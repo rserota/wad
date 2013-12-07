@@ -47,7 +47,10 @@ The Wad constructor supports many optional arguments to modify your sound, from 
 })</code></pre>
 
 
+The <code>play()<code> method also accepts optional arguments, such as volume and pitch. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.  
 
+<pre><code>var saw = new Wad({source : 'sawtooth'})
+saw.play({volume : 0.8, pitch : 'A4
 
 
 

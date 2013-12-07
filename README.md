@@ -25,7 +25,7 @@ You can also create oscillators using the same syntax, by specifying 'sine', 'sq
 The peak volume can be set during the creation of a wad, or any time afterwards. The default value is 1.
 
 <pre><code>var saw = new Wad({source : 'sawtooth', volume : .9})
-saw.setVolume(0.5)
+saw.setVolume(0.5)</code></pre>
 
 The Wad constructor supports many optional arguments to modify your sound, from simple settings such as peak volume, to more powerful things like ADSR envelopes and filters.  If not set explicitly, the ADSR envelope will have the values shown below. No filters is used unless it is set explicitly. Filter type can be specified as either 'lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', and 'allpass'.
 
@@ -47,7 +47,7 @@ The Wad constructor supports many optional arguments to modify your sound, from 
 })</code></pre>
 
 
-The <code>play()<code> method also accepts optional arguments, such as volume and pitch. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.  
+The <code>play()</code> method also accepts optional arguments, such as volume and pitch. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.  
 
 <pre><code>var saw = new Wad({source : 'sawtooth'})
 saw.play({volume : 0.8, pitch : 'A4'}) // A4 is 440 hertz.</code></pre>
@@ -59,14 +59,23 @@ To Do
 
 
 Select pitch by frequency
+
 Panning
+
 Reverb
+
 Filter envelopes
+
 Set envelope on play()
+
 Set filter on play()
+
 Set filter envelope on play()
+
 Arbitrary LFO's
+
 Microphone input
+
 
 
 

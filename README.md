@@ -22,12 +22,16 @@ You can also create oscillators using the same syntax, by specifying 'sine', 'sq
 
 <pre><code>var saw = new Wad({source : 'sawtooth'})</code></pre>
 
+The peak volume can be set during the creation of a wad, or any time afterwards. The default value is 1.
+
+<pre><code>var saw = new Wad({source : 'sawtooth', volume : .9})
+saw.setVolume(0.5)
 
 The Wad constructor supports many optional arguments to modify your sound, from simple settings such as peak volume, to more powerful things like ADSR envelopes and filters.  If not set explicitly, the ADSR envelope will have the values shown below. No filters is used unless it is set explicitly. Filter type can be specified as either 'lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', and 'allpass'.
 
 <pre><code>var saw = new Wad({
   source : 'sawtooth',
-  volume : 1.0, // volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
+  volume : 1.0, // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
   env : {
     attack : 0.0, // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
     decay : 0.0, // Time in seconds from peak volume to sustain volume.

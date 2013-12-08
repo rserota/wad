@@ -53,12 +53,15 @@ The <code>play()</code> method also accepts optional arguments, such as volume a
 saw.play({volume : 0.8, pitch : 'A4'}) // A4 is 440 hertz.</code></pre>
 
 
+If you like, you can also select a pitch by frequency.
+
+<code>saw.play({pitch : 440})</code>
+
+
 
 To Do
 ---
 
-
-Select pitch by frequency
 
 Panning
 

@@ -27,7 +27,7 @@ The peak volume can be set during the creation of a wad, or any time afterwards.
 <pre><code>var saw = new Wad({source : 'sawtooth', volume : .9})
 saw.setVolume(0.5)</code></pre>
 
-The Wad constructor supports many optional arguments to modify your sound, from simple settings such as peak volume, to more powerful things like ADSR envelopes and filters.  If not set explicitly, the ADSR envelope will have the values shown below. No filters is used unless it is set explicitly. Filter type can be specified as either 'lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', and 'allpass'.
+The Wad constructor supports many optional arguments to modify your sound, from simple settings such as peak volume, to more powerful things like ADSR envelopes and filters.  If not set explicitly, the ADSR envelope will have the values shown below. No filter is used unless it is set explicitly. Filter type can be specified as either 'lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', or 'allpass'.
 
 <pre><code>var saw = new Wad({
   source : 'sawtooth',

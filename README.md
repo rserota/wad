@@ -1,13 +1,12 @@
-Wad
-===
+<h1>Wad</h1>
 
 
 Wad is a Javascript library for manipulating audio using the new HTML5 Audio API.  It greatly simplifies the process of creating, playing, and manipulating audio, either for real-time playback, or at scheduled intervals.  Wad provides a simple interface to use many features one would find in a desktop DAW (digital audio workstation), but doesn't require the user to worry about sending XHR requests or setting up complex audio graphs.  
 
 
 
-Usage
----
+<h2>Usage</h2>
+
 
 The simplest use case is loading and playing a single audio file.  
 
@@ -27,7 +26,10 @@ The peak volume can be set during the creation of a wad, or any time afterwards.
 <pre><code>var saw = new Wad({source : 'sawtooth', volume : .9})
 saw.setVolume(0.5)</code></pre>
 
-The Wad constructor supports many optional arguments to modify your sound, from simple settings such as peak volume, to more powerful things like ADSR envelopes and filters.  If not set explicitly, the ADSR envelope will have the values shown below. No filter is used unless it is set explicitly. Filter type can be specified as either 'lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', or 'allpass'.
+
+<h3>Constructor Arguments</h3>
+
+The Wad constructor supports many optional arguments to modify your sound, from simple settings such as peak volume, to more powerful things like ADSR envelopes and filters.  If not set explicitly, the ADSR envelope will have the values shown below. Filters, LFOs, and reverb are not used unless they are set explicitly. Filter type can be specified as either 'lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', or 'allpass'.
 
 <pre><code>var saw = new Wad({
   source : 'sawtooth',
@@ -43,6 +45,12 @@ The Wad constructor supports many optional arguments to modify your sound, from 
     type : 'lowpass', // What type of filter is applied.
     frequency : 600, // The frequency, in hertz, to which the filter is applied.
     q : 1 // Q-factor.  No one knows what this does. The default value is 1. Sensible values are from 0 to 10.
+    env : { // Filter envelope.
+      frequency : 800, If this is set, filter frequency will slide from filter.frequency to filter.env.frequency when a note is triggered.
+      attack : 0.5 // Time in seconds for the filter frequency to slide from filter.frequency to filter.env.frequency
+  },
+  reverb : {
+    wet : 1 // Volume of the reverberations.  
   }
 })</code></pre>
 
@@ -64,10 +72,6 @@ To Do
 
 
 Panning
-
-Reverb
-
-Filter envelopes
 
 Set envelope on play()
 

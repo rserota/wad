@@ -58,6 +58,7 @@ The Wad constructor supports many optional arguments to modify your sound, from 
 
 In order to use reverb, you will need a server to send an impulse response via XmlHttpRequest. An impulse response is a small audio file, like a wav or mp3, that describes the acoustic characteristics of a physical space.  By default, Wad.js serves a sample impulse response that you can use freely.  However, it is recommended that you use your own impulse response. Modify the variable 'impulseURL' at the top of Wad.js to serve an impulse response from a different URL. You can make your own impulse response, but it might be easier to just <a href="http://www.voxengo.com/impulses/">find one online</a>.
 
+<h3>Play Arguments</h3>
 
 The <code>play()</code> method also accepts optional arguments: volume, pitch, envelope, and filter. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.   
 

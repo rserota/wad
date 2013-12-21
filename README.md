@@ -1,13 +1,12 @@
-Wad
-===
+<h1>Wad</h1>
 
 
 Wad is a Javascript library for manipulating audio using the new HTML5 Audio API.  It greatly simplifies the process of creating, playing, and manipulating audio, either for real-time playback, or at scheduled intervals.  Wad provides a simple interface to use many features one would find in a desktop DAW (digital audio workstation), but doesn't require the user to worry about sending XHR requests or setting up complex audio graphs.  
 
 
 
-Usage
----
+<h2>Usage</h2>
+
 
 The simplest use case is loading and playing a single audio file.  
 
@@ -27,7 +26,10 @@ The peak volume can be set during the creation of a wad, or any time afterwards.
 <pre><code>var saw = new Wad({source : 'sawtooth', volume : .9})
 saw.setVolume(0.5)</code></pre>
 
-The Wad constructor supports many optional arguments to modify your sound, from simple settings such as peak volume, to more powerful things like ADSR envelopes and filters.  If not set explicitly, the ADSR envelope will have the values shown below. No filter is used unless it is set explicitly. Filter type can be specified as either 'lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', or 'allpass'.
+
+<h3>Constructor Arguments</h3>
+
+The Wad constructor supports many optional arguments to modify your sound, from simple settings such as peak volume, to more powerful things like ADSR envelopes and filters.  If not set explicitly, the ADSR envelope will have the values shown below. Filters, LFOs, and reverb are not used unless they are set explicitly. Filter type can be specified as either 'lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', or 'allpass'.
 
 <pre><code>var saw = new Wad({
   source : 'sawtooth',
@@ -43,14 +45,30 @@ The Wad constructor supports many optional arguments to modify your sound, from 
     type : 'lowpass', // What type of filter is applied.
     frequency : 600, // The frequency, in hertz, to which the filter is applied.
     q : 1 // Q-factor.  No one knows what this does. The default value is 1. Sensible values are from 0 to 10.
+    env : { // Filter envelope.
+      frequency : 800, If this is set, filter frequency will slide from filter.frequency to filter.env.frequency when a note is triggered.
+      attack : 0.5 // Time in seconds for the filter frequency to slide from filter.frequency to filter.env.frequency
+  },
+  reverb : {
+    wet : 1 // Volume of the reverberations.  
   }
 })</code></pre>
 
+<h3>Configuring Reverb</h3>
 
-The <code>play()</code> method also accepts optional arguments, such as volume and pitch. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.  
+In order to use reverb, you will need a server to send an impulse response via XmlHttpRequest. An impulse response is a small audio file, like a wav or mp3, that describes the acoustic characteristics of a physical space.  By default, Wad.js serves a sample impulse response that you can use freely.  However, it is recommended that you use your own impulse response. Modify the variable 'impulseURL' at the top of Wad.js to serve an impulse response from a different URL. You can make your own impulse response, but it might be easier to just <a href="http://www.voxengo.com/impulses/">find one online</a>.
+
+<h3>Play Arguments</h3>
+
+The <code>play()</code> method also accepts optional arguments: volume, pitch, envelope, and filter. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.   
 
 <pre><code>var saw = new Wad({source : 'sawtooth'})
-saw.play({volume : 0.8, pitch : 'A4'}) // A4 is 440 hertz.</code></pre>
+saw.play({
+  volume : 0.8,
+  pitch : 'A4', // A4 is 440 hertz.
+  env : {hold : 9001},
+  filter : {frequency : 900}
+}) </code></pre>
 
 
 If you like, you can also select a pitch by frequency.
@@ -64,16 +82,6 @@ To Do
 
 
 Panning
-
-Reverb
-
-Filter envelopes
-
-Set envelope on play()
-
-Set filter on play()
-
-Set filter envelope on play()
 
 Arbitrary LFO's
 

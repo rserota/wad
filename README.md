@@ -34,6 +34,7 @@ The Wad constructor supports many optional arguments to modify your sound, from 
 <pre><code>var saw = new Wad({
   source : 'sawtooth',
   volume : 1.0, // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
+  panning : -5 // Horizontal placement of the sound source. Sensible values are from 10 to -10.
   env : {
     attack : 0.0, // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
     decay : 0.0, // Time in seconds from peak volume to sustain volume.
@@ -53,6 +54,8 @@ The Wad constructor supports many optional arguments to modify your sound, from 
     wet : 1 // Volume of the reverberations.  
   }
 })</code></pre>
+
+If you've used other audio software before, you probably know what most of these settings do, though panning works a little bit differently.  With Web Audio, you don't directly set the left/right stereo balance. Rather, the panning setting describes the distance of the sound source from the audio listener, along the X axis. You can set the panning to arbitrarily high or low values, but it will make the sound very quiet, since it's very far away. 
 
 <h3>Configuring Reverb</h3>
 

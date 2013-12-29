@@ -21,7 +21,15 @@ var Wad = (function(){
 
     var Wad = function(arg){
         this.source = arg.source;
+        this.destination = arg.destination || context.destination
         this.volume = arg.volume || 1 // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
+        this.defaultVolume = this.volume
+        if(arg.pitch && arg.pitch in Wad.pitches){
+            this.pitch = Wad.pitches[arg.pitch]
+        }
+        else{
+            this.pitch = arg.pitch || 440
+        }
         this.env = { //default envelope, if one is not specified on play
             attack : arg.env ? (arg.env.attack || 0) : 0, // time in seconds from onset to peak volume
             decay : arg.env ? (arg.env.decay || 0) : 0, // time in seconds from peak volume to sustain volume
@@ -68,6 +76,28 @@ var Wad = (function(){
             }
         }
 
+        if (arg.panning){
+            this.panning = {
+                location : arg.panning
+            }
+        }
+
+        if (arg.vibrato){
+            this.vibrato = {
+                shape : arg.vibrato.shape || 'sine',
+                speed : arg.vibrato.speed || 1,
+                magnitude : arg.vibrato.magnitude || 5,
+                attack : arg.vibrato.attack || 0
+            }
+        }
+        if (arg.tremolo){
+            this.tremolo= {
+                shape : arg.tremolo.shape || 'sine',
+                speed : arg.tremolo.speed || 1,
+                magnitude : arg.tremolo.magnitude || 5,
+                attack : arg.tremolo.attack || 1
+            }
+        }
         /** special handling for mic input **/
         if(this.source === 'mic'){
             var that = this
@@ -105,6 +135,22 @@ var Wad = (function(){
         }
         /////////////////////////////////////
 
+        if (arg.lfo){
+            this.lfo = {}
+            if (arg.lfo.volume){
+                this.lfo.volume = {
+                    source : arg.lfo.volume.source || 'sine',
+                    pitch : arg.lfo.volume.pitch || 1,
+                    volume : arg.lfo.volume.volume || 5,
+                    env : {
+                        attack : arg.lfo.volume.attack || 0,
+                        hold : this.env.hold
+                    }
+                }
+
+            }
+        }
+
         this.setVolume = function(volume){
             this.volume = volume;
             if(this.gain){this.gain.gain.value = volume};
@@ -137,6 +183,7 @@ var Wad = (function(){
         this.play = function(arg){
             this.nodes = []
             if(arg && arg.volume){this.volume = arg.volume}
+            else {this.volume = this.defaultVolume}
             if(this.source in {'sine':0, 'sawtooth':0, 'square':0, 'triangle':0}){            
                 this.soundSource = context.createOscillator()
                 this.soundSource.type = this.source
@@ -147,6 +194,9 @@ var Wad = (function(){
                     else{
                         this.soundSource.frequency.value = arg.pitch
                     }
+                }
+                else {
+                    this.soundSource.frequency.value = this.pitch
                 }
             }
             else{
@@ -164,7 +214,6 @@ var Wad = (function(){
             else{
                 this.env = this.defaultEnv
             }
-
 
             this.nodes.push(this.soundSource)
 
@@ -208,11 +257,44 @@ var Wad = (function(){
                 this.nodes.push(this.reverb.gain)
             }
 
-            this.nodes.push(context.destination)
+            if ((arg && arg.panning) || this.panning){
+                this.panning.node = context.createPanner()
+                var panning = (arg && arg.panning) ? arg.panning : this.panning.location
+                this.panning.node.setPosition(panning, 0, 0)
+                this.nodes.push(this.panning.node)
+            }
+
+            this.nodes.push(this.destination)
 
             plugEmIn(this.nodes)
             if(this.filter && this.filter.env){filterEnv(this)}
             playEnv(this)
+
+            if (this.vibrato){
+                this.vibrato.wad = new Wad({
+                    source : this.vibrato.shape,
+                    pitch : this.vibrato.speed,
+                    volume : this.vibrato.magnitude,
+                    env : {
+                        attack : this.vibrato.attack
+                    },
+                    destination : this.soundSource.frequency
+                })
+                this.vibrato.wad.play()
+            }
+
+            if (this.tremolo){
+                this.tremolo.wad = new Wad({
+                    source : this.tremolo.shape,
+                    pitch : this.tremolo.speed,
+                    volume : this.tremolo.magnitude,
+                    env : {
+                        attack : this.tremolo.attack
+                    },
+                    destination : this.gain.gain
+                })
+                this.tremolo.wad.play()
+            }
         }
 
     //If multiple instances of a sound are playing simultaneously, stopSound only can stop the most recent one
@@ -352,130 +434,3 @@ var Wad = (function(){
     return Wad
     
 })()
-
-mic = new Wad({
-    source :'mic',
-    filter : {
-        type : 'highpass',
-        frequency : 600
-    }
-    // reverb : {
-    //     wet : .5
-    // }
-})
-
-phone = new Wad({
-    source : 'http://localhost:3000/us/sendaudio/A2.wav',
-    reverb : {
-        impulse : 'http://localhost:3000/us/sendaudio/widehall.wav',
-        wet : 1
-    },
-
-})
-
-phone2 = new Wad({
-    source : 'http://localhost:3000/us/sendaudio/A2.wav',
-    reverb : {
-        impulse : 'http://localhost:3000/us/sendaudio/widehall.wav',
-        wet : .6
-    },
-
-})
-
-phone3 = new Wad({
-    source : 'http://localhost:3000/us/sendaudio/A2.wav',
-    reverb : {
-        impulse : 'http://localhost:3000/us/sendaudio/widehall.wav',
-        wet : .2
-    },
-
-})
-
-asm = new Wad({
-    source : 'http://localhost:3000/us/sendaudio/asm.mp3',
-    reverb : {
-        impulse : 'http://localhost:3000/us/sendaudio/longhall.wav',
-        wet : 1
-    }
-
-})
-
-tone = new Wad({
-    source : 'http://localhost:3000/us/sendaudio/A2.wav',
-    env : {
-        attack : .1,
-        decay : .2,
-        sustain : .9,
-        hold : .5,
-        release : .9
-    }
-})
-
-
-saw = new Wad({
-    source : 'sawtooth',
-    env : {
-        attack : .2,
-        decay : .2,
-        sustain : .9,
-        hold : 2,
-        release : .2
-    },
-    filter : {
-        type : 'lowpass',
-        frequency : 1200,
-        q : 1,
-        env : {
-            attack : .1,
-            frequency : 3000
-        }
-    },
-    reverb : {
-        wet : 1
-    }
-})
-saw2 = new Wad({
-    source : 'sawtooth',
-    env : {
-        attack : .2,
-        decay : .2,
-        sustain : .9,
-        hold : 2,
-        release : .2
-    },
-    filter : {
-        type : 'lowpass',
-        frequency : 1200,
-        q : 1,
-        env : {
-            attack : .4,
-            frequency : 3000
-        }
-    },
-    reverb : {
-        wet : 1
-    }
-})
-saw3 = new Wad({
-    source : 'sawtooth',
-    env : {
-        attack : .2,
-        decay : .2,
-        sustain : .9,
-        hold : 2,
-        release : .2
-    },
-    filter : {
-        type : 'lowpass',
-        frequency : 1200,
-        q : 1,
-        env : {
-            attack : .9,
-            frequency : 3000
-        }
-    },
-    reverb : {
-        wet : 1
-    }
-})
-

@@ -35,7 +35,7 @@ The Wad constructor supports many optional arguments to modify your sound, from 
   source : 'sawtooth',
   volume : 1.0, // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
   panning : -5 // Horizontal placement of the sound source. Sensible values are from 10 to -10.
-  env : {
+  env : { // This is the ADSR envelope. 
     attack : 0.0, // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
     decay : 0.0, // Time in seconds from peak volume to sustain volume.
     sustain : 1.0, // Sustain volume level. This is a percent of the peak volume, so sensible values are between 0 and 1.
@@ -75,7 +75,7 @@ In order to use reverb, you will need a server to send an impulse response via X
 
 <h3>Play Arguments</h3>
 
-The <code>play()</code> method also accepts optional arguments: volume, pitch, envelope, and filter. If you intend to include a filter envelope as an argument, you should set a filter envelope when the Wad is first instantiated. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.   
+The <code>play()</code> method also accepts optional arguments: volume, pitch, envelope, panning, and filter. If you intend to include a filter envelope as an argument on <code>play()</code>, you should have set a filter envelope when the Wad was first instantiated. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.   
 
 <pre><code>var saw = new Wad({source : 'sawtooth'})
 saw.play({
@@ -93,7 +93,7 @@ If you like, you can also select a pitch by frequency.
 
 <h3>Microphone Input</h3>
 
-You can also use microphone input as the source for a Wad. You can apply reverb or filters to the microphone input, but you cannot apply an envelope or filter envelope, since microphone Wads aren't triggered by the <code>play()</code> or <code>stop()</code> methods. You may experience problems with microphone feedback if you aren't using headphones.
+You can also use microphone input as the source for a Wad. You can apply reverb or filters to the microphone input, but you cannot apply an envelope or filter envelope, since microphone Wads aren't triggered by the <code>play()</code> or <code>stop()</code> methods. You may experience problems with microphone feedback if you aren't using headphones.  It is not necessary to call <code>play()</code> on a microphone Wad. If a Wad uses the microphone as the source, it will constantly stream the mic input through all applied effects (filters, reverb, etc) and out through your speakers or headphones. Because microphone Wads do not use the <code>play()</code> method, you cannot set an ADSR envelope or filter envelope on a microphone Wad.
 
 <pre><code>var voice = new Wad({
   source : 'mic',
@@ -103,7 +103,8 @@ You can also use microphone input as the source for a Wad. You can apply reverb 
   filter : {
     type : 'highpass',
     frequency : 700
-  }
+  },
+  panning : -2
 }</code></pre>
 
 

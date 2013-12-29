@@ -52,6 +52,18 @@ The Wad constructor supports many optional arguments to modify your sound, from 
   },
   reverb : {
     wet : 1 // Volume of the reverberations.  
+  },
+  vibrato : { // A vibrating pitch effect.  Only works for oscillators.
+    shape : 'sine', // shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'.
+    magnitude : 3, // how much the pitch changes. Sensible values are from 1 to 10.
+    speed : 4, // How quickly the pitch changes, in cycles per second.  Sensible values are from 0.1 to 10.
+    attack : 0 // Time in seconds for the vibrato effect to reach peak magnitude.
+  },
+  tremolo : { // A vibrating volume effect.
+    shape : 'sine', // shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'.
+    magnitude : 3, // how much the volume changes. Sensible values are from 1 to 10.
+    speed : 4, // How quickly the volume changes, in cycles per second.  Sensible values are from 0.1 to 10.
+    attack : 0 // Time in seconds for the tremolo effect to reach peak magnitude.
   }
 })</code></pre>
 
@@ -70,6 +82,7 @@ saw.play({
   volume : 0.8,
   pitch : 'A4', // A4 is 440 hertz.
   env : {hold : 9001},
+  panning : 4,
   filter : {frequency : 900}
 }) </code></pre>
 
@@ -92,16 +105,6 @@ You can also use microphone input as the source for a Wad. You can apply reverb 
     frequency : 700
   }
 }</code></pre>
-
-To Do
----
-
-
-Panning
-
-Arbitrary LFO's
-
-Microphone input
 
 
 

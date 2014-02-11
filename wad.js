@@ -1,7 +1,25 @@
 
 
 var Wad = (function(){
-    var impulseURL = 'http://localhost:3000/us/sendaudio/widehall.wav'
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    context = new AudioContext();
+    navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia || navigator.getUserMedia
+
+    var bufferSize = 2 * context.sampleRate,
+    noiseBuffer = context.createBuffer(1, bufferSize, context.sampleRate),
+    output = noiseBuffer.getChannelData(0);
+    for (var i = 0; i < bufferSize; i++) {
+        output[i] = Math.random() * 2 - 1;
+    }
+
+    var whiteNoise = context.createBufferSource();
+    whiteNoise.buffer = noiseBuffer;
+    whiteNoise.loop = true;
+    // whiteNoise.start(0);
+
+    whiteNoise.connect(context.destination);
+
+    var impulseURL = 'http://www.codecur.io/us/sendaudio/widehall.wav'
     var request = new XMLHttpRequest();
     request.open("GET", impulseURL, true);
     request.responseType = "arraybuffer";
@@ -12,9 +30,6 @@ var Wad = (function(){
     }
     request.send();
     
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    context = new AudioContext();
-    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
 
 
 
@@ -40,7 +55,7 @@ var Wad = (function(){
         this.defaultEnv = this.env
         
 
-        if(!(this.source in {'sine':0, 'sawtooth':0, 'square':0, 'triangle':0, 'mic':0})){
+        if(!(this.source in {'sine':0, 'sawtooth':0, 'square':0, 'triangle':0, 'mic':0, 'noise':0})){
             /** fetch resources **/
             var request = new XMLHttpRequest();
             request.open("GET", this.source, true);
@@ -53,6 +68,10 @@ var Wad = (function(){
             }
             request.send();
             //////////////////////
+        }
+
+        if(this.source === 'noise'){
+            this.decodedBuffer = noiseBuffer
         }
 
         if (arg.filter){
@@ -76,7 +95,7 @@ var Wad = (function(){
             }
         }
 
-        if (arg.panning){
+        if ('panning' in arg){
             this.panning = {
                 location : arg.panning
             }
@@ -135,21 +154,21 @@ var Wad = (function(){
         }
         /////////////////////////////////////
 
-        if (arg.lfo){
-            this.lfo = {}
-            if (arg.lfo.volume){
-                this.lfo.volume = {
-                    source : arg.lfo.volume.source || 'sine',
-                    pitch : arg.lfo.volume.pitch || 1,
-                    volume : arg.lfo.volume.volume || 5,
-                    env : {
-                        attack : arg.lfo.volume.attack || 0,
-                        hold : this.env.hold
-                    }
-                }
+        // if (arg.lfo){
+        //     this.lfo = {}
+        //     if (arg.lfo.volume){
+        //         this.lfo.volume = {
+        //             source : arg.lfo.volume.source || 'sine',
+        //             pitch : arg.lfo.volume.pitch || 1,
+        //             volume : arg.lfo.volume.volume || 5,
+        //             env : {
+        //                 attack : arg.lfo.volume.attack || 0,
+        //                 hold : this.env.hold
+        //             }
+        //         }
 
-            }
-        }
+        //     }
+        // }
 
         this.setVolume = function(volume){
             this.volume = volume;
@@ -166,7 +185,7 @@ var Wad = (function(){
             wad.gain.gain.linearRampToValueAtTime(wad.volume, context.currentTime+wad.env.attack)
             wad.gain.gain.linearRampToValueAtTime(wad.volume*wad.env.sustain, context.currentTime+wad.env.attack+wad.env.decay)
             wad.gain.gain.linearRampToValueAtTime(0.0001, context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release)
-            wad.soundSource.stop(context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release)
+            // wad.soundSource.stop(context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release)
             ///////////////////////////
             wad.soundSource.start(context.currentTime);
         }
@@ -201,7 +220,10 @@ var Wad = (function(){
             }
             else{
                 this.soundSource = context.createBufferSource();
-                this.soundSource.buffer = that.decodedBuffer;    
+                this.soundSource.buffer = this.decodedBuffer;
+                if(this.source === 'noise'){
+                    this.soundSource.loop = true
+                }  
             }
 
             if(arg && arg.env){
@@ -299,8 +321,13 @@ var Wad = (function(){
 
     //If multiple instances of a sound are playing simultaneously, stopSound only can stop the most recent one
         this.stop = function(){
-            this.gain.gain.linearRampToValueAtTime(.0001, context.currentTime+this.env.release)
-            this.soundSource.stop(context.currentTime+this.env.release)
+            if(!(this.source === 'mic')){
+                this.gain.gain.linearRampToValueAtTime(.0001, context.currentTime+this.env.release)
+                this.soundSource.stop(context.currentTime+this.env.release)             
+            }
+            else {
+                this.mediaStreamSource.disconnect(0)
+            }
         }
     }
 

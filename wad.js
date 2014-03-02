@@ -1,24 +1,27 @@
 
 
 var Wad = (function(){
+
+/** Let's do the vendor-prefix dance. **/
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     context = new AudioContext();
     navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia || navigator.getUserMedia
+/////////////////////////////////////////
 
+
+/** Pre-render a noise buffer instead of generating noise on the fly. **/
     var bufferSize = 2 * context.sampleRate,
     noiseBuffer = context.createBuffer(1, bufferSize, context.sampleRate),
     output = noiseBuffer.getChannelData(0);
     for (var i = 0; i < bufferSize; i++) {
         output[i] = Math.random() * 2 - 1;
     }
+/////////////////////////////////////////////////////////////////////////
 
-    var whiteNoise = context.createBufferSource();
-    whiteNoise.buffer = noiseBuffer;
-    whiteNoise.loop = true;
-    // whiteNoise.start(0);
 
-    whiteNoise.connect(context.destination);
-
+/** Grab the reverb impulse response file from a server.
+You may want to change this URL to serve files from your own server.
+Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
     var impulseURL = 'http://www.codecur.io/us/sendaudio/widehall.wav'
     var request = new XMLHttpRequest();
     request.open("GET", impulseURL, true);
@@ -29,14 +32,13 @@ var Wad = (function(){
         })
     }
     request.send();
-    
-
-
+////////////////////////////////////////////////////////////////////////
 
 
     var Wad = function(arg){
+/** Set basic Wad properties **/
         this.source = arg.source;
-        this.destination = arg.destination || context.destination
+        this.destination = arg.destination || context.destination // the last node the sound is routed to
         this.volume = arg.volume || 1 // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
         this.defaultVolume = this.volume
         if(arg.pitch && arg.pitch in Wad.pitches){
@@ -53,26 +55,6 @@ var Wad = (function(){
             release : arg.env ? (arg.env.release || 0) : 0 // time in seconds from sustain volume to zero volume
         }
         this.defaultEnv = this.env
-        
-
-        if(!(this.source in {'sine':0, 'sawtooth':0, 'square':0, 'triangle':0, 'mic':0, 'noise':0})){
-            /** fetch resources **/
-            var request = new XMLHttpRequest();
-            request.open("GET", this.source, true);
-            request.responseType = "arraybuffer";
-            var that = this
-            request.onload = function() {
-                context.decodeAudioData(request.response, function (decodedBuffer){
-                    that.decodedBuffer = decodedBuffer
-                })
-            }
-            request.send();
-            //////////////////////
-        }
-
-        if(this.source === 'noise'){
-            this.decodedBuffer = noiseBuffer
-        }
 
         if (arg.filter){
             this.filter = {
@@ -117,7 +99,33 @@ var Wad = (function(){
                 attack : arg.tremolo.attack || 1
             }
         }
-        /** special handling for mic input **/
+////////////////////////////////
+
+
+/** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
+        if(!(this.source in {'sine':0, 'sawtooth':0, 'square':0, 'triangle':0, 'mic':0, 'noise':0})){
+            var request = new XMLHttpRequest();
+            request.open("GET", this.source, true);
+            request.responseType = "arraybuffer";
+            var that = this
+            request.onload = function() {
+                context.decodeAudioData(request.response, function (decodedBuffer){
+                    that.decodedBuffer = decodedBuffer
+                })
+            }
+            request.send();
+        }
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
+        if(this.source === 'noise'){
+            this.decodedBuffer = noiseBuffer
+        }
+////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/** If the Wad's source is the microphone, the rest of the setup happens here. **/
         if(this.source === 'mic'){
             var that = this
             navigator.getUserMedia({audio:true}, function(stream){
@@ -152,29 +160,16 @@ var Wad = (function(){
                 
             });
         }
-        /////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////        
 
-        // if (arg.lfo){
-        //     this.lfo = {}
-        //     if (arg.lfo.volume){
-        //         this.lfo.volume = {
-        //             source : arg.lfo.volume.source || 'sine',
-        //             pitch : arg.lfo.volume.pitch || 1,
-        //             volume : arg.lfo.volume.volume || 5,
-        //             env : {
-        //                 attack : arg.lfo.volume.attack || 0,
-        //                 hold : this.env.hold
-        //             }
-        //         }
-
-        //     }
-        // }
 
         this.setVolume = function(volume){
             this.volume = volume;
             if(this.gain){this.gain.gain.value = volume};
         }
 
+/** When a note is played, these two functions will schedule changes in volume and filter frequency,
+as specified by the volume envelope and filter envelope **/
         var filterEnv = function(wad){
             wad.filter.node.frequency.linearRampToValueAtTime(wad.filter.frequency, context.currentTime)
             wad.filter.node.frequency.linearRampToValueAtTime(wad.filter.env.frequency, context.currentTime+wad.filter.env.attack)
@@ -185,11 +180,14 @@ var Wad = (function(){
             wad.gain.gain.linearRampToValueAtTime(wad.volume, context.currentTime+wad.env.attack)
             wad.gain.gain.linearRampToValueAtTime(wad.volume*wad.env.sustain, context.currentTime+wad.env.attack+wad.env.decay)
             wad.gain.gain.linearRampToValueAtTime(0.0001, context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release)
-            // wad.soundSource.stop(context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release)
-            ///////////////////////////
             wad.soundSource.start(context.currentTime);
+            wad.soundSource.stop(context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release)
         }
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+/** When all the nodes are set up for this Wad, this function plugs them into each other,
+ with special handling for reverb (ConvolverNode). **/
         var plugEmIn = function(nodes){
             for (var i=1; i<nodes.length; i++){
                 nodes[i-1].connect(nodes[i])
@@ -198,6 +196,8 @@ var Wad = (function(){
                 }
             }
         }
+/////////////////////////////////////////////////////////////////////////////////////////
+
 
         this.play = function(arg){
             this.nodes = []

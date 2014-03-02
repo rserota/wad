@@ -34,6 +34,7 @@ The Wad constructor supports many optional arguments to modify your sound, from 
 <pre><code>var saw = new Wad({
   source : 'sawtooth',
   volume : 1.0, // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
+  pitch : 'A4', // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
   panning : -5 // Horizontal placement of the sound source. Sensible values are from 10 to -10.
   env : { // This is the ADSR envelope. 
     attack : 0.0, // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.

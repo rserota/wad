@@ -122,7 +122,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         if(this.source === 'noise'){
             this.decodedBuffer = noiseBuffer
         }
-////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** If the Wad's source is the microphone, the rest of the setup happens here. **/
@@ -199,6 +199,10 @@ as specified by the volume envelope and filter envelope **/
 /////////////////////////////////////////////////////////////////////////////////////////
 
 
+/** the play() method will create the various nodes that are required for this Wad to play,
+set properties on those nodes according to the constructor arguments and play() arguments,
+plug the nodes into each other with plugEmIn(),
+then finally play the sound by calling playEnv() **/
         this.play = function(arg){
             this.nodes = []
             if(arg && arg.volume){this.volume = arg.volume}
@@ -226,6 +230,11 @@ as specified by the volume envelope and filter envelope **/
                 }  
             }
 
+            this.nodes.push(this.soundSource)
+
+/**  sets the volume envelope based on the play() arguments if present,
+or defaults to the constructor arguments if the volume envelope is not set on play() **/
+
             if(arg && arg.env){
                 this.env.attack = arg.env.attack || this.defaultEnv.attack
                 this.env.decay = arg.env.decay || this.defaultEnv.decay
@@ -236,9 +245,11 @@ as specified by the volume envelope and filter envelope **/
             else{
                 this.env = this.defaultEnv
             }
+////////////////////////////////////////////////////////////////////////////////////////
 
-            this.nodes.push(this.soundSource)
 
+/**  sets up the filter and filter envelope based on the play() argument if present,
+or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
             if(arg && arg.filter && this.filter){
                 this.filter.node = context.createBiquadFilter()
                 this.filter.node.type = this.filter.type
@@ -265,11 +276,13 @@ as specified by the volume envelope and filter envelope **/
                 this.filter.node.Q.value = this.filter.q
                 this.nodes.push(this.filter.node)
             }
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
-            this.gain = context.createGain()
+
+            this.gain = context.createGain() // sets up the gain node
             this.nodes.push(this.gain)
 
-            if (this.reverb){
+            if (this.reverb){ // sets up reverb
                 this.reverb.node = context.createConvolver()
                 this.reverb.node.buffer = Wad.reverb
                 this.reverb.gain = context.createGain()
@@ -279,20 +292,23 @@ as specified by the volume envelope and filter envelope **/
                 this.nodes.push(this.reverb.gain)
             }
 
+/**  sets panning based on the play() argument if present, or defaults to the constructor argument if panning is not set on play **/
             if ((arg && arg.panning) || this.panning){
                 this.panning.node = context.createPanner()
                 var panning = (arg && arg.panning) ? arg.panning : this.panning.location
                 this.panning.node.setPosition(panning, 0, 0)
                 this.nodes.push(this.panning.node)
             }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
             this.nodes.push(this.destination)
 
-            plugEmIn(this.nodes)
+            plugEmIn(this.nodes) 
             if(this.filter && this.filter.env){filterEnv(this)}
             playEnv(this)
 
-            if (this.vibrato){
+            if (this.vibrato){ //sets up vibrato LFO
                 this.vibrato.wad = new Wad({
                     source : this.vibrato.shape,
                     pitch : this.vibrato.speed,
@@ -305,7 +321,7 @@ as specified by the volume envelope and filter envelope **/
                 this.vibrato.wad.play()
             }
 
-            if (this.tremolo){
+            if (this.tremolo){ //sets up tremolo LFO
                 this.tremolo.wad = new Wad({
                     source : this.tremolo.shape,
                     pitch : this.tremolo.speed,
@@ -318,8 +334,9 @@ as specified by the volume envelope and filter envelope **/
                 this.tremolo.wad.play()
             }
         }
+//////////////////////////////////////////////////////////////////////////////////////////
 
-    //If multiple instances of a sound are playing simultaneously, stopSound only can stop the most recent one
+/** If multiple instances of a sound are playing simultaneously, stop() only can stop the most recent one **/
         this.stop = function(){
             if(!(this.source === 'mic')){
                 this.gain.gain.linearRampToValueAtTime(.0001, context.currentTime+this.env.release)
@@ -330,7 +347,9 @@ as specified by the volume envelope and filter envelope **/
             }
         }
     }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/** This object is a mapping of note names to frequencies. **/ 
     Wad.pitches = {
         'A0' :27.5000, 
         'A#0' :29.1352,
@@ -456,6 +475,12 @@ as specified by the volume envelope and filter envelope **/
         'Bb7' :3729.31,
         'B7' :3951.07,
         'C8' :4186.01
+    }
+//////////////////////////////////////////////////////////////
+
+
+    Wad.presets = {
+        "high-hat" : {source : 'noise', env : { hold : .06}, filter : { type : 'highpass', frequency : 400}}
     }
 
     return Wad

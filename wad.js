@@ -480,7 +480,7 @@ or defaults to the constructor argument if the filter and filter envelope are no
 
 
     Wad.presets = {
-        "high-hat" : {source : 'noise', env : { hold : .06}, filter : { type : 'highpass', frequency : 400}}
+        "high-hat-closed" : {source : 'noise', env : { hold : .06}, filter : { type : 'highpass', frequency : 400}}
     }
 
     return Wad

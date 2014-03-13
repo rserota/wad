@@ -4,6 +4,10 @@
 Wad is a Javascript library for manipulating audio using the new HTML5 Audio API.  It greatly simplifies the process of creating, playing, and manipulating audio, either for real-time playback, or at scheduled intervals.  Wad provides a simple interface to use many features one would find in a desktop DAW (digital audio workstation), but doesn't require the user to worry about sending XHR requests or setting up complex audio graphs.  
 
 
+<h2>Live Demo</h2>
+
+To see a demo of an app that uses a small subset of the features in Wad.js, check <a href="http://www.codecur.io/us/audiotest">this</a> out. 
+
 
 <h2>Usage</h2>
 
@@ -108,9 +112,28 @@ You can also use microphone input as the source for a Wad. You can apply reverb 
   panning : -2
 }</code></pre>
 
+<h3>Presets</h3>
+
+If you'd like to use a pre-configured Wad, check out the presets.  They should give you a better idea of the sorts of sounds that you can create with Wad.js.  For example, you can create a Wad using the preset 'high-hat-closed' like this:
+
+<pre><code>var hat = new Wad(Wad.presets['high-hat-closed'])</code></pre>
 
 
+<h2>How To Contribute</h2>
+
+I've put a lot of work into this project, but there's still plenty of room for improvement, both in terms of bugfixes and feature additions. Please feel free to fork this repo and submit pull requests. 
 
 
+<h3>Cross-Browser Compatibility</h3>
+
+I tried to future-proof Wad.js by using standards-compliant methods, but the cross-browser compatibility is still not great. It works best in Chrome, decently in Safari for iOS, and it works very poorly in Firefox. I have not tested it in any other browsers. I would greatly appreciate contributions to help Wad.js run optimally in any browser that supports Web Audio, especially mobile browsers. 
 
 
+<h3>Low Frequency Oscillators</h3>
+
+Originally, I had wanted to allow users to easily add an LFO to any parameter, such as pitch, volume, panning, resonance, filter cutoff frequency, etc, but this turned out to be fairly difficult for me to implement. Instead, I implemented LFOs specifically for pitch (vibrato) and volume (tremolo). If anyone can implement more versatile LFOs, that would be awesome.  
+
+
+<h3>Presets</h3>
+
+It would be nice if there were more presets, so that users wouldn't have to make most of their sounds from scratch. If you enjoy making your own sounds with Wad.js, consider submitting them to be used as presets. Better yet, you can bundle together a bunch of presets as a 'preset-pack'. 

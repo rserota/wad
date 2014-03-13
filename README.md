@@ -98,7 +98,7 @@ If you like, you can also select a pitch by frequency.
 
 <h3>Microphone Input</h3>
 
-You can also use microphone input as the source for a Wad. You can apply reverb or filters to the microphone input, but you cannot apply an envelope or filter envelope, since microphone Wads aren't triggered by the <code>play()</code> or <code>stop()</code> methods. You may experience problems with microphone feedback if you aren't using headphones.  It is not necessary to call <code>play()</code> on a microphone Wad. If a Wad uses the microphone as the source, it will constantly stream the mic input through all applied effects (filters, reverb, etc) and out through your speakers or headphones. Because microphone Wads do not use the <code>play()</code> method, you cannot set an ADSR envelope or filter envelope on a microphone Wad.
+You can also use microphone input as the source for a Wad. You can apply reverb or filters to the microphone input, but you cannot apply an envelope or filter envelope, since microphone Wads aren't triggered by the <code>play()</code> method. If a Wad uses the microphone as the source, it will constantly stream the mic input through all applied effects (filters, reverb, etc) and out through your speakers or headphones. Call the <code>stop()</code> method on a microphone Wad to disconnect your microphone from that Wad. You may experience problems with microphone feedback if you aren't using headphones.  
 
 <pre><code>var voice = new Wad({
   source : 'mic',
@@ -111,6 +111,7 @@ You can also use microphone input as the source for a Wad. You can apply reverb 
   },
   panning : -2
 }</code></pre>
+
 
 <h3>Presets</h3>
 

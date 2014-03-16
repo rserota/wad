@@ -98,7 +98,6 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
     var setUpMic = function(that, arg){
         navigator.getUserMedia({audio:true}, function(stream){
-            console.log(that)
             that.nodes = []
             that.mediaStreamSource = context.createMediaStreamSource(stream)
             that.nodes.push(that.mediaStreamSource)
@@ -286,6 +285,41 @@ with special handling for reverb (ConvolverNode). **/
         that.nodes.push(that.reverb.gain)
     }
 
+    var setUpPanningOnPlay = function(that, arg){
+        if ((arg && arg.panning) || that.panning){
+            that.panning.node = context.createPanner()
+            var panning = (arg && arg.panning) ? arg.panning : that.panning.location
+            that.panning.node.setPosition(panning, 0, 0)
+            that.nodes.push(that.panning.node)
+        }
+    }
+
+    var setUpVibratoOnPlay = function(that, arg){
+        that.vibrato.wad = new Wad({
+            source : that.vibrato.shape,
+            pitch : that.vibrato.speed,
+            volume : that.vibrato.magnitude,
+            env : {
+                attack : that.vibrato.attack
+            },
+            destination : that.soundSource.frequency
+        })
+        that.vibrato.wad.play()
+    }
+
+    var setUpTremoloOnPlay = function(that, arg){
+        that.tremolo.wad = new Wad({
+            source : that.tremolo.shape,
+            pitch : that.tremolo.speed,
+            volume : that.tremolo.magnitude,
+            env : {
+                attack : that.tremolo.attack
+            },
+            destination : that.gain.gain
+        })
+        that.tremolo.wad.play()
+    }
+
 /** the play() method will create the various nodes that are required for this Wad to play,
 set properties on those nodes according to the constructor arguments and play() arguments,
 plug the nodes into each other with plugEmIn(),
@@ -330,45 +364,23 @@ or defaults to the constructor argument if the filter and filter envelope are no
         }
 
 /**  sets panning based on the play() argument if present, or defaults to the constructor argument if panning is not set on play **/
-        if ((arg && arg.panning) || this.panning){
-            this.panning.node = context.createPanner()
-            var panning = (arg && arg.panning) ? arg.panning : this.panning.location
-            this.panning.node.setPosition(panning, 0, 0)
-            this.nodes.push(this.panning.node)
-        }
+        setUpPanningOnPlay(this, arg)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
         this.nodes.push(this.destination)
 
         plugEmIn(this.nodes) 
-        if(this.filter && this.filter.env){filterEnv(this)}
+
+        if(this.filter && this.filter.env){ filterEnv(this) }
         playEnv(this)
 
         if (this.vibrato){ //sets up vibrato LFO
-            this.vibrato.wad = new Wad({
-                source : this.vibrato.shape,
-                pitch : this.vibrato.speed,
-                volume : this.vibrato.magnitude,
-                env : {
-                    attack : this.vibrato.attack
-                },
-                destination : this.soundSource.frequency
-            })
-            this.vibrato.wad.play()
+            setUpVibratoOnPlay(this, arg)
         }
 
         if (this.tremolo){ //sets up tremolo LFO
-            this.tremolo.wad = new Wad({
-                source : this.tremolo.shape,
-                pitch : this.tremolo.speed,
-                volume : this.tremolo.magnitude,
-                env : {
-                    attack : this.tremolo.attack
-                },
-                destination : this.gain.gain
-            })
-            this.tremolo.wad.play()
+            setUpTremoloOnPlay(this, arg)
         }
     }
 //////////////////////////////////////////////////////////////////////////////////////////

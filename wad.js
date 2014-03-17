@@ -158,7 +158,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             }
         }
 
-        if (arg.panning){
+        if ('panning' in arg){
             this.panning = {
                 location : arg.panning
             }

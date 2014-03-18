@@ -195,13 +195,13 @@ as specified by the volume envelope and filter envelope **/
         wad.filter.node.frequency.linearRampToValueAtTime(wad.filter.env.frequency, context.currentTime+wad.filter.env.attack)
     }
 
-    var playEnv = function(wad){
-        wad.gain.gain.linearRampToValueAtTime(0.0001, context.currentTime)
-        wad.gain.gain.linearRampToValueAtTime(wad.volume, context.currentTime+wad.env.attack)
-        wad.gain.gain.linearRampToValueAtTime(wad.volume*wad.env.sustain, context.currentTime+wad.env.attack+wad.env.decay)
-        wad.gain.gain.linearRampToValueAtTime(0.0001, context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release)
-        wad.soundSource.start(context.currentTime);
-        wad.soundSource.stop(context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release)
+    var playEnv = function(wad, arg){
+        wad.gain.gain.linearRampToValueAtTime(0.0001, context.currentTime + arg.wait)
+        wad.gain.gain.linearRampToValueAtTime(wad.volume, context.currentTime+wad.env.attack + arg.wait)
+        wad.gain.gain.linearRampToValueAtTime(wad.volume*wad.env.sustain, context.currentTime+wad.env.attack+wad.env.decay + arg.wait)
+        wad.gain.gain.linearRampToValueAtTime(0.0001, context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release + arg.wait)
+        wad.soundSource.start(context.currentTime + arg.wait);
+        wad.soundSource.stop(context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release + arg.wait)
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -326,6 +326,8 @@ plug the nodes into each other with plugEmIn(),
 then finally play the sound by calling playEnv() **/
     Wad.prototype.play = function(arg){
         this.nodes = []
+        if(arg && !arg.wait){arg.wait = 0}
+        if(!arg){var arg = {wait: 0}}
         if(arg && arg.volume){this.volume = arg.volume}
         else {this.volume = this.defaultVolume}
 
@@ -373,7 +375,7 @@ or defaults to the constructor argument if the filter and filter envelope are no
         plugEmIn(this.nodes) 
 
         if(this.filter && this.filter.env){ filterEnv(this) }
-        playEnv(this)
+        playEnv(this, arg)
 
         if (this.vibrato){ //sets up vibrato LFO
             setUpVibratoOnPlay(this, arg)

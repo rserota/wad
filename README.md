@@ -9,6 +9,14 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Audio API
 To see a demo of an app that uses a small subset of the features in Wad.js, check <a href="http://www.codecur.io/us/audiotest">this</a> out. 
 
 
+<h2>Installation</h2>
+
+To use Wad.js in your project, simply include the script in your HTML file.
+
+<pre><code>&lt;script src="path/to/wad.js"&gt;&lt;/script&gt;
+
+
+
 <h2>Usage</h2>
 
 
@@ -80,11 +88,12 @@ In order to use reverb, you will need a server to send an impulse response via X
 
 <h3>Play Arguments</h3>
 
-The <code>play()</code> method also accepts optional arguments: volume, pitch, envelope, panning, and filter. If you intend to include a filter envelope as an argument on <code>play()</code>, you should have set a filter envelope when the Wad was first instantiated. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.   
+The <code>play()</code> method also accepts optional arguments: volume, wait, pitch, envelope, panning, and filter. If you intend to include a filter envelope or panning as an argument on <code>play()</code>, you should have set a filter envelope or panning when the Wad was first instantiated. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.   
 
 <pre><code>var saw = new Wad({source : 'sawtooth'})
 saw.play({
   volume : 0.8,
+  wait : 0, // Time in seconds between calling play() and actually triggering the note.
   pitch : 'A4', // A4 is 440 hertz.
   env : {hold : 9001},
   panning : 4,
@@ -138,3 +147,28 @@ Originally, I had wanted to allow users to easily add an LFO to any parameter, s
 <h3>Presets</h3>
 
 It would be nice if there were more presets, so that users wouldn't have to make most of their sounds from scratch. If you enjoy making your own sounds with Wad.js, consider submitting them to be used as presets. Better yet, you can bundle together a bunch of presets as a 'preset-pack'. 
+
+
+<h3>License</h3>
+
+The MIT License (MIT)
+
+Copyright (c) 2014 Raphael Serota
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

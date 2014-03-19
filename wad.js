@@ -3,19 +3,22 @@
 var Wad = (function(){
 
 /** Let's do the vendor-prefix dance. **/
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    context = new AudioContext();
+    var audioContext = window.AudioContext || window.webkitAudioContext;
+    var context = new audioContext();
     navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia || navigator.getUserMedia
 /////////////////////////////////////////
 
 
 /** Pre-render a noise buffer instead of generating noise on the fly. **/
-    var bufferSize = 2 * context.sampleRate,
-    noiseBuffer = context.createBuffer(1, bufferSize, context.sampleRate),
-    output = noiseBuffer.getChannelData(0);
-    for (var i = 0; i < bufferSize; i++) {
-        output[i] = Math.random() * 2 - 1;
-    }
+    var noiseBuffer = (function(){
+        var bufferSize = 2 * context.sampleRate,
+        var noiseBuffer = context.createBuffer(1, bufferSize, context.sampleRate),
+        var output = noiseBuffer.getChannelData(0);
+        for (var i = 0; i < bufferSize; i++) {
+            output[i] = Math.random() * 2 - 1;
+        }
+        return noiseBuffer
+    })()
 /////////////////////////////////////////////////////////////////////////
 
 
@@ -62,13 +65,14 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         }
     }
 
-    var requestAudioFile = function(that){
+    var requestAudioFile = function(that, callback){
         var request = new XMLHttpRequest();
         request.open("GET", that.source, true);
         request.responseType = "arraybuffer";
         request.onload = function() {
             context.decodeAudioData(request.response, function (decodedBuffer){
                 that.decodedBuffer = decodedBuffer
+                if(callback){callback()}
             })
         }
         request.send();
@@ -137,17 +141,14 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.volume = arg.volume || 1 // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
         this.defaultVolume = this.volume
 
-        if(arg.pitch && arg.pitch in Wad.pitches){
-            this.pitch = Wad.pitches[arg.pitch]
-        }
-        else{
-            this.pitch = arg.pitch || 440
-        }
+        this.pitch = Wad.pitches[arg.pitch] || arg.pitch || 440
 
         constructEnv(this, arg)
 
         constructFilter(this, arg)
-        
+
+        //this.vibrato = constructVibrato(arg.vibrato)
+
         constructVibrato(this, arg)
 
         constructTremolo(this, arg)
@@ -155,6 +156,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         if (arg.reverb){
             this.reverb = {
                 wet : arg.reverb.wet || 1
+
             }
         }
 
@@ -174,15 +176,15 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
 
 /** If the Wad's source is the microphone, the rest of the setup happens here. **/
-        if(this.source === 'mic'){
+        else if(this.source === 'mic'){
             setUpMic(this, arg)
         }
 //////////////////////////////////////////////////////////////////////////////////        
 
 
 /** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
-        if(!(this.source in {'sine':0, 'sawtooth':0, 'square':0, 'triangle':0, 'mic':0, 'noise':0})){
-            requestAudioFile(this)
+        else if(!(this.source in {'sine':0, 'sawtooth':0, 'square':0, 'triangle':0})){
+            requestAudioFile(this, arg.callback)
         }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
@@ -190,9 +192,9 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
 /** When a note is played, these two functions will schedule changes in volume and filter frequency,
 as specified by the volume envelope and filter envelope **/
-    var filterEnv = function(wad){
-        wad.filter.node.frequency.linearRampToValueAtTime(wad.filter.frequency, context.currentTime)
-        wad.filter.node.frequency.linearRampToValueAtTime(wad.filter.env.frequency, context.currentTime+wad.filter.env.attack)
+    var filterEnv = function(wad, arg){
+        wad.filter.node.frequency.linearRampToValueAtTime(wad.filter.frequency, context.currentTime + arg.wait)
+        wad.filter.node.frequency.linearRampToValueAtTime(wad.filter.env.frequency, context.currentTime+wad.filter.env.attack + arg.wait)
     }
 
     var playEnv = function(wad, arg){
@@ -543,3 +545,4 @@ or defaults to the constructor argument if the filter and filter envelope are no
     return Wad
     
 })()
+

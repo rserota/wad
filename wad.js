@@ -69,10 +69,13 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         var request = new XMLHttpRequest();
         request.open("GET", that.source, true);
         request.responseType = "arraybuffer";
+        that.playable = false
         request.onload = function() {
             context.decodeAudioData(request.response, function (decodedBuffer){
                 that.decodedBuffer = decodedBuffer
                 if(callback){callback()}
+                that.playable = true
+                if (that.playOnLoad){that.play(that.playOnLoadArg)}
             })
         }
         request.send();
@@ -132,7 +135,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 that.panning.node.setPosition(that.panning.location, 0, 0)
                 that.nodes.push(that.panning.node)
             }
-            
+
             that.nodes.push(context.destination)
 
             plugEmIn(that.nodes)
@@ -334,64 +337,72 @@ set properties on those nodes according to the constructor arguments and play() 
 plug the nodes into each other with plugEmIn(),
 then finally play the sound by calling playEnv() **/
     Wad.prototype.play = function(arg){
-        this.nodes = []
-        if(arg && !arg.wait){arg.wait = 0}
-        if(!arg){var arg = {wait: 0}}
-        if(arg && arg.volume){this.volume = arg.volume}
-        else {this.volume = this.defaultVolume}
 
-        if(this.source in {'sine':0, 'sawtooth':0, 'square':0, 'triangle':0}){            
-            setUpOscillator(this, arg)
+        if(this.playable === false){
+            this.playOnLoad = true
+            this.playOnLoadArg = arg
         }
-
+        
         else{
-            this.soundSource = context.createBufferSource();
-            this.soundSource.buffer = this.decodedBuffer;
-            if(this.source === 'noise'){
-                this.soundSource.loop = true
-            }  
-        }
+            this.nodes = []
+            if(arg && !arg.wait){arg.wait = 0}
+            if(!arg){var arg = {wait: 0}}
+            if(arg && arg.volume){this.volume = arg.volume}
+            else {this.volume = this.defaultVolume}
 
-        this.nodes.push(this.soundSource)
+            if(this.source in {'sine':0, 'sawtooth':0, 'square':0, 'triangle':0}){            
+                setUpOscillator(this, arg)
+            }
 
+            else{
+                this.soundSource = context.createBufferSource();
+                this.soundSource.buffer = this.decodedBuffer;
+                if(this.source === 'noise'){
+                    this.soundSource.loop = true
+                }  
+            }
 
-/**  sets the volume envelope based on the play() arguments if present,
-or defaults to the constructor arguments if the volume envelope is not set on play() **/
-        setUpEnvOnPlay(this, arg)
-////////////////////////////////////////////////////////////////////////////////////////
-
-
-/**  sets up the filter and filter envelope based on the play() argument if present,
-or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
-        setUpFilterOnPlay(this, arg)
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-        this.gain = context.createGain() // sets up the gain node
-        this.nodes.push(this.gain)
-
-        if (this.reverb){ // sets up reverb
-            setUpReverbOnPlay(this, arg)
-        }
-
-/**  sets panning based on the play() argument if present, or defaults to the constructor argument if panning is not set on play **/
-        setUpPanningOnPlay(this, arg)
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            this.nodes.push(this.soundSource)
 
 
-        this.nodes.push(this.destination)
+    /**  sets the volume envelope based on the play() arguments if present,
+    or defaults to the constructor arguments if the volume envelope is not set on play() **/
+            setUpEnvOnPlay(this, arg)
+    ////////////////////////////////////////////////////////////////////////////////////////
 
-        plugEmIn(this.nodes) 
 
-        if(this.filter && this.filter.env){ filterEnv(this) }
-        playEnv(this, arg)
+    /**  sets up the filter and filter envelope based on the play() argument if present,
+    or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
+            setUpFilterOnPlay(this, arg)
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-        if (this.vibrato){ //sets up vibrato LFO
-            setUpVibratoOnPlay(this, arg)
-        }
 
-        if (this.tremolo){ //sets up tremolo LFO
-            setUpTremoloOnPlay(this, arg)
+            this.gain = context.createGain() // sets up the gain node
+            this.nodes.push(this.gain)
+
+            if (this.reverb){ // sets up reverb
+                setUpReverbOnPlay(this, arg)
+            }
+
+    /**  sets panning based on the play() argument if present, or defaults to the constructor argument if panning is not set on play **/
+            setUpPanningOnPlay(this, arg)
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+            this.nodes.push(this.destination)
+
+            plugEmIn(this.nodes) 
+
+            if(this.filter && this.filter.env){ filterEnv(this) }
+            playEnv(this, arg)
+
+            if (this.vibrato){ //sets up vibrato LFO
+                setUpVibratoOnPlay(this, arg)
+            }
+
+            if (this.tremolo){ //sets up tremolo LFO
+                setUpTremoloOnPlay(this, arg)
+            }
         }
     }
 //////////////////////////////////////////////////////////////////////////////////////////

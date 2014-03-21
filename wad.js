@@ -413,6 +413,10 @@ then finally play the sound by calling playEnv() **/
         if(this.gain){this.gain.gain.value = volume};
     }
 
+    Wad.prototype.setPanning = function(panning){
+        this.panning.node.setPosition(panning, 0, 0)
+    }
+
 
 /** If multiple instances of a sound are playing simultaneously, stop() only can stop the most recent one **/
     Wad.prototype.stop = function(){

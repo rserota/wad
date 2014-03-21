@@ -126,6 +126,13 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 that.nodes.push(that.reverb.node)
                 that.nodes.push(that.reverb.gain)
             }
+
+            if (that.panning){
+                that.panning.node = context.createPanner()
+                that.panning.node.setPosition(that.panning.location, 0, 0)
+                that.nodes.push(that.panning.node)
+            }
+            
             that.nodes.push(context.destination)
 
             plugEmIn(that.nodes)

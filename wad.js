@@ -21,12 +21,8 @@ var Wad = (function(){
 /////////////////////////////////////////////////////////////////////////
 
 
-/** Grab the reverb impulse response file from a server.
-You may want to change this URL to serve files from your own server.
-Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
-////////////////////////////////////////////////////////////////////////
-
+/** Set up the default ADSR envelope. **/
     var constructEnv = function(that, arg){   
         that.env = { //default envelope, if one is not specified on play
             attack : arg.env ? (arg.env.attack || 0) : 0, // time in seconds from onset to peak volume
@@ -37,7 +33,10 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         }
         that.defaultEnv = that.env
     }
+/////////////////////////////////////////
 
+
+/** Set up the default filter and filter envelope. **/
     var constructFilter = function(that, arg){   
         if (arg.filter){
             that.filter = {
@@ -54,7 +53,11 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             that.defaultFilter = that.filter
         }
     }
+//////////////////////////////////////////////////////
 
+
+/** If the Wad uses an audio file as the source, request it from the server.
+Don't let the Wad play until all necessary files have been downloaded. **/
     var requestAudioFile = function(that, callback){
         var request = new XMLHttpRequest();
         request.open("GET", that.source, true);
@@ -70,7 +73,10 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         }
         request.send();
     }
+//////////////////////////////////////////////////////////////////////////
 
+
+/** Set up the vibrato LFO **/
     var constructVibrato = function(that, arg){
         if (arg.vibrato){
             that.vibrato = {
@@ -81,7 +87,10 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             }
         }
     }
+//////////////////////////////
 
+
+/** Set up the tremolo LFO **/
     var constructTremolo = function(that, arg){
         if (arg.tremolo){
             that.tremolo= {
@@ -92,7 +101,38 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             }
         }
     }
+//////////////////////////////
 
+
+/** Grab the reverb impulse response file from a server.
+You may want to change Wad.defaultImpulse to serve files from your own server.
+Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
+    var constructReverb = function(that, arg){
+        if (arg.reverb){
+            that.reverb = {
+                wet : arg.reverb.wet || 1
+
+            }
+            var impulseURL = arg.reverb.impulse || Wad.defaultImpulse
+            var request = new XMLHttpRequest();
+            request.open("GET", impulseURL, true);
+            request.responseType = "arraybuffer";
+            that.playable--
+            request.onload = function() {
+                context.decodeAudioData(request.response, function (decodedBuffer){
+                    that.reverb.buffer = decodedBuffer
+                    that.playable++
+                    if (that.playOnLoad){that.play(that.playOnLoadArg)}
+
+                })
+            }
+            request.send();
+        }
+    }
+//////////////////////////////////////////////////////////////////////////////
+
+
+/** Special initialization and configuration for microphone Wads **/
     var setUpMic = function(that, arg){
         navigator.getUserMedia({audio:true}, function(stream){
             that.nodes = []
@@ -128,6 +168,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             that.nodes.push(context.destination)            
         });
     }
+////////////////////////////////////////////////////////////////////
 
 
     var Wad = function(arg){
@@ -137,48 +178,19 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.volume = arg.volume || 1 // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
         this.defaultVolume = this.volume
         this.playable = 1 // if this is less than 1, this Wad is still waiting for a file to download before it can play
-
         this.pitch = Wad.pitches[arg.pitch] || arg.pitch || 440
 
         constructEnv(this, arg)
-
         constructFilter(this, arg)
-
-        //this.vibrato = constructVibrato(arg.vibrato)
-
         constructVibrato(this, arg)
-
         constructTremolo(this, arg)
-
-        if (arg.reverb){
-            this.reverb = {
-                wet : arg.reverb.wet || 1
-
-            }
-
-            var impulseURL = arg.reverb.impulse || Wad.defaultImpulse
-            var request = new XMLHttpRequest();
-            request.open("GET", impulseURL, true);
-            request.responseType = "arraybuffer";
-            this.playable--
-            var that = this
-            request.onload = function() {
-                context.decodeAudioData(request.response, function (decodedBuffer){
-                    that.reverb.buffer = decodedBuffer
-                    that.playable++
-                    if (that.playOnLoad){that.play(that.playOnLoadArg)}
-
-                })
-            }
-            request.send();
-        }
+        constructReverb(this, arg)
 
         if ('panning' in arg){
             this.panning = {
                 location : arg.panning
             }
         }
-        
         else {
             this.panning = { location : 0 }
         }
@@ -237,6 +249,8 @@ with special handling for reverb (ConvolverNode). **/
     }
 /////////////////////////////////////////////////////////////////////////////////////////
 
+
+/** Initialize and configure an oscillator node **/
     var setUpOscillator = function(that, arg){
         that.soundSource = context.createOscillator()
         that.soundSource.type = that.source
@@ -252,7 +266,10 @@ with special handling for reverb (ConvolverNode). **/
             that.soundSource.frequency.value = that.pitch
         }
     }
+///////////////////////////////////////////////////
 
+
+/** Set the ADSR volume envelope according to play() arguments, or revert to defaults **/
     var setUpEnvOnPlay = function(that, arg){
         if(arg && arg.env){
             that.env.attack = arg.env.attack || that.defaultEnv.attack
@@ -265,7 +282,10 @@ with special handling for reverb (ConvolverNode). **/
             that.env = that.defaultEnv
         }
     }
+//////////////////////////////////////////////////////////////////////////////////
 
+
+/** Set the filter and filter envelope according to play() arguments, or revert to defaults **/
     var setUpFilterOnPlay = function(that, arg){
         if(arg && arg.filter && that.filter){
             that.filter.node = context.createBiquadFilter()
@@ -294,10 +314,11 @@ with special handling for reverb (ConvolverNode). **/
             that.nodes.push(that.filter.node)
         }
     }
+///////////////////////////////////////////////////////////////////////////////////////////////
 
+
+/** Initialize and configure a convolver node for playback **/
     var setUpReverbOnPlay = function(that, arg){
-
-
         that.reverb.node = context.createConvolver()
         that.reverb.node.buffer = that.reverb.buffer
         that.reverb.gain = context.createGain()
@@ -305,7 +326,10 @@ with special handling for reverb (ConvolverNode). **/
         that.nodes.push(that.reverb.node)
         that.nodes.push(that.reverb.gain)
     }
+//////////////////////////////////////////////////////////////
 
+
+/** Initialize and configure a panner node for playback **/
     var setUpPanningOnPlay = function(that, arg){
         if ((arg && arg.panning) || that.panning){
             that.panning.node = context.createPanner()
@@ -314,7 +338,10 @@ with special handling for reverb (ConvolverNode). **/
             that.nodes.push(that.panning.node)
         }
     }
+///////////////////////////////////////////////////////////
 
+
+/** Initialize and configure a vibrato LFO Wad for playback **/
     var setUpVibratoOnPlay = function(that, arg){
         that.vibrato.wad = new Wad({
             source : that.vibrato.shape,
@@ -327,7 +354,10 @@ with special handling for reverb (ConvolverNode). **/
         })
         that.vibrato.wad.play()
     }
+///////////////////////////////////////////////////////////////
 
+
+/** Initialize and configure a tremolo LFO Wad for playback **/
     var setUpTremoloOnPlay = function(that, arg){
         that.tremolo.wad = new Wad({
             source : that.tremolo.shape,
@@ -340,6 +370,8 @@ with special handling for reverb (ConvolverNode). **/
         })
         that.tremolo.wad.play()
     }
+///////////////////////////////////////////////////////////////
+
 
 /** the play() method will create the various nodes that are required for this Wad to play,
 set properties on those nodes according to the constructor arguments and play() arguments,
@@ -421,14 +453,19 @@ then finally play the sound by calling playEnv() **/
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
+/** Change the volume of a Wad at any time, including during playback **/
     Wad.prototype.setVolume = function(volume){
         this.volume = volume;
         if(this.gain){this.gain.gain.value = volume};
     }
+/////////////////////////////////////////////////////////////////////////
 
+
+/** Change the panning of a Wad at any time, including during playback **/
     Wad.prototype.setPanning = function(panning){
         this.panning.node.setPosition(panning, 0, 0)
     }
+//////////////////////////////////////////////////////////////////////////
 
 
 /** If multiple instances of a sound are playing simultaneously, stop() only can stop the most recent one **/
@@ -443,7 +480,11 @@ then finally play the sound by calling playEnv() **/
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+/** If a Wad is created with reverb without specifying a URL for the impulse response,
+grab it from the defaultImpulse URL **/
     Wad.defaultImpulse = 'http://www.codecur.io/us/sendaudio/widehall.wav'
+//////////////////////////////////////////////////////////////////////////////////////
 
 
 /** This object is a mapping of note names to frequencies. **/ 
@@ -576,8 +617,9 @@ then finally play the sound by calling playEnv() **/
 //////////////////////////////////////////////////////////////
 
 
+
     Wad.presets = {
-        "high-hat-closed" : {source : 'noise', env : { hold : .06}, filter : { type : 'highpass', frequency : 400}}
+        highHatClosed : {source : 'noise', env : { hold : .06}, filter : { type : 'highpass', frequency : 400}}
     }
 
     return Wad

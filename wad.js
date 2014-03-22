@@ -10,8 +10,8 @@ var Wad = (function(){
 
 /** Pre-render a noise buffer instead of generating noise on the fly. **/
     var noiseBuffer = (function(){
-        var bufferSize = 2 * context.sampleRate,
-        var noiseBuffer = context.createBuffer(1, bufferSize, context.sampleRate),
+        var bufferSize = 2 * context.sampleRate;
+        var noiseBuffer = context.createBuffer(1, bufferSize, context.sampleRate);
         var output = noiseBuffer.getChannelData(0);
         for (var i = 0; i < bufferSize; i++) {
             output[i] = Math.random() * 2 - 1;

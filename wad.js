@@ -24,16 +24,7 @@ var Wad = (function(){
 /** Grab the reverb impulse response file from a server.
 You may want to change this URL to serve files from your own server.
 Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
-    var impulseURL = 'http://www.codecur.io/us/sendaudio/widehall.wav'
-    var request = new XMLHttpRequest();
-    request.open("GET", impulseURL, true);
-    request.responseType = "arraybuffer";
-    request.onload = function() {
-        context.decodeAudioData(request.response, function (decodedBuffer){
-            Wad.reverb = decodedBuffer
-        })
-    }
-    request.send();
+
 ////////////////////////////////////////////////////////////////////////
 
     var constructEnv = function(that, arg){   
@@ -121,10 +112,9 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
             if (that.reverb){
                 that.reverb.node = context.createConvolver()
-                that.reverb.node.buffer = Wad.reverb
+                that.reverb.node.buffer = that.reverb.buffer
                 that.reverb.gain = context.createGain()
                 that.reverb.gain.gain.value = that.reverb.wet
-
                 that.nodes.push(that.reverb.node)
                 that.nodes.push(that.reverb.gain)
             }
@@ -164,6 +154,22 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 wet : arg.reverb.wet || 1
 
             }
+
+            var impulseURL = arg.reverb.impulse || Wad.defaultImpulse
+            var request = new XMLHttpRequest();
+            request.open("GET", impulseURL, true);
+            request.responseType = "arraybuffer";
+            this.playable = false
+            var that = this
+            request.onload = function() {
+                context.decodeAudioData(request.response, function (decodedBuffer){
+                    that.reverb.buffer = decodedBuffer
+                    that.playable = true
+                    if (that.playOnLoad){that.play(that.playOnLoadArg)}
+
+                })
+            }
+            request.send();
         }
 
         if ('panning' in arg){
@@ -289,8 +295,10 @@ with special handling for reverb (ConvolverNode). **/
     }
 
     var setUpReverbOnPlay = function(that, arg){
+
+
         that.reverb.node = context.createConvolver()
-        that.reverb.node.buffer = Wad.reverb
+        that.reverb.node.buffer = that.reverb.buffer
         that.reverb.gain = context.createGain()
         that.reverb.gain.gain.value = that.reverb.wet
         that.nodes.push(that.reverb.node)
@@ -347,7 +355,6 @@ then finally play the sound by calling playEnv() **/
             plugEmIn(this.nodes)
         }
 
-        
         else{
             this.nodes = []
             if(arg && !arg.wait){arg.wait = 0}
@@ -434,6 +441,9 @@ then finally play the sound by calling playEnv() **/
         }
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    Wad.defaultImpulse = 'http://www.codecur.io/us/sendaudio/widehall.wav'
+
 
 /** This object is a mapping of note names to frequencies. **/ 
     Wad.pitches = {

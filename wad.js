@@ -59,12 +59,12 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         var request = new XMLHttpRequest();
         request.open("GET", that.source, true);
         request.responseType = "arraybuffer";
-        that.playable = false
+        that.playable--
         request.onload = function() {
             context.decodeAudioData(request.response, function (decodedBuffer){
                 that.decodedBuffer = decodedBuffer
                 if(callback){callback()}
-                that.playable = true
+                that.playable++
                 if (that.playOnLoad){that.play(that.playOnLoadArg)}
             })
         }
@@ -136,6 +136,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.destination = arg.destination || context.destination // the last node the sound is routed to
         this.volume = arg.volume || 1 // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
         this.defaultVolume = this.volume
+        this.playable = 1 // if this is less than 1, this Wad is still waiting for a file to download before it can play
 
         this.pitch = Wad.pitches[arg.pitch] || arg.pitch || 440
 
@@ -159,12 +160,12 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             var request = new XMLHttpRequest();
             request.open("GET", impulseURL, true);
             request.responseType = "arraybuffer";
-            this.playable = false
+            this.playable--
             var that = this
             request.onload = function() {
                 context.decodeAudioData(request.response, function (decodedBuffer){
                     that.reverb.buffer = decodedBuffer
-                    that.playable = true
+                    that.playable++
                     if (that.playOnLoad){that.play(that.playOnLoadArg)}
 
                 })
@@ -346,7 +347,7 @@ plug the nodes into each other with plugEmIn(),
 then finally play the sound by calling playEnv() **/
     Wad.prototype.play = function(arg){
 
-        if(this.playable === false){
+        if(this.playable < 1){
             this.playOnLoad = true
             this.playOnLoadArg = arg
         }

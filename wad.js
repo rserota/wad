@@ -174,6 +174,8 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             this.panning = {
                 location : arg.panning
             }
+        } else {
+            this.panning = { location : 0 }
         }
 ////////////////////////////////
 

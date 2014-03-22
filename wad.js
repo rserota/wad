@@ -43,7 +43,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             that.filter = {
                 type : arg.filter.type,
                 frequency : arg.filter.frequency,
-                Q : arg.filter.q || 1
+                q : arg.filter.q || 1
             } 
             if (arg.filter.env){
                 that.filter.env = {

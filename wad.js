@@ -135,10 +135,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 that.nodes.push(that.panning.node)
             }
 
-            that.nodes.push(context.destination)
-
-            plugEmIn(that.nodes)
-            
+            that.nodes.push(context.destination)            
         });
     }
 
@@ -345,6 +342,11 @@ then finally play the sound by calling playEnv() **/
             this.playOnLoad = true
             this.playOnLoadArg = arg
         }
+
+        else if(this.source === 'mic'){
+            plugEmIn(this.nodes)
+        }
+
         
         else{
             this.nodes = []

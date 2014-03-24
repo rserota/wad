@@ -10,11 +10,21 @@ var Wad = (function(){
 
 /** Pre-render a noise buffer instead of generating noise on the fly. **/
     var noiseBuffer = (function(){
+        // the initial seed
+        Math.seed = 6;
+        Math.seededRandom = function(max, min) {
+            max = max || 1;
+            min = min || 0;
+            Math.seed = (Math.seed * 9301 + 49297) % 233280;
+            var rnd = Math.seed / 233280;
+
+            return min + rnd * (max - min);
+        }
         var bufferSize = 2 * context.sampleRate;
         var noiseBuffer = context.createBuffer(1, bufferSize, context.sampleRate);
         var output = noiseBuffer.getChannelData(0);
         for (var i = 0; i < bufferSize; i++) {
-            output[i] = Math.random() * 2 - 1;
+            output[i] = Math.seededRandom() * 2 - 1;
         }
         return noiseBuffer
     })()
@@ -31,7 +41,13 @@ var Wad = (function(){
             hold : arg.env ? (arg.env.hold || 9001) : 9001, // time in seconds to maintain sustain volume
             release : arg.env ? (arg.env.release || 0) : 0 // time in seconds from sustain volume to zero volume
         }
-        that.defaultEnv = that.env
+        that.defaultEnv = {
+            attack : arg.env ? (arg.env.attack || 0) : 0, // time in seconds from onset to peak volume
+            decay : arg.env ? (arg.env.decay || 0) : 0, // time in seconds from peak volume to sustain volume
+            sustain : arg.env ? (arg.env.sustain || 1) : 1, // sustain volume level, as a percent of peak volume. min:0, max:1
+            hold : arg.env ? (arg.env.hold || 9001) : 9001, // time in seconds to maintain sustain volume
+            release : arg.env ? (arg.env.release || 0) : 0 // time in seconds from sustain volume to zero volume
+        }
     }
 /////////////////////////////////////////
 
@@ -239,12 +255,19 @@ as specified by the volume envelope and filter envelope **/
 
 /** When all the nodes are set up for this Wad, this function plugs them into each other,
 with special handling for reverb (ConvolverNode). **/
-    var plugEmIn = function(nodes){
-        for (var i=1; i<nodes.length; i++){
-            nodes[i-1].connect(nodes[i])
-            if(nodes[i] instanceof ConvolverNode){
-                nodes[i-1].connect(nodes[i+2])
+    var plugEmIn = function(that){
+        for (var i=1; i<that.nodes.length; i++){
+            that.nodes[i-1].connect(that.nodes[i])
+            if(that.nodes[i] instanceof ConvolverNode){
+                that.nodes[i-1].connect(that.nodes[i+2])
             }
+        }
+
+        that.nodes[that.nodes.length-1].connect(that.destination)
+        if (Wad.reverb){
+            that.nodes[that.nodes.length-1].connect(Wad.reverb.node)
+            Wad.reverb.node.connect(Wad.reverb.gain)
+            Wad.reverb.gain.connect(that.destination)
         }
     }
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -279,7 +302,13 @@ with special handling for reverb (ConvolverNode). **/
             that.env.release = arg.env.release || that.defaultEnv.release 
         }
         else{
-            that.env = that.defaultEnv
+            that.env = {
+                attack : that.defaultEnv.attack,
+                decay : that.defaultEnv.decay,
+                sustain : that.defaultEnv.sustain,
+                hold : that.defaultEnv.hold,
+                release : that.defaultEnv.release
+            }
         }
     }
 //////////////////////////////////////////////////////////////////////////////////
@@ -434,11 +463,9 @@ then finally play the sound by calling playEnv() **/
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-            this.nodes.push(this.destination)
+            plugEmIn(this) 
 
-            plugEmIn(this.nodes) 
-
-            if(this.filter && this.filter.env){ filterEnv(this) }
+            if(this.filter && this.filter.env){ filterEnv(this, arg) }
             playEnv(this, arg)
 
             if (this.vibrato){ //sets up vibrato LFO
@@ -455,7 +482,7 @@ then finally play the sound by calling playEnv() **/
 
 /** Change the volume of a Wad at any time, including during playback **/
     Wad.prototype.setVolume = function(volume){
-        this.volume = volume;
+        this.defaultVolume = volume;
         if(this.gain){this.gain.gain.value = volume};
     }
 /////////////////////////////////////////////////////////////////////////
@@ -484,6 +511,24 @@ then finally play the sound by calling playEnv() **/
 /** If a Wad is created with reverb without specifying a URL for the impulse response,
 grab it from the defaultImpulse URL **/
     Wad.defaultImpulse = 'http://www.codecur.io/us/sendaudio/widehall.wav'
+    Wad.setGlobalReverb = function(arg){
+        Wad.reverb = {}
+        Wad.reverb.node = context.createConvolver()
+        Wad.reverb.gain = context.createGain()
+        Wad.reverb.gain.gain.value = arg.wet
+
+        var impulseURL = arg.impulse || Wad.defaultImpulse
+        var request = new XMLHttpRequest();
+        request.open("GET", impulseURL, true);
+        request.responseType = "arraybuffer";
+        request.onload = function() {
+            context.decodeAudioData(request.response, function (decodedBuffer){
+                Wad.reverb.node.buffer = decodedBuffer
+            })
+        }
+        request.send();
+
+    }
 //////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -619,9 +664,10 @@ grab it from the defaultImpulse URL **/
 
 
     Wad.presets = {
-        highHatClosed : {source : 'noise', env : { hold : .06}, filter : { type : 'highpass', frequency : 400}}
+        highHatClosed : {source : 'noise', env : { attack : .001, decay : .008, sustain : .2, hold : .03, release : .01}, filter : { type : 'highpass', frequency : 400, q : 1}},
+        snare : {source : 'noise', env : {attack : .001, decay : .01, sustain : .2, hold : .03, release : .02}, filter : {type : 'bandpass', frequency : 300, q : .180}},
+        highHatOpen : {source : 'noise', env : { attack : .001, decay : .008, sustain : .2, hold : .43, release : .01}, filter : { type : 'highpass', frequency : 100, q : .2}}
     }
-
     return Wad
     
 })()

@@ -57,3 +57,8 @@ coolSound.play();
 function soundOff () {
     coolSound.stop();
 }
+
+function changeValue(n, slider){
+    //slider = name attribute of input tag
+    document.getElementById(slider).innerHTML = n;
+}

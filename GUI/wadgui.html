@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>WAD GUI</title>
-    <script src="value.js"></script>
     <script src="play.js"></script>
     <script src="../wad.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css" />
@@ -15,31 +14,27 @@
 <p>Playground for WAD. A work in progress.</p>
 <form id="WADsynth">
 <!-- WAD source -->
-<div id="WADsource">
-<h2>Source Wave</h2>
-<select id = "waveSelect">
+<div><h2>Source Wave</h2>
+    <select id = "waveSelect">
     <option value="sine">Sine</option>
     <option value="square">Square</option>
     <option value="sawtooth">Sawtooth</option>
     <option value="triangle">Triangle</option>
     <!-- <option>Custom</option> if user selects this, New forms appear below. This is not yet developed in WAD. -->
-</select>
+</select></div>
 <!-- Custom wave creation goes here -->
-</div>
 
-<div id="WADvolume">
 <!-- WAD volume
 Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.-->
-<h2>Volume</h2>
-<input id="volumeSlider" name="volume" type="range" min="0.0" max="1.0" step="0.1" value="1" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "volume">*</span>
+<div><h2>Volume</h2>
+    <input id="volumeSlider" name="volume" type="range" min="0.0" max="1.0" step="0.1" value="1" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "volume">*</span>
 </div>
 
-<div id="WADpitch">
 <!-- WAD pitch
 Set a default pitch on the constructor if you don't want to set the pitch on <code>play()</code>-->
 <h2>Pitch</h2>
 <!-- note -->
-<p>Note</p>
+<div><p>Note</p>
 <select id = "pitchSelect">
     <option value="C">C</option>
     <option value="C#">C#</option>
@@ -58,54 +53,53 @@ Set a default pitch on the constructor if you don't want to set the pitch on <co
     <option value="A#">A#</option>
     <option value="Bb">Bb</option>
     <option value="B">B</option>
-</select>
+</select></div>
 
 <!-- octave -->
-<p>Octave</p>
-<input id="octaveSlider" name="octave" type="range" min="0" max="8" step="1" value="4" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "octave">*</span>
-<!-- concatenate pitch & octave selection into the 'pitch' argument -->
+<div><p>Octave</p>
+    <input id="octaveSlider" name="octave" type="range" min="0" max="8" step="1" value="4" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "octave">*</span>
 </div>
+    <!-- concatenate pitch & octave selection into the 'pitch' argument -->
 
-<div id="WADpan">
 <!-- WAD pan
 Horizontal placement of the sound source. Sensible values are from 10 to -10.-->
 <h2>Pan</h2>
-<input id="panSlider" name="pan" type="range" min="-10" max="10" step="1" value="0" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "pan">*</span>
+<div>
+    <input id="panSlider" name="pan" type="range" min="-10" max="10" step="1" value="0" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "pan">*</span>
 </div>
 
-<div id="WADenvelope">
 <!-- WAD envelope -->
 <h2>Envelope</h2>
 <!-- WAD attack
 Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.-->
-<p>Attack</p>
-<input id="attackSlider" name="attack" type="range" min="0.00" max="0.50" step="0.01" value="0.05" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "attack">*</span>
-
+<div><p>Attack</p>
+    <input id="attackSlider" name="attack" type="range" min="0.00" max="0.50" step="0.01" value="0.05" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "attack">*</span>
+</div>
 <!-- WAD decay
 Time in seconds from peak volume to sustain volume.-->
-<p>Decay</p>
-<input id="decaySlider" name="decay" type="range" min="0.00" max="0.50" step="0.01" value="0.05" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "decay">*</span>
-
+<div><p>Decay</p>
+    <input id="decaySlider" name="decay" type="range" min="0.00" max="0.50" step="0.01" value="0.05" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "decay">*</span>
+</div>
 <!-- WAD sustain
 Sustain volume level. This is a percent of the peak volume, so sensible values are between 0 and 1.-->
-<p>Sustain</p>
-<input id="sustainSlider" name="sustain" type="range" min="0.0" max="1.0" step="0.1" value="1" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "sustain">*</span>
 
+<div><p>Sustain</p>
+    <input id="sustainSlider" name="sustain" type="range" min="0.0" max="1.0" step="0.1" value="1" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "sustain">*</span>
+</div>
 <!-- WAD hold
 Time in seconds to maintain the sustain volume level. If this is not set to a lower value, oscillators must be manually stopped by calling their stop() method.-->
-<p>Hold</p>
-<input id="holdSlider" name="hold" type="range" min="0.1" max="60" step="0.1" value="2" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "hold">*</span>
-
+<div><p>Hold</p>
+    <input id="holdSlider" name="hold" type="range" min="0.1" max="60" step="0.1" value="2" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "hold">*</span>
+</div>
 <!-- WAD release
 Time in seconds from the end of the hold period to zero volume, or from calling stop() to zero volume.-->
-<p>Release</p>
+<div><p>Release</p>
 <input id="releaseSlider" name="release" type="range" min="0.0" max="10.0" step="0.1" value="0.5" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "release">*</span>
 </div>
-
-<div id="WADfilter">
 <!-- WAD filter
 http://www.w3.org/TR/webaudio/#BiquadFilterNode -->
 <h2>Filter</h2>
+<div>
 <p>Filter Type</p>
 <select id = "filterType">
     <option value="lowpass">Low Pass</option>
@@ -116,69 +110,72 @@ http://www.w3.org/TR/webaudio/#BiquadFilterNode -->
     <option value="peaking">Peaking</option>
     <option value="notch">Notch</option>
     <option value="allpass">All Pass</option>
-</select>
+</select></div>
 
-<p>Frequency</p>
-<input id="filterFreqSlider" name="filterFreq" type="range" min="15" max="12000" step="1" value="200" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "filterFreq">*</span>
-
-<p>Q-factor (needs some tweaking - takes on different values with each filter type)</p>
-<input id="qSlider" name="q" type="range" min="0" max="20000" step="1" value="100" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "q">*</span>
-
-<p>Filter Envelope:</p>
-<p><emphasis>Frequency</emphasis></p>
-<input id="fEnvFreqSlider" name="fEnvFreq" type="range" min="15" max="12000" step="1" value="200" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "fEnvFreq">*</span>
-<p><emphasis>Attack</emphasis></p>
-<input id="filterAttackSlider" name="filterAttack" type="range" min="0.00" max="0.50" step="0.01" value="0.05" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "filterAttack">*</span>
+<div><p>Frequency</p>
+    <input id="filterFreqSlider" name="filterFreq" type="range" min="15" max="12000" step="1" value="200" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "filterFreq">*</span>
 </div>
 
-<div id="WADvibrato">
+<div><p>Q-factor</p>
+    <input id="qSlider" name="q" type="range" min="0" max="20000" step="1" value="100" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "q">*</span>
+</div>
+
+<div><p><em>Filter Env Frequency</em></p>
+    <input id="fEnvFreqSlider" name="fEnvFreq" type="range" min="15" max="12000" step="1" value="200" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "fEnvFreq">*</span>
+</div>
+
+<div><p><em>Filter Env Attack</em></p>
+    <input id="filterAttackSlider" name="filterAttack" type="range" min="0.00" max="0.50" step="0.01" value="0.05" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "filterAttack">*</span>
+</div>
 <!-- WAD vibrato -->
 <h2>Vibrato</h2>
 <!-- shape -->
-<p>Shape</p>
-<select id = "vibratoSelect">
+
+<div>
+    <p>Shape</p>
+    <select id = "vibratoSelect">
     <option value="sine">Sine</option>
     <option value="square">Square</option>
     <option value="sawtooth">Sawtooth</option>
     <option value="triangle">Triangle</option>
 </select>
-
-<!-- magnitude -->
-<p>Magnitude</p>
-<input id="vMagnitudeSlider" name="vMagnitude" type="range" min="0.0" max="10.0" step="0.1" value="5.0" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "vMagnitude">*</span>
-
-<!-- speed -->
-<p>Speed</p>
-<input id="vSpeedSlider" name="vSpeed" type="range" min="0.0" max="10.0" step="0.1" value="5.0" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "vSpeed">*</span>
-
-<p>Attack</p>
-<input id="vAttackSlider" name="vAttack" type="range" min="0.0" max="2.0" step="0.1" value="0.1" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "vAttack">*</span>
 </div>
 
-<div id="WADtremolo">
+<!-- magnitude -->
+<div><p>Magnitude</p>
+    <input id="vMagnitudeSlider" name="vMagnitude" type="range" min="0.0" max="10.0" step="0.1" value="5.0" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "vMagnitude">*</span>
+</div>
+<!-- speed -->
+<div><p>Speed</p>
+    <input id="vSpeedSlider" name="vSpeed" type="range" min="0.0" max="10.0" step="0.1" value="5.0" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "vSpeed">*</span>
+</div>
+<div><p>Attack</p>
+    <input id="vAttackSlider" name="vAttack" type="range" min="0.0" max="2.0" step="0.1" value="0.1" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "vAttack">*</span>
+</div>
 <!-- WAD Tremolo -->
 <h2>Tremolo</h2>
 <!-- shape -->
-<p>Shape</p>
+<div><p>Shape</p>
 <select id = "tremoloSelect">
     <option value="sine">Sine</option>
     <option value="square">Square</option>
     <option value="sawtooth">Sawtooth</option>
     <option value="triangle">Triangle</option>
-</select>
+</select></div>
 
 <!-- magnitude -->
-<p>Magnitude</p>
-<input id="tMagnitudeSlider" name="tMagnitude" type="range" min="0.0" max="10.0" step="0.1" value="5.0" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "tMagnitude">*</span>
 
-<!-- speed -->
-<p>Speed</p>
-<input id="tSpeedSlider" name="tSpeed" type="range" min="0.0" max="10.0" step="0.1" value="5.0" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "tSpeed">*</span>
-
-<p>Attack</p>
-<input id="tAttackSlider" name="tAttack" type="range" min="0.0" max="2.0" step="0.1" value="0.1" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "tAttack">*</span>
+<div><p>Magnitude</p>
+    <input id="tMagnitudeSlider" name="tMagnitude" type="range" min="0.0" max="10.0" step="0.1" value="5.0" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "tMagnitude">*</span>
 </div>
+<!-- speed -->
 
+<div><p>Speed</p>
+    <input id="tSpeedSlider" name="tSpeed" type="range" min="0.0" max="10.0" step="0.1" value="5.0" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "tSpeed">*</span>
+</div>
+<div><p>Attack</p>
+    <input id="tAttackSlider" name="tAttack" type="range" min="0.0" max="2.0" step="0.1" value="0.1" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "tAttack">*</span>
+</div>
 </form>
 
 <br><br>

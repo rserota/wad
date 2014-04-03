@@ -2,4 +2,5 @@ div{
     display:inline-block;
     border: 1px solid;
     vertical-align:top;
+    padding:1em;
 }

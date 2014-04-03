@@ -1,51 +1,59 @@
-var coolSound = {};
-
-function play(params){
+function soundOn (){
 
 if(coolSound) coolSound.stop();
+var coolSound;
+var p = document.getElementById('WADsynth');
+var params = [];
+var settings = {};
+for (var i = 0; i < p.length; i++){
+if (p[i].value) params.push(p[i].value);
+}
+console.log(params + " " + params.length);
 
-coolSound = new Wad({
-    source : 'sawtooth',
-    volume : 1.0,
-    pitch : 'A4',
-    panning : -5,
+settings = {
+    source : params[0],
+    volume : parseFloat(params[1]),
+    pitch : params[2]+params[3],
+    panning : parseFloat(params[4]),
     env : {
-        attack : 0.0,
-        decay : 0.0,
-        sustain : 1.0,
-        hold : 9001,
-        release : 0
+        attack : parseFloat(params[5]),
+        decay : parseFloat(params[6]),
+        sustain : parseFloat(params[7]),
+        hold : parseFloat(params[8]),
+        release : parseFloat(params[9])
     },
     filter : {
-        type : 'lowpass',
-        frequency : 600,
-        q : 1
+        type : params[10],
+        frequency : parseFloat(params[11]),
+        q : parseFloat(params[12]),
         env : {
-            frequency : 800,
-            attack : 0.5
+            frequency : parseFloat(params[13]),
+            attack : parseFloat(params[14])
         }
     },
     /*reverb : {
-        wet : 1, // Volume of the reverberations.
-        impulse : 'http://www.myServer.com/path/to/impulse.wav' // A URL for an impulse response file, if you do not want to use the default impulse response.
-    },*/
+     wet : 1, // Volume of the reverberations.
+     impulse : 'http://www.myServer.com/path/to/impulse.wav' // A URL for an impulse response file, if you do not want to use the default impulse response.
+     },*/
     vibrato : {
-        shape : 'sine',
-        magnitude : 3,
-        speed : 4,
-        attack : 0
+        shape : params[15],
+        magnitude : parseFloat(params[16]),
+        speed : parseFloat(params[17]),
+        attack : parseFloat(params[18])
     },
     tremolo : {
-        shape : 'sine',
-        magnitude : 3,
-        speed : 4,
-        attack : 0
+        shape : params[19],
+        magnitude : parseFloat(params[20]),
+        speed : parseFloat(params[21]),
+        attack : parseFloat(params[22])
     }
-})
+}
 
+console.log(settings);
+coolSound = new Wad(settings);
 coolSound.play();
 }
 
-function stop(){
+function soundOff () {
     coolSound.stop();
 }

@@ -91,6 +91,23 @@ If you've used other audio software before, you probably know what most of these
 
 In order to use reverb, you will need a server to send an impulse response via XmlHttpRequest. An impulse response is a small audio file, like a wav or mp3, that describes the acoustic characteristics of a physical space.  By default, Wad.js serves a sample impulse response that you can use freely.  However, it is recommended that you use your own impulse response. To use your own impulse response, pass a URL to an impulse response file as an argument to the constructor, as shown above. You can also modify the attribute Wad.defaultImpulse to change the default impulse response. You can make your own impulse response, but it might be easier to just <a href="http://www.voxengo.com/impulses/">find one online</a>.
 
+<h4>Global Reverb</h4>
+
+If you want to use reverb on many Wads simultaneously, you may run into performance issues. You can work around this problem by using global reverb, which uses the same convolver node for many Wads, rather than using a seperate convolver node for each Wad that uses reverb. To use global reverb, there are two steps.  First, call <code>Wad.setGlobalReverb()</code>.
+
+<pre><code>Wad.setGlobalReverb({
+    wet : 1, // Volume of the reverberations.
+    impulse : 'http://www.myServer.com/path/to/impulse.wav' // A URL for an impulse response file, if you do not want to use the default impulse response.  
+  })</code></pre>
+
+Next, set globalReverb to true when creating a new Wad.
+
+<code>var sine = new Wad({source : 'sine', globalReverb : true})</code>
+
+You can also set or unset global reverb on a Wad after it's been created.
+
+<code>sine.globalReverb = false</code>
+
 <h3>Play Arguments</h3>
 
 The <code>play()</code> method also accepts optional arguments: volume, wait, pitch, envelope, panning, and filter. If you intend to include a filter envelope or panning as an argument on <code>play()</code>, you should have set a filter envelope or panning when the Wad was first instantiated. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.   

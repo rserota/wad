@@ -84,7 +84,7 @@ Time in seconds from peak volume to sustain volume.-->
 Sustain volume level. This is a percent of the peak volume, so sensible values are between 0 and 1.-->
 
 <div><p>Sustain</p>
-    <input id="sustainSlider" name="sustain" type="range" min="0.0" max="1.0" step="0.1" value="1" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "sustain">*</span>
+    <input id="sustainSlider" name="sustain" type="range" min="0.0" max="1.0" step="0.1" value=".9" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "sustain">*</span>
 </div>
 <!-- WAD hold
 Time in seconds to maintain the sustain volume level. If this is not set to a lower value, oscillators must be manually stopped by calling their stop() method.-->
@@ -113,15 +113,15 @@ http://www.w3.org/TR/webaudio/#BiquadFilterNode -->
 </select></div>
 
 <div><p>Frequency</p>
-    <input id="filterFreqSlider" name="filterFreq" type="range" min="15" max="12000" step="1" value="200" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "filterFreq">*</span>
+    <input id="filterFreqSlider" name="filterFreq" type="range" min="15" max="12000" step="1" value="12000" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "filterFreq">*</span>
 </div>
 
 <div><p>Q-factor</p>
-    <input id="qSlider" name="q" type="range" min="0" max="20000" step="1" value="100" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "q">*</span>
+    <input id="qSlider" name="q" type="range" min="0.1" max="20" step=".1" value="1" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "q">*</span>
 </div>
 
 <div><p><em>Filter Env Frequency</em></p>
-    <input id="fEnvFreqSlider" name="fEnvFreq" type="range" min="15" max="12000" step="1" value="200" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "fEnvFreq">*</span>
+    <input id="fEnvFreqSlider" name="fEnvFreq" type="range" min="15" max="12000" step="1" value="12000" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "fEnvFreq">*</span>
 </div>
 
 <div><p><em>Filter Env Attack</em></p>
@@ -143,7 +143,7 @@ http://www.w3.org/TR/webaudio/#BiquadFilterNode -->
 
 <!-- magnitude -->
 <div><p>Magnitude</p>
-    <input id="vMagnitudeSlider" name="vMagnitude" type="range" min="0.0" max="10.0" step="0.1" value="5.0" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "vMagnitude">*</span>
+    <input id="vMagnitudeSlider" name="vMagnitude" type="range" min="0.01" max="10.0" step="0.1" value=".01" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "vMagnitude">*</span>
 </div>
 <!-- speed -->
 <div><p>Speed</p>
@@ -166,7 +166,7 @@ http://www.w3.org/TR/webaudio/#BiquadFilterNode -->
 <!-- magnitude -->
 
 <div><p>Magnitude</p>
-    <input id="tMagnitudeSlider" name="tMagnitude" type="range" min="0.0" max="10.0" step="0.1" value="5.0" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "tMagnitude">*</span>
+    <input id="tMagnitudeSlider" name="tMagnitude" type="range" min="0.01" max="10.0" step="0.1" value=".01" onchange="changeValue(this.value, this.name)" oninput="changeValue(this.value, this.name)"><span id = "tMagnitude">*</span>
 </div>
 <!-- speed -->
 

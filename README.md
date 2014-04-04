@@ -51,7 +51,7 @@ The Wad constructor supports many optional arguments to modify your sound, from 
   source : 'sawtooth',
   volume : 1.0, // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
   pitch : 'A4', // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
-  panning : -5 // Horizontal placement of the sound source. Sensible values are from 10 to -10.
+  panning : -5, // Horizontal placement of the sound source. Sensible values are from 10 to -10.
   env : { // This is the ADSR envelope. 
     attack : 0.0, // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
     decay : 0.0, // Time in seconds from peak volume to sustain volume.
@@ -62,7 +62,7 @@ The Wad constructor supports many optional arguments to modify your sound, from 
   filter : {
     type : 'lowpass', // What type of filter is applied.
     frequency : 600, // The frequency, in hertz, to which the filter is applied.
-    q : 1 // Q-factor.  No one knows what this does. The default value is 1. Sensible values are from 0 to 10.
+    q : 1, // Q-factor.  No one knows what this does. The default value is 1. Sensible values are from 0 to 10.
     env : { // Filter envelope.
       frequency : 800, If this is set, filter frequency will slide from filter.frequency to filter.env.frequency when a note is triggered.
       attack : 0.5 // Time in seconds for the filter frequency to slide from filter.frequency to filter.env.frequency

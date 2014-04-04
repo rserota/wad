@@ -100,7 +100,7 @@ If you want to use reverb on many Wads simultaneously, you may run into performa
     impulse : 'http://www.myServer.com/path/to/impulse.wav' // A URL for an impulse response file, if you do not want to use the default impulse response.  
   })</code></pre>
 
-Next, set <code>globalReverb = true</code> when creating a new Wad.
+Next, set <code>globalReverb : true</code> when creating a new Wad.
 
 <code>var sine = new Wad({source : 'sine', globalReverb : true})</code>
 

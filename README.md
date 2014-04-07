@@ -13,7 +13,7 @@ To see a demo of an app that uses a small subset of the features in Wad.js, chec
 
 To use Wad.js in your project, simply include the script in your HTML file.
 
-<pre><code>&lt;script src="path/to/wad.js"&gt;&lt;/script&gt;</pre></code>
+<pre><code>&lt;script src="path/to/build/wad-min.js"&gt;&lt;/script&gt;</pre></code>
 
 Wad.js is also available as a bower package.
 

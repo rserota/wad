@@ -4,7 +4,7 @@ var Wad = (function(){
 /** Let's do the vendor-prefix dance. **/
     var audioContext = window.AudioContext || window.webkitAudioContext;
     var context = new audioContext();
-    navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia || navigator.getUserMedia;
+    navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia || navigator.getUserMedia
 /////////////////////////////////////////
 
 
@@ -19,15 +19,15 @@ var Wad = (function(){
             var rnd = Math.seed / 233280;
 
             return min + rnd * (max - min);
-        };
+        }
         var bufferSize = 2 * context.sampleRate;
         var noiseBuffer = context.createBuffer(1, bufferSize, context.sampleRate);
         var output = noiseBuffer.getChannelData(0);
         for (var i = 0; i < bufferSize; i++) {
             output[i] = Math.seededRandom() * 2 - 1;
         }
-        return noiseBuffer;
-    })();
+        return noiseBuffer
+    })()
 /////////////////////////////////////////////////////////////////////////
 
 
@@ -40,15 +40,15 @@ var Wad = (function(){
             sustain : arg.env ? (arg.env.sustain || 1) : 1, // sustain volume level, as a percent of peak volume. min:0, max:1
             hold : arg.env ? (arg.env.hold || 4) : 4, // time in seconds to maintain sustain volume
             release : arg.env ? (arg.env.release || 0) : 0 // time in seconds from sustain volume to zero volume
-        };
+        }
         that.defaultEnv = {
             attack : arg.env ? (arg.env.attack || 0) : 0, // time in seconds from onset to peak volume
             decay : arg.env ? (arg.env.decay || 0) : 0, // time in seconds from peak volume to sustain volume
             sustain : arg.env ? (arg.env.sustain || 1) : 1, // sustain volume level, as a percent of peak volume. min:0, max:1
             hold : arg.env ? (arg.env.hold || 4) : 4, // time in seconds to maintain sustain volume
             release : arg.env ? (arg.env.release || 0) : 0 // time in seconds from sustain volume to zero volume
-        };
-    };
+        }
+    }
 /////////////////////////////////////////
 
 
@@ -59,16 +59,16 @@ var Wad = (function(){
                 type : arg.filter.type,
                 frequency : arg.filter.frequency,
                 q : arg.filter.q || 1
-            }; 
+            } 
             if (arg.filter.env){
                 that.filter.env = {
                     attack : arg.filter.env.attack,
                     frequency : arg.filter.env.frequency
-                };
+                }
             }
-            that.defaultFilter = that.filter;
+            that.defaultFilter = that.filter
         }
-    };
+    }
 //////////////////////////////////////////////////////
 
 
@@ -78,17 +78,17 @@ Don't let the Wad play until all necessary files have been downloaded. **/
         var request = new XMLHttpRequest();
         request.open("GET", that.source, true);
         request.responseType = "arraybuffer";
-        that.playable--;
+        that.playable--
         request.onload = function() {
             context.decodeAudioData(request.response, function (decodedBuffer){
-                that.decodedBuffer = decodedBuffer;
+                that.decodedBuffer = decodedBuffer
                 if(callback){callback()}
-                that.playable++;
+                that.playable++
                 if (that.playOnLoad){that.play(that.playOnLoadArg)}
-            });
-        };
+            })
+        }
         request.send();
-    };
+    }
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -100,9 +100,9 @@ Don't let the Wad play until all necessary files have been downloaded. **/
                 speed : arg.vibrato.speed || 1,
                 magnitude : arg.vibrato.magnitude || 5,
                 attack : arg.vibrato.attack || 0
-            };
+            }
         }
-    };
+    }
 //////////////////////////////
 
 
@@ -114,9 +114,9 @@ Don't let the Wad play until all necessary files have been downloaded. **/
                 speed : arg.tremolo.speed || 1,
                 magnitude : arg.tremolo.magnitude || 5,
                 attack : arg.tremolo.attack || 1
-            };
+            }
         }
-    };
+    }
 //////////////////////////////
 
 
@@ -128,130 +128,135 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             that.reverb = {
                 wet : arg.reverb.wet || 1
 
-            };
-            var impulseURL = arg.reverb.impulse || Wad.defaultImpulse;
+            }
+            var impulseURL = arg.reverb.impulse || Wad.defaultImpulse
             var request = new XMLHttpRequest();
             request.open("GET", impulseURL, true);
             request.responseType = "arraybuffer";
-            that.playable--;
+            that.playable--
             request.onload = function() {
                 context.decodeAudioData(request.response, function (decodedBuffer){
-                    that.reverb.buffer = decodedBuffer;
-                    that.playable++;
+                    that.reverb.buffer = decodedBuffer
+                    that.playable++
                     if (that.playOnLoad){that.play(that.playOnLoadArg)}
 
-                });
-            };
+                })
+            }
             request.send();
         }
-    };
+    }
 //////////////////////////////////////////////////////////////////////////////
 
 
 /** Special initialization and configuration for microphone Wads **/
     var setUpMic = function(that, arg){
         navigator.getUserMedia({audio:true}, function(stream){
-            that.nodes = [];
-            that.mediaStreamSource = context.createMediaStreamSource(stream);
-            that.nodes.push(that.mediaStreamSource);
-            that.gain = context.createGain();
-            that.gain.gain.value = that.volume;
-            that.nodes.push(that.gain);
+            that.nodes = []
+            that.mediaStreamSource = context.createMediaStreamSource(stream)
+            that.nodes.push(that.mediaStreamSource)
+            that.gain = context.createGain()
+            that.gain.gain.value = that.volume
+            that.nodes.push(that.gain)
 
             if (that.filter){
-                that.filter.node = context.createBiquadFilter();
-                that.filter.node.type = that.filter.type;
-                that.filter.node.frequency.value = that.filter.frequency;
-                that.filter.node.Q.value = that.filter.q;
-                that.nodes.push(that.filter.node);
+                that.filter.node = context.createBiquadFilter()
+                that.filter.node.type = that.filter.type
+                that.filter.node.frequency.value = that.filter.frequency
+                that.filter.node.Q.value = that.filter.q
+                that.nodes.push(that.filter.node)
             }
 
             if (that.reverb){
-                that.reverb.node = context.createConvolver();
-                that.reverb.node.buffer = that.reverb.buffer;
-                that.reverb.gain = context.createGain();
-                that.reverb.gain.gain.value = that.reverb.wet;
-                that.nodes.push(that.reverb.node);
-                that.nodes.push(that.reverb.gain);
+                that.reverb.node = context.createConvolver()
+                that.reverb.node.buffer = that.reverb.buffer
+                that.reverb.gain = context.createGain()
+                that.reverb.gain.gain.value = that.reverb.wet
+                that.nodes.push(that.reverb.node)
+                that.nodes.push(that.reverb.gain)
             }
 
             if (that.panning){
-                that.panning.node = context.createPanner();
-                that.panning.node.setPosition(that.panning.location, 0, 0);
-                that.nodes.push(that.panning.node);
+                that.panning.node = context.createPanner()
+
+                that.panning.node.setPosition(that.panning.location[0], that.panning.location[1], that.panning.location[2])
+                that.nodes.push(that.panning.node)
             }
 
-            that.nodes.push(context.destination);         
         });
-    };
+    }
 ////////////////////////////////////////////////////////////////////
 
 
     var Wad = function(arg){
 /** Set basic Wad properties **/
         this.source = arg.source;
-        this.destination = arg.destination || context.destination; // the last node the sound is routed to
-        this.volume = arg.volume || 1; // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
-        this.defaultVolume = this.volume;
-        this.playable = 1; // if this is less than 1, this Wad is still waiting for a file to download before it can play
-        this.pitch = Wad.pitches[arg.pitch] || arg.pitch || 440;
-        this.globalReverb = arg.globalReverb || false;
+        this.destination = arg.destination || context.destination // the last node the sound is routed to
+        this.volume = arg.volume || 1 // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
+        this.defaultVolume = this.volume
+        this.playable = 1 // if this is less than 1, this Wad is still waiting for a file to download before it can play
+        this.pitch = Wad.pitches[arg.pitch] || arg.pitch || 440
+        this.globalReverb = arg.globalReverb || false
 
 
-        constructEnv(this, arg);
-        constructFilter(this, arg);
-        constructVibrato(this, arg);
-        constructTremolo(this, arg);
-        constructReverb(this, arg);
+        constructEnv(this, arg)
+        constructFilter(this, arg)
+        constructVibrato(this, arg)
+        constructTremolo(this, arg)
+        constructReverb(this, arg)
 
         if ('panning' in arg){
-            this.panning = {
-                location : arg.panning
-            };
+            if (typeof(arg.panning) === "number"){
+                this.panning = { location : [ arg.panning, 0, 0 ] }
+            }
+
+            else {
+                this.panning = { location : [ arg.panning[0], arg.panning[1], arg.panning[2] ] }
+            }
         }
+
         else {
-            this.panning = { location : 0 };
+            this.panning = { location : [0, 0, 0] }
         }
 ////////////////////////////////
 
 
 /** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
         if(this.source === 'noise'){
-            this.decodedBuffer = noiseBuffer;
+            this.decodedBuffer = noiseBuffer
         }
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** If the Wad's source is the microphone, the rest of the setup happens here. **/
         else if(this.source === 'mic'){
-            setUpMic(this, arg);
+            setUpMic(this, arg)
         }
 //////////////////////////////////////////////////////////////////////////////////        
 
 
 /** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
         else if(!(this.source in {'sine':0, 'sawtooth':0, 'square':0, 'triangle':0})){
-            requestAudioFile(this, arg.callback);
+            requestAudioFile(this, arg.callback)
         }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-    };
+    }
 
 
 /** When a note is played, these two functions will schedule changes in volume and filter frequency,
 as specified by the volume envelope and filter envelope **/
     var filterEnv = function(wad, arg){
-        wad.filter.node.frequency.linearRampToValueAtTime(wad.filter.frequency, context.currentTime + arg.wait);
-        wad.filter.node.frequency.linearRampToValueAtTime(wad.filter.env.frequency, context.currentTime+wad.filter.env.attack + arg.wait);
-    };
+        wad.filter.node.frequency.linearRampToValueAtTime(wad.filter.frequency, context.currentTime + arg.wait)
+        wad.filter.node.frequency.linearRampToValueAtTime(wad.filter.env.frequency, context.currentTime+wad.filter.env.attack + arg.wait)
+    }
 
     var playEnv = function(wad, arg){
-        wad.gain.gain.linearRampToValueAtTime(0.0001, context.currentTime + arg.wait);
-        wad.gain.gain.linearRampToValueAtTime(wad.volume, context.currentTime+wad.env.attack + arg.wait);
-        wad.gain.gain.linearRampToValueAtTime(wad.volume*wad.env.sustain, context.currentTime+wad.env.attack+wad.env.decay + arg.wait);
-        wad.gain.gain.linearRampToValueAtTime(0.0001, context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release + arg.wait);
+        wad.gain.gain.linearRampToValueAtTime(0.0001, context.currentTime + arg.wait)
+        wad.gain.gain.linearRampToValueAtTime(wad.volume, context.currentTime+wad.env.attack + arg.wait)
+        wad.gain.gain.linearRampToValueAtTime(wad.volume*wad.env.sustain, context.currentTime+wad.env.attack+wad.env.decay + arg.wait)
+        wad.gain.gain.linearRampToValueAtTime(0.0001, context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release + arg.wait)
         wad.soundSource.start(context.currentTime + arg.wait);
-        wad.soundSource.stop(context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release + arg.wait);
-    };
+        wad.soundSource.stop(context.currentTime+wad.env.attack+wad.env.decay+wad.env.hold+wad.env.release + arg.wait)
+    }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -259,49 +264,49 @@ as specified by the volume envelope and filter envelope **/
 with special handling for reverb (ConvolverNode). **/
     var plugEmIn = function(that){
         for (var i=1; i<that.nodes.length; i++){
-            that.nodes[i-1].connect(that.nodes[i]);
+            that.nodes[i-1].connect(that.nodes[i])
             if(that.nodes[i] instanceof ConvolverNode){
-                that.nodes[i-1].connect(that.nodes[i+2]);
+                that.nodes[i-1].connect(that.nodes[i+2])
             }
         }
 
-        that.nodes[that.nodes.length-1].connect(that.destination);
+        that.nodes[that.nodes.length-1].connect(that.destination)
         if (Wad.reverb && that.globalReverb){
-            that.nodes[that.nodes.length-1].connect(Wad.reverb.node);
-            Wad.reverb.node.connect(Wad.reverb.gain);
-            Wad.reverb.gain.connect(that.destination);
+            that.nodes[that.nodes.length-1].connect(Wad.reverb.node)
+            Wad.reverb.node.connect(Wad.reverb.gain)
+            Wad.reverb.gain.connect(that.destination)
         }
-    };
+    }
 /////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** Initialize and configure an oscillator node **/
     var setUpOscillator = function(that, arg){
-        that.soundSource = context.createOscillator();
-        that.soundSource.type = that.source;
+        that.soundSource = context.createOscillator()
+        that.soundSource.type = that.source
         if(arg && arg.pitch){
             if(arg.pitch in Wad.pitches){
-                that.soundSource.frequency.value = Wad.pitches[arg.pitch];
+                that.soundSource.frequency.value = Wad.pitches[arg.pitch]
             }
             else{
-                that.soundSource.frequency.value = arg.pitch;
+                that.soundSource.frequency.value = arg.pitch
             }
         }
         else {
-            that.soundSource.frequency.value = that.pitch;
+            that.soundSource.frequency.value = that.pitch
         }
-    };
+    }
 ///////////////////////////////////////////////////
 
 
 /** Set the ADSR volume envelope according to play() arguments, or revert to defaults **/
     var setUpEnvOnPlay = function(that, arg){
         if(arg && arg.env){
-            that.env.attack = arg.env.attack || that.defaultEnv.attack;
-            that.env.decay = arg.env.decay || that.defaultEnv.decay;
-            that.env.sustain = arg.env.sustain || that.defaultEnv.sustain;
-            that.env.hold = arg.env.hold || that.defaultEnv.hold;
-            that.env.release = arg.env.release || that.defaultEnv.release; 
+            that.env.attack = arg.env.attack || that.defaultEnv.attack
+            that.env.decay = arg.env.decay || that.defaultEnv.decay
+            that.env.sustain = arg.env.sustain || that.defaultEnv.sustain
+            that.env.hold = arg.env.hold || that.defaultEnv.hold
+            that.env.release = arg.env.release || that.defaultEnv.release 
         }
         else{
             that.env = {
@@ -310,65 +315,76 @@ with special handling for reverb (ConvolverNode). **/
                 sustain : that.defaultEnv.sustain,
                 hold : that.defaultEnv.hold,
                 release : that.defaultEnv.release
-            };
+            }
         }
-    };
+    }
 //////////////////////////////////////////////////////////////////////////////////
 
 
 /** Set the filter and filter envelope according to play() arguments, or revert to defaults **/
     var setUpFilterOnPlay = function(that, arg){
         if(arg && arg.filter && that.filter){
-            that.filter.node = context.createBiquadFilter();
-            that.filter.node.type = that.filter.type;
-            that.filter.node.frequency.value = arg.filter.frequency || that.filter.frequency;
-            that.filter.node.Q.value = arg.filter.q || that.filter.q;
+            that.filter.node = context.createBiquadFilter()
+            that.filter.node.type = that.filter.type
+            that.filter.node.frequency.value = arg.filter.frequency || that.filter.frequency
+            that.filter.node.Q.value = arg.filter.q || that.filter.q
             if (arg.filter.env){
                 that.filter.env = {
                     attack : arg.filter.env.attack || that.defaultFilter.env.attack,
                     frequency : arg.filter.env.frequency || that.defaultFilter.env.frequency
-                };
+                }
             }
             else if (that.defaultFilter.env){
-                that.filter.env = that.defaultFilter.env;
+                that.filter.env = that.defaultFilter.env
             }
-            that.nodes.push(that.filter.node);
+            that.nodes.push(that.filter.node)            
         }
         else if(that.filter){
             if(that.defaultFilter.env){
-                that.filter.env = that.defaultFilter.env;
+                that.filter.env = that.defaultFilter.env
             }
-            that.filter.node = context.createBiquadFilter();
-            that.filter.node.type = that.filter.type;
-            that.filter.node.frequency.value = that.filter.frequency;
-            that.filter.node.Q.value = that.filter.q;
-            that.nodes.push(that.filter.node);
+            that.filter.node = context.createBiquadFilter()
+            that.filter.node.type = that.filter.type
+            that.filter.node.frequency.value = that.filter.frequency
+            that.filter.node.Q.value = that.filter.q
+            that.nodes.push(that.filter.node)
         }
-    };
+    }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** Initialize and configure a convolver node for playback **/
     var setUpReverbOnPlay = function(that, arg){
-        that.reverb.node = context.createConvolver();
-        that.reverb.node.buffer = that.reverb.buffer;
-        that.reverb.gain = context.createGain();
-        that.reverb.gain.gain.value = that.reverb.wet;
-        that.nodes.push(that.reverb.node);
-        that.nodes.push(that.reverb.gain);
-    };
+        that.reverb.node = context.createConvolver()
+        that.reverb.node.buffer = that.reverb.buffer
+        that.reverb.gain = context.createGain()
+        that.reverb.gain.gain.value = that.reverb.wet
+        that.nodes.push(that.reverb.node)
+        that.nodes.push(that.reverb.gain)
+    }
 //////////////////////////////////////////////////////////////
 
 
 /** Initialize and configure a panner node for playback **/
     var setUpPanningOnPlay = function(that, arg){
         if ((arg && arg.panning) || that.panning){
-            that.panning.node = context.createPanner();
-            var panning = (arg && arg.panning) ? arg.panning : that.panning.location;
-            that.panning.node.setPosition(panning, 0, 0);
-            that.nodes.push(that.panning.node);
+            that.panning.node = context.createPanner()
+            // var panning = (arg && arg.panning) ? arg.panning : that.panning.location
+            if (arg && arg.panning){
+                if (typeof(arg.panning) === 'number'){
+                    var panning = [arg.panning, 0, 0]
+                }
+                else {
+                    var panning = [arg.panning[0], arg.panning[1], arg.panning[2]]
+                }
+            }
+            else {
+                var panning = [0, 0, 0]
+            }
+            that.panning.node.setPosition(panning[0], panning[1], panning[2] )
+            that.nodes.push(that.panning.node)
         }
-    };
+    }
 ///////////////////////////////////////////////////////////
 
 
@@ -382,9 +398,9 @@ with special handling for reverb (ConvolverNode). **/
                 attack : that.vibrato.attack
             },
             destination : that.soundSource.frequency
-        });
-        that.vibrato.wad.play();
-    };
+        })
+        that.vibrato.wad.play()
+    }
 ///////////////////////////////////////////////////////////////
 
 
@@ -398,9 +414,9 @@ with special handling for reverb (ConvolverNode). **/
                 attack : that.tremolo.attack
             },
             destination : that.gain.gain
-        });
-        that.tremolo.wad.play();
-    };
+        })
+        that.tremolo.wad.play()
+    }
 ///////////////////////////////////////////////////////////////
 
 
@@ -411,89 +427,96 @@ then finally play the sound by calling playEnv() **/
     Wad.prototype.play = function(arg){
 
         if(this.playable < 1){
-            this.playOnLoad = true;
-            this.playOnLoadArg = arg;
+            this.playOnLoad = true
+            this.playOnLoadArg = arg
         }
 
         else if(this.source === 'mic'){
-            plugEmIn(this.nodes);
+            plugEmIn(this)
         }
 
         else{
-            this.nodes = [];
+            this.nodes = []
             if(arg && !arg.wait){arg.wait = 0}
             if(!arg){var arg = {wait: 0}}
             if(arg && arg.volume){this.volume = arg.volume}
             else {this.volume = this.defaultVolume}
 
             if(this.source in {'sine':0, 'sawtooth':0, 'square':0, 'triangle':0}){            
-                setUpOscillator(this, arg);
+                setUpOscillator(this, arg)
             }
 
             else{
                 this.soundSource = context.createBufferSource();
                 this.soundSource.buffer = this.decodedBuffer;
                 if(this.source === 'noise'){
-                    this.soundSource.loop = true;
+                    this.soundSource.loop = true
                 }  
             }
 
-            this.nodes.push(this.soundSource);
+            this.nodes.push(this.soundSource)
 
 
     /**  sets the volume envelope based on the play() arguments if present,
     or defaults to the constructor arguments if the volume envelope is not set on play() **/
-            setUpEnvOnPlay(this, arg);
+            setUpEnvOnPlay(this, arg)
     ////////////////////////////////////////////////////////////////////////////////////////
 
 
     /**  sets up the filter and filter envelope based on the play() argument if present,
     or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
-            setUpFilterOnPlay(this, arg);
+            setUpFilterOnPlay(this, arg)
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-            this.gain = context.createGain(); // sets up the gain node
-            this.nodes.push(this.gain);
+            this.gain = context.createGain() // sets up the gain node
+            this.nodes.push(this.gain)
 
             if (this.reverb){ // sets up reverb
-                setUpReverbOnPlay(this, arg);
+                setUpReverbOnPlay(this, arg)
             }
 
     /**  sets panning based on the play() argument if present, or defaults to the constructor argument if panning is not set on play **/
-            setUpPanningOnPlay(this, arg);
+            setUpPanningOnPlay(this, arg)
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-            plugEmIn(this); 
+            plugEmIn(this) 
 
             if(this.filter && this.filter.env){ filterEnv(this, arg) }
-            playEnv(this, arg);
+            playEnv(this, arg)
 
             if (this.vibrato){ //sets up vibrato LFO
-                setUpVibratoOnPlay(this, arg);
+                setUpVibratoOnPlay(this, arg)
             }
 
             if (this.tremolo){ //sets up tremolo LFO
-                setUpTremoloOnPlay(this, arg);
+                setUpTremoloOnPlay(this, arg)
             }
         }
-    };
+    }
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** Change the volume of a Wad at any time, including during playback **/
     Wad.prototype.setVolume = function(volume){
         this.defaultVolume = volume;
-        if(this.gain){this.gain.gain.value = volume}
-    };
+        if(this.gain){this.gain.gain.value = volume};
+    }
 /////////////////////////////////////////////////////////////////////////
 
 
 /** Change the panning of a Wad at any time, including during playback **/
     Wad.prototype.setPanning = function(panning){
-        this.panning.node.setPosition(panning, 0, 0);
-    };
+        if (typeof(panning) === 'number'){
+            this.panning.node.setPosition(panning, this.panning.location[1], this.panning.location[2])
+        }
+
+        else {
+            this.panning.node.setPosition(panning[0], panning[1], panning[2])
+        }
+    }
+    
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -504,32 +527,33 @@ then finally play the sound by calling playEnv() **/
             // this.soundSource.stop(context.currentTime+this.env.release)             
         }
         else {
-            this.mediaStreamSource.disconnect(0);
+            this.mediaStreamSource.disconnect(0)
         }
-    };
+    }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** If a Wad is created with reverb without specifying a URL for the impulse response,
 grab it from the defaultImpulse URL **/
-    Wad.defaultImpulse = 'http://www.codecur.io/us/sendaudio/widehall.wav';
+    Wad.defaultImpulse = 'http://www.codecur.io/us/sendaudio/widehall.wav'
     Wad.setGlobalReverb = function(arg){
-        Wad.reverb = {};
-        Wad.reverb.node = context.createConvolver();
-        Wad.reverb.gain = context.createGain();
-        Wad.reverb.gain.gain.value = arg.wet;
+        Wad.reverb = {}
+        Wad.reverb.node = context.createConvolver()
+        Wad.reverb.gain = context.createGain()
+        Wad.reverb.gain.gain.value = arg.wet
 
-        var impulseURL = arg.impulse || Wad.defaultImpulse;
+        var impulseURL = arg.impulse || Wad.defaultImpulse
         var request = new XMLHttpRequest();
         request.open("GET", impulseURL, true);
         request.responseType = "arraybuffer";
         request.onload = function() {
             context.decodeAudioData(request.response, function (decodedBuffer){
-                Wad.reverb.node.buffer = decodedBuffer;
-            });
-        };
+                Wad.reverb.node.buffer = decodedBuffer
+            })
+        }
         request.send();
-    };
+
+    }
 //////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -659,7 +683,7 @@ grab it from the defaultImpulse URL **/
         'Bb7' :3729.31,
         'B7' :3951.07,
         'C8' :4186.01
-    };
+    }
 //////////////////////////////////////////////////////////////
 
 
@@ -670,7 +694,8 @@ grab it from the defaultImpulse URL **/
         highHatOpen : {source : 'noise', env : { attack : .001, decay : .008, sustain : .2, hold : .43, release : .01}, filter : { type : 'highpass', frequency : 100, q : .2}},
         ghost : {source : 'square', volume : .3, env : {attack : .01, decay : .002, sustain : .5, hold : 2.5, release : .3}, filter : {type : 'lowpass', frequency : 600, q : 7, env : { attack : .7, frequency : 1600}}, vibrato : {attack : 8, speed : 8, magnitude : 100 }},
         piano : {source : 'square', volume : 1.4, env : {attack : .01, decay : .005, sustain : .2, hold : .015, release : .3}, filter : {type : 'lowpass', frequency : 1200, q : 8.5, env : {attack : .2, frequency : 600}}}
-    };
-    return Wad;
+    }
+    return Wad
     
-})();
+})()
+

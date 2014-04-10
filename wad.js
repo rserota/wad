@@ -177,7 +177,8 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
             if (that.panning){
                 that.panning.node = context.createPanner()
-                that.panning.node.setPosition(that.panning.location, 0, 0)
+
+                that.panning.node.setPosition(that.panning.location[0], that.panning.location[1], that.panning.location[2])
                 that.nodes.push(that.panning.node)
             }
 
@@ -205,12 +206,17 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         constructReverb(this, arg)
 
         if ('panning' in arg){
-            this.panning = {
-                location : arg.panning
+            if (typeof(arg.panning) === "number"){
+                this.panning = { location : [ arg.panning, 0, 0 ] }
+            }
+
+            else {
+                this.panning = { location : [ arg.panning[0], arg.panning[1], arg.panning[2] ] }
             }
         }
+
         else {
-            this.panning = { location : 0 }
+            this.panning = { location : [0, 0, 0] }
         }
 ////////////////////////////////
 
@@ -364,8 +370,19 @@ with special handling for reverb (ConvolverNode). **/
     var setUpPanningOnPlay = function(that, arg){
         if ((arg && arg.panning) || that.panning){
             that.panning.node = context.createPanner()
-            var panning = (arg && arg.panning) ? arg.panning : that.panning.location
-            that.panning.node.setPosition(panning, 0, 0)
+            // var panning = (arg && arg.panning) ? arg.panning : that.panning.location
+            if (arg && arg.panning){
+                if (typeof(arg.panning) === 'number'){
+                    var panning = [arg.panning, 0, 0]
+                }
+                else {
+                    var panning = [arg.panning[0], arg.panning[1], arg.panning[2]]
+                }
+            }
+            else {
+                var panning = [0, 0, 0]
+            }
+            that.panning.node.setPosition(panning[0], panning[1], panning[2] )
             that.nodes.push(that.panning.node)
         }
     }
@@ -492,8 +509,15 @@ then finally play the sound by calling playEnv() **/
 
 /** Change the panning of a Wad at any time, including during playback **/
     Wad.prototype.setPanning = function(panning){
-        this.panning.node.setPosition(panning, 0, 0)
+        if (typeof(panning) === 'number'){
+            this.panning.node.setPosition(panning, this.panning.location[1], this.panning.location[2])
+        }
+
+        else {
+            this.panning.node.setPosition(panning[0], panning[1], panning[2])
+        }
     }
+    
 //////////////////////////////////////////////////////////////////////////
 
 

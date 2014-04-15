@@ -86,7 +86,17 @@ The Wad constructor supports many optional arguments to modify your sound, from 
   }
 })</code></pre>
 
+
+<h3>Panning</h3>
+
 If you've used other audio software before, you probably know what most of these settings do, though panning works a little bit differently.  With Web Audio, you don't directly set the left/right stereo balance. Rather, the panning setting describes the distance of the sound source from the audio listener, along the X axis. You can set the panning to arbitrarily high or low values, but it will make the sound very quiet, since it's very far away. 
+
+Wad.js supports 3D panning. Any time you would pass in a panning parameter (either to the constructor, the <code>play()</code> method, or the <code>setPanning()</code> method), you can pass it in as a three element array to specify the X, Y, and Z location of the sound. 
+
+<pre><code>var saw = new Wad({
+    source : 'sawtooth',
+    panning : [0, 1, 10]
+})</code></pre>
 
 <h3>Configuring Reverb</h3>
 
@@ -119,7 +129,7 @@ saw.play({
   wait : 0, // Time in seconds between calling play() and actually triggering the note.
   pitch : 'A4', // A4 is 440 hertz.
   env : {hold : 9001},
-  panning : 4,
+  panning : [1, -1, 10],
   filter : {frequency : 900}
 }) </code></pre>
 

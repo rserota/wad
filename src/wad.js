@@ -54,19 +54,33 @@ var Wad = (function(){
 
 /** Set up the default filter and filter envelope. **/
     var constructFilter = function(that, arg){   
-        if (arg.filter){
-            that.filter = {
+        if (!arg.filter) return;
+
+        if (Object.prototype.toString.call(arg.filter) === '[object Array]'){
+            arg.filter.forEach(function(filter){
+                filterArg = {}
+                filterArg.filter = filter
+                constructFilter(that, filterArg)
+            })
+        } else {
+            that.filter = (that.filter || [])
+
+            var filter = {
                 type : arg.filter.type,
                 frequency : arg.filter.frequency,
                 q : arg.filter.q || 1
             } 
+
             if (arg.filter.env){
-                that.filter.env = {
+                filter.env = {
                     attack : arg.filter.env.attack,
                     frequency : arg.filter.env.frequency
                 }
             }
-            that.defaultFilter = that.filter
+
+            that.filter.push(filter)
+
+            that.defaultFilter = that.filter[0]
         }
     }
 //////////////////////////////////////////////////////

@@ -337,27 +337,17 @@ with special handling for reverb (ConvolverNode). **/
 
 /** Set the filter and filter envelope according to play() arguments, or revert to defaults **/
 
-
-//SO LIKE ABSTTRACT THIS
-//SO THAT THERE IS A MAKE A FILTER METHOD
-//THAT CAN ALSO GO OTHER PLACES TOO YO!
-//ITERATE OVER FILTER
-//HANDLE EDGE CASES!
-
     var createFilters = function(that, arg){
         that.filter.forEach(function(filter, i){
             filter.node = context.createBiquadFilter()
             filter.node.type = filter.type
             filter.node.frequency.value = arg.filter[i].frequency || filter.frequency
             filter.node.Q.value = arg.filter[i].q || filter.q
-            if (arg.filter[i].env){
+            if (arg.filter[i].env || that.filter[i].env){
                 filter.env = {
                     attack : arg.filter[i].env.attack || that.filter[i].env.attack,
                     frequency : arg.filter[i].env.frequency || that.filter[i].env.frequency
                 }
-            }
-            else if (that.filter[i].env){
-                filter.env = that.filter[i].env
             }
             that.nodes.push(filter.node)
         })

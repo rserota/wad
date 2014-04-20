@@ -57,13 +57,12 @@ var Wad = (function(){
         if (!arg.filter) return;
 
         if (Object.prototype.toString.call(arg.filter) === '[object Array]'){
-            arg.filter.forEach(function(filter){
-                filterArg = {}
-                filterArg.filter = filter
-                constructFilter(that, filterArg)
+            arg.filter.forEach(function(filterArg){
+                constructFilter(that, {filter: filterArg})
             })
         } else {
             that.filter = (that.filter || [])
+
             var filter = {
                 type : arg.filter.type,
                 frequency : arg.filter.frequency,
@@ -173,11 +172,6 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 createFilters(that, arg)
                 //this would make a filter.env if one exists? could it take args?
                 //is there a reason setupMic didn't use filter args? or do a filter.env?
-                // that.filter.node = context.createBiquadFilter()
-                // that.filter.node.type = that.filter.type
-                // that.filter.node.frequency.value = that.filter.frequency
-                // that.filter.node.Q.value = that.filter.q
-                // that.nodes.push(that.filter.node)
             }
 
             if (that.reverb){

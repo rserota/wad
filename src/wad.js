@@ -347,10 +347,10 @@ with special handling for reverb (ConvolverNode). **/
         })
     }
 
-
     var setUpFilterOnPlay = function(that, arg){
         if(arg && arg.filter && that.filter){
-            createFilters(that, arg)           
+            if(!Object.prototype.toString.call(arg.filter) === '[object Array]')) arg.filter = [arg.filter]
+            createFilters(that, arg)     
         }
         else if(that.filter){
             createFilters(that, that)//

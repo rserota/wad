@@ -30,7 +30,10 @@ var Wad = (function(){
     })()
 /////////////////////////////////////////////////////////////////////////
 
-
+/** a lil hack. just be glad it isn't on Object.prototype. **/
+    var isArray = function(object){
+        return Object.prototype.toString.call(object) === '[object Array]'
+    }
 
 /** Set up the default ADSR envelope. **/
     var constructEnv = function(that, arg){   
@@ -56,7 +59,7 @@ var Wad = (function(){
     var constructFilter = function(that, arg){   
         if (!arg.filter) return;
 
-        if (Object.prototype.toString.call(arg.filter) === '[object Array]'){
+        if (isArray(arg.filter)){
             arg.filter.forEach(function(filterArg){
                 constructFilter(that, {filter: filterArg})
             })
@@ -349,7 +352,7 @@ with special handling for reverb (ConvolverNode). **/
 
     var setUpFilterOnPlay = function(that, arg){
         if(arg && arg.filter && that.filter){
-            if(!Object.prototype.toString.call(arg.filter) === '[object Array]')) arg.filter = [arg.filter]
+            if(!isArrayarg.filter) arg.filter = [arg.filter]
             createFilters(that, arg)     
         }
         else if(that.filter){
@@ -357,7 +360,6 @@ with special handling for reverb (ConvolverNode). **/
         }
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
 
 /** Initialize and configure a convolver node for playback **/
     var setUpReverbOnPlay = function(that, arg){

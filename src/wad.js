@@ -30,7 +30,10 @@ var Wad = (function(){
     })()
 /////////////////////////////////////////////////////////////////////////
 
-
+/** a lil hack. just be glad it isn't on Object.prototype. **/
+    var isArray = function(object){
+        return Object.prototype.toString.call(object) === '[object Array]'
+    }
 
 /** Set up the default ADSR envelope. **/
     var constructEnv = function(that, arg){   
@@ -54,19 +57,29 @@ var Wad = (function(){
 
 /** Set up the default filter and filter envelope. **/
     var constructFilter = function(that, arg){   
-        if (arg.filter){
-            that.filter = {
+        if (!arg.filter) return;
+
+        if (isArray(arg.filter)){
+            arg.filter.forEach(function(filterArg){
+                constructFilter(that, {filter: filterArg})
+            })
+        } else {
+            that.filter = (that.filter || [])
+
+            var filter = {
                 type : arg.filter.type,
                 frequency : arg.filter.frequency,
                 q : arg.filter.q || 1
             } 
+
             if (arg.filter.env){
-                that.filter.env = {
+                filter.env = {
                     attack : arg.filter.env.attack,
                     frequency : arg.filter.env.frequency
                 }
             }
-            that.defaultFilter = that.filter
+
+            that.filter.push(filter)
         }
     }
 //////////////////////////////////////////////////////
@@ -159,11 +172,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             that.nodes.push(that.gain)
 
             if (that.filter){
-                that.filter.node = context.createBiquadFilter()
-                that.filter.node.type = that.filter.type
-                that.filter.node.frequency.value = that.filter.frequency
-                that.filter.node.Q.value = that.filter.q
-                that.nodes.push(that.filter.node)
+                createFilters(that, arg)
             }
 
             if (that.reverb){
@@ -322,36 +331,35 @@ with special handling for reverb (ConvolverNode). **/
 
 
 /** Set the filter and filter envelope according to play() arguments, or revert to defaults **/
-    var setUpFilterOnPlay = function(that, arg){
-        if(arg && arg.filter && that.filter){
-            that.filter.node = context.createBiquadFilter()
-            that.filter.node.type = that.filter.type
-            that.filter.node.frequency.value = arg.filter.frequency || that.filter.frequency
-            that.filter.node.Q.value = arg.filter.q || that.filter.q
-            if (arg.filter.env){
-                that.filter.env = {
-                    attack : arg.filter.env.attack || that.defaultFilter.env.attack,
-                    frequency : arg.filter.env.frequency || that.defaultFilter.env.frequency
+
+    var createFilters = function(that, arg){
+        that.filter.forEach(function(filter, i){
+            filter.node = context.createBiquadFilter()
+            filter.node.type = filter.type
+            filter.node.frequency.value = arg.filter[i].frequency || filter.frequency
+            filter.node.Q.value = arg.filter[i].q || filter.q
+
+            if (arg.filter[i].env || that.filter[i].env && !(that.source === "mic")){
+                filter.env = {
+                    attack : arg.filter[i].env.attack || that.filter[i].env.attack,
+                    frequency : arg.filter[i].env.frequency || that.filter[i].env.frequency
                 }
             }
-            else if (that.defaultFilter.env){
-                that.filter.env = that.defaultFilter.env
-            }
-            that.nodes.push(that.filter.node)            
+
+            that.nodes.push(filter.node)
+        })
+    }
+
+    var setUpFilterOnPlay = function(that, arg){
+        if(arg && arg.filter && that.filter){
+            if(!isArray(arg.filter)) arg.filter = [arg.filter]
+            createFilters(that, arg)     
         }
         else if(that.filter){
-            if(that.defaultFilter.env){
-                that.filter.env = that.defaultFilter.env
-            }
-            that.filter.node = context.createBiquadFilter()
-            that.filter.node.type = that.filter.type
-            that.filter.node.frequency.value = that.filter.frequency
-            that.filter.node.Q.value = that.filter.q
-            that.nodes.push(that.filter.node)
+            createFilters(that, that)
         }
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
 
 /** Initialize and configure a convolver node for playback **/
     var setUpReverbOnPlay = function(that, arg){

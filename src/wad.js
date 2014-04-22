@@ -254,8 +254,10 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 /** When a note is played, these two functions will schedule changes in volume and filter frequency,
 as specified by the volume envelope and filter envelope **/
     var filterEnv = function(wad, arg){
-        wad.filter.node.frequency.linearRampToValueAtTime(wad.filter.frequency, context.currentTime + arg.wait)
-        wad.filter.node.frequency.linearRampToValueAtTime(wad.filter.env.frequency, context.currentTime+wad.filter.env.attack + arg.wait)
+           wad.filter.forEach(function(fltr, index){
+            fltr.node.frequency.linearRampToValueAtTime(fltr.frequency, context.currentTime + arg.wait)
+            fltr.node.frequency.linearRampToValueAtTime(fltr.env.frequency, context.currentTime + fltr.env.attack + arg.wait)
+        })
     }
 
     var playEnv = function(wad, arg){

@@ -173,8 +173,6 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
             if (that.filter){
                 createFilters(that, arg)
-                //this would make a filter.env if one exists? could it take args?
-                //is there a reason setupMic didn't use filter args? or do a filter.env?
             }
 
             if (that.reverb){
@@ -340,23 +338,25 @@ with special handling for reverb (ConvolverNode). **/
             filter.node.type = filter.type
             filter.node.frequency.value = arg.filter[i].frequency || filter.frequency
             filter.node.Q.value = arg.filter[i].q || filter.q
-            if (arg.filter[i].env || that.filter[i].env){
+
+            if (arg.filter[i].env || that.filter[i].env && !(that.source === "mic")){
                 filter.env = {
                     attack : arg.filter[i].env.attack || that.filter[i].env.attack,
                     frequency : arg.filter[i].env.frequency || that.filter[i].env.frequency
                 }
             }
+
             that.nodes.push(filter.node)
         })
     }
 
     var setUpFilterOnPlay = function(that, arg){
         if(arg && arg.filter && that.filter){
-            if(!isArrayarg.filter) arg.filter = [arg.filter]
+            if(!isArray(arg.filter)) arg.filter = [arg.filter]
             createFilters(that, arg)     
         }
         else if(that.filter){
-            createFilters(that, that)//
+            createFilters(that, that)
         }
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////

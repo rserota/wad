@@ -427,7 +427,7 @@ with special handling for reverb (ConvolverNode). **/
 
 
 /** To be overrided by the user **/
-    var setUpFxLoopOnPlay = function(that, arg, context){
+    Wad.prototype.setUpFxLoopOnPlay = function(that, arg, context){
         //user does what is necessary here, and then maybe does something like:
         // that.nodes.push(externalFX)
     }
@@ -482,7 +482,7 @@ then finally play the sound by calling playEnv() **/
             setUpFilterOnPlay(this, arg)
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-            setUpFxLoopOnPlay(this, arg, context)
+            Wad.setUpFxLoopOnPlay(this, arg, context)
 
 
             this.gain = context.createGain() // sets up the gain node

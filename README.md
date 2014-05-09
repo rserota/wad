@@ -104,8 +104,8 @@ The filter constructor argument can be passed an object or an array of objects. 
 
 <pre><code>
   filter: [
-  {type : 'lowpass', frequency : 600, q : 1, env : {frequency : 800, attack : 0.5}},
-  {type : 'highpass', frequency : 1000, q : 5}
+      {type : 'lowpass', frequency : 600, q : 1, env : {frequency : 800, attack : 0.5}},
+      {type : 'highpass', frequency : 1000, q : 5}
   ]
 </code></pre>
 
@@ -184,7 +184,7 @@ Sometimes you might want to incorporate external libraries into Wad, for example
   //For Tuna, for example, you would put this somewhere in your own code:
 
   var tuna;
-  Wad.setUpFxLoopOnPlay = function(that, arg, context){
+  Wad.setUpFxLoopOnPlay = function(arg, context){
     tuna ||= tuna new Tuna(context); // we get the context so we can do things like this.
     var chorus = new tuna.Chorus({
                      rate: 5.5,

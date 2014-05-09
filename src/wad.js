@@ -36,7 +36,7 @@ var Wad = (function(){
     }
 
 /** Set up the default ADSR envelope. **/
-    var constructEnv = function(that, arg){   
+    var constructEnv = function(that, arg){
         that.env = { //default envelope, if one is not specified on play
             attack : arg.env ? ( arg.env.attack || 0 ) : 0, // time in seconds from onset to peak volume
             decay : arg.env ? ( arg.env.decay || 0 ) : 0, // time in seconds from peak volume to sustain volume
@@ -56,7 +56,7 @@ var Wad = (function(){
 
 
 /** Set up the default filter and filter envelope. **/
-    var constructFilter = function(that, arg){   
+    var constructFilter = function(that, arg){
         if ( !arg.filter ) { return; }
 
         if ( isArray(arg.filter) ) {
@@ -71,7 +71,7 @@ var Wad = (function(){
                 type : arg.filter.type,
                 frequency : arg.filter.frequency,
                 q : arg.filter.q || 1
-            } 
+            }
 
             if ( arg.filter.env ) {
                 filter.env = {
@@ -236,7 +236,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         else if ( this.source === 'mic' ) {
             setUpMic(this, arg)
         }
-//////////////////////////////////////////////////////////////////////////////////        
+//////////////////////////////////////////////////////////////////////////////////
 
 
 /** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
@@ -313,7 +313,7 @@ with special handling for reverb (ConvolverNode). **/
             that.env.decay = arg.env.decay || that.defaultEnv.decay
             that.env.sustain = arg.env.sustain || that.defaultEnv.sustain
             that.env.hold = arg.env.hold || that.defaultEnv.hold
-            that.env.release = arg.env.release || that.defaultEnv.release 
+            that.env.release = arg.env.release || that.defaultEnv.release
         }
         else {
             that.env = {
@@ -351,7 +351,7 @@ with special handling for reverb (ConvolverNode). **/
     var setUpFilterOnPlay = function(that, arg){
         if ( arg && arg.filter && that.filter ) {
             if ( !isArray(arg.filter) ) arg.filter = [arg.filter]
-            createFilters(that, arg)     
+            createFilters(that, arg)
         }
         else if ( that.filter ) {
             createFilters(that, that)
@@ -426,6 +426,14 @@ with special handling for reverb (ConvolverNode). **/
 ///////////////////////////////////////////////////////////////
 
 
+/** To be overrided by the user **/
+    Wad.prototype.setUpFxLoopOnPlay = function(that, arg, context){
+        //user does what is necessary here, and then maybe does something like:
+        // that.nodes.push(externalFX)
+    }
+///////////////////////////////////////////////////////////////
+
+
 /** the play() method will create the various nodes that are required for this Wad to play,
 set properties on those nodes according to the constructor arguments and play() arguments,
 plug the nodes into each other with plugEmIn(),
@@ -448,7 +456,7 @@ then finally play the sound by calling playEnv() **/
             if ( arg && arg.volume ) { this.volume = arg.volume }
             else { this.volume = this.defaultVolume }
 
-            if ( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) {            
+            if ( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) {
                 setUpOscillator(this, arg)
             }
 
@@ -457,7 +465,7 @@ then finally play the sound by calling playEnv() **/
                 this.soundSource.buffer = this.decodedBuffer;
                 if ( this.source === 'noise' ) {
                     this.soundSource.loop = true
-                }  
+                }
             }
 
             this.nodes.push(this.soundSource)
@@ -474,6 +482,8 @@ then finally play the sound by calling playEnv() **/
             setUpFilterOnPlay(this, arg)
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+            Wad.setUpFxLoopOnPlay(this, arg, context)
+
 
             this.gain = context.createGain() // sets up the gain node
             this.nodes.push(this.gain)
@@ -487,7 +497,7 @@ then finally play the sound by calling playEnv() **/
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-            plugEmIn(this) 
+            plugEmIn(this)
 
             if ( this.filter && this.filter.env ) { filterEnv(this, arg) }
             playEnv(this, arg)
@@ -520,7 +530,7 @@ then finally play the sound by calling playEnv() **/
             this.panning.node.setPosition(panning[0], panning[1], panning[2])
         }
     }
-    
+
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -528,7 +538,7 @@ then finally play the sound by calling playEnv() **/
     Wad.prototype.stop = function(){
         if ( !( this.source === 'mic' ) ) {
             this.gain.gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release)
-            // this.soundSource.stop(context.currentTime+this.env.release)             
+            // this.soundSource.stop(context.currentTime+this.env.release)
         }
         else {
             this.mediaStreamSource.disconnect(0)
@@ -561,9 +571,9 @@ grab it from the defaultImpulse URL **/
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-/** This object is a mapping of note names to frequencies. **/ 
+/** This object is a mapping of note names to frequencies. **/
     Wad.pitches = {
-        'A0' : 27.5000, 
+        'A0' : 27.5000,
         'A#0' : 29.1352,
         'Bb0' : 29.1352,
         'B0' : 30.8677,
@@ -700,6 +710,6 @@ grab it from the defaultImpulse URL **/
         piano : { source : 'square', volume : 1.4, env : { attack : .01, decay : .005, sustain : .2, hold : .015, release : .3 }, filter : { type : 'lowpass', frequency : 1200, q : 8.5, env : { attack : .2, frequency : 600 } } }
     }
     return Wad
-    
+
 })()
 

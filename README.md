@@ -176,6 +176,27 @@ You can also use microphone input as the source for a Wad. You can apply reverb 
 voice.play()
 </code></pre>
 
+<h3>External FX loop</h3>
+
+Sometimes you might want to incorporate external libraries into Wad, for example FX or visualizers. You can override the setUpFxLoopOnPlay method to add those nodes to the wad chain. In the following example the values are hardcoded, but they could easily have been passed as arguments to play. The fxloop does not rely on a constructor.
+
+<pre><code>
+  //For Tuna, for example, you would put this somewhere in your own code:
+
+  var tuna;
+  Wad.setUpFxLoopOnPlay = function(that, arg, context){
+    tuna ||= tuna new Tuna(context); // we get the context so we can do things like this.
+    var chorus = new tuna.Chorus({
+                     rate: 5.5,
+                     feedback: 0.07,
+                     delay: 0.0045,
+                     bypass: 0
+                 });
+    chorus.input.connect = chorus.connect.bind(chorus)//we do this dance because tuna exposes its input differently.
+    that.nodes.push(chorus.input)//you would generally want to do this at the end unless you are working with something that does not modulate the sound (i.e, a visualizer)
+  }
+</code></pre>
+
 
 <h3>Presets</h3>
 

@@ -158,6 +158,13 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
     }
 //////////////////////////////////////////////////////////////////////////////
 
+/** Method to allow users to setup external fx in the constructor **/
+    Wad.prototype.constructExternalFx = function(arg, context){
+        //override me in your own code
+    };
+
+//////////////////////////////////////////////////////////////////////////////
+
 
 /** Special initialization and configuration for microphone Wads **/
     var setUpMic = function(that, arg){
@@ -208,6 +215,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         constructVibrato(this, arg)
         constructTremolo(this, arg)
         constructReverb(this, arg)
+        this.constructExternalFx(arg, context)
 
         if ( 'panning' in arg ) {
             if ( typeof(arg.panning) === "number" ) {
@@ -427,7 +435,7 @@ with special handling for reverb (ConvolverNode). **/
 
 
 /** To be overrided by the user **/
-    Wad.prototype.setUpFxLoopOnPlay = function(arg, context){
+    Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
         //user does what is necessary here, and then maybe does something like:
         // this.nodes.push(externalFX)
     }
@@ -482,7 +490,7 @@ then finally play the sound by calling playEnv() **/
             setUpFilterOnPlay(this, arg)
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-            Wad.setUpFxLoopOnPlay(arg, context)
+            Wad.setUpExternalFxOnPlay(arg, context)
 
 
             this.gain = context.createGain() // sets up the gain node

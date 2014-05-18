@@ -158,12 +158,6 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
     }
 //////////////////////////////////////////////////////////////////////////////
 
-/** Method to allow users to setup external fx in the constructor **/
-    Wad.prototype.constructExternalFx = function(arg, context){
-        //override me in your own code
-    };
-
-//////////////////////////////////////////////////////////////////////////////
 
 
 /** Special initialization and configuration for microphone Wads **/
@@ -434,6 +428,13 @@ with special handling for reverb (ConvolverNode). **/
 ///////////////////////////////////////////////////////////////
 
 
+/** Method to allow users to setup external fx in the constructor **/
+    Wad.prototype.constructExternalFx = function(arg, context){
+        //override me in your own code
+    };
+
+//////////////////////////////////////////////////////////////////////////////
+
 /** To be overrided by the user **/
     Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
         //user does what is necessary here, and then maybe does something like:
@@ -490,7 +491,7 @@ then finally play the sound by calling playEnv() **/
             setUpFilterOnPlay(this, arg)
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-            Wad.setUpExternalFxOnPlay(arg, context)
+            this.setUpExternalFxOnPlay(arg, context)
 
 
             this.gain = context.createGain() // sets up the gain node

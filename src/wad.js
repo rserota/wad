@@ -4,7 +4,13 @@ var Wad = (function(){
 /** Let's do the vendor-prefix dance. **/
     var audioContext = window.AudioContext || window.webkitAudioContext;
     var context = new audioContext();
-    navigator.getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia || navigator.getUserMedia;
+    getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia || navigator.getUserMedia;
+    if (getUserMedia) {
+        console.log('get user media is supported')
+        getUserMedia = getUserMedia.bind(navigator);
+    } else {
+        // have to figure out how to handle the error somehow
+    }
 /////////////////////////////////////////
 
 
@@ -163,7 +169,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 /** Special initialization and configuration for microphone Wads **/
     var setUpMic = function(that, arg){
         console.log('set up mic')
-        navigator.getUserMedia({ audio : true }, function (stream){
+        getUserMedia({ audio : true , video : false}, function (stream){
             console.log('got stream')
             that.nodes = []
             that.mediaStreamSource = context.createMediaStreamSource(stream)
@@ -189,8 +195,8 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 that.panning.node.setPosition(that.panning.location[0], that.panning.location[1], that.panning.location[2])
                 that.nodes.push(that.panning.node)
             }
-
-        }, function(){console.log('error')});
+            console.log(that)
+        }, function(error){console.log(error)});
     }
 ////////////////////////////////////////////////////////////////////
 
@@ -274,6 +280,7 @@ as specified by the volume envelope and filter envelope **/
 /** When all the nodes are set up for this Wad, this function plugs them into each other,
 with special handling for reverb (ConvolverNode). **/
     var plugEmIn = function(that){
+        console.log('plugemin', that)
         for ( var i = 1; i < that.nodes.length; i++ ) {
             that.nodes[i - 1].connect(that.nodes[i])
             if ( that.nodes[i] instanceof ConvolverNode ) {
@@ -457,6 +464,7 @@ then finally play the sound by calling playEnv() **/
         }
 
         else if ( this.source === 'mic' ) {
+            console.log('mic play')
             plugEmIn(this)
         }
 

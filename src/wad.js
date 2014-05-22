@@ -162,7 +162,9 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
 /** Special initialization and configuration for microphone Wads **/
     var setUpMic = function(that, arg){
+        console.log('set up mic')
         navigator.getUserMedia({ audio : true }, function (stream){
+            console.log('got stream')
             that.nodes = []
             that.mediaStreamSource = context.createMediaStreamSource(stream)
             that.nodes.push(that.mediaStreamSource)
@@ -188,7 +190,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 that.nodes.push(that.panning.node)
             }
 
-        });
+        }, function(){console.log('error')});
     }
 ////////////////////////////////////////////////////////////////////
 

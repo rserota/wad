@@ -6,10 +6,10 @@ var Wad = (function(){
     var context = new audioContext();
     getUserMedia = navigator.mozGetUserMedia || navigator.webkitGetUserMedia || navigator.getUserMedia;
     if (getUserMedia) {
-        console.log('get user media is supported')
+        // console.log('get user media is supported')
         getUserMedia = getUserMedia.bind(navigator);
     } else {
-        // have to figure out how to handle the error somehow
+        // console.log('get user media is not supported')
     }
 /////////////////////////////////////////
 

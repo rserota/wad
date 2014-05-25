@@ -720,6 +720,40 @@ grab it from the defaultImpulse URL **/
 //////////////////////////////////////////////////////////////
 
 
+    Wad.midiMap = function(event){
+        console.log(event.receivedTime, event.data)
+        if ( event.data[0] === 144 ) {
+            console.log('note')
+        }
+        else if ( event.data[0] === 176 ) {
+            console.log('controller')
+        }
+        else if ( event.data[0] === 224 ) {
+            console.log('pitch bend')
+        }
+    }
+
+
+    var m = null;   // m = MIDIAccess object for you to make calls on
+    var onSuccessCallback = function(access){ 
+        m = access;
+
+        // Things you can do with the MIDIAccess object:
+        var inputs = m.inputs();   // inputs = array of MIDIPorts
+        // var outputs = m.outputs(); // outputs = array of MIDIPorts
+        inputs[0].onmidimessage = Wad.midiMap; // onmidimessage( event ), event.data & event.receivedTime are populated
+        // var o = m.outputs()[0];           // grab first output device
+        // o.send( [ 0x90, 0x45, 0x7f ] );     // full velocity note on A4 on channel zero
+        // o.send( [ 0x80, 0x45, 0x7f ], window.performance.now() + 1000 );  // full velocity A4 note off in one second.
+    };
+    var onErrorCallback = function(err){
+        console.log("uh-oh! Something went wrong!  Error code: " + err.code );
+    }
+
+    navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
+
+
+
 
     Wad.presets = {
         hiHatClosed : { source : 'noise', env : { attack : .001, decay : .008, sustain : .2, hold : .03, release : .01}, filter : { type : 'highpass', frequency : 400, q : 1 } },

@@ -719,16 +719,30 @@ grab it from the defaultImpulse URL **/
     }
 //////////////////////////////////////////////////////////////
 
-
-    Wad.midiMap = function(event){
-        console.log(event.receivedTime, event.data)
-        if ( event.data[0] === 144 ) {
-            console.log('note')
+    Wad.midiInstrument = {
+        play : function() {
+            console.log('playing midi')
+        },
+        stop : function() {
+            console.log('stopping midi')
         }
-        else if ( event.data[0] === 176 ) {
+    }
+    Wad.midiMap = function(event){
+        // console.log(event.receivedTime, event.data)
+        if ( event.data[0] === 144 ) { // 144 means the medi message has note data
+            console.log('note')
+            if ( event.data[2] === 0 ) { // noteOn velocity of 0 means this is actually a noteOff message
+                Wad.midiInstrument.stop()
+            }
+            else if ( event.data[2] > 0 ) {
+                console.log
+                Wad.midiInstrument.play({})
+            }
+        }
+        else if ( event.data[0] === 176 ) { // 176 means the midi message has controller data
             console.log('controller')
         }
-        else if ( event.data[0] === 224 ) {
+        else if ( event.data[0] === 224 ) { // 224 means the midi message has pitch bend data
             console.log('pitch bend')
         }
     }

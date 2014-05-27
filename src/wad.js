@@ -280,7 +280,7 @@ as specified by the volume envelope and filter envelope **/
 /** When all the nodes are set up for this Wad, this function plugs them into each other,
 with special handling for reverb (ConvolverNode). **/
     var plugEmIn = function(that){
-        console.log('plugemin', that)
+        // console.log('plugemin', that)
         for ( var i = 1; i < that.nodes.length; i++ ) {
             that.nodes[i - 1].connect(that.nodes[i])
             if ( that.nodes[i] instanceof ConvolverNode ) {
@@ -717,6 +717,97 @@ grab it from the defaultImpulse URL **/
         'B7' : 3951.07,
         'C8' : 4186.01
     }
+
+    Wad.pitchesArray = [
+        'A0',
+        'A#0',
+        'B0',
+        'C1',
+        'C#1',
+        'D1',
+        'D#1',
+        'E1',
+        'F1',
+        'F#1',
+        'G1',
+        'G#1',
+        'A1',
+        'A#1',
+        'B1',
+        'C2',
+        'C#2',
+        'D2',
+        'D#2',
+        'E2',
+        'F2',
+        'F#2',
+        'G2',
+        'G#2',
+        'A2',
+        'A#2',
+        'B2',
+        'C3',
+        'C#3',
+        'D3',
+        'D#3',
+        'E3',
+        'F3',
+        'F#3',
+        'G3',
+        'G#3',
+        'A3',
+        'A#3',
+        'B3',
+        'C4',
+        'C#4',
+        'D4',
+        'D#4',
+        'E4',
+        'F4',
+        'F#4',
+        'G4',
+        'G#4',
+        'A4',
+        'A#4',
+        'B4',
+        'C5',
+        'C#5',
+        'D5',
+        'D#5',
+        'E5',
+        'F5',
+        'F#5',
+        'G5',
+        'G#5',
+        'A5',
+        'A#5',
+        'B5',
+        'C6',
+        'C#6',
+        'D6',
+        'D#6',
+        'E6',
+        'F6',
+        'F#6',
+        'G6',
+        'G#6',
+        'A6',
+        'A#6',
+        'B6',
+        'C7',
+        'C#7',
+        'D7',
+        'D#7',
+        'E7',
+        'F7',
+        'F#7',
+        'G7',
+        'G#7',
+        'A7',
+        'A#7',
+        'B7',
+        'C8'
+    ]
 //////////////////////////////////////////////////////////////
 
     Wad.midiInstrument = {
@@ -728,7 +819,7 @@ grab it from the defaultImpulse URL **/
         }
     }
     Wad.midiMap = function(event){
-        // console.log(event.receivedTime, event.data)
+        console.log(event.receivedTime, event.data)
         if ( event.data[0] === 144 ) { // 144 means the medi message has note data
             console.log('note')
             if ( event.data[2] === 0 ) { // noteOn velocity of 0 means this is actually a noteOff message
@@ -750,10 +841,12 @@ grab it from the defaultImpulse URL **/
 
     var m = null;   // m = MIDIAccess object for you to make calls on
     var onSuccessCallback = function(access){ 
+        console.log('got midi access')
         m = access;
 
         // Things you can do with the MIDIAccess object:
         var inputs = m.inputs();   // inputs = array of MIDIPorts
+        console.log(inputs)
         // var outputs = m.outputs(); // outputs = array of MIDIPorts
         inputs[0].onmidimessage = Wad.midiMap; // onmidimessage( event ), event.data & event.receivedTime are populated
         // var o = m.outputs()[0];           // grab first output device

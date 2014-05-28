@@ -210,7 +210,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.playable = 1 // if this is less than 1, this Wad is still waiting for a file to download before it can play
         this.pitch = Wad.pitches[arg.pitch] || arg.pitch || 440
         this.globalReverb = arg.globalReverb || false
-
+        this.gain = []
 
         constructEnv(this, arg)
         constructFilter(this, arg)
@@ -267,10 +267,10 @@ as specified by the volume envelope and filter envelope **/
     }
 
     var playEnv = function(wad, arg){
-        wad.gain.gain.linearRampToValueAtTime(0.0001, context.currentTime + arg.wait)
-        wad.gain.gain.linearRampToValueAtTime(wad.volume, context.currentTime + wad.env.attack + arg.wait)
-        wad.gain.gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, context.currentTime + wad.env.attack + wad.env.decay + arg.wait)
-        wad.gain.gain.linearRampToValueAtTime(0.0001, context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait)
+        wad.gain[0].gain.linearRampToValueAtTime(0.0001, context.currentTime + arg.wait)
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume, context.currentTime + wad.env.attack + arg.wait)
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, context.currentTime + wad.env.attack + wad.env.decay + arg.wait)
+        wad.gain[0].gain.linearRampToValueAtTime(0.0001, context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait)
         wad.soundSource.start(context.currentTime + arg.wait);
         wad.soundSource.stop(context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait)
     }
@@ -280,7 +280,7 @@ as specified by the volume envelope and filter envelope **/
 /** When all the nodes are set up for this Wad, this function plugs them into each other,
 with special handling for reverb (ConvolverNode). **/
     var plugEmIn = function(that){
-        console.log('plugemin', that)
+        // console.log('plugemin', that)
         for ( var i = 1; i < that.nodes.length; i++ ) {
             that.nodes[i - 1].connect(that.nodes[i])
             if ( that.nodes[i] instanceof ConvolverNode ) {
@@ -430,7 +430,7 @@ with special handling for reverb (ConvolverNode). **/
             env : {
                 attack : that.tremolo.attack
             },
-            destination : that.gain.gain
+            destination : that.gain[0].gain
         })
         that.tremolo.wad.play()
     }
@@ -504,8 +504,9 @@ then finally play the sound by calling playEnv() **/
             this.setUpExternalFxOnPlay(arg, context)
 
 
-            this.gain = context.createGain() // sets up the gain node
-            this.nodes.push(this.gain)
+            this.gain.unshift(context.createGain()) // sets up the gain node
+            this.gain[0].label = arg.label
+            this.nodes.push(this.gain[0])
 
             if ( this.reverb ) { // sets up reverb
                 setUpReverbOnPlay(this, arg)
@@ -534,7 +535,7 @@ then finally play the sound by calling playEnv() **/
 /** Change the volume of a Wad at any time, including during playback **/
     Wad.prototype.setVolume = function(volume){
         this.defaultVolume = volume;
-        if ( this.gain ) { this.gain.gain.value = volume };
+        if ( this.gain.length > 0 ) { this.gain[0].gain.value = volume };
     }
 /////////////////////////////////////////////////////////////////////////
 
@@ -554,9 +555,16 @@ then finally play the sound by calling playEnv() **/
 
 
 /** If multiple instances of a sound are playing simultaneously, stop() only can stop the most recent one **/
-    Wad.prototype.stop = function(){
+    Wad.prototype.stop = function(label){
         if ( !( this.source === 'mic' ) ) {
-            this.gain.gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release)
+            if ( label ) {
+                for ( var i = 0; i < this.gain.length; i++ ) {
+                    if ( this.gain[i].label === label ) {
+                        this.gain[i].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release)
+                    }
+                }
+            }
+            this.gain[0].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release)
             // this.soundSource.stop(context.currentTime+this.env.release)
         }
         else {
@@ -717,7 +725,157 @@ grab it from the defaultImpulse URL **/
         'B7' : 3951.07,
         'C8' : 4186.01
     }
+
+    Wad.pitchesArray = [
+        'C0',
+        'C#0',
+        'D0',
+        'D#0',
+        'E0',
+        'F0',
+        'F#0',
+        'G0',
+        'G#0',
+        'A0',
+        'A#0',
+        'B0',
+        'C1',
+        'C#1',
+        'D1',
+        'D#1',
+        'E1',
+        'F1',
+        'F#1',
+        'G1',
+        'G#1',
+        'A1',
+        'A#1',
+        'B1',
+        'C2',
+        'C#2',
+        'D2',
+        'D#2',
+        'E2',
+        'F2',
+        'F#2',
+        'G2',
+        'G#2',
+        'A2',
+        'A#2',
+        'B2',
+        'C3',
+        'C#3',
+        'D3',
+        'D#3',
+        'E3',
+        'F3',
+        'F#3',
+        'G3',
+        'G#3',
+        'A3',
+        'A#3',
+        'B3',
+        'C4',
+        'C#4',
+        'D4',
+        'D#4',
+        'E4',
+        'F4',
+        'F#4',
+        'G4',
+        'G#4',
+        'A4',
+        'A#4',
+        'B4',
+        'C5',
+        'C#5',
+        'D5',
+        'D#5',
+        'E5',
+        'F5',
+        'F#5',
+        'G5',
+        'G#5',
+        'A5',
+        'A#5',
+        'B5',
+        'C6',
+        'C#6',
+        'D6',
+        'D#6',
+        'E6',
+        'F6',
+        'F#6',
+        'G6',
+        'G#6',
+        'A6',
+        'A#6',
+        'B6',
+        'C7',
+        'C#7',
+        'D7',
+        'D#7',
+        'E7',
+        'F7',
+        'F#7',
+        'G7',
+        'G#7',
+        'A7',
+        'A#7',
+        'B7',
+        'C8'
+    ]
 //////////////////////////////////////////////////////////////
+
+    Wad.midiInstrument = {
+        play : function() {
+            console.log('playing midi')
+        },
+        stop : function() {
+            console.log('stopping midi')
+        }
+    }
+    Wad.midiMap = function(event){
+        console.log(event.receivedTime, event.data)
+        if ( event.data[0] === 144 ) { // 144 means the medi message has note data
+            console.log('note')
+            if ( event.data[2] === 0 ) { // noteOn velocity of 0 means this is actually a noteOff message
+                Wad.midiInstrument.stop(Wad.pitchesArray[event.data[1]])
+            }
+            else if ( event.data[2] > 0 ) {
+                console.log(Wad.pitchesArray[event.data[1]])
+                Wad.midiInstrument.play({pitch : Wad.pitchesArray[event.data[1]], label : Wad.pitchesArray[event.data[1]]})
+            }
+        }
+        else if ( event.data[0] === 176 ) { // 176 means the midi message has controller data
+            console.log('controller')
+        }
+        else if ( event.data[0] === 224 ) { // 224 means the midi message has pitch bend data
+            console.log('pitch bend')
+        }
+    }
+
+
+    var m = null;   // m = MIDIAccess object for you to make calls on
+    var onSuccessCallback = function(access){ 
+        console.log('got midi access')
+        m = access;
+
+        // Things you can do with the MIDIAccess object:
+        var inputs = m.inputs();   // inputs = array of MIDIPorts
+        // console.log(inputs)
+        // var outputs = m.outputs(); // outputs = array of MIDIPorts
+        inputs[0].onmidimessage = Wad.midiMap; // onmidimessage( event ), event.data & event.receivedTime are populated
+        // var o = m.outputs()[0];           // grab first output device
+        // o.send( [ 0x90, 0x45, 0x7f ] );     // full velocity note on A4 on channel zero
+        // o.send( [ 0x80, 0x45, 0x7f ], window.performance.now() + 1000 );  // full velocity A4 note off in one second.
+    };
+    var onErrorCallback = function(err){
+        console.log("uh-oh! Something went wrong!  Error code: " + err.code );
+    }
+
+    navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
+
 
 
 

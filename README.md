@@ -139,6 +139,7 @@ saw.play({
   volume : 0.8,
   wait : 0, // Time in seconds between calling play() and actually triggering the note.
   pitch : 'A4', // A4 is 440 hertz.
+  label : 'A', // A label that identifies this note.
   env : {hold : 9001},
   panning : [1, -1, 10],
   filter : {frequency : 900}
@@ -148,6 +149,15 @@ saw.play({
 If you like, you can also select a pitch by frequency.
 
 <code>saw.play({pitch : 440})</code>
+
+<h4>Play Labels</h4>
+
+When you call <code>stop()</code> on a Wad, it will only stop the most recently triggered note. If you want to retain control over multiple notes that played from the same Wad, you can label those notes when <code>play()</code> is called. When <code>stop()</code> is called, you can pass in a label argument to stop all currently sustained notes with that label. 
+
+<pre><code>saw.play({pitch : 'A4', label : 'A4'}) // The label can be any string, but using the same name as the note is often sensible.
+saw.play({pitch : 'G4', label : 'G4'})
+saw.stop('A4') // The first note will stop, but the second note will continue playing.</code></pre>
+
 
 <h3>Changing Settings During Playback</h3>
 

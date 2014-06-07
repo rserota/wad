@@ -726,7 +726,8 @@ grab it from the defaultImpulse URL **/
         'C8' : 4186.01
     }
 
-    Wad.pitchesArray = [
+
+    Wad.pitchesArray = [ // Just an array of note names. This can be useful for mapping MIDI data to notes. 
         'C0',
         'C#0',
         'D0',
@@ -835,9 +836,10 @@ grab it from the defaultImpulse URL **/
             console.log('stopping midi')
         }
     }
-    Wad.midiMap = function(event){
+    Wad.midiMaps = []
+    Wad.midiMaps[0] = function(event){
         console.log(event.receivedTime, event.data)
-        if ( event.data[0] === 144 ) { // 144 means the medi message has note data
+        if ( event.data[0] === 144 ) { // 144 means the midi message has note data
             console.log('note')
             if ( event.data[2] === 0 ) { // noteOn velocity of 0 means this is actually a noteOff message
                 Wad.midiInstrument.stop(Wad.pitchesArray[event.data[1]])
@@ -865,7 +867,9 @@ grab it from the defaultImpulse URL **/
         var inputs = m.inputs();   // inputs = array of MIDIPorts
         // console.log(inputs)
         // var outputs = m.outputs(); // outputs = array of MIDIPorts
-        inputs[0].onmidimessage = Wad.midiMap; // onmidimessage( event ), event.data & event.receivedTime are populated
+        for ( var i = 0; i < inputs.length; i++ ) {
+            inputs[i].onmidimessage = Wad.midiMaps[i]; // onmidimessage( event ), event.data & event.receivedTime are populated
+        }
         // var o = m.outputs()[0];           // grab first output device
         // o.send( [ 0x90, 0x45, 0x7f ] );     // full velocity note on A4 on channel zero
         // o.send( [ 0x80, 0x45, 0x7f ], window.performance.now() + 1000 );  // full velocity A4 note off in one second.

@@ -71,22 +71,8 @@ var Wad = (function(){
             })
         }
         else {
-            that.filter = ( that.filter || [] )
-
-            var filter = {
-                type : arg.filter.type,
-                frequency : arg.filter.frequency,
-                q : arg.filter.q || 1
-            }
-
-            if ( arg.filter.env ) {
-                filter.env = {
-                    attack : arg.filter.env.attack,
-                    frequency : arg.filter.env.frequency
-                }
-            }
-
-            that.filter.push(filter)
+            arg.filter = [arg.filter]
+            that.filter = arg.filter
         }
     }
 //////////////////////////////////////////////////////
@@ -342,11 +328,15 @@ with special handling for reverb (ConvolverNode). **/
 /** Set the filter and filter envelope according to play() arguments, or revert to defaults **/
 
     var createFilters = function(that, arg){
+        console.log('arg ', arg)
+        // console.log(that.filter)
         that.filter.forEach(function (filter, i) {
+            console.log(filter)
             filter.node = context.createBiquadFilter()
+            console.log(filter)
             filter.node.type = filter.type
-            filter.node.frequency.value = arg.filter[i].frequency || filter.frequency
-            filter.node.Q.value = arg.filter[i].q || filter.q
+            filter.node.frequency.value = arg.filter[i] ? ( arg.filter[i].frequency || filter.frequency ) : filter.frequency
+            filter.node.Q.value = arg.filter[i] ? ( arg.filter[i].q || filter.q ) : filter.q
 
             if ( arg.filter[i].env || that.filter[i].env && !( that.source === "mic" ) ) {
                 filter.env = {

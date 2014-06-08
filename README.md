@@ -214,9 +214,9 @@ Sometimes you might want to incorporate external libraries into Wad, for example
 
 <h3>Presets</h3>
 
-If you'd like to use a pre-configured Wad, check out the presets.  They should give you a better idea of the sorts of sounds that you can create with Wad.js.  For example, you can create a Wad using the preset 'highHatClosed' like this:
+If you'd like to use a pre-configured Wad, check out the presets.  They should give you a better idea of the sorts of sounds that you can create with Wad.js.  For example, you can create a Wad using the preset 'hiHatClosed' like this:
 
-<pre><code>var hat = new Wad(Wad.presets.highHatClosed)</code></pre>
+<pre><code>var hat = new Wad(Wad.presets.hiHatClosed)</code></pre>
 
 <h3>MIDI Input</h3>
 

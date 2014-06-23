@@ -8,6 +8,7 @@ var settings = {};
 for (var i = 0; i < p.length; i++){
 if (p[i].value) params.push(p[i].value);
 }
+
 console.log(params + " " + params.length);
 
 settings = {

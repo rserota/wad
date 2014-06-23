@@ -1,5 +1,4 @@
 
-var Wad = (function(){
 
 /** Let's do the vendor-prefix dance. **/
     var audioContext = window.AudioContext || window.webkitAudioContext;
@@ -13,6 +12,7 @@ var Wad = (function(){
     }
 /////////////////////////////////////////
 
+var Wad = (function(){
 
 /** Pre-render a noise buffer instead of generating noise on the fly. **/
     var noiseBuffer = (function(){
@@ -328,12 +328,9 @@ with special handling for reverb (ConvolverNode). **/
 /** Set the filter and filter envelope according to play() arguments, or revert to defaults **/
 
     var createFilters = function(that, arg){
-        console.log('arg ', arg)
         // console.log(that.filter)
         that.filter.forEach(function (filter, i) {
-            console.log(filter)
             filter.node = context.createBiquadFilter()
-            console.log(filter)
             filter.node.type = filter.type
             filter.node.frequency.value = arg.filter[i] ? ( arg.filter[i].frequency || filter.frequency ) : filter.frequency
             filter.node.Q.value = arg.filter[i] ? ( arg.filter[i].q || filter.q ) : filter.q
@@ -554,7 +551,9 @@ then finally play the sound by calling playEnv() **/
                     }
                 }
             }
-            this.gain[0].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release)
+            if ( !label ) {
+                this.gain[0].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release)
+            }
             // this.soundSource.stop(context.currentTime+this.env.release)
         }
         else {
@@ -828,14 +827,15 @@ grab it from the defaultImpulse URL **/
     }
     Wad.midiMaps = []
     Wad.midiMaps[0] = function(event){
-        console.log(event.receivedTime, event.data)
+        // console.log(event.receivedTime, event.data)
         if ( event.data[0] === 144 ) { // 144 means the midi message has note data
-            console.log('note')
+            // console.log('note')
             if ( event.data[2] === 0 ) { // noteOn velocity of 0 means this is actually a noteOff message
+                console.log('|| stopping note: ', Wad.pitchesArray[event.data[1]])
                 Wad.midiInstrument.stop(Wad.pitchesArray[event.data[1]])
             }
             else if ( event.data[2] > 0 ) {
-                console.log(Wad.pitchesArray[event.data[1]])
+                console.log('> playing note: ', Wad.pitchesArray[event.data[1]])
                 Wad.midiInstrument.play({pitch : Wad.pitchesArray[event.data[1]], label : Wad.pitchesArray[event.data[1]]})
             }
         }
@@ -855,7 +855,7 @@ grab it from the defaultImpulse URL **/
 
         // Things you can do with the MIDIAccess object:
         var inputs = m.inputs();   // inputs = array of MIDIPorts
-        // console.log(inputs)
+        console.log(inputs)
         // var outputs = m.outputs(); // outputs = array of MIDIPorts
         for ( var i = 0; i < inputs.length; i++ ) {
             inputs[i].onmidimessage = Wad.midiMaps[i]; // onmidimessage( event ), event.data & event.receivedTime are populated

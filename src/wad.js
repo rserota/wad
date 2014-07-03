@@ -148,6 +148,22 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             request.send();
         }
     }
+
+    var constructPanning = function(that, arg){        
+        if ( 'panning' in arg ) {
+            if ( typeof(arg.panning) === "number" ) {
+                that.panning = { location : [ arg.panning, 0, 0 ] }
+            }
+
+            else {
+                that.panning = { location : [ arg.panning[0], arg.panning[1], arg.panning[2] ] }
+            }
+        }
+
+        else {
+            that.panning = { location : [ 0, 0, 0 ] }
+        }
+    }
 //////////////////////////////////////////////////////////////////////////////
 
 
@@ -204,25 +220,13 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         constructTremolo(this, arg)
         constructReverb(this, arg)
         this.constructExternalFx(arg, context)
+        constructPanning(this, arg)
 
-        if ( 'panning' in arg ) {
-            if ( typeof(arg.panning) === "number" ) {
-                this.panning = { location : [ arg.panning, 0, 0 ] }
-            }
-
-            else {
-                this.panning = { location : [ arg.panning[0], arg.panning[1], arg.panning[2] ] }
-            }
-        }
-
-        else {
-            this.panning = { location : [ 0, 0, 0 ] }
-        }
 ////////////////////////////////
 
 
 /** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
-        if( this.source === 'noise' ) {
+        if ( this.source === 'noise' ) {
             this.decodedBuffer = noiseBuffer
         }
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,11 +240,73 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
 
 /** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
-        else if( !( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) ) {
+        else if ( !( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) ) {
             requestAudioFile(this, arg.callback)
         }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        this.poly = function(arg){
+            this.wads = []
+            this.input = context.createAnalyser()
+            this.nodes = [this.input]
+            this.destination = arg.destination || context.destination // the last node the sound is routed to
+            this.output.connect(this.destination)
+            this.rec = new Recorder(multiwad.node, {workerPath: './Recorderjs/recorderWorker.js'})
+
+            this.volume = arg.volume || 1  
+            this.output = context.createGain()
+            this.output.gain.value = this.volume
+
+            this.playable = 1 // if this is less than 1, this Wad is still waiting for a file to download before it can play
+            this.globalReverb = arg.globalReverb || false
+
+            constructFilter(this, arg)
+            if ( this.filter ) { createFilters(this, arg) }
+
+
+            constructReverb(this, arg)
+            if ( this.reverb ) {
+                setUpReverbOnPlay(this, arg)
+            }
+
+            this.constructExternalFx(arg, context)
+            constructPanning(this, arg)
+            setUpPanningOnPlay(this, arg)
+
+
+            this.setVolume = function(volume){
+                this.output.gain.value = volume
+            }
+            this.play = function(arg){
+                if ( this.playable < 1 ) {
+                    this.playOnLoad = true
+                    this.playOnLoadArg = arg
+                }
+                else {
+                    if ( arg && arg.volume ) {
+                        this.output.gain.value = arg.volume // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
+                        arg.volume = undefined // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad. 
+                    }
+                    for ( var i = 0; i < this.wads.length; i++ ) {
+                        this.wads[i].play(arg)
+                    }
+                }
+            }
+            this.stop = function(arg){
+                for ( var i = 0; i < this.wads.length; i++ ) {
+                    this.wads[i].stop(arg)
+                }
+            }
+        }
+
     }
+
+// multiwad = {
+//     node : context.createAnalyser()
+// }
+// multiwad.rec = new Recorder(multiwad.node, {workerPath: './src/Recorderjs/recorderWorker.js'})
+// multiwad.node.connect(context.destination)
+
 
 
 /** When a note is played, these two functions will schedule changes in volume and filter frequency,

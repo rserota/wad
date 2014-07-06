@@ -245,60 +245,6 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        this.poly = function(arg){
-            this.wads = []
-            this.input = context.createAnalyser()
-            this.nodes = [this.input]
-            this.destination = arg.destination || context.destination // the last node the sound is routed to
-            this.output.connect(this.destination)
-            this.rec = new Recorder(multiwad.node, {workerPath: './Recorderjs/recorderWorker.js'})
-
-            this.volume = arg.volume || 1  
-            this.output = context.createGain()
-            this.output.gain.value = this.volume
-
-            this.playable = 1 // if this is less than 1, this Wad is still waiting for a file to download before it can play
-            this.globalReverb = arg.globalReverb || false
-
-            constructFilter(this, arg)
-            if ( this.filter ) { createFilters(this, arg) }
-
-
-            constructReverb(this, arg)
-            if ( this.reverb ) {
-                setUpReverbOnPlay(this, arg)
-            }
-
-            this.constructExternalFx(arg, context)
-            constructPanning(this, arg)
-            setUpPanningOnPlay(this, arg)
-
-
-            this.setVolume = function(volume){
-                this.output.gain.value = volume
-            }
-            this.play = function(arg){
-                if ( this.playable < 1 ) {
-                    this.playOnLoad = true
-                    this.playOnLoadArg = arg
-                }
-                else {
-                    if ( arg && arg.volume ) {
-                        this.output.gain.value = arg.volume // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
-                        arg.volume = undefined // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad. 
-                    }
-                    for ( var i = 0; i < this.wads.length; i++ ) {
-                        this.wads[i].play(arg)
-                    }
-                }
-            }
-            this.stop = function(arg){
-                for ( var i = 0; i < this.wads.length; i++ ) {
-                    this.wads[i].stop(arg)
-                }
-            }
-        }
-
     }
 
 // multiwad = {
@@ -401,10 +347,10 @@ with special handling for reverb (ConvolverNode). **/
             filter.node.frequency.value = arg.filter[i] ? ( arg.filter[i].frequency || filter.frequency ) : filter.frequency
             filter.node.Q.value = arg.filter[i] ? ( arg.filter[i].q || filter.q ) : filter.q
 
-            if ( arg.filter[i].env || that.filter[i].env && !( that.source === "mic" ) ) {
+            if ( ( arg.filter[i].env || that.filter[i].env ) && !( that.source === "mic" ) ) {
                 filter.env = {
-                    attack : arg.filter[i].env.attack || that.filter[i].env.attack,
-                    frequency : arg.filter[i].env.frequency || that.filter[i].env.frequency
+                    attack : ( arg.filter[i].env && arg.filter[i].env.attack ) || that.filter[i].env.attack,
+                    frequency : ( arg.filter[i].env && arg.filter[i].env.frequency ) || that.filter[i].env.frequency
                 }
             }
 
@@ -490,10 +436,12 @@ with special handling for reverb (ConvolverNode). **/
 ///////////////////////////////////////////////////////////////
 
 
+
 /** Method to allow users to setup external fx in the constructor **/
     Wad.prototype.constructExternalFx = function(arg, context){
         //override me in your own code
     };
+
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -628,6 +576,82 @@ then finally play the sound by calling playEnv() **/
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+    Wad.Poly = function(arg){
+        this.wads = []
+        this.input = context.createAnalyser()
+        this.nodes = [this.input]
+        this.destination = arg.destination || context.destination // the last node the sound is routed to
+        this.volume = arg.volume || 1  
+        this.output = context.createGain()
+        this.output.gain.value = this.volume
+        // this.output.connect(this.destination)
+        this.rec = new Recorder(this.output, {workerPath: 'src/Recorderjs/recorderWorker.js'})
+
+
+        this.playable = 1 // if this is less than 1, this Wad is still waiting for a file to download before it can play
+        this.globalReverb = arg.globalReverb || false
+
+        constructFilter(this, arg)
+        if ( this.filter ) { createFilters(this, arg) }
+
+
+        constructReverb(this, arg)
+        if ( this.reverb ) {
+            setUpReverbOnPlay(this, arg)
+        }
+
+        this.constructExternalFx(arg, context)
+        constructPanning(this, arg)
+        setUpPanningOnPlay(this, arg)
+
+        this.nodes.push(this.output)
+        plugEmIn(this)
+
+        this.setVolume = function(volume){
+            this.output.gain.value = volume
+        }
+
+        this.play = function(arg){
+            if ( this.playable < 1 ) {
+                this.playOnLoad = true
+                this.playOnLoadArg = arg
+            }
+            else {
+                if ( arg && arg.volume ) {
+                    this.output.gain.value = arg.volume // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
+                    arg.volume = undefined // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad. 
+                }
+                for ( var i = 0; i < this.wads.length; i++ ) {
+                    this.wads[i].play(arg)
+                }
+            }
+        }
+
+        this.stop = function(arg){
+            for ( var i = 0; i < this.wads.length; i++ ) {
+                this.wads[i].stop(arg)
+            }
+        }
+
+        this.add = function(wad){
+            wad.destination = this.input
+            this.wads.push(wad)
+        }
+
+        this.remove = function(wad){
+            for ( var i = 0; i < this.wads.length; i++ ) {
+                if ( this.wads[i] === wad ) {
+                    this.wads[i].destination = context.destination
+                    this.wads.splice(i,1)
+                }
+            }
+        }
+    }
+
+    Wad.Poly.prototype.constructExternalFx = function(arg, context){
+
+    }
 
 /** If a Wad is created with reverb without specifying a URL for the impulse response,
 grab it from the defaultImpulse URL **/

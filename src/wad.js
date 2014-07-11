@@ -277,8 +277,9 @@ as specified by the volume envelope and filter envelope **/
 
 /** When all the nodes are set up for this Wad, this function plugs them into each other,
 with special handling for reverb (ConvolverNode). **/
-    var plugEmIn = function(that){
+    var plugEmIn = function(that, arg){
         // console.log('plugemin', that)
+        var destination = ( arg && arg.destination ) || that.destination
         for ( var i = 1; i < that.nodes.length; i++ ) {
             that.nodes[i - 1].connect(that.nodes[i])
             if ( that.nodes[i] instanceof ConvolverNode ) {
@@ -286,11 +287,11 @@ with special handling for reverb (ConvolverNode). **/
             }
         }
 
-        that.nodes[that.nodes.length - 1].connect(that.destination)
+        that.nodes[that.nodes.length - 1].connect(destination)
         if ( Wad.reverb && that.globalReverb ) {
             that.nodes[that.nodes.length - 1].connect(Wad.reverb.node)
             Wad.reverb.node.connect(Wad.reverb.gain)
-            Wad.reverb.gain.connect(that.destination)
+            Wad.reverb.gain.connect(destination)
         }
     }
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -466,7 +467,7 @@ then finally play the sound by calling playEnv() **/
 
         else if ( this.source === 'mic' ) {
             console.log('mic play')
-            plugEmIn(this)
+            plugEmIn(this, arg)
         }
 
         else {
@@ -518,7 +519,7 @@ then finally play the sound by calling playEnv() **/
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-            plugEmIn(this)
+            plugEmIn(this, arg)
 
             if ( this.filter && this.filter.env ) { filterEnv(this, arg) }
             playEnv(this, arg)
@@ -606,7 +607,7 @@ then finally play the sound by calling playEnv() **/
         setUpPanningOnPlay(this, arg)
 
         this.nodes.push(this.output)
-        plugEmIn(this)
+        plugEmIn(this, arg)
 
         this.setVolume = function(volume){
             this.output.gain.value = volume

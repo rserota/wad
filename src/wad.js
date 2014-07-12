@@ -638,13 +638,24 @@ then finally play the sound by calling playEnv() **/
         this.add = function(wad){
             wad.destination = this.input
             this.wads.push(wad)
+            if ( wad instanceof Wad.Poly ) {
+                console.log('poly!')
+                wad.output.disconnect(0)
+                wad.output.connect(this.input)
+            }
         }
+
+
 
         this.remove = function(wad){
             for ( var i = 0; i < this.wads.length; i++ ) {
                 if ( this.wads[i] === wad ) {
                     this.wads[i].destination = context.destination
                     this.wads.splice(i,1)
+                    if ( wad instanceof Wad.Poly ) {
+                        wad.output.disconnect(0)
+                        wad.output.connect(context.destination)
+                    }
                 }
             }
         }

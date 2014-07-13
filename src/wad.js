@@ -1001,11 +1001,17 @@ grab it from the defaultImpulse URL **/
         console.log("uh-oh! Something went wrong!  Error code: " + err.code );
     }
 
-if ( navigator && navigator.requestMIDIAccess ) {   
-    navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
+if ( navigator && navigator.requestMIDIAccess ) {       
+    try {
+        navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
+    }
+    catch(err) {
+        var text = "There was an error on this page.\n\n";
+        text += "Error description: " + err.message + "\n\n";
+        text += "Click OK to continue.\n\n";
+        console.log(text);
+    }
 }
-
-
 
 
     Wad.presets = {

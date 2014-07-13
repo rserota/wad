@@ -139,9 +139,12 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             that.playable--
             request.onload = function(){
                 context.decodeAudioData(request.response, function (decodedBuffer){
+
+                    console.log('request callback')
                     that.reverb.buffer = decodedBuffer
                     that.playable++
                     if ( that.playOnLoad ) { that.play(that.playOnLoadArg) }
+                    if ( that instanceof Wad.Poly ) { that.setUp(arg) }
 
                 })
             }
@@ -579,82 +582,110 @@ then finally play the sound by calling playEnv() **/
 
 
     Wad.Poly = function(arg){
-        this.wads = []
-        this.input = context.createAnalyser()
-        this.nodes = [this.input]
-        this.destination = arg.destination || context.destination // the last node the sound is routed to
-        this.volume = arg.volume || 1  
-        this.output = context.createGain()
-        this.output.gain.value = this.volume
-        // this.output.connect(this.destination)
-        this.rec = new Recorder(this.output, {workerPath: 'src/Recorderjs/recorderWorker.js'})
+        if ( !arg ) { arg = {} }
+        this.isSetUp = false
+        this.playable = 1
+        this.setUp = function(arg){
+            this.wads = []
+            this.input = context.createAnalyser()
+            this.nodes = [this.input]
+            this.destination = arg.destination || context.destination // the last node the sound is routed to
+            this.volume = arg.volume || 1  
+            this.output = context.createGain()
+            this.output.gain.value = this.volume
+            // this.output.connect(this.destination)
+            // this.rec = new Recorder(this.output, {workerPath: 'src/Recorderjs/recorderWorker.js'})
 
 
-        this.playable = 1 // if this is less than 1, this Wad is still waiting for a file to download before it can play
-        this.globalReverb = arg.globalReverb || false
+            this.globalReverb = arg.globalReverb || false
 
-        constructFilter(this, arg)
-        if ( this.filter ) { createFilters(this, arg) }
+            constructFilter(this, arg)
+            if ( this.filter ) { createFilters(this, arg) }
 
 
-        constructReverb(this, arg)
-        if ( this.reverb ) {
-            setUpReverbOnPlay(this, arg)
+            // constructReverb(this, arg)
+            if ( this.reverb ) {
+                setUpReverbOnPlay(this, arg)
+            }
+            console.log(this)
+            this.constructExternalFx(arg, context)
+            constructPanning(this, arg)
+            setUpPanningOnPlay(this, arg)
+
+            this.nodes.push(this.output)
+            console.log('plugemin')
+            plugEmIn(this, arg)
+            this.isSetUp = true
+            if ( arg.callback ) {
+                arg.callback(this)
+            }
+        }
+        if ( arg.reverb ) {
+            constructReverb(this, arg)
+        }
+        else {
+            this.setUp(arg)
         }
 
-        this.constructExternalFx(arg, context)
-        constructPanning(this, arg)
-        setUpPanningOnPlay(this, arg)
-
-        this.nodes.push(this.output)
-        plugEmIn(this, arg)
-
         this.setVolume = function(volume){
-            this.output.gain.value = volume
+            if ( this.isSetUp ) {
+                this.output.gain.value = volume
+            }
         }
 
         this.play = function(arg){
-            if ( this.playable < 1 ) {
-                this.playOnLoad = true
-                this.playOnLoadArg = arg
+            if ( this.isSetUp ) {
+                if ( this.playable < 1 ) {
+                    this.playOnLoad = true
+                    this.playOnLoadArg = arg
+                }
+                else {
+                    if ( arg && arg.volume ) {
+                        this.output.gain.value = arg.volume // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
+                        arg.volume = undefined // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad. 
+                    }
+                    for ( var i = 0; i < this.wads.length; i++ ) {
+                        this.wads[i].play(arg)
+                    }
+                }
             }
             else {
-                if ( arg && arg.volume ) {
-                    this.output.gain.value = arg.volume // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
-                    arg.volume = undefined // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad. 
-                }
-                for ( var i = 0; i < this.wads.length; i++ ) {
-                    this.wads[i].play(arg)
-                }
+                console.log('not set up')
             }
         }
 
         this.stop = function(arg){
-            for ( var i = 0; i < this.wads.length; i++ ) {
-                this.wads[i].stop(arg)
+            if ( this.isSetUp ) {   
+                for ( var i = 0; i < this.wads.length; i++ ) {
+                    this.wads[i].stop(arg)
+                }
             }
         }
 
         this.add = function(wad){
-            wad.destination = this.input
-            this.wads.push(wad)
-            if ( wad instanceof Wad.Poly ) {
-                console.log('poly!')
-                wad.output.disconnect(0)
-                wad.output.connect(this.input)
+            if ( this.isSetUp ) {
+                wad.destination = this.input
+                this.wads.push(wad)
+                if ( wad instanceof Wad.Poly ) {
+                    console.log('poly!')
+                    wad.output.disconnect(0)
+                    wad.output.connect(this.input)
+                }
             }
         }
 
 
 
         this.remove = function(wad){
-            for ( var i = 0; i < this.wads.length; i++ ) {
-                if ( this.wads[i] === wad ) {
-                    this.wads[i].destination = context.destination
-                    this.wads.splice(i,1)
-                    if ( wad instanceof Wad.Poly ) {
-                        wad.output.disconnect(0)
-                        wad.output.connect(context.destination)
+            if ( this.isSetUp ) {
+                for ( var i = 0; i < this.wads.length; i++ ) {
+                    if ( this.wads[i] === wad ) {
+                        this.wads[i].destination = context.destination
+                        this.wads.splice(i,1)
+                        if ( wad instanceof Wad.Poly ) {
+                            wad.output.disconnect(0)
+                            wad.output.connect(context.destination)
+                        }
                     }
                 }
             }
@@ -970,7 +1001,9 @@ grab it from the defaultImpulse URL **/
         console.log("uh-oh! Something went wrong!  Error code: " + err.code );
     }
 
+if ( navigator && navigator.requestMIDIAccess ) {   
     navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
+}
 
 
 

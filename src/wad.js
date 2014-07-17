@@ -565,11 +565,15 @@ then finally play the sound by calling playEnv() **/
             if ( label ) {
                 for ( var i = 0; i < this.gain.length; i++ ) {
                     if ( this.gain[i].label === label ) {
+                        this.gain[i].gain.cancelScheduledValues(context.currentTime) // not sure if this helps
+                        this.gain[i].gain.setValueAtTime(this.gain[i].gain.value, context.currentTime)
                         this.gain[i].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release)
                     }
                 }
             }
             if ( !label ) {
+                this.gain[0].gain.cancelScheduledValues(context.currentTime) // not sure if this helps
+                this.gain[0].gain.setValueAtTime(this.gain[0].gain.value, context.currentTime)
                 this.gain[0].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release)
             }
             // this.soundSource.stop(context.currentTime+this.env.release)

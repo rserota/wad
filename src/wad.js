@@ -635,6 +635,7 @@ then finally play the sound by calling playEnv() **/
             if ( this.isSetUp ) {
                 this.output.gain.value = volume
             }
+            return this
         }
 
         this.play = function(arg){
@@ -656,6 +657,7 @@ then finally play the sound by calling playEnv() **/
             else {
                 console.log('not set up')
             }
+            return this
         }
 
         this.stop = function(arg){
@@ -676,6 +678,7 @@ then finally play the sound by calling playEnv() **/
                     wad.output.connect(this.input)
                 }
             }
+            return this
         }
 
 
@@ -693,6 +696,7 @@ then finally play the sound by calling playEnv() **/
                     }
                 }
             }
+            return this
         }
     }
 

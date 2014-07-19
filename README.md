@@ -115,6 +115,8 @@ In order to use reverb, you will need a server to send an impulse response via X
 
 <h4>Global Reverb</h4>
 
+<em>Global reverb has been deprecated, since PolyWads provide a more flexible way to apply reverb to multiple Wads. Global reverb will be removed at some point in the near future.</em>
+
 If you want to use reverb on many Wads simultaneously, you may run into performance issues. You can work around this problem by using global reverb, which uses the same convolver node for many Wads, rather than using a seperate convolver node for each Wad that uses reverb. To use global reverb, there are two steps.  First, call <code>Wad.setGlobalReverb()</code>.
 
 <pre><code>Wad.setGlobalReverb({
@@ -186,7 +188,36 @@ You can also use microphone input as the source for a Wad. You can apply reverb 
 voice.play()
 </code></pre>
 
-<h3>External FX loop</h3>
+<h3>PolyWads</h3>
+
+In many cases, it is useful to group multiple Wads together. This can be accomplished with a PolyWad, a multi-purpose object that can store other Wads and PolyWads. There are two main cases where you might want to group several Wads together. One case is when you want to make a complex instrument that uses multiple oscillators.  Other audio synthesis programs often have instruments that combine multiple oscillators, with names like 'TripleOscillator' or '3xOSC'.
+
+<pre><code>var sine = new Wad({ source : 'sine' })
+var square = new Wad({ source : 'square' })
+var triangle = new Wad({ source : 'triangle' })
+
+var tripleOscillator = new Wad.Poly()
+
+tripleOscillator.add(sine).add(square).add(triangle) // Many methods are chainable for convenience, but it's never necessary to do so. 
+
+tripleOscillator.play({ pitch : 'G#'})
+tripleOscillator.setVolume(.5)
+tripleOscillator.stop() // play(), stop(), and various setter methods can be called on a PolyWad just as they would be called on a regular Wad.
+
+tripleOscillator.remove(triangle)
+</code></pre>
+
+The second main case in which you would want to group several Wads together is to make a mixer track, where several Wads share a set of effects and filters.
+
+<pre><code>var mixerTrack = new Wad.Poly({
+    filter : {
+        type : 'lowpass',
+        frequency : 700,
+        q : 3
+    },
+})
+
+<h3>External FX</h3>
 
 Sometimes you might want to incorporate external libraries into Wad, for example FX or visualizers. You can override the constructExternalFx and setUpExternalFxOnPlay methods to add those nodes to the wad chain. In the following example the values are hardcoded, but they could easily have been passed as arguments to play.
 

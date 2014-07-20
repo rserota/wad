@@ -200,11 +200,11 @@ var tripleOscillator = new Wad.Poly()
 
 tripleOscillator.add(sine).add(square).add(triangle) // Many methods are chainable for convenience, but it's never necessary to do so. 
 
-tripleOscillator.play({ pitch : 'G#'})
+tripleOscillator.play({ pitch : 'G#2'})
 tripleOscillator.setVolume(.5)
 tripleOscillator.stop() // play(), stop(), and various setter methods can be called on a PolyWad just as they would be called on a regular Wad.
 
-tripleOscillator.remove(triangle)
+tripleOscillator.remove(triangle) // It's really just a double-oscillator at this point.
 </code></pre>
 
 The second main case in which you would want to group several Wads together is to make a mixer track, where several Wads share a set of effects and filters.
@@ -215,7 +215,12 @@ The second main case in which you would want to group several Wads together is t
         frequency : 700,
         q : 3
     },
+    panning : 1
 })
+
+mixerTrack.add(tripleOscillator).add(triangle)
+tripleOscillator.play({ pitch : 'Eb3'}) // This note is filtered and panned.
+</code></pre>
 
 <h3>External FX</h3>
 

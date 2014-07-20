@@ -625,7 +625,7 @@ then finally play the sound by calling playEnv() **/
             }
         }
         if ( arg.reverb ) {
-            constructReverb(this, arg)
+            constructReverb(this, arg) // We need to make sure we have downloaded the impulse response before continuing with the setup.
         }
         else {
             this.setUp(arg)

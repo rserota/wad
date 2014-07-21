@@ -347,7 +347,7 @@ with special handling for reverb (ConvolverNode). **/
             filter.node                 = context.createBiquadFilter()
             filter.node.type            = filter.type
             filter.node.frequency.value = arg.filter[i] ? ( arg.filter[i].frequency || filter.frequency ) : filter.frequency
-            filter.node.Q.value         = arg.filter[i] ? ( arg.filter[i].q || filter.q ) : filter.q
+            filter.node.Q.value         = arg.filter[i] ? ( arg.filter[i].q         || filter.q )         : filter.q
 
             if ( ( arg.filter[i].env || that.filter[i].env ) && !( that.source === "mic" ) ) {
                 filter.env = {
@@ -373,9 +373,9 @@ with special handling for reverb (ConvolverNode). **/
 
 /** Initialize and configure a convolver node for playback **/
     var setUpReverbOnPlay = function(that, arg){
-        that.reverb.node = context.createConvolver()
-        that.reverb.node.buffer = that.reverb.buffer
-        that.reverb.gain = context.createGain()
+        that.reverb.node            = context.createConvolver()
+        that.reverb.node.buffer     = that.reverb.buffer
+        that.reverb.gain            = context.createGain()
         that.reverb.gain.gain.value = that.reverb.wet
         that.nodes.push(that.reverb.node)
         that.nodes.push(that.reverb.gain)
@@ -410,9 +410,9 @@ with special handling for reverb (ConvolverNode). **/
     var setUpVibratoOnPlay = function(that, arg){
         that.vibrato.wad = new Wad({
             source : that.vibrato.shape,
-            pitch : that.vibrato.speed,
+            pitch  : that.vibrato.speed,
             volume : that.vibrato.magnitude,
-            env : {
+            env    : {
                 attack : that.vibrato.attack
             },
             destination : that.soundSource.frequency
@@ -426,9 +426,9 @@ with special handling for reverb (ConvolverNode). **/
     var setUpTremoloOnPlay = function(that, arg){
         that.tremolo.wad = new Wad({
             source : that.tremolo.shape,
-            pitch : that.tremolo.speed,
+            pitch  : that.tremolo.speed,
             volume : that.tremolo.magnitude,
-            env : {
+            env    : {
                 attack : that.tremolo.attack
             },
             destination : that.gain[0].gain
@@ -466,10 +466,7 @@ then finally play the sound by calling playEnv() **/
             this.playOnLoadArg = arg
         }
 
-        else if ( this.source === 'mic' ) {
-            console.log('mic play')
-            plugEmIn(this, arg)
-        }
+        else if ( this.source === 'mic' ) { plugEmIn(this, arg) }
 
         else {
             this.nodes = []
@@ -511,9 +508,8 @@ then finally play the sound by calling playEnv() **/
             this.gain[0].label = arg.label
             this.nodes.push(this.gain[0])
 
-            if ( this.reverb ) { // sets up reverb
-                setUpReverbOnPlay(this, arg)
-            }
+            // sets up reverb
+            if ( this.reverb ) { setUpReverbOnPlay(this, arg) }
 
     /**  sets panning based on the play() argument if present, or defaults to the constructor argument if panning is not set on play **/
             setUpPanningOnPlay(this, arg)
@@ -587,41 +583,35 @@ then finally play the sound by calling playEnv() **/
         if ( !arg ) { arg = {} }
         this.isSetUp = false
         this.playable = 1
-        this.setUp = function(arg){
-            this.wads = []
-            this.input = context.createAnalyser()
-            this.nodes = [this.input]
-            this.destination = arg.destination || context.destination // the last node the sound is routed to
-            this.volume = arg.volume || 1  
-            this.output = context.createGain()
-            this.output.gain.value = this.volume
-            // this.output.connect(this.destination)
-            // this.rec = new Recorder(this.output, {workerPath: 'src/Recorderjs/recorderWorker.js'})
 
+        this.setUp = function(arg){
+            this.wads              = []
+            this.input             = context.createAnalyser()
+            this.nodes             = [this.input]
+            this.destination       = arg.destination || context.destination // the last node the sound is routed to
+            this.volume            = arg.volume || 1  
+            this.output            = context.createGain()
+            this.output.gain.value = this.volume
+            // this.rec = new Recorder(this.output, {workerPath: 'src/Recorderjs/recorderWorker.js'})
 
             this.globalReverb = arg.globalReverb || false
 
             constructFilter(this, arg)
             if ( this.filter ) { createFilters(this, arg) }
 
+            if ( this.reverb ) { setUpReverbOnPlay(this, arg) }
 
-            // constructReverb(this, arg)
-            if ( this.reverb ) {
-                setUpReverbOnPlay(this, arg)
-            }
-            console.log(this)
             this.constructExternalFx(arg, context)
+
             constructPanning(this, arg)
             setUpPanningOnPlay(this, arg)
 
             this.nodes.push(this.output)
-            console.log('plugemin')
             plugEmIn(this, arg)
             this.isSetUp = true
-            if ( arg.callback ) {
-                arg.callback(this)
-            }
+            if ( arg.callback ) { arg.callback(this) }
         }
+
         if ( arg.reverb ) {
             constructReverb(this, arg) // We need to make sure we have downloaded the impulse response before continuing with the setup.
         }
@@ -634,6 +624,9 @@ then finally play the sound by calling playEnv() **/
                 this.output.gain.value = volume
             }
             return this
+            else {
+                console.log('This PolyWad is not set up yet.')
+            }
         }
 
         this.play = function(arg){
@@ -653,7 +646,7 @@ then finally play the sound by calling playEnv() **/
                 }
             }
             else {
-                console.log('not set up')
+                console.log('This PolyWad is not set up yet.')
             }
             return this
         }
@@ -675,6 +668,9 @@ then finally play the sound by calling playEnv() **/
                     wad.output.disconnect(0)
                     wad.output.connect(this.input)
                 }
+            }
+            else {
+                console.log('This PolyWad is not set up yet.')
             }
             return this
         }
@@ -705,16 +701,18 @@ then finally play the sound by calling playEnv() **/
 /** If a Wad is created with reverb without specifying a URL for the impulse response,
 grab it from the defaultImpulse URL **/
     Wad.defaultImpulse = 'http://www.codecur.io/us/sendaudio/widehall.wav'
-    Wad.setGlobalReverb = function(arg){
-        Wad.reverb = {}
-        Wad.reverb.node = context.createConvolver()
-        Wad.reverb.gain = context.createGain()
-        Wad.reverb.gain.gain.value = arg.wet
 
-        var impulseURL = arg.impulse || Wad.defaultImpulse
-        var request = new XMLHttpRequest();
+    // This method is deprecated.
+    Wad.setGlobalReverb = function(arg){
+        Wad.reverb                 = {}
+        Wad.reverb.node            = context.createConvolver()
+        Wad.reverb.gain            = context.createGain()
+        Wad.reverb.gain.gain.value = arg.wet
+        var impulseURL             = arg.impulse || Wad.defaultImpulse
+        var request                = new XMLHttpRequest();
         request.open("GET", impulseURL, true);
         request.responseType = "arraybuffer";
+
         request.onload = function() {
             context.decodeAudioData(request.response, function (decodedBuffer){
                 Wad.reverb.node.buffer = decodedBuffer
@@ -728,130 +726,130 @@ grab it from the defaultImpulse URL **/
 
 /** This object is a mapping of note names to frequencies. **/
     Wad.pitches = {
-        'A0' : 27.5000,
+        'A0'  : 27.5000,
         'A#0' : 29.1352,
         'Bb0' : 29.1352,
-        'B0' : 30.8677,
-        'C1' : 32.7032,
+        'B0'  : 30.8677,
+        'C1'  : 32.7032,
         'C#1' : 34.6478,
         'Db1' : 34.6478,
-        'D1' : 36.7081,
+        'D1'  : 36.7081,
         'D#1' : 38.8909,
         'Eb1' : 38.8909,
-        'E1' : 41.2034,
-        'F1' : 43.6535,
+        'E1'  : 41.2034,
+        'F1'  : 43.6535,
         'F#1' : 46.2493,
         'Gb1' : 46.2493,
-        'G1' : 48.9994,
+        'G1'  : 48.9994,
         'G#1' : 51.9131,
         'Ab1' : 51.9131,
-        'A1' : 55.0000,
+        'A1'  : 55.0000,
         'A#1' : 58.2705,
         'Bb1' : 58.2705,
-        'B1' : 61.7354,
-        'C2' : 65.4064,
+        'B1'  : 61.7354,
+        'C2'  : 65.4064,
         'C#2' : 69.2957,
         'Db2' : 69.2957,
-        'D2' : 73.4162,
+        'D2'  : 73.4162,
         'D#2' : 77.7817,
         'Eb2' : 77.7817,
-        'E2' : 82.4069,
-        'F2' : 87.3071,
+        'E2'  : 82.4069,
+        'F2'  : 87.3071,
         'F#2' : 92.4986,
         'Gb2' : 92.4986,
-        'G2' : 97.9989,
+        'G2'  : 97.9989,
         'G#2' : 103.826,
         'Ab2' : 103.826,
-        'A2' : 110.000,
+        'A2'  : 110.000,
         'A#2' : 116.541,
         'Bb2' : 116.541,
-        'B2' : 123.471,
-        'C3' : 130.813,
+        'B2'  : 123.471,
+        'C3'  : 130.813,
         'C#3' : 138.591,
         'Db3' : 138.591,
-        'D3' : 146.832,
+        'D3'  : 146.832,
         'D#3' : 155.563,
         'Eb3' : 155.563,
-        'E3' : 164.814,
-        'F3' : 174.614,
+        'E3'  : 164.814,
+        'F3'  : 174.614,
         'F#3' : 184.997,
         'Gb3' : 184.997,
-        'G3' : 195.998,
+        'G3'  : 195.998,
         'G#3' : 207.652,
         'Ab3' : 207.652,
-        'A3' : 220.000,
+        'A3'  : 220.000,
         'A#3' : 233.082,
         'Bb3' : 233.082,
-        'B3' : 246.942,
-        'C4' : 261.626,
+        'B3'  : 246.942,
+        'C4'  : 261.626,
         'C#4' : 277.183,
         'Db4' : 277.183,
-        'D4' : 293.665,
+        'D4'  : 293.665,
         'D#4' : 311.127,
         'Eb4' : 311.127,
-        'E4' : 329.628,
-        'F4' : 349.228,
+        'E4'  : 329.628,
+        'F4'  : 349.228,
         'F#4' : 369.994,
         'Gb4' : 369.994,
-        'G4' : 391.995,
+        'G4'  : 391.995,
         'G#4' : 415.305,
         'Ab4' : 415.305,
-        'A4' : 440.000,
+        'A4'  : 440.000,
         'A#4' : 466.164,
         'Bb4' : 466.164,
-        'B4' : 493.883,
-        'C5' : 523.251,
+        'B4'  : 493.883,
+        'C5'  : 523.251,
         'C#5' : 554.365,
         'Db5' : 554.365,
-        'D5' : 587.330,
+        'D5'  : 587.330,
         'D#5' : 622.254,
         'Eb5' : 622.254,
-        'E5' : 659.255,
-        'F5' : 698.456,
+        'E5'  : 659.255,
+        'F5'  : 698.456,
         'F#5' : 739.989,
         'Gb5' : 739.989,
-        'G5' : 783.991,
+        'G5'  : 783.991,
         'G#5' : 830.609,
         'Ab5' : 830.609,
-        'A5' : 880.000,
+        'A5'  : 880.000,
         'A#5' : 932.328,
         'Bb5' : 932.328,
-        'B5' : 987.767,
-        'C6' : 1046.50,
+        'B5'  : 987.767,
+        'C6'  : 1046.50,
         'C#6' : 1108.73,
         'Db6' : 1108.73,
-        'D6' : 1174.66,
+        'D6'  : 1174.66,
         'D#6' : 1244.51,
         'Eb6' : 1244.51,
-        'E6' : 1318.51,
-        'F6' : 1396.91,
+        'E6'  : 1318.51,
+        'F6'  : 1396.91,
         'F#6' : 1479.98,
         'Gb6' : 1479.98,
-        'G6' : 1567.98,
+        'G6'  : 1567.98,
         'G#6' : 1661.22,
         'Ab6' : 1661.22,
-        'A6' : 1760.00,
+        'A6'  : 1760.00,
         'A#6' : 1864.66,
         'Bb6' : 1864.66,
-        'B6' : 1975.53,
-        'C7' : 2093.00,
+        'B6'  : 1975.53,
+        'C7'  : 2093.00,
         'C#7' : 2217.46,
         'Db7' : 2217.46,
-        'D7' : 2349.32,
+        'D7'  : 2349.32,
         'D#7' : 2489.02,
         'Eb7' : 2489.02,
-        'E7' : 2637.02,
-        'F7' : 2793.83,
+        'E7'  : 2637.02,
+        'F7'  : 2793.83,
         'F#7' : 2959.96,
         'Gb7' : 2959.96,
-        'G7' : 3135.96,
+        'G7'  : 3135.96,
         'G#7' : 3322.44,
         'Ab7' : 3322.44,
-        'A7' : 3520.00,
+        'A7'  : 3520.00,
         'A#7' : 3729.31,
         'Bb7' : 3729.31,
-        'B7' : 3951.07,
-        'C8' : 4186.01
+        'B7'  : 3951.07,
+        'C8'  : 4186.01
     }
 
 
@@ -957,14 +955,10 @@ grab it from the defaultImpulse URL **/
 //////////////////////////////////////////////////////////////
 
     Wad.midiInstrument = {
-        play : function() {
-            console.log('playing midi')
-        },
-        stop : function() {
-            console.log('stopping midi')
-        }
+        play : function() { console.log('playing midi')  },
+        stop : function() { console.log('stopping midi') }
     }
-    Wad.midiMaps = []
+    Wad.midiMaps    = []
     Wad.midiMaps[0] = function(event){
         // console.log(event.receivedTime, event.data)
         if ( event.data[0] === 144 ) { // 144 means the midi message has note data
@@ -989,7 +983,6 @@ grab it from the defaultImpulse URL **/
 
     var m = null;   // m = MIDIAccess object for you to make calls on
     var onSuccessCallback = function(access){ 
-        console.log('got midi access')
         m = access;
 
         // Things you can do with the MIDIAccess object:

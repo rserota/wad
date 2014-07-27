@@ -240,6 +240,16 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 //////////////////////////////////////////////////////////////////////////////////
 
 
+/** If the Wad's source is an object, assume it is a buffer from a recorder. there's probably a better way to handle this. **/
+        else if ( typeof this.source == 'object' ) {
+            var newBuffer = context.createBuffer( 2, this.source[0].length, context.sampleRate );
+            newBuffer.getChannelData(0).set(this.source[0]);
+            newBuffer.getChannelData(1).set(this.source[1]);
+            this.decodedBuffer = newBuffer
+        }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 /** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
         else if ( !( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) ) {
             requestAudioFile(this, arg.callback)
@@ -596,7 +606,15 @@ then finally play the sound by calling playEnv() **/
             this.volume            = arg.volume || 1  
             this.output            = context.createGain()
             this.output.gain.value = this.volume
-            // this.rec = new Recorder(this.output, {workerPath: 'src/Recorderjs/recorderWorker.js'})
+            this.rec               = new Recorder(this.output, arg.recConfig)
+            this.rec.recordings    = []
+            var that = this
+            var getRecorderBufferCallback = function( buffers ) {
+                that.rec.recordings.unshift( new Wad({ source : buffers, env : { hold : 9001 } }) )
+            }
+            this.rec.createWad     = function(container){
+                this.getBuffer(getRecorderBufferCallback)
+            }
 
             this.globalReverb = arg.globalReverb || false
 

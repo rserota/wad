@@ -527,6 +527,8 @@ then finally play the sound by calling playEnv() **/
             //sets up tremolo LFO
             if ( this.tremolo ) { setUpTremoloOnPlay(this, arg) }
         }
+        if ( arg.callback ) { arg.callback(this) }
+        return this
     }
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -535,6 +537,7 @@ then finally play the sound by calling playEnv() **/
     Wad.prototype.setVolume = function(volume){
         this.defaultVolume = volume;
         if ( this.gain.length > 0 ) { this.gain[0].gain.value = volume };
+        return this
     }
 /////////////////////////////////////////////////////////////////////////
 
@@ -548,6 +551,7 @@ then finally play the sound by calling playEnv() **/
         else {
             this.panning.node.setPosition(panning[0], panning[1], panning[2])
         }
+        return this
     }
 
 //////////////////////////////////////////////////////////////////////////
@@ -623,10 +627,10 @@ then finally play the sound by calling playEnv() **/
             if ( this.isSetUp ) {
                 this.output.gain.value = volume
             }
-            return this
             else {
                 console.log('This PolyWad is not set up yet.')
             }
+            return this
         }
 
         this.play = function(arg){
@@ -960,16 +964,18 @@ grab it from the defaultImpulse URL **/
     }
     Wad.midiMaps    = []
     Wad.midiMaps[0] = function(event){
-        // console.log(event.receivedTime, event.data)
+        console.log(event.receivedTime, event.data)
         if ( event.data[0] === 144 ) { // 144 means the midi message has note data
             // console.log('note')
             if ( event.data[2] === 0 ) { // noteOn velocity of 0 means this is actually a noteOff message
-                console.log('|| stopping note: ', Wad.pitchesArray[event.data[1]])
-                Wad.midiInstrument.stop(Wad.pitchesArray[event.data[1]])
+                console.log('|| stopping note: ', Wad.pitchesArray[event.data[1]-12])
+                Wad.midiInstrument.stop(Wad.pitchesArray[event.data[1]-12])
             }
             else if ( event.data[2] > 0 ) {
-                console.log('> playing note: ', Wad.pitchesArray[event.data[1]])
-                Wad.midiInstrument.play({pitch : Wad.pitchesArray[event.data[1]], label : Wad.pitchesArray[event.data[1]]})
+                console.log('> playing note: ', Wad.pitchesArray[event.data[1]-12])
+                Wad.midiInstrument.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], callback : function(that){
+                    console.log(that.soundSource.frequency.value)
+                }})
             }
         }
         else if ( event.data[0] === 176 ) { // 176 means the midi message has controller data

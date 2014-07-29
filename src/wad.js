@@ -611,6 +611,7 @@ then finally play the sound by calling playEnv() **/
             var that = this
             var getRecorderBufferCallback = function( buffers ) {
                 that.rec.recordings.unshift( new Wad({ source : buffers, env : { hold : 9001 } }) )
+
             }
             this.rec.createWad     = function(container){
                 this.getBuffer(getRecorderBufferCallback)

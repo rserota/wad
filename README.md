@@ -4,7 +4,7 @@
 Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio API.  It greatly simplifies the process of creating, playing, and manipulating audio, either for real-time playback, or at scheduled intervals.  Wad provides a simple interface to use many features one would find in a desktop DAW (digital audio workstation), but doesn't require the user to worry about sending XHR requests or setting up complex audio graphs.
 
 
-<h2>Live Demo</h2>
+<h2 id='live-demo'>Live Demo</h2>
 
 To see a demo of an app that uses a small subset of the features in Wad.js, check <a href="http://www.codecur.io/us/songdemo">this</a> out.
 
@@ -113,24 +113,6 @@ The filter constructor argument can be passed an object or an array of objects. 
 
 In order to use reverb, you will need a server to send an impulse response via XmlHttpRequest. An impulse response is a small audio file, like a wav or mp3, that describes the acoustic characteristics of a physical space.  By default, Wad.js serves a sample impulse response that you can use freely.  However, it is recommended that you use your own impulse response. To use your own impulse response, pass a URL to an impulse response file as an argument to the constructor, as shown above. You can also modify the attribute Wad.defaultImpulse to change the default impulse response. You can make your own impulse response, but it might be easier to just <a href="http://www.voxengo.com/impulses/">find one online</a>.
 
-<h4>Global Reverb</h4>
-
-<em>Global reverb has been deprecated, since PolyWads provide a more flexible way to apply reverb to multiple Wads. Global reverb will be removed at some point in the near future.</em>
-
-If you want to use reverb on many Wads simultaneously, you may run into performance issues. You can work around this problem by using global reverb, which uses the same convolver node for many Wads, rather than using a seperate convolver node for each Wad that uses reverb. To use global reverb, there are two steps.  First, call <code>Wad.setGlobalReverb()</code>.
-
-<pre><code>Wad.setGlobalReverb({
-    wet : 1, // Volume of the reverberations.
-    impulse : 'http://www.myServer.com/path/to/impulse.wav' // A URL for an impulse response file, if you do not want to use the default impulse response.
-  })</code></pre>
-
-Next, set <code>globalReverb : true</code> when creating a new Wad.
-
-<code>var sine = new Wad({source : 'sine', globalReverb : true})</code>
-
-You can also set or unset global reverb on a Wad after it's been created.
-
-<code>sine.globalReverb = false</code>
 
 <h3>Play Arguments</h3>
 
@@ -287,3 +269,5 @@ Originally, I had wanted to allow users to easily add an LFO to any parameter, s
 <h3>Presets</h3>
 
 It would be nice if there were more presets, so that users wouldn't have to make most of their sounds from scratch. If you enjoy making your own sounds with Wad.js, consider submitting them to be used as presets. Better yet, you can bundle together a bunch of presets as a 'preset-pack'.
+
+<a href='#live-demo'>HI</a>

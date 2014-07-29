@@ -270,4 +270,3 @@ Originally, I had wanted to allow users to easily add an LFO to any parameter, s
 
 It would be nice if there were more presets, so that users wouldn't have to make most of their sounds from scratch. If you enjoy making your own sounds with Wad.js, consider submitting them to be used as presets. Better yet, you can bundle together a bunch of presets as a 'preset-pack'.
 
-<a href='#live-demo'>HI</a>

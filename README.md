@@ -8,6 +8,16 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
 
 To see a demo of an app that uses a small subset of the features in Wad.js, check <a href="http://www.codecur.io/us/songdemo">this</a> out.
 
+<h2>Table of Contents</h2>
+
+<ul>
+    <li><a href='#installation'>Installation</a></li>
+    <li>
+        <ul><a href='#usage'>Usage</a>
+            <li><a href='#constructor-arguments'>Constructor Arguments</a></li>
+        </ul>
+    <li>
+</ul>
 
 <h2>Installation</h2>
 

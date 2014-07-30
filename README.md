@@ -13,7 +13,8 @@ To see a demo of an app that uses a small subset of the features in Wad.js, chec
 <ul>
     <li><a href='#installation'>Installation</a></li>
     <li>
-        <ul><a href='#usage'>Usage</a>
+        <a href='#usage'>Usage</a>
+        <ul>
             <li><a href='#constructor-arguments'>Constructor Arguments</a></li>
         </ul>
     <li>

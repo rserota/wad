@@ -17,9 +17,20 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
             <li><a href='#panning'>Panning</a></li>
             <li><a href='#filters'>Filters</a></li>
             <li><a href='#configuring-reverb'>Filters</a></li>
-            <li><a href='#play-arguments'>Play Arguments</a></li>
+            <li>
+                <a href='#play-arguments'>Play()</a>
+                <ul>
+                    <li><a href='#play-labels'>Play Labels</a></li>
+                    <li><a href='#play-setters'>Changing Settings During Playback</a></li>
+                </ul>
+            </li>
+            <li><a href='#mic'>Microphone Input</a></li>
+            <li><a href='#polywads'>PolyWads</a></li>
+            <li><a href='#exfx'>External FX</a></li>
+            <li><a href='#presets'>Presets</a></li>
+            <li><a href='#midi'>MIDI Input</a></li>
         </ul>
-    <li>
+    <li><a href='#contribute'>How To Contribute</a></li>
 </ul>
 
 <h2 id='live-demo'>Live Demo</h2>
@@ -65,42 +76,42 @@ saw.setVolume(0.5)</code></pre>
 The Wad constructor supports many optional arguments to modify your sound, from simple settings such as peak volume, to more powerful things like ADSR envelopes and filters.  If not set explicitly, the ADSR envelope will have the values shown below. Filters, LFOs, and reverb are not used unless they are set explicitly. Filter type can be specified as either 'lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', or 'allpass'.
 
 <pre><code>var saw = new Wad({
-  source : 'sawtooth',
-  volume : 1.0, // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
-  pitch : 'A4', // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
-  panning : -5, // Horizontal placement of the sound source. Sensible values are from 10 to -10.
-  env : { // This is the ADSR envelope.
-    attack : 0.0, // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
-    decay : 0.0, // Time in seconds from peak volume to sustain volume.
-    sustain : 1.0, // Sustain volume level. This is a percent of the peak volume, so sensible values are between 0 and 1.
-    hold : 9001, // Time in seconds to maintain the sustain volume level. If this is not set to a lower value, oscillators must be manually stopped by calling their stop() method.
-    release : 0 // Time in seconds from the end of the hold period to zero volume, or from calling stop() to zero volume.
-  },
-  filter : {
-    type : 'lowpass', // What type of filter is applied.
-    frequency : 600, // The frequency, in hertz, to which the filter is applied.
-    q : 1, // Q-factor.  No one knows what this does. The default value is 1. Sensible values are from 0 to 10.
-    env : { // Filter envelope.
-      frequency : 800, // If this is set, filter frequency will slide from filter.frequency to filter.env.frequency when a note is triggered.
-      attack : 0.5 // Time in seconds for the filter frequency to slide from filter.frequency to filter.env.frequency
+    source : 'sawtooth',
+    volume : 1.0, // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
+    pitch : 'A4', // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
+    panning : -5, // Horizontal placement of the sound source. Sensible values are from 10 to -10.
+    env : { // This is the ADSR envelope.
+        attack : 0.0, // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
+        decay : 0.0, // Time in seconds from peak volume to sustain volume.
+        sustain : 1.0, // Sustain volume level. This is a percent of the peak volume, so sensible values are between 0 and 1.
+        hold : 9001, // Time in seconds to maintain the sustain volume level. If this is not set to a lower value, oscillators must be manually stopped by calling their stop() method.
+        release : 0 // Time in seconds from the end of the hold period to zero volume, or from calling stop() to zero volume.
+    },
+    filter : {
+        type : 'lowpass', // What type of filter is applied.
+        frequency : 600, // The frequency, in hertz, to which the filter is applied.
+        q : 1, // Q-factor.  No one knows what this does. The default value is 1. Sensible values are from 0 to 10.
+        env : { // Filter envelope.
+            frequency : 800, // If this is set, filter frequency will slide from filter.frequency to filter.env.frequency when a note is triggered.
+            attack : 0.5 // Time in seconds for the filter frequency to slide from filter.frequency to filter.env.frequency
+        }
+    },
+    reverb : {
+        wet : 1, // Volume of the reverberations.
+        impulse : 'http://www.myServer.com/path/to/impulse.wav' // A URL for an impulse response file, if you do not want to use the default impulse response.
+    },
+    vibrato : { // A vibrating pitch effect.  Only works for oscillators.
+        shape : 'sine', // shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'.
+        magnitude : 3, // how much the pitch changes. Sensible values are from 1 to 10.
+        speed : 4, // How quickly the pitch changes, in cycles per second.  Sensible values are from 0.1 to 10.
+        attack : 0 // Time in seconds for the vibrato effect to reach peak magnitude.
+    },
+    tremolo : { // A vibrating volume effect.
+        shape : 'sine', // shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'.
+        magnitude : 3, // how much the volume changes. Sensible values are from 1 to 10.
+        speed : 4, // How quickly the volume changes, in cycles per second.  Sensible values are from 0.1 to 10.
+        attack : 0 // Time in seconds for the tremolo effect to reach peak magnitude.
     }
-  },
-  reverb : {
-    wet : 1, // Volume of the reverberations.
-    impulse : 'http://www.myServer.com/path/to/impulse.wav' // A URL for an impulse response file, if you do not want to use the default impulse response.
-  },
-  vibrato : { // A vibrating pitch effect.  Only works for oscillators.
-    shape : 'sine', // shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'.
-    magnitude : 3, // how much the pitch changes. Sensible values are from 1 to 10.
-    speed : 4, // How quickly the pitch changes, in cycles per second.  Sensible values are from 0.1 to 10.
-    attack : 0 // Time in seconds for the vibrato effect to reach peak magnitude.
-  },
-  tremolo : { // A vibrating volume effect.
-    shape : 'sine', // shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'.
-    magnitude : 3, // how much the volume changes. Sensible values are from 1 to 10.
-    speed : 4, // How quickly the volume changes, in cycles per second.  Sensible values are from 0.1 to 10.
-    attack : 0 // Time in seconds for the tremolo effect to reach peak magnitude.
-  }
 })</code></pre>
 
 
@@ -119,11 +130,10 @@ Wad.js supports 3D panning. Any time you would pass in a panning parameter (eith
 
 The filter constructor argument can be passed an object or an array of objects. If an array is passed, the filters are applied in that order. Whichever form is passed to the constructor should also be passed to the play argument.
 
-<pre><code>
-  filter: [
-      {type : 'lowpass', frequency : 600, q : 1, env : {frequency : 800, attack : 0.5}},
-      {type : 'highpass', frequency : 1000, q : 5}
-  ]
+<pre><code>filter: [
+    {type : 'lowpass', frequency : 600, q : 1, env : {frequency : 800, attack : 0.5}},
+    {type : 'highpass', frequency : 1000, q : 5}
+]
 </code></pre>
 
 <h3 id='configuring-reverb'>Configuring Reverb</h3>
@@ -131,19 +141,19 @@ The filter constructor argument can be passed an object or an array of objects. 
 In order to use reverb, you will need a server to send an impulse response via XmlHttpRequest. An impulse response is a small audio file, like a wav or mp3, that describes the acoustic characteristics of a physical space.  By default, Wad.js serves a sample impulse response that you can use freely.  However, it is recommended that you use your own impulse response. To use your own impulse response, pass a URL to an impulse response file as an argument to the constructor, as shown above. You can also modify the attribute Wad.defaultImpulse to change the default impulse response. You can make your own impulse response, but it might be easier to just <a href="http://www.voxengo.com/impulses/">find one online</a>.
 
 
-<h3 id='#play-arguments'>Play Arguments</h3>
+<h3 id='play-arguments'>Play()</h3>
 
 The <code>play()</code> method also accepts optional arguments: volume, wait, pitch, envelope, panning, and filter. If you intend to include a filter envelope or panning as an argument on <code>play()</code>, you should have set a filter envelope or panning when the Wad was first instantiated. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.
 
 <pre><code>var saw = new Wad({source : 'sawtooth'})
 saw.play({
-  volume : 0.8,
-  wait : 0, // Time in seconds between calling play() and actually triggering the note.
-  pitch : 'A4', // A4 is 440 hertz.
-  label : 'A', // A label that identifies this note.
-  env : {hold : 9001},
-  panning : [1, -1, 10],
-  filter : {frequency : 900}
+    volume : 0.8,
+    wait : 0, // Time in seconds between calling play() and actually triggering the note.
+    pitch : 'A4', // A4 is 440 hertz.
+    label : 'A', // A label that identifies this note.
+    env : {hold : 9001},
+    panning : [1, -1, 10],
+    filter : {frequency : 900}
 }) </code></pre>
 
 
@@ -151,7 +161,7 @@ If you like, you can also select a pitch by frequency.
 
 <code>saw.play({pitch : 440})</code>
 
-<h4>Play Labels</h4>
+<h4 id='play-labels'>Play Labels</h4>
 
 When you call <code>stop()</code> on a Wad, it will only stop the most recently triggered note. If you want to retain control over multiple notes that played from the same Wad, you can label those notes when <code>play()</code> is called. When <code>stop()</code> is called, you can pass in a label argument to stop all currently sustained notes with that label. 
 
@@ -160,7 +170,7 @@ saw.play({pitch : 'G4', label : 'G4'})
 saw.stop('A4') // The first note will stop, but the second note will continue playing.</code></pre>
 
 
-<h4>Changing Settings During Playback</h4>
+<h4 id='play-setters'>Changing Settings During Playback</h4>
 
 If you want to change an attribute of a Wad during playback, you can use the relevant setter method for that attribute.
 
@@ -168,20 +178,20 @@ If you want to change an attribute of a Wad during playback, you can use the rel
 saw.setPanning(-2)</code></pre>
 
 
-<h3>Microphone Input</h3>
+<h3 id='mic'>Microphone Input</h3>
 
 You can also use microphone input as the source for a Wad. You can apply reverb or filters to the microphone input, but you cannot apply an envelope or filter envelope. If a Wad uses the microphone as the source, it will constantly stream the mic input through all applied effects (filters, reverb, etc) and out through your speakers or headphones as soon as you call the <code>play()</code> method on that Wad. Call the <code>stop()</code> method on a microphone Wad to disconnect your microphone from that Wad. You may experience problems with microphone feedback if you aren't using headphones.
 
 <pre><code>var voice = new Wad({
-  source : 'mic',
-  reverb : {
-    wet : .4
-  }
-  filter : {
-    type : 'highpass',
-    frequency : 700
-  },
-  panning : -2
+    source : 'mic',
+    reverb : {
+        wet : .4
+    }
+    filter : {
+        type : 'highpass',
+        frequency : 700
+    },
+    panning : -2
 }
 
 voice.play()
@@ -221,29 +231,29 @@ mixerTrack.add(tripleOscillator).add(triangle)
 tripleOscillator.play({ pitch : 'Eb3'}) // This note is filtered and panned.
 </code></pre>
 
-<h3>External FX</h3>
+<h3 id='exfx'>External FX</h3>
 
 Sometimes you might want to incorporate external libraries into Wad, for example FX or visualizers. You can override the constructExternalFx and setUpExternalFxOnPlay methods to add those nodes to the wad chain. In the following example the values are hardcoded, but they could easily have been passed as arguments to play.
 
 <pre><code>
-  //For example to add a Tuna chorus you would put this somewhere in your own code, and also include the Tuna library:
+//For example to add a Tuna chorus you would put this somewhere in your own code, and also include the Tuna library:
 
-  var tuna;
-  Wad.prototype.constructExternalFx = function(arg, context){
+var tuna;
+Wad.prototype.constructExternalFx = function(arg, context){
     this.tuna = new Tuna(context);
     this.chorus = arg.chorus
-  }
+}
 
-  Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
+Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
     var chorus = new tuna.Chorus({
-                     rate: arg.chorus.rate || this.chorus.rate,
-                     feedback: arg.chorus.feedback || this.chorus.feedback,
-                     delay: arg.chorus.delay || this.chorus.delay,
-                     bypass: arg.chorus.bypass || this.chorus.bypass
-                 });
+        rate: arg.chorus.rate || this.chorus.rate,
+        feedback: arg.chorus.feedback || this.chorus.feedback,
+        delay: arg.chorus.delay || this.chorus.delay,
+        bypass: arg.chorus.bypass || this.chorus.bypass
+    });
     chorus.input.connect = chorus.connect.bind(chorus)//we do this dance because tuna exposes its input differently.
     that.nodes.push(chorus.input)//you would generally want to do this at the end unless you are working with something that does not modulate the sound (i.e, a visualizer)
-  }
+}
 </code></pre>
 
 
@@ -253,7 +263,7 @@ If you'd like to use a pre-configured Wad, check out the presets.  They should g
 
 <pre><code>var hat = new Wad(Wad.presets.hiHatClosed)</code></pre>
 
-<h3>MIDI Input</h3>
+<h3 id='midi'>MIDI Input</h3>
 
 Wad.js can read MIDI data from MIDI instruments and controllers, and you can set handlers to respond to that data. MIDI handler functions are stored in the <code>Wad.midiMaps</code> array, which should have one handler function for each MIDI device you are using. By default, <code>Wad.midiMaps[0]</code> is configured to log MIDI messages to the console, which should be sufficient if you are only testing one device. If you want to quickly set up a MIDI keyboard to play a Wad, assign a Wad of your choice (or any object with <code>play()</code> and <code>stop()</code> methods) to <code>Wad.midiInstrument</code>.
 

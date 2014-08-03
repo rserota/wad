@@ -258,13 +258,6 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
     }
 
-// multiwad = {
-//     node : context.createAnalyser()
-// }
-// multiwad.rec = new Recorder(multiwad.node, {workerPath: './src/Recorderjs/recorderWorker.js'})
-// multiwad.node.connect(context.destination)
-
-
 
 /** When a note is played, these two functions will schedule changes in volume and filter frequency,
 as specified by the volume envelope and filter envelope **/
@@ -606,15 +599,17 @@ then finally play the sound by calling playEnv() **/
             this.volume            = arg.volume || 1  
             this.output            = context.createGain()
             this.output.gain.value = this.volume
-            this.rec               = new Recorder(this.output, arg.recConfig)
-            this.rec.recordings    = []
-            var that = this
-            var getRecorderBufferCallback = function( buffers ) {
-                that.rec.recordings.unshift( new Wad({ source : buffers, env : { hold : 9001 } }) )
+            if ( !( typeof Recorder === 'undefined' ) ) { // Recorder should be defined, unless you're running the unconcatenated source version and forgot to include recorder.js.
+                this.rec               = new Recorder(this.output, arg.recConfig)
+                this.rec.recordings    = []
+                var that = this
+                var getRecorderBufferCallback = function( buffers ) {
+                    that.rec.recordings.unshift(new Wad({ source : buffers, env : { hold : 9001 } }))
 
-            }
-            this.rec.createWad     = function(container){
-                this.getBuffer(getRecorderBufferCallback)
+                }
+                this.rec.createWad     = function(arg){
+                    this.getBuffer(getRecorderBufferCallback)
+                }
             }
 
             this.globalReverb = arg.globalReverb || false

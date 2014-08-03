@@ -4,21 +4,27 @@
 Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio API.  It greatly simplifies the process of creating, playing, and manipulating audio, either for real-time playback, or at scheduled intervals.  Wad provides a simple interface to use many features one would find in a desktop DAW (digital audio workstation), but doesn't require the user to worry about sending XHR requests or setting up complex audio graphs.
 
 
-<h2 id='live-demo'>Live Demo</h2>
-
-To see a demo of an app that uses a small subset of the features in Wad.js, check <a href="http://www.codecur.io/us/songdemo">this</a> out.
 
 <h2>Table of Contents</h2>
 
 <ul>
+    <li><a href='#live-demo'>Live Demo</a></li>
     <li><a href='#installation'>Installation</a></li>
     <li>
         <a href='#usage'>Usage</a>
         <ul>
             <li><a href='#constructor-arguments'>Constructor Arguments</a></li>
+            <li><a href='#panning'>Panning</a></li>
+            <li><a href='#filters'>Filters</a></li>
+            <li><a href='#configuring-reverb'>Filters</a></li>
+            <li><a href='#play-arguments'>Play Arguments</a></li>
         </ul>
     <li>
 </ul>
+
+<h2 id='live-demo'>Live Demo</h2>
+
+To see a demo of an app that uses a small subset of the features in Wad.js, check <a href="http://www.codecur.io/us/songdemo">this</a> out.
 
 <h2>Installation</h2>
 
@@ -109,7 +115,7 @@ Wad.js supports 3D panning. Any time you would pass in a panning parameter (eith
     panning : [0, 1, 10]
 })</code></pre>
 
-<h3>Filter</h3>
+<h3>Filters</h3>
 
 The filter constructor argument can be passed an object or an array of objects. If an array is passed, the filters are applied in that order. Whichever form is passed to the constructor should also be passed to the play argument.
 
@@ -120,12 +126,12 @@ The filter constructor argument can be passed an object or an array of objects. 
   ]
 </code></pre>
 
-<h3>Configuring Reverb</h3>
+<h3 id='configuring-reverb'>Configuring Reverb</h3>
 
 In order to use reverb, you will need a server to send an impulse response via XmlHttpRequest. An impulse response is a small audio file, like a wav or mp3, that describes the acoustic characteristics of a physical space.  By default, Wad.js serves a sample impulse response that you can use freely.  However, it is recommended that you use your own impulse response. To use your own impulse response, pass a URL to an impulse response file as an argument to the constructor, as shown above. You can also modify the attribute Wad.defaultImpulse to change the default impulse response. You can make your own impulse response, but it might be easier to just <a href="http://www.voxengo.com/impulses/">find one online</a>.
 
 
-<h3>Play Arguments</h3>
+<h3 id='#play-arguments'>Play Arguments</h3>
 
 The <code>play()</code> method also accepts optional arguments: volume, wait, pitch, envelope, panning, and filter. If you intend to include a filter envelope or panning as an argument on <code>play()</code>, you should have set a filter envelope or panning when the Wad was first instantiated. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.
 
@@ -154,7 +160,7 @@ saw.play({pitch : 'G4', label : 'G4'})
 saw.stop('A4') // The first note will stop, but the second note will continue playing.</code></pre>
 
 
-<h3>Changing Settings During Playback</h3>
+<h4>Changing Settings During Playback</h4>
 
 If you want to change an attribute of a Wad during playback, you can use the relevant setter method for that attribute.
 

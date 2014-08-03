@@ -26,6 +26,7 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
             </li>
             <li><a href='#microphone-input'>Microphone Input</a></li>
             <li><a href='#polywads'>PolyWads</a></li>
+            <li><a href='#recording'>Recording</a></li>
             <li><a href='#external-fx'>External FX</a></li>
             <li><a href='#presets'>Presets</a></li>
             <li><a href='#midi-input'>MIDI Input</a></li>
@@ -230,6 +231,35 @@ The second main case in which you would want to group several Wads together is t
 mixerTrack.add(tripleOscillator).add(triangle)
 tripleOscillator.play({ pitch : 'Eb3'}) // This note is filtered and panned.
 </code></pre>
+
+<h3>Recording</h3>
+
+A PolyWad can be used to record the output produced by the Wads it contains.
+
+<pre><code>
+var sine = new Wad({source : 'sine'})
+var mixerTrack = new Wad.Poly({
+    recConfig : { // The Recorder configuration object. The only required property is 'workerPath'.
+        workerPath : '/src/Recorderjs/recorderWorker.js' // The path to the Recorder.js web worker script.
+    }
+})
+mixerTrack.add(sine)
+
+mixerTrack.rec.record() // Start recording output from this PolyWad.
+sine.play({pitch : 'C3'}).play({pitch : 'E3'}).play({pitch : 'G3'}) // Make some noise!
+mixerTrack.rec.stop() // Take a break.
+mixerTrack.rec.record() // Append to the same recording buffer.
+sine.play({pitch : 'C3'}).play({pitch : 'E3'}).play({pitch : 'G3'})
+mixerTrack.rec.stop()
+mixerTrack.rec.createWad() // This method accepts the same arguments as the Wad constructor, except that the 'source' is implied, so it's fine to call this method with no arguments. 
+mixerTrack.
+mixerTrack.rec.recordings[0].play() // The most recent recording is unshifted to the front of this array.
+mixerTrack.rec.clear() // Clear the recording buffer when you're done with it, so you can record something else.
+</code></pre>
+
+Wad.js uses Recorder.js for recording (the 'createWad()' method and the 'recordings' array are the only extensions that I've added). For more comprehensive documentation about the recorder object, <a href='https://github.com/mattdiamond/Recorderjs'>check out the Recorder.js documentation</a>. 
+
+Note that the minified version of Wad.js has Recorder.js concatenated to it, but the source version does not. If you want to tinker with recording in the source version, you will need to include recorder.js separately. Whichever version you use, recorderWorker.js is always a separate file, and its location must be specified in the recConfig object. 
 
 <h3 id='exfx'>External FX</h3>
 

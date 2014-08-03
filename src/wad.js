@@ -45,18 +45,18 @@ var Wad = (function(){
 /** Set up the default ADSR envelope. **/
     var constructEnv = function(that, arg){
         that.env = { //default envelope, if one is not specified on play
-            attack  : arg.env ? ( arg.env.attack  || 0 )    : 0, // time in seconds from onset to peak volume
-            decay   : arg.env ? ( arg.env.decay   || 0 )    : 0, // time in seconds from peak volume to sustain volume
-            sustain : arg.env ? ( arg.env.sustain || 1 )    : 1, // sustain volume level, as a percent of peak volume. min:0, max:1
-            hold    : arg.env ? ( arg.env.hold    || 4 )    : 4, // time in seconds to maintain sustain volume
-            release : arg.env ? ( arg.env.release || 0 )    : 0 // time in seconds from sustain volume to zero volume
+            attack  : arg.env ? ( arg.env.attack  || 0    )    : 0, // time in seconds from onset to peak volume
+            decay   : arg.env ? ( arg.env.decay   || 0    )    : 0, // time in seconds from peak volume to sustain volume
+            sustain : arg.env ? ( arg.env.sustain || 1    )    : 1, // sustain volume level, as a percent of peak volume. min:0, max:1
+            hold    : arg.env ? ( arg.env.hold    || 9001 )    : 9001, // time in seconds to maintain sustain volume
+            release : arg.env ? ( arg.env.release || 0    )    : 0 // time in seconds from sustain volume to zero volume
         }
         that.defaultEnv = {
-            attack  : arg.env ? ( arg.env.attack  || 0 )    : 0, // time in seconds from onset to peak volume
-            decay   : arg.env ? ( arg.env.decay   || 0 )    : 0, // time in seconds from peak volume to sustain volume
-            sustain : arg.env ? ( arg.env.sustain || 1 )    : 1, // sustain volume level, as a percent of peak volume. min:0, max:1
-            hold    : arg.env ? ( arg.env.hold    || 4 )    : 4, // time in seconds to maintain sustain volume
-            release : arg.env ? ( arg.env.release || 0 )    : 0 // time in seconds from sustain volume to zero volume
+            attack  : arg.env ? ( arg.env.attack  || 0    )    : 0, // time in seconds from onset to peak volume
+            decay   : arg.env ? ( arg.env.decay   || 0    )    : 0, // time in seconds from peak volume to sustain volume
+            sustain : arg.env ? ( arg.env.sustain || 1    )    : 1, // sustain volume level, as a percent of peak volume. min:0, max:1
+            hold    : arg.env ? ( arg.env.hold    || 9001 )    : 9001, // time in seconds to maintain sustain volume
+            release : arg.env ? ( arg.env.release || 0    )    : 0 // time in seconds from sustain volume to zero volume
         }
     }
 /////////////////////////////////////////
@@ -588,7 +588,7 @@ then finally play the sound by calling playEnv() **/
 
     Wad.Poly = function(arg){
         if ( !arg ) { arg = {} }
-        this.isSetUp = false
+        this.isSetUp  = false
         this.playable = 1
 
         this.setUp = function(arg){
@@ -604,10 +604,12 @@ then finally play the sound by calling playEnv() **/
                 this.rec.recordings    = []
                 var that = this
                 var getRecorderBufferCallback = function( buffers ) {
-                    that.rec.recordings.unshift(new Wad({ source : buffers, env : { hold : 9001 } }))
+                    that.rec.createWadArg.source = buffers
+                    that.rec.recordings.unshift(new Wad(that.rec.createWadArg))
 
                 }
-                this.rec.createWad     = function(arg){
+                this.rec.createWad = function(arg){
+                    this.createWadArg = arg || {}
                     this.getBuffer(getRecorderBufferCallback)
                 }
             }

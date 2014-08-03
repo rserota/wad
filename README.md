@@ -252,7 +252,6 @@ mixerTrack.rec.record() // Append to the same recording buffer.
 sine.play({pitch : 'C3'}).play({pitch : 'E3'}).play({pitch : 'G3'})
 mixerTrack.rec.stop()
 mixerTrack.rec.createWad() // This method accepts the same arguments as the Wad constructor, except that the 'source' is implied, so it's fine to call this method with no arguments. 
-mixerTrack.
 mixerTrack.rec.recordings[0].play() // The most recent recording is unshifted to the front of this array.
 mixerTrack.rec.clear() // Clear the recording buffer when you're done with it, so you can record something else.
 </code></pre>

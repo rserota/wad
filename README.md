@@ -16,21 +16,21 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
             <li><a href='#constructor-arguments'>Constructor Arguments</a></li>
             <li><a href='#panning'>Panning</a></li>
             <li><a href='#filters'>Filters</a></li>
-            <li><a href='#configuring-reverb'>Filters</a></li>
+            <li><a href='#configuring-reverb'>Configuring Reverb</a></li>
             <li>
-                <a href='#play-arguments'>Play()</a>
+                <a href='#play'>Play()</a>
                 <ul>
                     <li><a href='#play-labels'>Play Labels</a></li>
-                    <li><a href='#play-setters'>Changing Settings During Playback</a></li>
+                    <li><a href='#changing-settings-during-playback'>Changing Settings During Playback</a></li>
                 </ul>
             </li>
-            <li><a href='#mic'>Microphone Input</a></li>
+            <li><a href='#microphone-input'>Microphone Input</a></li>
             <li><a href='#polywads'>PolyWads</a></li>
-            <li><a href='#exfx'>External FX</a></li>
+            <li><a href='#external-fx'>External FX</a></li>
             <li><a href='#presets'>Presets</a></li>
-            <li><a href='#midi'>MIDI Input</a></li>
+            <li><a href='#midi-input'>MIDI Input</a></li>
         </ul>
-    <li><a href='#contribute'>How To Contribute</a></li>
+    <li><a href='#how-to-contribute'>How To Contribute</a></li>
 </ul>
 
 <h2 id='live-demo'>Live Demo</h2>

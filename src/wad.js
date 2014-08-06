@@ -440,7 +440,18 @@ with special handling for reverb (ConvolverNode). **/
     }
 ///////////////////////////////////////////////////////////////
 
+/** **/
+    var constructCompressor = function(that, arg){
+        that.compressor = context.createDynamicsCompressor()
+        that.compressor.attack.value = arg.compressor.attack || that.compressor.attack.value
+        that.compressor.knee.value = arg.compressor.knee|| that.compressor.knee.value
+        that.compressor.ratio.value = arg.compressor.ratio || that.compressor.ratio.value
+        that.compressor.release.value = arg.compressor.release || that.compressor.release.value
+        that.compressor.threshold.value = arg.compressor.threshold|| that.compressor.threshold.value
+        that.nodes.push(that.compressor)
+    }
 
+///
 
 /** Method to allow users to setup external fx in the constructor **/
     Wad.prototype.constructExternalFx = function(arg, context){
@@ -591,7 +602,7 @@ then finally play the sound by calling playEnv() **/
         this.isSetUp  = false
         this.playable = 1
 
-        this.setUp = function(arg){
+        this.setUp = function(arg){ // Anything that needs to happen before reverb is set up can go here. 
             this.wads              = []
             this.input             = context.createAnalyser()
             this.nodes             = [this.input]
@@ -625,6 +636,7 @@ then finally play the sound by calling playEnv() **/
 
             constructPanning(this, arg)
             setUpPanningOnPlay(this, arg)
+            if ( this.compressor ) { constructCompressor(this, arg) }
 
             this.nodes.push(this.output)
             plugEmIn(this, arg)

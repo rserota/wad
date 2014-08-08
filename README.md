@@ -25,8 +25,13 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
                 </ul>
             </li>
             <li><a href='#microphone-input'>Microphone Input</a></li>
-            <li><a href='#polywads'>PolyWads</a></li>
-            <li><a href='#recording'>Recording</a></li>
+            <li>
+                <a href='#polywads'>PolyWads</a>
+                <ul>
+                    <li><a href='#recording'>Recording</a></li>
+                    <li><a href='#compression'>Compression</a></li>
+                </ul>
+            </li>
             <li><a href='#external-fx'>External FX</a></li>
             <li><a href='#presets'>Presets</a></li>
             <li><a href='#midi-input'>MIDI Input</a></li>
@@ -232,7 +237,7 @@ mixerTrack.add(tripleOscillator).add(triangle)
 tripleOscillator.play({ pitch : 'Eb3'}) // This note is filtered and panned.
 </code></pre>
 
-<h3>Recording</h3>
+<h4>Recording</h4>
 
 A PolyWad can be used to record the output produced by the Wads it contains.
 
@@ -259,6 +264,23 @@ mixerTrack.rec.clear() // Clear the recording buffer when you're done with it, s
 Wad.js uses Recorder.js for recording (the 'createWad()' method and the 'recordings' array are the only extensions that I've added). For more comprehensive documentation about the recorder object, <a href='https://github.com/mattdiamond/Recorderjs'>check out the Recorder.js documentation</a>. 
 
 Note that the minified version of Wad.js has Recorder.js concatenated to it, but the source version does not. If you want to tinker with recording in the source version, you will need to include recorder.js separately. Whichever version you use, recorderWorker.js is always a separate file, and its location must be specified in the recConfig object. 
+
+<h4>Compression</h4>
+
+If you want to make a song that sounds rich and modern, it often helps to compress the dynamic range of the song. A compressor will make the loudest parts of your song quieter, and the quietest parts louder.
+
+<pre><code>
+var compressor = new Wad.Poly({
+    compressor : {
+        attack : .003 // The amount of time, in seconds, to reduce the gain by 10dB. This parameter ranges from 0 to 1.
+        knee : 30 // A decibel value representing the range above the threshold where the curve smoothly transitions to the "ratio" portion. This parameter ranges from 0 to 40.
+        ratio : 12 // The amount of dB change in input for a 1 dB change in output. This parameter ranges from 1 to 20.
+        release : .25 // The amount of time (in seconds) to increase the gain by 10dB. This parameter ranges from 0 to 1.
+        threshold : -24 // The decibel value above which the compression will start taking effect. This parameter ranges from -100 to 0.
+
+}
+})
+
 
 <h3 id='exfx'>External FX</h3>
 
@@ -306,6 +328,9 @@ If you want to use multiple MIDI devices at once, or you'd like to get creative 
 }
 Wad.midiMaps[1] = anotherMidiHandlerFunction // If you have multiple MIDI devices that you would like to use simultaneously, you will need multiple MIDI handler functions.</code></pre>
 
+As of writing this, MIDI is poorly supported by most browsers. In Chrome, MIDI is an 'experimental feature', so you will need to <a href="http://stackoverflow.com/questions/21821121/web-midi-api-not-implemented-in-chrome-canary">enable it manually</a>. 
+
+You will also need to install the <a href="http://jazz-soft.net/doc/Jazz-Plugin/">jazz plugin</a> to give your browser access to MIDI input. 
 
 <h2>How To Contribute</h2>
 

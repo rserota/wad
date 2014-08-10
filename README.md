@@ -60,9 +60,11 @@ Wad.js is also available as a bower package.
 
 The simplest use case is loading and playing a single audio file.
 
-<pre><code>var bell = new Wad({source : 'http://www.myserver.com/audio/bell.wav'})
+<pre><code>
+var bell = new Wad({source : 'http://www.myserver.com/audio/bell.wav'})
 bell.play()
-bell.stop()</code></pre>
+bell.stop()
+</code></pre>
 
 
 Behind the scenes, Wad sends an XMLHttpRequest to the source URL, so you will need a server running to respond to the request. You can't simply test it with local files, like you can with an HTML &lt;audio> tag.
@@ -81,7 +83,8 @@ saw.setVolume(0.5)</code></pre>
 
 The Wad constructor supports many optional arguments to modify your sound, from simple settings such as peak volume, to more powerful things like ADSR envelopes and filters.  If not set explicitly, the ADSR envelope will have the values shown below. Filters, LFOs, and reverb are not used unless they are set explicitly. Filter type can be specified as either 'lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', or 'allpass'.
 
-<pre><code>var saw = new Wad({
+<pre><code>
+var saw = new Wad({
     source  : 'sawtooth',
     volume  : 1.0,  // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
     pitch   : 'A4', // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
@@ -118,7 +121,8 @@ The Wad constructor supports many optional arguments to modify your sound, from 
         speed     : 4,      // How quickly the volume changes, in cycles per second.  Sensible values are from 0.1 to 10.
         attack    : 0       // Time in seconds for the tremolo effect to reach peak magnitude.
     }
-})</code></pre>
+})
+</code></pre>
 
 
 <h3>Panning</h3>
@@ -127,16 +131,19 @@ If you've used other audio software before, you probably know what most of these
 
 Wad.js supports 3D panning. Any time you would pass in a panning parameter (either to the constructor, the <code>play()</code> method, or the <code>setPanning()</code> method), you can pass it in as a three element array to specify the X, Y, and Z location of the sound.
 
-<pre><code>var saw = new Wad({
+<pre><code>
+var saw = new Wad({
     source : 'sawtooth',
     panning : [0, 1, 10]
-})</code></pre>
+})
+</code></pre>
 
 <h3>Filters</h3>
 
 The filter constructor argument can be passed an object or an array of objects. If an array is passed, the filters are applied in that order. Whichever form is passed to the constructor should also be passed to the play argument.
 
-<pre><code>filter: [
+<pre><code>
+filter: [
     {type : 'lowpass', frequency : 600, q : 1, env : {frequency : 800, attack : 0.5}},
     {type : 'highpass', frequency : 1000, q : 5}
 ]
@@ -149,18 +156,20 @@ In order to use reverb, you will need a server to send an impulse response via X
 
 <h3 id='play-arguments'>Play()</h3>
 
-The <code>play()</code> method also accepts optional arguments: volume, wait, pitch, envelope, panning, and filter. If you intend to include a filter envelope or panning as an argument on <code>play()</code>, you should have set a filter envelope or panning when the Wad was first instantiated. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2), but don't try to be pedantic. There is no mapping for C## or Fb. Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.
+The <code>play()</code> method also accepts optional arguments: volume, wait, pitch, envelope, panning, and filter. If you intend to include a filter envelope or panning as an argument on <code>play()</code>, you should have set a filter envelope or panning when the Wad was first instantiated. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2). Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.
 
-<pre><code>var saw = new Wad({source : 'sawtooth'})
+<pre><code>
+var saw = new Wad({source : 'sawtooth'})
 saw.play({
-    volume : 0.8,
-    wait : 0, // Time in seconds between calling play() and actually triggering the note.
-    pitch : 'A4', // A4 is 440 hertz.
-    label : 'A', // A label that identifies this note.
-    env : {hold : 9001},
+    volume  : 0.8,
+    wait    : 0,    // Time in seconds between calling play() and actually triggering the note.
+    pitch   : 'A4', // A4 is 440 hertz.
+    label   : 'A',  // A label that identifies this note.
+    env     : {hold : 9001},
     panning : [1, -1, 10],
-    filter : {frequency : 900}
-}) </code></pre>
+    filter  : {frequency : 900}
+})
+</code></pre>
 
 
 If you like, you can also select a pitch by frequency.
@@ -171,30 +180,35 @@ If you like, you can also select a pitch by frequency.
 
 When you call <code>stop()</code> on a Wad, it will only stop the most recently triggered note. If you want to retain control over multiple notes that played from the same Wad, you can label those notes when <code>play()</code> is called. When <code>stop()</code> is called, you can pass in a label argument to stop all currently sustained notes with that label. 
 
-<pre><code>saw.play({pitch : 'A4', label : 'A4'}) // The label can be any string, but using the same name as the note is often sensible.
+<pre><code>
+saw.play({pitch : 'A4', label : 'A4'}) // The label can be any string, but using the same name as the note is often sensible.
 saw.play({pitch : 'G4', label : 'G4'})
-saw.stop('A4') // The first note will stop, but the second note will continue playing.</code></pre>
+saw.stop('A4') // The first note will stop, but the second note will continue playing.
+</code></pre>
 
 
 <h4 id='play-setters'>Changing Settings During Playback</h4>
 
 If you want to change an attribute of a Wad during playback, you can use the relevant setter method for that attribute.
 
-<pre><code>saw.play()
-saw.setPanning(-2)</code></pre>
+<pre><code>
+saw.play()
+saw.setPanning(-2)
+</code></pre>
 
 
 <h3 id='mic'>Microphone Input</h3>
 
 You can also use microphone input as the source for a Wad. You can apply reverb or filters to the microphone input, but you cannot apply an envelope or filter envelope. If a Wad uses the microphone as the source, it will constantly stream the mic input through all applied effects (filters, reverb, etc) and out through your speakers or headphones as soon as you call the <code>play()</code> method on that Wad. Call the <code>stop()</code> method on a microphone Wad to disconnect your microphone from that Wad. You may experience problems with microphone feedback if you aren't using headphones.
 
-<pre><code>var voice = new Wad({
-    source : 'mic',
-    reverb : {
+<pre><code>
+var voice = new Wad({
+    source  : 'mic',
+    reverb  : {
         wet : .4
     }
-    filter : {
-        type : 'highpass',
+    filter  : {
+        type      : 'highpass',
         frequency : 700
     },
     panning : -2
@@ -207,8 +221,9 @@ voice.play()
 
 In many cases, it is useful to group multiple Wads together. This can be accomplished with a PolyWad, a multi-purpose object that can store other Wads and PolyWads. There are two main cases where you might want to group several Wads together. One case is when you want to make a complex instrument that uses multiple oscillators.  Other audio synthesis programs often have instruments that combine multiple oscillators, with names like 'TripleOscillator' or '3xOSC'.
 
-<pre><code>var sine = new Wad({ source : 'sine' })
-var square = new Wad({ source : 'square' })
+<pre><code>
+var sine     = new Wad({ source : 'sine' })
+var square   = new Wad({ source : 'square' })
 var triangle = new Wad({ source : 'triangle' })
 
 var tripleOscillator = new Wad.Poly()
@@ -224,11 +239,12 @@ tripleOscillator.remove(triangle) // It's really just a double-oscillator at thi
 
 The second main case in which you would want to group several Wads together is to make a mixer track, where several Wads share a set of effects and filters.
 
-<pre><code>var mixerTrack = new Wad.Poly({
-    filter : {
-        type : 'lowpass',
+<pre><code>
+var mixerTrack = new Wad.Poly({
+    filter  : {
+        type      : 'lowpass',
         frequency : 700,
-        q : 3
+        q         : 3
     },
     panning : 1
 })
@@ -250,15 +266,15 @@ var mixerTrack = new Wad.Poly({
 })
 mixerTrack.add(sine)
 
-mixerTrack.rec.record() // Start recording output from this PolyWad.
-sine.play({pitch : 'C3'}).play({pitch : 'E3'}).play({pitch : 'G3'}) // Make some noise!
-mixerTrack.rec.stop() // Take a break.
-mixerTrack.rec.record() // Append to the same recording buffer.
-sine.play({pitch : 'C3'}).play({pitch : 'E3'}).play({pitch : 'G3'})
+mixerTrack.rec.record()             // Start recording output from this PolyWad.
+sine.play({pitch : 'C3'})           // Make some noise!
+mixerTrack.rec.stop()               // Take a break.
+mixerTrack.rec.record()             // Append to the same recording buffer.
+sine.play({pitch : 'G3'})
 mixerTrack.rec.stop()
-mixerTrack.rec.createWad() // This method accepts the same arguments as the Wad constructor, except that the 'source' is implied, so it's fine to call this method with no arguments. 
+mixerTrack.rec.createWad()          // This method accepts the same arguments as the Wad constructor, except that the 'source' is implied, so it's fine to call this method with no arguments. 
 mixerTrack.rec.recordings[0].play() // The most recent recording is unshifted to the front of this array.
-mixerTrack.rec.clear() // Clear the recording buffer when you're done with it, so you can record something else.
+mixerTrack.rec.clear()              // Clear the recording buffer when you're done with it, so you can record something else.
 </code></pre>
 
 Wad.js uses Recorder.js for recording (the 'createWad()' method and the 'recordings' array are the only extensions that I've added). For more comprehensive documentation about the recorder object, <a href='https://github.com/mattdiamond/Recorderjs'>check out the Recorder.js documentation</a>. 
@@ -272,14 +288,14 @@ If you want to make a song that sounds rich and modern, it often helps to compre
 <pre><code>
 var compressor = new Wad.Poly({
     compressor : {
-        attack : .003 // The amount of time, in seconds, to reduce the gain by 10dB. This parameter ranges from 0 to 1.
-        knee : 30 // A decibel value representing the range above the threshold where the curve smoothly transitions to the "ratio" portion. This parameter ranges from 0 to 40.
-        ratio : 12 // The amount of dB change in input for a 1 dB change in output. This parameter ranges from 1 to 20.
-        release : .25 // The amount of time (in seconds) to increase the gain by 10dB. This parameter ranges from 0 to 1.
-        threshold : -24 // The decibel value above which the compression will start taking effect. This parameter ranges from -100 to 0.
+        attack    : .003 // The amount of time, in seconds, to reduce the gain by 10dB. This parameter ranges from 0 to 1.
+        knee      : 30   // A decibel value representing the range above the threshold where the curve smoothly transitions to the "ratio" portion. This parameter ranges from 0 to 40.
+        ratio     : 12   // The amount of dB change in input for a 1 dB change in output. This parameter ranges from 1 to 20.
+        release   : .25  // The amount of time (in seconds) to increase the gain by 10dB. This parameter ranges from 0 to 1.
+        threshold : -24  // The decibel value above which the compression will start taking effect. This parameter ranges from -100 to 0.
     }
 })
-
+</code></pre>
 
 <h3 id='exfx'>External FX</h3>
 
@@ -290,19 +306,19 @@ Sometimes you might want to incorporate external libraries into Wad, for example
 
 var tuna;
 Wad.prototype.constructExternalFx = function(arg, context){
-    this.tuna = new Tuna(context);
+    this.tuna   = new Tuna(context);
     this.chorus = arg.chorus
 }
 
 Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
     var chorus = new tuna.Chorus({
-        rate: arg.chorus.rate || this.chorus.rate,
-        feedback: arg.chorus.feedback || this.chorus.feedback,
-        delay: arg.chorus.delay || this.chorus.delay,
-        bypass: arg.chorus.bypass || this.chorus.bypass
+        rate     : arg.chorus.rate     || this.chorus.rate,
+        feedback : arg.chorus.feedback || this.chorus.feedback,
+        delay    : arg.chorus.delay    || this.chorus.delay,
+        bypass   : arg.chorus.bypass   || this.chorus.bypass
     });
-    chorus.input.connect = chorus.connect.bind(chorus)//we do this dance because tuna exposes its input differently.
-    that.nodes.push(chorus.input)//you would generally want to do this at the end unless you are working with something that does not modulate the sound (i.e, a visualizer)
+    chorus.input.connect = chorus.connect.bind(chorus) // we do this dance because tuna exposes its input differently.
+    that.nodes.push(chorus.input) // you would generally want to do this at the end unless you are working with something that does not modulate the sound (i.e, a visualizer)
 }
 </code></pre>
 

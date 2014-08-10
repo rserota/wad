@@ -443,11 +443,11 @@ with special handling for reverb (ConvolverNode). **/
 /** **/
     var constructCompressor = function(that, arg){
         that.compressor = context.createDynamicsCompressor()
-        that.compressor.attack.value = arg.compressor.attack || that.compressor.attack.value
-        that.compressor.knee.value = arg.compressor.knee|| that.compressor.knee.value
-        that.compressor.ratio.value = arg.compressor.ratio || that.compressor.ratio.value
-        that.compressor.release.value = arg.compressor.release || that.compressor.release.value
-        that.compressor.threshold.value = arg.compressor.threshold|| that.compressor.threshold.value
+        that.compressor.attack.value    = arg.compressor.attack    || that.compressor.attack.value
+        that.compressor.knee.value      = arg.compressor.knee      || that.compressor.knee.value
+        that.compressor.ratio.value     = arg.compressor.ratio     || that.compressor.ratio.value
+        that.compressor.release.value   = arg.compressor.release   || that.compressor.release.value
+        that.compressor.threshold.value = arg.compressor.threshold || that.compressor.threshold.value
         that.nodes.push(that.compressor)
     }
 
@@ -636,7 +636,7 @@ then finally play the sound by calling playEnv() **/
 
             constructPanning(this, arg)
             setUpPanningOnPlay(this, arg)
-            if ( this.compressor ) { constructCompressor(this, arg) }
+            if ( arg.compressor ) { constructCompressor(this, arg) }
 
             this.nodes.push(this.output)
             plugEmIn(this, arg)

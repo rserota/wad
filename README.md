@@ -83,40 +83,40 @@ The Wad constructor supports many optional arguments to modify your sound, from 
 
 <pre><code>var saw = new Wad({
     source  : 'sawtooth',
-    volume  : 1.0, // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
+    volume  : 1.0,  // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
     pitch   : 'A4', // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
-    panning : -5, // Horizontal placement of the sound source. Sensible values are from 10 to -10.
-    env     : { // This is the ADSR envelope.
-        attack  : 0.0, // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
-        decay   : 0.0, // Time in seconds from peak volume to sustain volume.
-        sustain : 1.0, // Sustain volume level. This is a percent of the peak volume, so sensible values are between 0 and 1.
+    panning : -5,   // Horizontal placement of the sound source. Sensible values are from 10 to -10.
+    env     : {     // This is the ADSR envelope.
+        attack  : 0.0,  // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
+        decay   : 0.0,  // Time in seconds from peak volume to sustain volume.
+        sustain : 1.0,  // Sustain volume level. This is a percent of the peak volume, so sensible values are between 0 and 1.
         hold    : 9001, // Time in seconds to maintain the sustain volume level. If this is not set to a lower value, oscillators must be manually stopped by calling their stop() method.
-        release : 0 // Time in seconds from the end of the hold period to zero volume, or from calling stop() to zero volume.
+        release : 0     // Time in seconds from the end of the hold period to zero volume, or from calling stop() to zero volume.
     },
     filter  : {
         type      : 'lowpass', // What type of filter is applied.
-        frequency : 600, // The frequency, in hertz, to which the filter is applied.
-        q         : 1, // Q-factor.  No one knows what this does. The default value is 1. Sensible values are from 0 to 10.
-        env       : { // Filter envelope.
+        frequency : 600,       // The frequency, in hertz, to which the filter is applied.
+        q         : 1,         // Q-factor.  No one knows what this does. The default value is 1. Sensible values are from 0 to 10.
+        env       : {          // Filter envelope.
             frequency : 800, // If this is set, filter frequency will slide from filter.frequency to filter.env.frequency when a note is triggered.
-            attack    : 0.5 // Time in seconds for the filter frequency to slide from filter.frequency to filter.env.frequency
+            attack    : 0.5  // Time in seconds for the filter frequency to slide from filter.frequency to filter.env.frequency
         }
     },
     reverb  : {
-        wet     : 1, // Volume of the reverberations.
+        wet     : 1,                                            // Volume of the reverberations.
         impulse : 'http://www.myServer.com/path/to/impulse.wav' // A URL for an impulse response file, if you do not want to use the default impulse response.
     },
     vibrato : { // A vibrating pitch effect.  Only works for oscillators.
         shape     : 'sine', // shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'.
-        magnitude : 3, // how much the pitch changes. Sensible values are from 1 to 10.
-        speed     : 4, // How quickly the pitch changes, in cycles per second.  Sensible values are from 0.1 to 10.
-        attack    : 0 // Time in seconds for the vibrato effect to reach peak magnitude.
+        magnitude : 3,      // how much the pitch changes. Sensible values are from 1 to 10.
+        speed     : 4,      // How quickly the pitch changes, in cycles per second.  Sensible values are from 0.1 to 10.
+        attack    : 0       // Time in seconds for the vibrato effect to reach peak magnitude.
     },
     tremolo : { // A vibrating volume effect.
         shape     : 'sine', // shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'.
-        magnitude : 3, // how much the volume changes. Sensible values are from 1 to 10.
-        speed     : 4, // How quickly the volume changes, in cycles per second.  Sensible values are from 0.1 to 10.
-        attack    : 0 // Time in seconds for the tremolo effect to reach peak magnitude.
+        magnitude : 3,      // how much the volume changes. Sensible values are from 1 to 10.
+        speed     : 4,      // How quickly the volume changes, in cycles per second.  Sensible values are from 0.1 to 10.
+        attack    : 0       // Time in seconds for the tremolo effect to reach peak magnitude.
     }
 })</code></pre>
 

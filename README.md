@@ -133,7 +133,7 @@ Wad.js supports 3D panning. Any time you would pass in a panning parameter (eith
 
 <pre><code>
 var saw = new Wad({
-    source : 'sawtooth',
+    source  : 'sawtooth',
     panning : [0, 1, 10]
 })
 </code></pre>

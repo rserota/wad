@@ -168,7 +168,13 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         }
     }
 //////////////////////////////////////////////////////////////////////////////
-
+    var constructDelay = function(that, arg){
+        that.delay = {
+            delayTime : arg.delay.delayTime || .15
+            feedback  : arg.delay.feedback  || .25
+            wet       : arg.delay.wet       || .25
+        }
+    }
 
 
 /** Special initialization and configuration for microphone Wads **/
@@ -439,6 +445,32 @@ with special handling for reverb (ConvolverNode). **/
         that.tremolo.wad.play()
     }
 ///////////////////////////////////////////////////////////////
+
+    var setUpDelayOnPlay = function(that, arg){
+            //create the nodes we’ll use
+            that.delay.input    = audioContext.createGainNode()
+            that.delay.output   = audioContext.createGainNode()
+            that.delay.node     = audioContext.createDelayNode()
+            that.delay.feedback = audioContext.createGainNode()
+            that.delay.wet      = audioContext.createGainNode()
+
+            //set some decent values
+            that.delay.node.delayTime.value = arg.delay.delayTime || that.delay.delayTime
+            that.delay.feedback.gain.value  = arg.delay.feedback  || that.delay.feedback
+            that.delay.wet.gain.value       = arg.delay.wet       || that.delay.wet
+
+            //set up the routing
+            that.delay.input.connect(that.delay.node);
+            // this.input.connect(output);
+            that.delay.node.connect(feedback);
+            that.delay.node.connect(that.delay.wet);
+            that.delay.feedback.connect(that.delay.node);
+            that.delay.wet.connect(that.delay.output);
+
+            that.nodes.push(that.delay.input)
+            that.nodes.push(that.delay.output)
+        };
+    }
 
 /** **/
     var constructCompressor = function(that, arg){

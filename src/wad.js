@@ -170,7 +170,6 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 //////////////////////////////////////////////////////////////////////////////
     var constructDelay = function(that, arg){
         if ( arg.delay ) {
-            console.log('construct delay')
             that.delay = {
                 delayTime : arg.delay.delayTime || .15,
                 feedback  : arg.delay.feedback  || .25,
@@ -208,6 +207,11 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 that.panning.node.setPosition(that.panning.location[0], that.panning.location[1], that.panning.location[2])
                 that.nodes.push(that.panning.node)
             }
+
+            if ( that.delay ) {
+                setUpDelayOnPlay(that, arg)
+            }
+
         }, function(error) { console.log('Error setting up microphone input: ', error) }); // This is the error callback.
     }
 ////////////////////////////////////////////////////////////////////
@@ -291,7 +295,7 @@ as specified by the volume envelope and filter envelope **/
 /** When all the nodes are set up for this Wad, this function plugs them into each other,
 with special handling for reverb (ConvolverNode). **/
     var plugEmIn = function(that, arg){
-        // console.log('plugemin', that)
+        console.log('plugemin', that)
         var destination = ( arg && arg.destination ) || that.destination
         for ( var i = 1; i < that.nodes.length; i++ ) {
             that.nodes[i - 1].connect(that.nodes[i])
@@ -454,16 +458,16 @@ with special handling for reverb (ConvolverNode). **/
         if ( that.delay ) {
             if ( !arg.delay ) { arg.delay = {} }
             //create the nodes we’ll use
-            that.delay.input    = context.createGain()
-            that.delay.output   = context.createGain()
+            that.delay.input         = context.createGain()
+            that.delay.output        = context.createGain()
             that.delay.delayNode     = context.createDelay()
-            that.delay.feedbackNode = context.createGain()
-            that.delay.wetNode      = context.createGain()
+            that.delay.feedbackNode  = context.createGain()
+            that.delay.wetNode       = context.createGain()
 
             //set some decent values
             that.delay.delayNode.delayTime.value = arg.delay.delayTime || that.delay.delayTime
-            that.delay.feedbackNode.gain.value  = arg.delay.feedback  || that.delay.feedback
-            that.delay.wetNode.gain.value       = arg.delay.wet       || that.delay.wet
+            that.delay.feedbackNode.gain.value   = arg.delay.feedback  || that.delay.feedback
+            that.delay.wetNode.gain.value        = arg.delay.wet       || that.delay.wet
             console.log('arg delay feedback: ', arg.delay.feedback)
             console.log('that delay feedback: ', that.delay.feedback)
 
@@ -514,7 +518,7 @@ set properties on those nodes according to the constructor arguments and play() 
 plug the nodes into each other with plugEmIn(),
 then finally play the sound by calling playEnv() **/
     Wad.prototype.play = function(arg){
-
+        arg = arg || {}
         if ( this.playable < 1 ) {
             this.playOnLoad = true
             this.playOnLoadArg = arg

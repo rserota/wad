@@ -169,10 +169,13 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
     }
 //////////////////////////////////////////////////////////////////////////////
     var constructDelay = function(that, arg){
-        that.delay = {
-            delayTime : arg.delay.delayTime || .15
-            feedback  : arg.delay.feedback  || .25
-            wet       : arg.delay.wet       || .25
+        if ( arg.delay ) {
+            console.log('construct delay')
+            that.delay = {
+                delayTime : arg.delay.delayTime || .15,
+                feedback  : arg.delay.feedback  || .25,
+                wet       : arg.delay.wet       || .25
+            }
         }
     }
 
@@ -228,7 +231,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         constructReverb(this, arg)
         this.constructExternalFx(arg, context)
         constructPanning(this, arg)
-
+        constructDelay(this, arg)
 ////////////////////////////////
 
 
@@ -246,7 +249,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 //////////////////////////////////////////////////////////////////////////////////
 
 
-/** If the Wad's source is an object, assume it is a buffer from a recorder. there's probably a better way to handle this. **/
+/** If the Wad's source is an object, assume it is a buffer from a recorder. There's probably a better way to handle this. **/
         else if ( typeof this.source == 'object' ) {
             var newBuffer = context.createBuffer( 2, this.source[0].length, context.sampleRate );
             newBuffer.getChannelData(0).set(this.source[0]);
@@ -438,7 +441,8 @@ with special handling for reverb (ConvolverNode). **/
             pitch  : that.tremolo.speed,
             volume : that.tremolo.magnitude,
             env    : {
-                attack : that.tremolo.attack
+                attack : that.tremolo.attack,
+                hold   : 10
             },
             destination : that.gain[0].gain
         })
@@ -447,29 +451,33 @@ with special handling for reverb (ConvolverNode). **/
 ///////////////////////////////////////////////////////////////
 
     var setUpDelayOnPlay = function(that, arg){
+        if ( that.delay ) {
+            if ( !arg.delay ) { arg.delay = {} }
             //create the nodes we’ll use
-            that.delay.input    = audioContext.createGainNode()
-            that.delay.output   = audioContext.createGainNode()
-            that.delay.node     = audioContext.createDelayNode()
-            that.delay.feedback = audioContext.createGainNode()
-            that.delay.wet      = audioContext.createGainNode()
+            that.delay.input    = context.createGain()
+            that.delay.output   = context.createGain()
+            that.delay.delayNode     = context.createDelay()
+            that.delay.feedbackNode = context.createGain()
+            that.delay.wetNode      = context.createGain()
 
             //set some decent values
-            that.delay.node.delayTime.value = arg.delay.delayTime || that.delay.delayTime
-            that.delay.feedback.gain.value  = arg.delay.feedback  || that.delay.feedback
-            that.delay.wet.gain.value       = arg.delay.wet       || that.delay.wet
+            that.delay.delayNode.delayTime.value = arg.delay.delayTime || that.delay.delayTime
+            that.delay.feedbackNode.gain.value  = arg.delay.feedback  || that.delay.feedback
+            that.delay.wetNode.gain.value       = arg.delay.wet       || that.delay.wet
+            console.log('arg delay feedback: ', arg.delay.feedback)
+            console.log('that delay feedback: ', that.delay.feedback)
 
             //set up the routing
-            that.delay.input.connect(that.delay.node);
-            // this.input.connect(output);
-            that.delay.node.connect(feedback);
-            that.delay.node.connect(that.delay.wet);
-            that.delay.feedback.connect(that.delay.node);
-            that.delay.wet.connect(that.delay.output);
+            that.delay.input.connect(that.delay.delayNode);
+            that.delay.delayNode.connect(that.delay.feedbackNode);
+            that.delay.delayNode.connect(that.delay.wetNode);
+            that.delay.feedbackNode.connect(that.delay.delayNode);
+            that.delay.wetNode.connect(that.delay.output);
 
             that.nodes.push(that.delay.input)
             that.nodes.push(that.delay.output)
-        };
+        }
+
     }
 
 /** **/
@@ -561,6 +569,8 @@ then finally play the sound by calling playEnv() **/
             setUpPanningOnPlay(this, arg)
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+            setUpDelayOnPlay(this, arg)
 
             plugEmIn(this, arg)
 

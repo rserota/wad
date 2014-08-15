@@ -109,6 +109,11 @@ var saw = new Wad({
         wet     : 1,                                            // Volume of the reverberations.
         impulse : 'http://www.myServer.com/path/to/impulse.wav' // A URL for an impulse response file, if you do not want to use the default impulse response.
     },
+    delay   : {
+        delayTime : .15,
+        feedback  : .25,
+        wet       : .25
+    }
     vibrato : { // A vibrating pitch effect.  Only works for oscillators.
         shape     : 'sine', // shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'.
         magnitude : 3,      // how much the pitch changes. Sensible values are from 1 to 10.

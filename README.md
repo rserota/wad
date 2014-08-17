@@ -161,7 +161,7 @@ In order to use reverb, you will need a server to send an impulse response via X
 
 <h3 id='play-arguments'>Play()</h3>
 
-The <code>play()</code> method also accepts optional arguments: volume, wait, pitch, envelope, panning, and filter. If you intend to include a filter envelope or panning as an argument on <code>play()</code>, you should have set a filter envelope or panning when the Wad was first instantiated. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2). Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.
+The <code>play()</code> method also accepts many optional arguments, such as volume, wait, pitch, envelope, panning, and filter. If you intend to include a filter envelope or panning as an argument on <code>play()</code>, you should have set a filter envelope or panning when the Wad was first instantiated. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2). Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.
 
 <pre><code>
 var saw = new Wad({source : 'sawtooth'})
@@ -172,7 +172,8 @@ saw.play({
     label   : 'A',  // A label that identifies this note.
     env     : {hold : 9001},
     panning : [1, -1, 10],
-    filter  : {frequency : 900}
+    filter  : {frequency : 900},
+    delay   : {delayTime : .8}
 })
 </code></pre>
 

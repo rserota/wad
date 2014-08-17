@@ -110,9 +110,9 @@ var saw = new Wad({
         impulse : 'http://www.myServer.com/path/to/impulse.wav' // A URL for an impulse response file, if you do not want to use the default impulse response.
     },
     delay   : {
-        delayTime : .15,
-        feedback  : .25,
-        wet       : .25
+        delayTime : .5,  // Time in seconds between each delayed playback.
+        wet       : .25, // Relative volume change between the original sound and the first delayed playback.
+        feedback  : .25, // Relative volume change between each delayed playback and the next. 
     }
     vibrato : { // A vibrating pitch effect.  Only works for oscillators.
         shape     : 'sine', // shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'.
@@ -233,7 +233,7 @@ var triangle = new Wad({ source : 'triangle' })
 
 var tripleOscillator = new Wad.Poly()
 
-tripleOscillator.add(sine).add(square).add(triangle) // Many methods are chainable for convenience, but it's never necessary to do so. 
+tripleOscillator.add(sine).add(square).add(triangle) // Many methods are chainable for convenience.
 
 tripleOscillator.play({ pitch : 'G#2'})
 tripleOscillator.setVolume(.5)

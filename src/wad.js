@@ -171,7 +171,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
     var constructDelay = function(that, arg){
         if ( arg.delay ) {
             that.delay = {
-                delayTime : arg.delay.delayTime || .15,
+                delayTime : arg.delay.delayTime || .5,
                 feedback  : arg.delay.feedback  || .25,
                 wet       : arg.delay.wet       || .25
             }
@@ -683,6 +683,9 @@ then finally play the sound by calling playEnv() **/
             constructPanning(this, arg)
             setUpPanningOnPlay(this, arg)
             if ( arg.compressor ) { constructCompressor(this, arg) }
+
+            constructDelay(this, arg)
+            setUpDelayOnPlay(this, arg)
 
             this.nodes.push(this.output)
             plugEmIn(this, arg)

@@ -171,9 +171,10 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
     var constructDelay = function(that, arg){
         if ( arg.delay ) {
             that.delay = {
-                delayTime : arg.delay.delayTime || .5,
-                feedback  : arg.delay.feedback  || .25,
-                wet       : arg.delay.wet       || .25
+                delayTime    : arg.delay.delayTime    || .5,
+                maxDelayTime : arg.delay.maxDelayTime || 2,
+                feedback     : arg.delay.feedback     || .25,
+                wet          : arg.delay.wet          || .25
             }
         }
     }
@@ -460,7 +461,7 @@ with special handling for reverb (ConvolverNode). **/
             //create the nodes we’ll use
             that.delay.input         = context.createGain()
             that.delay.output        = context.createGain()
-            that.delay.delayNode     = context.createDelay()
+            that.delay.delayNode     = context.createDelay(maxDelayTime = that.delay.maxDelayTime)
             that.delay.feedbackNode  = context.createGain()
             that.delay.wetNode       = context.createGain()
 

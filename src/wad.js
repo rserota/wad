@@ -45,18 +45,18 @@ var Wad = (function(){
 /** Set up the default ADSR envelope. **/
     var constructEnv = function(that, arg){
         that.env = { //default envelope, if one is not specified on play
-            attack  : arg.env ? ( arg.env.attack  || 0    )    : 0, // time in seconds from onset to peak volume
-            decay   : arg.env ? ( arg.env.decay   || 0    )    : 0, // time in seconds from peak volume to sustain volume
-            sustain : arg.env ? ( arg.env.sustain || 1    )    : 1, // sustain volume level, as a percent of peak volume. min:0, max:1
-            hold    : arg.env ? ( arg.env.hold    || 9001 )    : 9001, // time in seconds to maintain sustain volume
-            release : arg.env ? ( arg.env.release || 0    )    : 0 // time in seconds from sustain volume to zero volume
+            attack  : arg.env ? ( arg.env.attack  || 0    )    : 0,    // time in seconds from onset to peak volume
+            decay   : arg.env ? ( arg.env.decay   || 0    )    : 0,    // time in seconds from peak volume to sustain volume
+            sustain : arg.env ? ( arg.env.sustain || 1    )    : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
+            hold    : arg.env ? ( arg.env.hold    || 3.14 )    : 3.14, // time in seconds to maintain sustain volume
+            release : arg.env ? ( arg.env.release || 0    )    : 0     // time in seconds from sustain volume to zero volume
         }
         that.defaultEnv = {
-            attack  : arg.env ? ( arg.env.attack  || 0    )    : 0, // time in seconds from onset to peak volume
-            decay   : arg.env ? ( arg.env.decay   || 0    )    : 0, // time in seconds from peak volume to sustain volume
-            sustain : arg.env ? ( arg.env.sustain || 1    )    : 1, // sustain volume level, as a percent of peak volume. min:0, max:1
-            hold    : arg.env ? ( arg.env.hold    || 9001 )    : 9001, // time in seconds to maintain sustain volume
-            release : arg.env ? ( arg.env.release || 0    )    : 0 // time in seconds from sustain volume to zero volume
+            attack  : arg.env ? ( arg.env.attack  || 0    )    : 0,    // time in seconds from onset to peak volume
+            decay   : arg.env ? ( arg.env.decay   || 0    )    : 0,    // time in seconds from peak volume to sustain volume
+            sustain : arg.env ? ( arg.env.sustain || 1    )    : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
+            hold    : arg.env ? ( arg.env.hold    || 3.14 )    : 3.14, // time in seconds to maintain sustain volume
+            release : arg.env ? ( arg.env.release || 0    )    : 0     // time in seconds from sustain volume to zero volume
         }
     }
 /////////////////////////////////////////
@@ -1058,6 +1058,10 @@ grab it from the defaultImpulse URL **/
         }
         else if ( event.data[0] === 176 ) { // 176 means the midi message has controller data
             console.log('controller')
+            if ( event.data[1] == 46 ) {
+                if ( event.data[2] == 127 ) { Wad.midiInstrument.pedalMod = true }
+                else if ( event.data[2] == 0 ) { Wad.midiInstrument.pedalMod = false }
+            }
         }
         else if ( event.data[0] === 224 ) { // 224 means the midi message has pitch bend data
             console.log('pitch bend')

@@ -1112,3 +1112,179 @@ if ( navigator && navigator.requestMIDIAccess ) {
 
 })()
 
+
+
+function initBandpassFilters() {
+    // When this function is called, the carrierNode and modulatorAnalyser 
+    // may not already be created.  Create placeholder nodes for them.
+    modulatorInput = audioContext.createGain();
+    carrierInput   = audioContext.createGain();
+
+    modFilterBands         = []
+    modFilterPostGains     = []
+    heterodynes            = []
+    powers                 = []
+    lpFilters              = []
+    lpFilterPostGains      = []
+    bandAnalysers          = []
+    carrierBands           = []
+    carrierFilterPostGains = []
+    carrierBandGains       = []
+
+    var waveShaperCurve = new Float32Array(65536);
+    // Populate with a "curve" that does an abs()
+    var n  = 65536;
+    var n2 = n / 2;
+    
+    for ( var i = 0; i < n2; ++i ) {
+        x = i / n2;
+        
+        waveShaperCurve[n2 + i] = x;
+        waveShaperCurve[n2 - i - 1] = x;
+    }
+    
+    // Set up a high-pass filter to add back in the fricatives, etc.
+    // (this isn't used by default in the "production" version, as I hid the slider)
+    var hpFilter = context.createBiquadFilter();
+    hpFilter.type            = "highpass";
+    hpFilter.frequency.value = 8000; // or use vocoderBands[numVocoderBands-1].frequency;
+    hpFilter.Q.value         = 1; //    no peaking
+    modulatorInput.connect(hpFilter);
+
+    hpFilterGain = context.createGain();
+    hpFilterGain.gain.value = 0.0; // hmmmmmmmmm
+
+    hpFilter.connect(hpFilterGain);
+    hpFilterGain.connect( .destination); // dest?
+
+
+    var outputGain = context.createGain();
+    outputGain.connect( .destination); // dest?
+
+    var rectifierCurve = new Float32Array(65536);
+    for ( var i=-32768; i<32768; i++ ) 
+        rectifierCurve[i+32768] = ((i>0)?i:-i)/32768;
+
+    for ( var i=0; i<numVocoderBands; i++ ) {
+        // CREATE THE MODULATOR CHAIN
+        // create the bandpass filter in the modulator chain
+        var modulatorFilter = context.createBiquadFilter();
+        modulatorFilter.type            = "bandpass";  // Bandpass filter
+        modulatorFilter.frequency.value = vocoderBands[i].frequency;
+        modulatorFilter.Q.value         = FILTER_QUALITY; //    initial quality
+        modulatorInput.connect(modulatorFilter);
+        modFilterBands.push(modulatorFilter);
+
+        // Now, create a second bandpass filter tuned to the same frequency - 
+        // this turns our second-order filter into a 4th-order filter,
+        // which has a steeper rolloff/octave
+        var secondModulatorFilter = audioContext.createBiquadFilter();
+        secondModulatorFilter.type            = "bandpass";    // Bandpass filter
+        secondModulatorFilter.frequency.value = vocoderBands[i].frequency;
+        secondModulatorFilter.Q.value         = FILTER_QUALITY; //  initial quality
+        modulatorFilter.chainedFilter         = secondModulatorFilter;
+        modulatorFilter.connect( secondModulatorFilter );
+
+        // create a post-filtering gain to bump the levels up.
+        var modulatorFilterPostGain = context.createGain();
+        modulatorFilterPostGain.gain.value = 6;
+        secondModulatorFilter.connect(modulatorFilterPostGain);
+        modFilterPostGains.push(modulatorFilterPostGain);
+
+        // Create the sine oscillator for the heterodyne
+        var heterodyneOscillator = context.createOscillator();
+        heterodyneOscillator.frequency.value = vocoderBands[i].frequency;
+
+        heterodyneOscillator.start(0);
+
+        // Create the node to multiply the sine by the modulator
+        var heterodyne = context.createGain();
+        modulatorFilterPostGain.connect(heterodyne);
+        heterodyne.gain.value = 0.0;    // audio-rate inputs are summed with initial intrinsic value
+        heterodyneOscillator.connect(heterodyne.gain);
+
+        var heterodynePostGain = context.createGain();
+        heterodynePostGain.gain.value = 2.0;        // GUESS:  boost
+        heterodyne.connect(heterodynePostGain);
+        heterodynes.push(heterodynePostGain);
+
+
+        // Create the rectifier node
+        var rectifier   = context.createWaveShaper();
+        rectifier.curve = rectifierCurve;
+        heterodynePostGain.connect(rectifier);
+
+        // Create the lowpass filter to mask off the difference (near zero)
+        var lpFilter = context.createBiquadFilter();
+        lpFilter.type            = "lowpass";  // Lowpass filter
+        lpFilter.frequency.value = 5.0; // Guesstimate!  Mask off 20Hz and above.
+        lpFilter.Q.value         = 1;   // don't need a peak
+        lpFilters.push(lpFilter);
+        rectifier.connect(lpFilter);
+
+        var lpFilterPostGain = context.createGain();
+        lpFilterPostGain.gain.value = 1.0; 
+        lpFilter.connect(lpFilterPostGain);
+        lpFilterPostGains.push(lpFilterPostGain);
+
+        var waveshaper = context.createWaveShaper();
+        waveshaper.curve = waveShaperCurve;
+        lpFilterPostGain.connect(waveshaper);
+
+        // create an analyser to drive the vocoder band drawing
+        var analyser = context.createAnalyser();
+        analyser.fftSize = 128; //small, shouldn't matter
+        waveshaper.connect(analyser);
+        bandAnalysers.push(analyser);
+
+        // Create the bandpass filter in the carrier chain
+        var carrierFilter = context.createBiquadFilter();
+        carrierFilter.type            = "bandpass";
+        carrierFilter.frequency.value = vocoderBands[i].frequency;
+        carrierFilter.Q.value         = FILTER_QUALITY;
+        carrierBands.push(carrierFilter);
+        carrierInput.connect(carrierFilter);
+
+        // We want our carrier filters to be 4th-order filter too.
+        var secondCarrierFilter = context.createBiquadFilter();
+        secondCarrierFilter.type            = "bandpass";  // Bandpass filter
+        secondCarrierFilter.frequency.value = vocoderBands[i].frequency;
+        secondCarrierFilter.Q.value         = FILTER_QUALITY; //    initial quality
+        carrierFilter.chainedFilter         = secondCarrierFilter;
+        carrierFilter.connect(secondCarrierFilter);
+
+        var carrierFilterPostGain = context.createGain();
+        carrierFilterPostGain.gain.value = 10.0;
+        secondCarrierFilter.connect(carrierFilterPostGain);
+        carrierFilterPostGains.push(carrierFilterPostGain);
+
+        // Create the carrier band gain node
+        var bandGain = context.createGain();
+        carrierBandGains.push(bandGain);
+        carrierFilterPostGain.connect(bandGain);
+        bandGain.gain.value = 0.0;  // audio-rate inputs are summed with initial intrinsic value
+        waveshaper.connect(bandGain.gain);    // connect the lp controller
+
+        bandGain.connect(outputGain);
+    }
+
+
+    // modulatorInput.connect( analyser1 ); // just for visual analysis?
+    // outputGain.connect( analyser2 );
+
+    // Now set up our wavetable stuff.
+    var real = new Float32Array(FOURIER_SIZE);
+    var imag = new Float32Array(FOURIER_SIZE);
+    real[0] = 0.0;
+    imag[0] = 0.0;
+    for (var i=1; i<FOURIER_SIZE; i++) {
+        real[i]=1.0;
+        imag[i]=1.0;
+    }
+
+    wavetable = (context.createPeriodicWave) ?
+        context.createPeriodicWave(real, imag) :
+        context.createWaveTable(real, imag);
+    // loadNoiseBuffer(); // i can just use noise polywads
+
+}

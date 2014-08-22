@@ -1114,11 +1114,44 @@ if ( navigator && navigator.requestMIDIAccess ) {
 
 
 
-function initBandpassFilters() {
+
+
+
+var vocoderBands;
+var numVocoderBands;
+var FOURIER_SIZE = 4096;
+var FILTER_QUALITY = 6;
+
+function generateVocoderBands( startFreq, endFreq, numBands ) {
+    // Remember: 1200 cents in octave, 100 cents per semitone
+
+    var totalRangeInCents = 1200 * Math.log( endFreq / startFreq ) / Math.LN2;
+    var centsPerBand = totalRangeInCents / numBands;
+    var scale = Math.pow( 2, centsPerBand / 1200 );  // This is the scaling for successive bands
+
+    vocoderBands = new Array();
+    var currentFreq = startFreq;
+
+    for (var i=0; i<numBands; i++) {
+        vocoderBands[i] = new Object();
+        vocoderBands[i].frequency = currentFreq;
+//      console.log( "Band " + i + " centered at " + currentFreq + "Hz" );
+        currentFreq = currentFreq * scale;
+    }
+
+    numVocoderBands = numBands;
+}
+
+generateVocoderBands( 55, 7040, 28 );
+
+
+function constructVocoder(modulatorInput, carrierInput, destination) {
     // When this function is called, the carrierNode and modulatorAnalyser 
     // may not already be created.  Create placeholder nodes for them.
-    modulatorInput = audioContext.createGain();
-    carrierInput   = audioContext.createGain();
+    var vocoder = {}
+    vocoder.modulatorInput = context.createGain();
+    vocoder.carrierInput   = context.createGain();
+    vocoder.output         = context.createGain();
 
     modFilterBands         = []
     modFilterPostGains     = []
@@ -1149,17 +1182,17 @@ function initBandpassFilters() {
     hpFilter.type            = "highpass";
     hpFilter.frequency.value = 8000; // or use vocoderBands[numVocoderBands-1].frequency;
     hpFilter.Q.value         = 1; //    no peaking
-    modulatorInput.connect(hpFilter);
+    vocoder.modulatorInput.connect(hpFilter);
 
     hpFilterGain = context.createGain();
     hpFilterGain.gain.value = 0.0; // hmmmmmmmmm
 
     hpFilter.connect(hpFilterGain);
-    hpFilterGain.connect( .destination); // dest?
+    hpFilterGain.connect( vocoder.output); // dest?
 
 
     var outputGain = context.createGain();
-    outputGain.connect( .destination); // dest?
+    outputGain.connect( vocoder.output); // dest?
 
     var rectifierCurve = new Float32Array(65536);
     for ( var i=-32768; i<32768; i++ ) 
@@ -1172,13 +1205,13 @@ function initBandpassFilters() {
         modulatorFilter.type            = "bandpass";  // Bandpass filter
         modulatorFilter.frequency.value = vocoderBands[i].frequency;
         modulatorFilter.Q.value         = FILTER_QUALITY; //    initial quality
-        modulatorInput.connect(modulatorFilter);
+        vocoder.modulatorInput.connect(modulatorFilter);
         modFilterBands.push(modulatorFilter);
 
         // Now, create a second bandpass filter tuned to the same frequency - 
         // this turns our second-order filter into a 4th-order filter,
         // which has a steeper rolloff/octave
-        var secondModulatorFilter = audioContext.createBiquadFilter();
+        var secondModulatorFilter = context.createBiquadFilter();
         secondModulatorFilter.type            = "bandpass";    // Bandpass filter
         secondModulatorFilter.frequency.value = vocoderBands[i].frequency;
         secondModulatorFilter.Q.value         = FILTER_QUALITY; //  initial quality
@@ -1243,7 +1276,7 @@ function initBandpassFilters() {
         carrierFilter.frequency.value = vocoderBands[i].frequency;
         carrierFilter.Q.value         = FILTER_QUALITY;
         carrierBands.push(carrierFilter);
-        carrierInput.connect(carrierFilter);
+        vocoder.carrierInput.connect(carrierFilter);
 
         // We want our carrier filters to be 4th-order filter too.
         var secondCarrierFilter = context.createBiquadFilter();

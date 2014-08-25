@@ -9,7 +9,7 @@
         getUserMedia = getUserMedia.bind(navigator);
     } 
     else {
-        console.log('get user media is not supported')
+        console.log('get user media is not supported');
     }
 /////////////////////////////////////////
 
@@ -33,13 +33,13 @@ var Wad = (function(){
         for ( var i = 0; i < bufferSize; i++ ) {
             output[i] = Math.seededRandom() * 2 - 1;
         }
-        return noiseBuffer
+        return noiseBuffer;
     })()
 /////////////////////////////////////////////////////////////////////////
 
 /** a lil hack. just be glad it isn't on Object.prototype. **/
     var isArray = function(object){
-        return Object.prototype.toString.call(object) === '[object Array]'
+        return Object.prototype.toString.call(object) === '[object Array]';
     }
 
 /** Set up the default ADSR envelope. **/
@@ -50,14 +50,14 @@ var Wad = (function(){
             sustain : arg.env ? ( arg.env.sustain || 1    )    : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
             hold    : arg.env ? ( arg.env.hold    || 3.14 )    : 3.14, // time in seconds to maintain sustain volume
             release : arg.env ? ( arg.env.release || 0    )    : 0     // time in seconds from sustain volume to zero volume
-        }
+        };
         that.defaultEnv = {
             attack  : arg.env ? ( arg.env.attack  || 0    )    : 0,    // time in seconds from onset to peak volume
             decay   : arg.env ? ( arg.env.decay   || 0    )    : 0,    // time in seconds from peak volume to sustain volume
             sustain : arg.env ? ( arg.env.sustain || 1    )    : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
             hold    : arg.env ? ( arg.env.hold    || 3.14 )    : 3.14, // time in seconds to maintain sustain volume
             release : arg.env ? ( arg.env.release || 0    )    : 0     // time in seconds from sustain volume to zero volume
-        }
+        };
     }
 /////////////////////////////////////////
 
@@ -69,11 +69,11 @@ var Wad = (function(){
         if ( isArray(arg.filter) ) {
             arg.filter.forEach(function(filterArg){
                 constructFilter(that, { filter : filterArg })
-            })
+            });
         }
         else {
-            arg.filter  = [ arg.filter ]
-            that.filter = arg.filter
+            arg.filter  = [ arg.filter ];
+            that.filter = arg.filter;
         }
     }
 //////////////////////////////////////////////////////
@@ -85,17 +85,17 @@ Don't let the Wad play until all necessary files have been downloaded. **/
         var request = new XMLHttpRequest();
         request.open("GET", that.source, true);
         request.responseType = "arraybuffer";
-        that.playable--
+        that.playable--;
         request.onload = function(){
             context.decodeAudioData(request.response, function (decodedBuffer){
-                that.decodedBuffer = decodedBuffer
-                if ( callback ) { callback() }
-                that.playable++
-                if ( that.playOnLoad ) { that.play(that.playOnLoadArg) }
+                that.decodedBuffer = decodedBuffer;
+                if ( callback ) { callback(); }
+                that.playable++;
+                if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
             })
-        }
+        };
         request.send();
-    }
+    };
 //////////////////////////////////////////////////////////////////////////
 
 
@@ -107,9 +107,9 @@ Don't let the Wad play until all necessary files have been downloaded. **/
                 speed     : arg.vibrato.speed     || 1,
                 magnitude : arg.vibrato.magnitude || 5,
                 attack    : arg.vibrato.attack    || 0
-            }
+            };
         }
-    }
+    };
 //////////////////////////////
 
 
@@ -121,9 +121,9 @@ Don't let the Wad play until all necessary files have been downloaded. **/
                 speed     : arg.tremolo.speed     || 1,
                 magnitude : arg.tremolo.magnitude || 5,
                 attack    : arg.tremolo.attack    || 1
-            }
+            };
         }
-    }
+    };
 //////////////////////////////
 
 
@@ -132,41 +132,41 @@ You may want to change Wad.defaultImpulse to serve files from your own server.
 Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
     var constructReverb = function(that, arg){
         if ( arg.reverb ) {
-            that.reverb = { wet : arg.reverb.wet || 1 }
-            var impulseURL = arg.reverb.impulse || Wad.defaultImpulse
+            that.reverb = { wet : arg.reverb.wet || 1 };
+            var impulseURL = arg.reverb.impulse || Wad.defaultImpulse;
             var request = new XMLHttpRequest();
             request.open("GET", impulseURL, true);
             request.responseType = "arraybuffer";
-            that.playable--
+            that.playable--;
             request.onload = function(){
                 context.decodeAudioData(request.response, function (decodedBuffer){
 
-                    that.reverb.buffer = decodedBuffer
-                    that.playable++
-                    if ( that.playOnLoad ) { that.play(that.playOnLoadArg) }
-                    if ( that instanceof Wad.Poly ) { that.setUp(arg) }
+                    that.reverb.buffer = decodedBuffer;
+                    that.playable++;
+                    if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
+                    if ( that instanceof Wad.Poly ) { that.setUp(arg); }
 
                 })
-            }
+            };
             request.send();
         }
-    }
+    };
 
     var constructPanning = function(that, arg){        
         if ( 'panning' in arg ) {
             if ( typeof(arg.panning) === "number" ) {
-                that.panning = { location : [ arg.panning, 0, 0 ] }
+                that.panning = { location : [ arg.panning, 0, 0 ] };
             }
 
             else {
-                that.panning = { location : [ arg.panning[0], arg.panning[1], arg.panning[2] ] }
+                that.panning = { location : [ arg.panning[0], arg.panning[1], arg.panning[2] ] };
             }
         }
 
         else {
-            that.panning = { location : [ 0, 0, 0 ] }
+            that.panning = { location : [ 0, 0, 0 ] };
         }
-    }
+    };
 //////////////////////////////////////////////////////////////////////////////
     var constructDelay = function(that, arg){
         if ( arg.delay ) {
@@ -175,54 +175,54 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 maxDelayTime : arg.delay.maxDelayTime || 2,
                 feedback     : arg.delay.feedback     || .25,
                 wet          : arg.delay.wet          || .25
-            }
+            };
         }
-    }
+    };
 
 
 /** Special initialization and configuration for microphone Wads **/
     var setUpMic = function(that, arg){
         getUserMedia({ audio : true , video : false}, function (stream){
             // console.log('got stream')
-            that.nodes             = []
-            that.mediaStreamSource = context.createMediaStreamSource(stream)
-            that.gain              = context.createGain()
-            that.gain.gain.value   = that.volume
-            that.nodes.push(that.mediaStreamSource)
-            that.nodes.push(that.gain)
+            that.nodes             = [];
+            that.mediaStreamSource = context.createMediaStreamSource(stream);
+            that.gain              = context.createGain();
+            that.gain.gain.value   = that.volume;
+            that.nodes.push(that.mediaStreamSource);
+            that.nodes.push(that.gain);
 
-            if ( that.filter ) { createFilters(that, arg) }
+            if ( that.filter ) { createFilters(that, arg); }
 
             if ( that.reverb ) {
-                that.reverb.node            = context.createConvolver()
-                that.reverb.node.buffer     = that.reverb.buffer
-                that.reverb.gain            = context.createGain()
-                that.reverb.gain.gain.value = that.reverb.wet
-                that.nodes.push(that.reverb.node)
-                that.nodes.push(that.reverb.gain)
+                that.reverb.node            = context.createConvolver();
+                that.reverb.node.buffer     = that.reverb.buffer;
+                that.reverb.gain            = context.createGain();
+                that.reverb.gain.gain.value = that.reverb.wet;
+                that.nodes.push(that.reverb.node);
+                that.nodes.push(that.reverb.gain);
             }
 
             if ( that.panning ) {
-                that.panning.node = context.createPanner()
+                that.panning.node = context.createPanner();
 
-                that.panning.node.setPosition(that.panning.location[0], that.panning.location[1], that.panning.location[2])
-                that.nodes.push(that.panning.node)
+                that.panning.node.setPosition(that.panning.location[0], that.panning.location[1], that.panning.location[2]);
+                that.nodes.push(that.panning.node);
             }
 
             if ( that.delay ) {
-                setUpDelayOnPlay(that, arg)
+                setUpDelayOnPlay(that, arg);
             }
 
-        }, function(error) { console.log('Error setting up microphone input: ', error) }); // This is the error callback.
-    }
+        }, function(error) { console.log('Error setting up microphone input: ', error); }); // This is the error callback.
+    };
 ////////////////////////////////////////////////////////////////////
 
 
     var Wad = function(arg){
 /** Set basic Wad properties **/
         this.source        = arg.source;
-        this.destination   = arg.destination || context.destination // the last node the sound is routed to
-        this.volume        = arg.volume || 1 // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
+        this.destination   = arg.destination || context.destination; // the last node the sound is routed to
+        this.volume        = arg.volume || 1; // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
         this.defaultVolume = this.volume
         this.playable      = 1 // if this is less than 1, this Wad is still waiting for a file to download before it can play
         this.pitch         = Wad.pitches[arg.pitch] || arg.pitch || 440
@@ -284,12 +284,14 @@ as specified by the volume envelope and filter envelope **/
 
     var playEnv = function(wad, arg){
         wad.gain[0].gain.linearRampToValueAtTime(0.0001, context.currentTime + arg.wait)
-        wad.gain[0].gain.linearRampToValueAtTime(wad.volume, context.currentTime + wad.env.attack + arg.wait)
-        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, context.currentTime + wad.env.attack + wad.env.decay + arg.wait)
-        wad.gain[0].gain.linearRampToValueAtTime(0.0001, context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait)
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume, context.currentTime + wad.env.attack + arg.wait + 0.00001)
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, context.currentTime + wad.env.attack + wad.env.decay + arg.wait + 0.00002)
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + arg.wait + 0.00003)
+        wad.gain[0].gain.linearRampToValueAtTime(0.0001, context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait  + 0.00004)
         wad.soundSource.start(context.currentTime + arg.wait);
         wad.soundSource.stop(context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait)
     }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

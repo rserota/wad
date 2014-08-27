@@ -223,74 +223,74 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.source        = arg.source;
         this.destination   = arg.destination || context.destination; // the last node the sound is routed to
         this.volume        = arg.volume || 1; // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
-        this.defaultVolume = this.volume
-        this.playable      = 1 // if this is less than 1, this Wad is still waiting for a file to download before it can play
-        this.pitch         = Wad.pitches[arg.pitch] || arg.pitch || 440
-        this.globalReverb  = arg.globalReverb || false
-        this.gain          = []
+        this.defaultVolume = this.volume;
+        this.playable      = 1; // if this is less than 1, this Wad is still waiting for a file to download before it can play
+        this.pitch         = Wad.pitches[arg.pitch] || arg.pitch || 440;
+        this.globalReverb  = arg.globalReverb || false;
+        this.gain          = [];
 
-        constructEnv(this, arg)
-        constructFilter(this, arg)
-        constructVibrato(this, arg)
-        constructTremolo(this, arg)
-        constructReverb(this, arg)
-        this.constructExternalFx(arg, context)
-        constructPanning(this, arg)
-        constructDelay(this, arg)
+        constructEnv(this, arg);
+        constructFilter(this, arg);
+        constructVibrato(this, arg);
+        constructTremolo(this, arg);
+        constructReverb(this, arg);
+        this.constructExternalFx(arg, context);
+        constructPanning(this, arg);
+        constructDelay(this, arg);
 ////////////////////////////////
 
 
 /** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
         if ( this.source === 'noise' ) {
-            this.decodedBuffer = noiseBuffer
+            this.decodedBuffer = noiseBuffer;
         }
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** If the Wad's source is the microphone, the rest of the setup happens here. **/
         else if ( this.source === 'mic' ) {
-            setUpMic(this, arg)
+            setUpMic(this, arg);
         }
 //////////////////////////////////////////////////////////////////////////////////
 
 
 /** If the Wad's source is an object, assume it is a buffer from a recorder. There's probably a better way to handle this. **/
         else if ( typeof this.source == 'object' ) {
-            var newBuffer = context.createBuffer( 2, this.source[0].length, context.sampleRate );
+            var newBuffer = context.createBuffer(2, this.source[0].length, context.sampleRate);
             newBuffer.getChannelData(0).set(this.source[0]);
             newBuffer.getChannelData(1).set(this.source[1]);
-            this.decodedBuffer = newBuffer
+            this.decodedBuffer = newBuffer;
         }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
         else if ( !( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) ) {
-            requestAudioFile(this, arg.callback)
+            requestAudioFile(this, arg.callback);
         }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    }
+    };
 
 
 /** When a note is played, these two functions will schedule changes in volume and filter frequency,
 as specified by the volume envelope and filter envelope **/
     var filterEnv = function(wad, arg){
-           wad.filter.forEach(function (filter, index){
-            filter.node.frequency.linearRampToValueAtTime(filter.frequency, context.currentTime + arg.wait)
-            filter.node.frequency.linearRampToValueAtTime(filter.env.frequency, context.currentTime + filter.env.attack + arg.wait)
-        })
-    }
+        wad.filter.forEach(function (filter, index){
+            filter.node.frequency.linearRampToValueAtTime(filter.frequency, context.currentTime + arg.wait);
+            filter.node.frequency.linearRampToValueAtTime(filter.env.frequency, context.currentTime + filter.env.attack + arg.wait);
+        });
+    };
 
     var playEnv = function(wad, arg){
-        wad.gain[0].gain.linearRampToValueAtTime(0.0001, context.currentTime + arg.wait)
-        wad.gain[0].gain.linearRampToValueAtTime(wad.volume, context.currentTime + wad.env.attack + arg.wait + 0.00001)
-        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, context.currentTime + wad.env.attack + wad.env.decay + arg.wait + 0.00002)
-        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + arg.wait + 0.00003)
-        wad.gain[0].gain.linearRampToValueAtTime(0.0001, context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait  + 0.00004)
+        wad.gain[0].gain.linearRampToValueAtTime(0.0001, context.currentTime + arg.wait);
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume, context.currentTime + wad.env.attack + arg.wait + 0.00001);
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, context.currentTime + wad.env.attack + wad.env.decay + arg.wait + 0.00002);
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + arg.wait + 0.00003);
+        wad.gain[0].gain.linearRampToValueAtTime(0.0001, context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait  + 0.00004);
         wad.soundSource.start(context.currentTime + arg.wait);
-        wad.soundSource.stop(context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait)
-    }
+        wad.soundSource.stop(context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait);
+    };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -298,52 +298,51 @@ as specified by the volume envelope and filter envelope **/
 /** When all the nodes are set up for this Wad, this function plugs them into each other,
 with special handling for reverb (ConvolverNode). **/
     var plugEmIn = function(that, arg){
-        console.log('plugemin', that)
-        var destination = ( arg && arg.destination ) || that.destination
+        var destination = ( arg && arg.destination ) || that.destination;
         for ( var i = 1; i < that.nodes.length; i++ ) {
-            that.nodes[i - 1].connect(that.nodes[i])
+            that.nodes[i - 1].connect(that.nodes[i]);
             if ( that.nodes[i] instanceof ConvolverNode ) {
-                that.nodes[i - 1].connect(that.nodes[i + 2])
+                that.nodes[i - 1].connect(that.nodes[i + 2]);
             }
         }
 
-        that.nodes[that.nodes.length - 1].connect(destination)
+        that.nodes[that.nodes.length - 1].connect(destination);
         if ( Wad.reverb && that.globalReverb ) {
-            that.nodes[that.nodes.length - 1].connect(Wad.reverb.node)
-            Wad.reverb.node.connect(Wad.reverb.gain)
-            Wad.reverb.gain.connect(destination)
+            that.nodes[that.nodes.length - 1].connect(Wad.reverb.node);
+            Wad.reverb.node.connect(Wad.reverb.gain);
+            Wad.reverb.gain.connect(destination);
         }
-    }
+    };
 /////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** Initialize and configure an oscillator node **/
     var setUpOscillator = function(that, arg){
-        that.soundSource = context.createOscillator()
-        that.soundSource.type = that.source
+        that.soundSource = context.createOscillator();
+        that.soundSource.type = that.source;
         if ( arg && arg.pitch ) {
             if ( arg.pitch in Wad.pitches ) {
-                that.soundSource.frequency.value = Wad.pitches[arg.pitch]
+                that.soundSource.frequency.value = Wad.pitches[arg.pitch];
             }
             else {
-                that.soundSource.frequency.value = arg.pitch
+                that.soundSource.frequency.value = arg.pitch;
             }
         }
         else {
-            that.soundSource.frequency.value = that.pitch
+            that.soundSource.frequency.value = that.pitch;
         }
-    }
+    };
 ///////////////////////////////////////////////////
 
 
 /** Set the ADSR volume envelope according to play() arguments, or revert to defaults **/
     var setUpEnvOnPlay = function(that, arg){
         if ( arg && arg.env ) {
-            that.env.attack  = arg.env.attack  || that.defaultEnv.attack
-            that.env.decay   = arg.env.decay   || that.defaultEnv.decay
-            that.env.sustain = arg.env.sustain || that.defaultEnv.sustain
-            that.env.hold    = arg.env.hold    || that.defaultEnv.hold
-            that.env.release = arg.env.release || that.defaultEnv.release
+            that.env.attack  = arg.env.attack  || that.defaultEnv.attack;
+            that.env.decay   = arg.env.decay   || that.defaultEnv.decay;
+            that.env.sustain = arg.env.sustain || that.defaultEnv.sustain;
+            that.env.hold    = arg.env.hold    || that.defaultEnv.hold;
+            that.env.release = arg.env.release || that.defaultEnv.release;
         }
         else {
             that.env = {
@@ -352,32 +351,31 @@ with special handling for reverb (ConvolverNode). **/
                 sustain : that.defaultEnv.sustain,
                 hold    : that.defaultEnv.hold,
                 release : that.defaultEnv.release
-            }
+            };
         }
-    }
+    };
 //////////////////////////////////////////////////////////////////////////////////
 
 
 /** Set the filter and filter envelope according to play() arguments, or revert to defaults **/
 
     var createFilters = function(that, arg){
-        // console.log(that.filter)
         that.filter.forEach(function (filter, i) {
-            filter.node                 = context.createBiquadFilter()
-            filter.node.type            = filter.type
-            filter.node.frequency.value = arg.filter[i] ? ( arg.filter[i].frequency || filter.frequency ) : filter.frequency
-            filter.node.Q.value         = arg.filter[i] ? ( arg.filter[i].q         || filter.q )         : filter.q
+            filter.node                 = context.createBiquadFilter();
+            filter.node.type            = filter.type;
+            filter.node.frequency.value = arg.filter[i] ? ( arg.filter[i].frequency || filter.frequency ) : filter.frequency;
+            filter.node.Q.value         = arg.filter[i] ? ( arg.filter[i].q         || filter.q )         : filter.q;
 
             if ( ( arg.filter[i].env || that.filter[i].env ) && !( that.source === "mic" ) ) {
                 filter.env = {
                     attack    : ( arg.filter[i].env && arg.filter[i].env.attack )    || that.filter[i].env.attack,
                     frequency : ( arg.filter[i].env && arg.filter[i].env.frequency ) || that.filter[i].env.frequency
-                }
+                };
             }
 
-            that.nodes.push(filter.node)
+            that.nodes.push(filter.node);
         })
-    }
+    };
 
     var setUpFilterOnPlay = function(that, arg){
         if ( arg && arg.filter && that.filter ) {
@@ -385,43 +383,43 @@ with special handling for reverb (ConvolverNode). **/
             createFilters(that, arg)
         }
         else if ( that.filter ) {
-            createFilters(that, that)
+            createFilters(that, that);
         }
-    }
+    };
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 /** Initialize and configure a convolver node for playback **/
     var setUpReverbOnPlay = function(that, arg){
-        that.reverb.node            = context.createConvolver()
-        that.reverb.node.buffer     = that.reverb.buffer
-        that.reverb.gain            = context.createGain()
-        that.reverb.gain.gain.value = that.reverb.wet
-        that.nodes.push(that.reverb.node)
-        that.nodes.push(that.reverb.gain)
-    }
+        that.reverb.node            = context.createConvolver();
+        that.reverb.node.buffer     = that.reverb.buffer;
+        that.reverb.gain            = context.createGain();
+        that.reverb.gain.gain.value = that.reverb.wet;
+        that.nodes.push(that.reverb.node);
+        that.nodes.push(that.reverb.gain);
+    };
 //////////////////////////////////////////////////////////////
 
 
 /** Initialize and configure a panner node for playback **/
     var setUpPanningOnPlay = function(that, arg){
         if ( ( arg && arg.panning ) || that.panning ) {
-            that.panning.node = context.createPanner()
+            that.panning.node = context.createPanner();
             // var panning = (arg && arg.panning) ? arg.panning : that.panning.location
             if ( arg && arg.panning ) {
                 if ( typeof(arg.panning) === 'number' ) {
-                    var panning = [ arg.panning, 0, 0 ]
+                    var panning = [ arg.panning, 0, 0 ];
                 }
                 else {
-                    var panning = [ arg.panning[0], arg.panning[1], arg.panning[2] ]
+                    var panning = [ arg.panning[0], arg.panning[1], arg.panning[2] ];
                 }
             }
             else {
-                var panning = [ 0, 0, 0 ]
+                var panning = [ 0, 0, 0 ];
             }
-            that.panning.node.setPosition(panning[0], panning[1], panning[2])
-            that.nodes.push(that.panning.node)
+            that.panning.node.setPosition(panning[0], panning[1], panning[2]);
+            that.nodes.push(that.panning.node);
         }
-    }
+    };
 ///////////////////////////////////////////////////////////
 
 
@@ -435,9 +433,9 @@ with special handling for reverb (ConvolverNode). **/
                 attack : that.vibrato.attack
             },
             destination : that.soundSource.frequency
-        })
-        that.vibrato.wad.play()
-    }
+        });
+        that.vibrato.wad.play();
+    };
 ///////////////////////////////////////////////////////////////
 
 
@@ -452,27 +450,26 @@ with special handling for reverb (ConvolverNode). **/
                 hold   : 10
             },
             destination : that.gain[0].gain
-        })
-        that.tremolo.wad.play()
-    }
+        });
+        that.tremolo.wad.play();
+    };
 ///////////////////////////////////////////////////////////////
 
     var setUpDelayOnPlay = function(that, arg){
         if ( that.delay ) {
-            if ( !arg.delay ) { arg.delay = {} }
+            if ( !arg.delay ) { arg.delay = {}; }
             //create the nodes we’ll use
-            that.delay.input         = context.createGain()
-            that.delay.output        = context.createGain()
-            that.delay.delayNode     = context.createDelay(maxDelayTime = that.delay.maxDelayTime)
-            that.delay.feedbackNode  = context.createGain()
-            that.delay.wetNode       = context.createGain()
+            that.delay.input         = context.createGain();
+            that.delay.output        = context.createGain();
+            that.delay.delayNode     = context.createDelay(maxDelayTime = that.delay.maxDelayTime);
+            that.delay.feedbackNode  = context.createGain();
+            that.delay.wetNode       = context.createGain();
 
             //set some decent values
-            that.delay.delayNode.delayTime.value = arg.delay.delayTime || that.delay.delayTime
-            that.delay.feedbackNode.gain.value   = arg.delay.feedback  || that.delay.feedback
-            that.delay.wetNode.gain.value        = arg.delay.wet       || that.delay.wet
-            console.log('arg delay feedback: ', arg.delay.feedback)
-            console.log('that delay feedback: ', that.delay.feedback)
+            that.delay.delayNode.delayTime.value = arg.delay.delayTime || that.delay.delayTime;
+            that.delay.feedbackNode.gain.value   = arg.delay.feedback  || that.delay.feedback;
+            that.delay.wetNode.gain.value        = arg.delay.wet       || that.delay.wet;
+
 
             //set up the routing
             that.delay.input.connect(that.delay.delayNode);
@@ -481,22 +478,21 @@ with special handling for reverb (ConvolverNode). **/
             that.delay.feedbackNode.connect(that.delay.delayNode);
             that.delay.wetNode.connect(that.delay.output);
 
-            that.nodes.push(that.delay.input)
-            that.nodes.push(that.delay.output)
+            that.nodes.push(that.delay.input);
+            that.nodes.push(that.delay.output);
         }
-
-    }
+    };
 
 /** **/
     var constructCompressor = function(that, arg){
-        that.compressor = context.createDynamicsCompressor()
-        that.compressor.attack.value    = arg.compressor.attack    || that.compressor.attack.value
-        that.compressor.knee.value      = arg.compressor.knee      || that.compressor.knee.value
-        that.compressor.ratio.value     = arg.compressor.ratio     || that.compressor.ratio.value
-        that.compressor.release.value   = arg.compressor.release   || that.compressor.release.value
-        that.compressor.threshold.value = arg.compressor.threshold || that.compressor.threshold.value
-        that.nodes.push(that.compressor)
-    }
+        that.compressor = context.createDynamicsCompressor();
+        that.compressor.attack.value    = arg.compressor.attack    || that.compressor.attack.value;
+        that.compressor.knee.value      = arg.compressor.knee      || that.compressor.knee.value;
+        that.compressor.ratio.value     = arg.compressor.ratio     || that.compressor.ratio.value;
+        that.compressor.release.value   = arg.compressor.release   || that.compressor.release.value;
+        that.compressor.threshold.value = arg.compressor.threshold || that.compressor.threshold.value;
+        that.nodes.push(that.compressor);
+    };
 
 ///
 
@@ -512,7 +508,7 @@ with special handling for reverb (ConvolverNode). **/
     Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
         //user does what is necessary here, and then maybe does something like:
         // this.nodes.push(externalFX)
-    }
+    };
 ///////////////////////////////////////////////////////////////
 
 
@@ -521,101 +517,100 @@ set properties on those nodes according to the constructor arguments and play() 
 plug the nodes into each other with plugEmIn(),
 then finally play the sound by calling playEnv() **/
     Wad.prototype.play = function(arg){
-        arg = arg || {}
+        arg = arg || {};
         if ( this.playable < 1 ) {
-            this.playOnLoad = true
-            this.playOnLoadArg = arg
+            this.playOnLoad    = true;
+            this.playOnLoadArg = arg;
         }
 
-        else if ( this.source === 'mic' ) { plugEmIn(this, arg) }
+        else if ( this.source === 'mic' ) { plugEmIn(this, arg); }
 
         else {
-            this.nodes = []
-            if ( arg && !arg.wait ) { arg.wait = 0 }
-            if ( !arg ) { var arg = { wait: 0 } }
-            if ( arg && arg.volume ) { this.volume = arg.volume }
-            else { this.volume = this.defaultVolume }
+            this.nodes = [];
+            if ( !arg.wait ) { arg.wait = 0; }
+            if ( arg.volume ) { this.volume = arg.volume; }
+            else { this.volume = this.defaultVolume; }
 
             if ( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) {
-                setUpOscillator(this, arg)
+                setUpOscillator(this, arg);
             }
 
             else {
                 this.soundSource = context.createBufferSource();
                 this.soundSource.buffer = this.decodedBuffer;
                 if ( this.source === 'noise' ) {
-                    this.soundSource.loop = true
+                    this.soundSource.loop = true;
                 }
             }
 
-            this.nodes.push(this.soundSource)
+            this.nodes.push(this.soundSource);
 
 
     /**  sets the volume envelope based on the play() arguments if present,
     or defaults to the constructor arguments if the volume envelope is not set on play() **/
-            setUpEnvOnPlay(this, arg)
+            setUpEnvOnPlay(this, arg);
     ////////////////////////////////////////////////////////////////////////////////////////
 
 
     /**  sets up the filter and filter envelope based on the play() argument if present,
     or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
-            setUpFilterOnPlay(this, arg)
+            setUpFilterOnPlay(this, arg);
     ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-            this.setUpExternalFxOnPlay(arg, context)
+            this.setUpExternalFxOnPlay(arg, context);
 
 
-            this.gain.unshift(context.createGain()) // sets up the gain node
-            this.gain[0].label = arg.label
-            this.nodes.push(this.gain[0])
+            this.gain.unshift(context.createGain()); // sets up the gain node
+            this.gain[0].label = arg.label;
+            this.nodes.push(this.gain[0]);
 
             // sets up reverb
-            if ( this.reverb ) { setUpReverbOnPlay(this, arg) }
+            if ( this.reverb ) { setUpReverbOnPlay(this, arg); }
 
     /**  sets panning based on the play() argument if present, or defaults to the constructor argument if panning is not set on play **/
-            setUpPanningOnPlay(this, arg)
+            setUpPanningOnPlay(this, arg);
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-            setUpDelayOnPlay(this, arg)
+            setUpDelayOnPlay(this, arg);
 
-            plugEmIn(this, arg)
+            plugEmIn(this, arg);
 
-            if ( this.filter && this.filter.env ) { filterEnv(this, arg) }
-            playEnv(this, arg)
+            if ( this.filter && this.filter.env ) { filterEnv(this, arg); }
+            playEnv(this, arg);
 
             //sets up vibrato LFO
-            if ( this.vibrato ) { setUpVibratoOnPlay(this, arg) }
+            if ( this.vibrato ) { setUpVibratoOnPlay(this, arg); }
 
             //sets up tremolo LFO
-            if ( this.tremolo ) { setUpTremoloOnPlay(this, arg) }
+            if ( this.tremolo ) { setUpTremoloOnPlay(this, arg); }
         }
-        if ( arg.callback ) { arg.callback(this) }
-        return this
-    }
+        if ( arg.callback ) { arg.callback(this); }
+        return this;
+    };
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** Change the volume of a Wad at any time, including during playback **/
     Wad.prototype.setVolume = function(volume){
         this.defaultVolume = volume;
-        if ( this.gain.length > 0 ) { this.gain[0].gain.value = volume };
-        return this
-    }
+        if ( this.gain.length > 0 ) { this.gain[0].gain.value = volume; }
+        return this;
+    };
 /////////////////////////////////////////////////////////////////////////
 
 
 /** Change the panning of a Wad at any time, including during playback **/
     Wad.prototype.setPanning = function(panning){
         if ( typeof(panning) === 'number' ) {
-            this.panning.node.setPosition(panning, this.panning.location[1], this.panning.location[2])
+            this.panning.node.setPosition(panning, this.panning.location[1], this.panning.location[2]);
         }
 
         else {
-            this.panning.node.setPosition(panning[0], panning[1], panning[2])
+            this.panning.node.setPosition(panning[0], panning[1], panning[2]);
         }
-        return this
-    }
+        return this;
+    };
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -626,138 +621,137 @@ then finally play the sound by calling playEnv() **/
             if ( label ) {
                 for ( var i = 0; i < this.gain.length; i++ ) {
                     if ( this.gain[i].label === label ) {
-                        this.gain[i].gain.cancelScheduledValues(context.currentTime) // not sure if this helps
-                        this.gain[i].gain.setValueAtTime(this.gain[i].gain.value, context.currentTime)
-                        this.gain[i].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release)
+                        this.gain[i].gain.cancelScheduledValues(context.currentTime);
+                        this.gain[i].gain.setValueAtTime(this.gain[i].gain.value, context.currentTime);
+                        this.gain[i].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release);
                     }
                 }
             }
             if ( !label ) {
-                this.gain[0].gain.cancelScheduledValues(context.currentTime) // not sure if this helps
-                this.gain[0].gain.setValueAtTime(this.gain[0].gain.value, context.currentTime)
-                this.gain[0].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release)
+                this.gain[0].gain.cancelScheduledValues(context.currentTime); 
+                this.gain[0].gain.setValueAtTime(this.gain[0].gain.value, context.currentTime);
+                this.gain[0].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release);
             }
             // this.soundSource.stop(context.currentTime+this.env.release)
         }
         else {
-            this.mediaStreamSource.disconnect(0)
+            this.mediaStreamSource.disconnect(0);
         }
-    }
+    };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     Wad.Poly = function(arg){
-        if ( !arg ) { arg = {} }
-        this.isSetUp  = false
-        this.playable = 1
+        if ( !arg ) { arg = {}; }
+        this.isSetUp  = false;
+        this.playable = 1;
 
         this.setUp = function(arg){ // Anything that needs to happen before reverb is set up can go here. 
-            this.wads              = []
-            this.input             = context.createAnalyser()
-            this.nodes             = [this.input]
-            this.destination       = arg.destination || context.destination // the last node the sound is routed to
-            this.volume            = arg.volume || 1  
-            this.output            = context.createGain()
-            this.output.gain.value = this.volume
+            this.wads              = [];
+            this.input             = context.createAnalyser();
+            this.nodes             = [this.input];
+            this.destination       = arg.destination || context.destination; // the last node the sound is routed to
+            this.volume            = arg.volume || 1;
+            this.output            = context.createGain();
+            this.output.gain.value = this.volume;
             if ( !( typeof Recorder === 'undefined' ) ) { // Recorder should be defined, unless you're running the unconcatenated source version and forgot to include recorder.js.
-                this.rec               = new Recorder(this.output, arg.recConfig)
-                this.rec.recordings    = []
-                var that = this
-                var getRecorderBufferCallback = function( buffers ) {
-                    that.rec.createWadArg.source = buffers
-                    that.rec.recordings.unshift(new Wad(that.rec.createWadArg))
+                this.rec               = new Recorder(this.output, arg.recConfig);
+                this.rec.recordings    = [];
 
-                }
+                var that = this;
+                var getRecorderBufferCallback = function( buffers ) {
+                    that.rec.createWadArg.source = buffers;
+                    that.rec.recordings.unshift(new Wad(that.rec.createWadArg));
+                };
                 this.rec.createWad = function(arg){
-                    this.createWadArg = arg || {}
-                    this.getBuffer(getRecorderBufferCallback)
-                }
+                    this.createWadArg = arg || {};
+                    this.getBuffer(getRecorderBufferCallback);
+                };
             }
 
-            this.globalReverb = arg.globalReverb || false
+            this.globalReverb = arg.globalReverb || false;
 
-            constructFilter(this, arg)
-            if ( this.filter ) { createFilters(this, arg) }
+            constructFilter(this, arg);
+            if ( this.filter ) { createFilters(this, arg); }
 
-            if ( this.reverb ) { setUpReverbOnPlay(this, arg) }
+            if ( this.reverb ) { setUpReverbOnPlay(this, arg); }
 
-            this.constructExternalFx(arg, context)
+            this.constructExternalFx(arg, context);
 
-            constructPanning(this, arg)
-            setUpPanningOnPlay(this, arg)
-            if ( arg.compressor ) { constructCompressor(this, arg) }
+            constructPanning(this, arg);
+            setUpPanningOnPlay(this, arg);
+            if ( arg.compressor ) { constructCompressor(this, arg); }
 
-            constructDelay(this, arg)
-            setUpDelayOnPlay(this, arg)
+            constructDelay(this, arg);
+            setUpDelayOnPlay(this, arg);
 
-            this.nodes.push(this.output)
-            plugEmIn(this, arg)
-            this.isSetUp = true
-            if ( arg.callback ) { arg.callback(this) }
+            this.nodes.push(this.output);
+            plugEmIn(this, arg);
+            this.isSetUp = true;
+            if ( arg.callback ) { arg.callback(this); }
         }
 
         if ( arg.reverb ) {
-            constructReverb(this, arg) // We need to make sure we have downloaded the impulse response before continuing with the setup.
+            constructReverb(this, arg); // We need to make sure we have downloaded the impulse response before continuing with the setup.
         }
         else {
-            this.setUp(arg)
+            this.setUp(arg);
         }
 
         this.setVolume = function(volume){
             if ( this.isSetUp ) {
-                this.output.gain.value = volume
+                this.output.gain.value = volume;
             }
             else {
-                console.log('This PolyWad is not set up yet.')
+                console.log('This PolyWad is not set up yet.');
             }
-            return this
+            return this;
         }
 
         this.play = function(arg){
             if ( this.isSetUp ) {
                 if ( this.playable < 1 ) {
-                    this.playOnLoad = true
-                    this.playOnLoadArg = arg
+                    this.playOnLoad    = true;
+                    this.playOnLoadArg = arg;
                 }
                 else {
                     if ( arg && arg.volume ) {
-                        this.output.gain.value = arg.volume // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
-                        arg.volume = undefined // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad. 
+                        this.output.gain.value = arg.volume; // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
+                        arg.volume = undefined; // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad. 
                     }
                     for ( var i = 0; i < this.wads.length; i++ ) {
-                        this.wads[i].play(arg)
+                        this.wads[i].play(arg);
                     }
                 }
             }
             else {
-                console.log('This PolyWad is not set up yet.')
+                console.log('This PolyWad is not set up yet.');
             }
-            return this
-        }
+            return this;
+        };
 
         this.stop = function(arg){
             if ( this.isSetUp ) {   
                 for ( var i = 0; i < this.wads.length; i++ ) {
-                    this.wads[i].stop(arg)
+                    this.wads[i].stop(arg);
                 }
             }
-        }
+        };
 
         this.add = function(wad){
             if ( this.isSetUp ) {
-                wad.destination = this.input
-                this.wads.push(wad)
+                wad.destination = this.input;
+                this.wads.push(wad);
                 if ( wad instanceof Wad.Poly ) {
-                    console.log('poly!')
-                    wad.output.disconnect(0)
-                    wad.output.connect(this.input)
+                    wad.output.disconnect(0);
+                    wad.output.connect(this.input);
                 }
             }
             else {
-                console.log('This PolyWad is not set up yet.')
+                console.log('This PolyWad is not set up yet.');
             }
-            return this
-        }
+            return this;
+        };
 
 
 
@@ -765,46 +759,46 @@ then finally play the sound by calling playEnv() **/
             if ( this.isSetUp ) {
                 for ( var i = 0; i < this.wads.length; i++ ) {
                     if ( this.wads[i] === wad ) {
-                        this.wads[i].destination = context.destination
-                        this.wads.splice(i,1)
+                        this.wads[i].destination = context.destination;
+                        this.wads.splice(i,1);
                         if ( wad instanceof Wad.Poly ) {
-                            wad.output.disconnect(0)
-                            wad.output.connect(context.destination)
+                            wad.output.disconnect(0);
+                            wad.output.connect(context.destination);
                         }
                     }
                 }
             }
-            return this
-        }
-    }
+            return this;
+        };
+    };
 
     Wad.Poly.prototype.constructExternalFx = function(arg, context){
 
-    }
+    };
 
 /** If a Wad is created with reverb without specifying a URL for the impulse response,
 grab it from the defaultImpulse URL **/
-    Wad.defaultImpulse = 'http://www.codecur.io/us/sendaudio/widehall.wav'
+    Wad.defaultImpulse = 'http://www.codecur.io/us/sendaudio/widehall.wav';
 
     // This method is deprecated.
     Wad.setGlobalReverb = function(arg){
-        Wad.reverb                 = {}
-        Wad.reverb.node            = context.createConvolver()
-        Wad.reverb.gain            = context.createGain()
-        Wad.reverb.gain.gain.value = arg.wet
-        var impulseURL             = arg.impulse || Wad.defaultImpulse
+        Wad.reverb                 = {};
+        Wad.reverb.node            = context.createConvolver();
+        Wad.reverb.gain            = context.createGain();
+        Wad.reverb.gain.gain.value = arg.wet;
+        var impulseURL             = arg.impulse || Wad.defaultImpulse;
         var request                = new XMLHttpRequest();
         request.open("GET", impulseURL, true);
         request.responseType = "arraybuffer";
 
         request.onload = function() {
             context.decodeAudioData(request.response, function (decodedBuffer){
-                Wad.reverb.node.buffer = decodedBuffer
-            })
-        }
+                Wad.reverb.node.buffer = decodedBuffer;
+            });
+        };
         request.send();
 
-    }
+    };
 //////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -934,7 +928,7 @@ grab it from the defaultImpulse URL **/
         'Bb7' : 3729.31,
         'B7'  : 3951.07,
         'C8'  : 4186.01
-    }
+    };
 
 
     Wad.pitchesArray = [ // Just an array of note names. This can be useful for mapping MIDI data to notes. 
@@ -1035,40 +1029,40 @@ grab it from the defaultImpulse URL **/
         'A#7',
         'B7',
         'C8'
-    ]
+    ];
 //////////////////////////////////////////////////////////////
 
     Wad.midiInstrument = {
         play : function() { console.log('playing midi')  },
         stop : function() { console.log('stopping midi') }
-    }
-    Wad.midiMaps    = []
+    };
+    Wad.midiMaps    = [];
     Wad.midiMaps[0] = function(event){
-        console.log(event.receivedTime, event.data)
+        console.log(event.receivedTime, event.data);
         if ( event.data[0] === 144 ) { // 144 means the midi message has note data
             // console.log('note')
             if ( event.data[2] === 0 ) { // noteOn velocity of 0 means this is actually a noteOff message
-                console.log('|| stopping note: ', Wad.pitchesArray[event.data[1]-12])
-                Wad.midiInstrument.stop(Wad.pitchesArray[event.data[1]-12])
+                console.log('|| stopping note: ', Wad.pitchesArray[event.data[1]-12]);
+                Wad.midiInstrument.stop(Wad.pitchesArray[event.data[1]-12]);
             }
             else if ( event.data[2] > 0 ) {
-                console.log('> playing note: ', Wad.pitchesArray[event.data[1]-12])
+                console.log('> playing note: ', Wad.pitchesArray[event.data[1]-12]);
                 Wad.midiInstrument.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], callback : function(that){
                     console.log(that.soundSource.frequency.value)
                 }})
             }
         }
         else if ( event.data[0] === 176 ) { // 176 means the midi message has controller data
-            console.log('controller')
+            console.log('controller');
             if ( event.data[1] == 46 ) {
-                if ( event.data[2] == 127 ) { Wad.midiInstrument.pedalMod = true }
-                else if ( event.data[2] == 0 ) { Wad.midiInstrument.pedalMod = false }
+                if ( event.data[2] == 127 ) { Wad.midiInstrument.pedalMod = true; }
+                else if ( event.data[2] == 0 ) { Wad.midiInstrument.pedalMod = false; }
             }
         }
         else if ( event.data[0] === 224 ) { // 224 means the midi message has pitch bend data
-            console.log('pitch bend')
+            console.log('pitch bend');
         }
-    }
+    };
 
 
     var m = null;   // m = MIDIAccess object for you to make calls on
@@ -1088,7 +1082,7 @@ grab it from the defaultImpulse URL **/
     };
     var onErrorCallback = function(err){
         console.log("uh-oh! Something went wrong!  Error code: " + err.code );
-    }
+    };
 
 if ( navigator && navigator.requestMIDIAccess ) {       
     try {
@@ -1109,8 +1103,8 @@ if ( navigator && navigator.requestMIDIAccess ) {
         hiHatOpen : { source : 'noise', env : { attack : .001, decay : .008, sustain : .2, hold : .43, release : .01}, filter : { type : 'highpass', frequency : 100, q : .2 } },
         ghost : { source : 'square', volume : .3, env : { attack : .01, decay : .002, sustain : .5, hold : 2.5, release : .3 }, filter : { type : 'lowpass', frequency : 600, q : 7, env : { attack : .7, frequency : 1600 } }, vibrato : { attack : 8, speed : 8, magnitude : 100 } },
         piano : { source : 'square', volume : 1.4, env : { attack : .01, decay : .005, sustain : .2, hold : .015, release : .3 }, filter : { type : 'lowpass', frequency : 1200, q : 8.5, env : { attack : .2, frequency : 600 } } }
-    }
-    return Wad
+    };
+    return Wad;
 
 })()
 

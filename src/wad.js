@@ -1140,6 +1140,66 @@ function generateVocoderBands( startFreq, endFreq, numBands ) {
 
 generateVocoderBands( 55, 7040, 28 );
 
+function createCarriersAndPlay( output ) {
+    var wavetable = null;
+    var wavetableSignalGain = null;
+    var WAVETABLEBOOST = 40.0;
+    var SAWTOOTHBOOST = 0.40;
+    var oscillatorGain = null;
+    var oscillatorGainValue = 1.0;
+    var oscillatorDetuneValue = 0;
+    var FOURIER_SIZE = 4096;
+    var wavetable = null;
+    // Carrier Synth oscillator stuff
+    var oscillatorNode = null;
+    var oscillatorType = 4;     // CUSTOM
+    var oscillatorGain = null;
+    var oscillatorGainValue = 1.0;
+    // carrierSampleNode = audioContext.createBufferSource();
+    // carrierSampleNode.buffer = carrierBuffer;
+    // carrierSampleNode.loop = true;
+
+    // carrierSampleGain = audioContext.createGain();
+    // carrierSampleGain.gain.value = carrierSampleGainValue;
+    // carrierSampleNode.connect( carrierSampleGain );
+    // carrierSampleGain.connect( output );
+
+    // The wavetable signal needs a boost.
+    wavetableSignalGain = context.createGain();
+
+    oscillatorNode = context.createOscillator();
+    if (oscillatorType = 4) { // wavetable
+        oscillatorNode.setPeriodicWave ? 
+        oscillatorNode.setPeriodicWave(wavetable) :
+        oscillatorNode.setWaveTable(wavetable);
+        wavetableSignalGain.gain.value = WAVETABLEBOOST;
+    } else {
+        oscillatorNode.type = oscillatorType;
+        wavetableSignalGain.gain.value = SAWTOOTHBOOST;
+    }
+    oscillatorNode.frequency.value = 110;
+    oscillatorNode.detune.value = oscillatorDetuneValue;
+    oscillatorNode.connect(wavetableSignalGain);
+
+    oscillatorGain = context.createGain();
+    oscillatorGain.gain.value = oscillatorGainValue;
+
+    wavetableSignalGain.connect(oscillatorGain);
+    oscillatorGain.connect(output);
+    
+    // noiseNode = audioContext.createBufferSource();
+    // noiseNode.buffer = noiseBuffer;
+    // noiseNode.loop = true;
+    // noiseGain = audioContext.createGain();
+    // noiseGain.gain.value = noiseGainValue;
+    // noiseNode.connect(noiseGain);
+
+    // noiseGain.connect(output);
+    // oscillatorNode.start(0);
+    // noiseNode.start(0);
+    // carrierSampleNode.start(0);
+
+}
 
 function constructVocoder(modulatorInput, carrierInput, destination) {
     // When this function is called, the carrierNode and modulatorAnalyser 
@@ -1315,5 +1375,5 @@ function constructVocoder(modulatorInput, carrierInput, destination) {
         context.createPeriodicWave(real, imag) :
         context.createWaveTable(real, imag);
     // loadNoiseBuffer(); // i can just use noise polywads
-
+    return vocoder;
 }

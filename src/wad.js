@@ -226,6 +226,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.defaultVolume = this.volume;
         this.playable      = 1; // if this is less than 1, this Wad is still waiting for a file to download before it can play
         this.pitch         = Wad.pitches[arg.pitch] || arg.pitch || 440;
+        this.detune        = arg.detune || 0 // In Cents. 
         this.globalReverb  = arg.globalReverb || false;
         this.gain          = [];
 
@@ -318,9 +319,10 @@ with special handling for reverb (ConvolverNode). **/
 
 /** Initialize and configure an oscillator node **/
     var setUpOscillator = function(that, arg){
+        arg = arg || {};
         that.soundSource = context.createOscillator();
         that.soundSource.type = that.source;
-        if ( arg && arg.pitch ) {
+        if ( arg.pitch ) {
             if ( arg.pitch in Wad.pitches ) {
                 that.soundSource.frequency.value = Wad.pitches[arg.pitch];
             }
@@ -331,6 +333,7 @@ with special handling for reverb (ConvolverNode). **/
         else {
             that.soundSource.frequency.value = that.pitch;
         }
+        that.soundSource.detune.value = arg.detune || that.detune;
     };
 ///////////////////////////////////////////////////
 
@@ -599,6 +602,10 @@ then finally play the sound by calling playEnv() **/
     };
 /////////////////////////////////////////////////////////////////////////
 
+    Wad.prototype.setDetune = function(detune){
+        this.soundSource.detune.value = detune;
+        return this;
+    };
 
 /** Change the panning of a Wad at any time, including during playback **/
     Wad.prototype.setPanning = function(panning){
@@ -1036,8 +1043,9 @@ grab it from the defaultImpulse URL **/
         play : function() { console.log('playing midi')  },
         stop : function() { console.log('stopping midi') }
     };
-    Wad.midiMaps    = [];
-    Wad.midiMaps[0] = function(event){
+    Wad.midiInputs  = [];
+    
+    midiMap = function(event){
         console.log(event.receivedTime, event.data);
         if ( event.data[0] === 144 ) { // 144 means the midi message has note data
             // console.log('note')
@@ -1070,11 +1078,11 @@ grab it from the defaultImpulse URL **/
         m = access;
 
         // Things you can do with the MIDIAccess object:
-        var inputs = m.inputs();   // inputs = array of MIDIPorts
-        console.log(inputs)
+        Wad.midiInputs = m.inputs();   // inputs = array of MIDIPorts
+        console.log(Wad.midiInputs)
         // var outputs = m.outputs(); // outputs = array of MIDIPorts
-        for ( var i = 0; i < inputs.length; i++ ) {
-            inputs[i].onmidimessage = Wad.midiMaps[i]; // onmidimessage( event ), event.data & event.receivedTime are populated
+        for ( var i = 0; i < Wad.midiInputs.length; i++ ) {
+            Wad.midiInputs[i].onmidimessage = midiMap; // onmidimessage( event ), event.data & event.receivedTime are populated
         }
         // var o = m.outputs()[0];           // grab first output device
         // o.send( [ 0x90, 0x45, 0x7f ] );     // full velocity note on A4 on channel zero

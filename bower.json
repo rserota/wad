@@ -1,7 +1,7 @@
 {
   "name": "Wad",
   "main": "wad.js",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "homepage": "https://github.com/rserota/wad",
   "authors": [
     "raphael.serota@gmail.com"

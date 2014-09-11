@@ -652,7 +652,6 @@ then finally play the sound by calling playEnv() **/
         if ( !arg ) { arg = {}; }
         this.isSetUp  = false;
         this.playable = 1;
-
         this.setUp = function(arg){ // Anything that needs to happen before reverb is set up can go here. 
             this.wads              = [];
             this.input             = context.createAnalyser();
@@ -704,79 +703,79 @@ then finally play the sound by calling playEnv() **/
         else {
             this.setUp(arg);
         }
+    };
 
-        this.setVolume = function(volume){
-            if ( this.isSetUp ) {
-                this.output.gain.value = volume;
-            }
-            else {
-                console.log('This PolyWad is not set up yet.');
-            }
-            return this;
+    Wad.Poly.prototype.setVolume = function(volume){
+        if ( this.isSetUp ) {
+            this.output.gain.value = volume;
         }
+        else {
+            console.log('This PolyWad is not set up yet.');
+        }
+        return this;
+    }
 
-        this.play = function(arg){
-            if ( this.isSetUp ) {
-                if ( this.playable < 1 ) {
-                    this.playOnLoad    = true;
-                    this.playOnLoadArg = arg;
-                }
-                else {
-                    if ( arg && arg.volume ) {
-                        this.output.gain.value = arg.volume; // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
-                        arg.volume = undefined; // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad. 
-                    }
-                    for ( var i = 0; i < this.wads.length; i++ ) {
-                        this.wads[i].play(arg);
-                    }
-                }
+    Wad.Poly.prototype.play = function(arg){
+        if ( this.isSetUp ) {
+            if ( this.playable < 1 ) {
+                this.playOnLoad    = true;
+                this.playOnLoadArg = arg;
             }
             else {
-                console.log('This PolyWad is not set up yet.');
-            }
-            return this;
-        };
-
-        this.stop = function(arg){
-            if ( this.isSetUp ) {   
+                if ( arg && arg.volume ) {
+                    this.output.gain.value = arg.volume; // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
+                    arg.volume = undefined; // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad. 
+                }
                 for ( var i = 0; i < this.wads.length; i++ ) {
-                    this.wads[i].stop(arg);
+                    this.wads[i].play(arg);
                 }
             }
-        };
+        }
+        else {
+            console.log('This PolyWad is not set up yet.');
+        }
+        return this;
+    };
 
-        this.add = function(wad){
-            if ( this.isSetUp ) {
-                wad.destination = this.input;
-                this.wads.push(wad);
-                if ( wad instanceof Wad.Poly ) {
-                    wad.output.disconnect(0);
-                    wad.output.connect(this.input);
-                }
+    Wad.Poly.prototype.stop = function(arg){
+        if ( this.isSetUp ) {   
+            for ( var i = 0; i < this.wads.length; i++ ) {
+                this.wads[i].stop(arg);
             }
-            else {
-                console.log('This PolyWad is not set up yet.');
+        }
+    };
+
+    Wad.Poly.prototype.add = function(wad){
+        if ( this.isSetUp ) {
+            wad.destination = this.input;
+            this.wads.push(wad);
+            if ( wad instanceof Wad.Poly ) {
+                wad.output.disconnect(0);
+                wad.output.connect(this.input);
             }
-            return this;
-        };
+        }
+        else {
+            console.log('This PolyWad is not set up yet.');
+        }
+        return this;
+    };
 
 
 
-        this.remove = function(wad){
-            if ( this.isSetUp ) {
-                for ( var i = 0; i < this.wads.length; i++ ) {
-                    if ( this.wads[i] === wad ) {
-                        this.wads[i].destination = context.destination;
-                        this.wads.splice(i,1);
-                        if ( wad instanceof Wad.Poly ) {
-                            wad.output.disconnect(0);
-                            wad.output.connect(context.destination);
-                        }
+    Wad.Poly.prototype.remove = function(wad){
+        if ( this.isSetUp ) {
+            for ( var i = 0; i < this.wads.length; i++ ) {
+                if ( this.wads[i] === wad ) {
+                    this.wads[i].destination = context.destination;
+                    this.wads.splice(i,1);
+                    if ( wad instanceof Wad.Poly ) {
+                        wad.output.disconnect(0);
+                        wad.output.connect(context.destination);
                     }
                 }
             }
-            return this;
-        };
+        }
+        return this;
     };
 
     Wad.Poly.prototype.constructExternalFx = function(arg, context){

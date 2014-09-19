@@ -652,50 +652,6 @@ then finally play the sound by calling playEnv() **/
         if ( !arg ) { arg = {}; }
         this.isSetUp  = false;
         this.playable = 1;
-        this.setUp = function(arg){ // Anything that needs to happen before reverb is set up can go here. 
-            this.wads              = [];
-            this.input             = context.createAnalyser();
-            this.nodes             = [this.input];
-            this.destination       = arg.destination || context.destination; // the last node the sound is routed to
-            this.volume            = arg.volume || 1;
-            this.output            = context.createGain();
-            this.output.gain.value = this.volume;
-            if ( !( typeof Recorder === 'undefined' ) ) { // Recorder should be defined, unless you're running the unconcatenated source version and forgot to include recorder.js.
-                this.rec               = new Recorder(this.output, arg.recConfig);
-                this.rec.recordings    = [];
-
-                var that = this;
-                var getRecorderBufferCallback = function( buffers ) {
-                    that.rec.createWadArg.source = buffers;
-                    that.rec.recordings.unshift(new Wad(that.rec.createWadArg));
-                };
-                this.rec.createWad = function(arg){
-                    this.createWadArg = arg || {};
-                    this.getBuffer(getRecorderBufferCallback);
-                };
-            }
-
-            this.globalReverb = arg.globalReverb || false;
-
-            constructFilter(this, arg);
-            if ( this.filter ) { createFilters(this, arg); }
-
-            if ( this.reverb ) { setUpReverbOnPlay(this, arg); }
-
-            this.constructExternalFx(arg, context);
-
-            constructPanning(this, arg);
-            setUpPanningOnPlay(this, arg);
-            if ( arg.compressor ) { constructCompressor(this, arg); }
-
-            constructDelay(this, arg);
-            setUpDelayOnPlay(this, arg);
-
-            this.nodes.push(this.output);
-            plugEmIn(this, arg);
-            this.isSetUp = true;
-            if ( arg.callback ) { arg.callback(this); }
-        }
 
         if ( arg.reverb ) {
             constructReverb(this, arg); // We need to make sure we have downloaded the impulse response before continuing with the setup.
@@ -705,6 +661,51 @@ then finally play the sound by calling playEnv() **/
         }
     };
 
+    Wad.Poly.prototype.setUp = function(arg){ // Anything that needs to happen before reverb is set up can go here. 
+        this.wads              = [];
+        this.input             = context.createAnalyser();
+        this.nodes             = [this.input];
+        this.destination       = arg.destination || context.destination; // the last node the sound is routed to
+        this.volume            = arg.volume || 1;
+        this.output            = context.createGain();
+        this.output.gain.value = this.volume;
+        if ( !( typeof Recorder === 'undefined' ) ) { // Recorder should be defined, unless you're running the unconcatenated source version and forgot to include recorder.js.
+            this.rec               = new Recorder(this.output, arg.recConfig);
+            this.rec.recordings    = [];
+
+            var that = this;
+            var getRecorderBufferCallback = function( buffers ) {
+                that.rec.createWadArg.source = buffers;
+                that.rec.recordings.unshift(new Wad(that.rec.createWadArg));
+            };
+            this.rec.createWad = function(arg){
+                this.createWadArg = arg || {};
+                this.getBuffer(getRecorderBufferCallback);
+            };
+        }
+
+        this.globalReverb = arg.globalReverb || false;
+
+        constructFilter(this, arg);
+        if ( this.filter ) { createFilters(this, arg); }
+
+        if ( this.reverb ) { setUpReverbOnPlay(this, arg); }
+
+        this.constructExternalFx(arg, context);
+
+        constructPanning(this, arg);
+        setUpPanningOnPlay(this, arg);
+        if ( arg.compressor ) { constructCompressor(this, arg); }
+
+        constructDelay(this, arg);
+        setUpDelayOnPlay(this, arg);
+
+        this.nodes.push(this.output);
+        plugEmIn(this, arg);
+        this.isSetUp = true;
+        if ( arg.callback ) { arg.callback(this); }
+    }
+    
     Wad.Poly.prototype.setVolume = function(volume){
         if ( this.isSetUp ) {
             this.output.gain.value = volume;
@@ -1055,7 +1056,6 @@ grab it from the defaultImpulse URL **/
             else if ( event.data[2] > 0 ) {
                 console.log('> playing note: ', Wad.pitchesArray[event.data[1]-12]);
                 Wad.midiInstrument.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], callback : function(that){
-                    console.log(that.soundSource.frequency.value)
                 }})
             }
         }

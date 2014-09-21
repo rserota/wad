@@ -30,6 +30,7 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
                 <ul>
                     <li><a href='#recording'>Recording</a></li>
                     <li><a href='#compression'>Compression</a></li>
+                    <li><a href='#pitch-detection'>Pitch Detection</a></li>
                 </ul>
             </li>
             <li><a href='#external-fx'>External FX</a></li>
@@ -88,6 +89,7 @@ var saw = new Wad({
     source  : 'sawtooth',
     volume  : 1.0,  // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
     pitch   : 'A4', // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
+    detune  : 0,    // Set a default detune on the constructor if you don't want to set detune on <code>play()</code>. Detune is measured in cents. 100 cents is equal to 1 semitone.
     panning : -5,   // Horizontal placement of the sound source. Sensible values are from 10 to -10.
     env     : {     // This is the ADSR envelope.
         attack  : 0.0,  // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
@@ -301,6 +303,30 @@ var compressor = new Wad.Poly({
         threshold : -24  // The decibel value above which the compression will start taking effect. This parameter ranges from -100 to 0.
     }
 })
+</code></pre>
+
+
+<h4>Pitch Detection</h4>
+
+PolyWads can detect the frequency of their input. 
+
+<pre><code>
+var voice = new Wad({source : 'mic' })
+var tuner = new Wad.Poly();
+tuner.add(voice)
+voice.play()
+
+tuner.updatePitch() // The tuner is now calculating the pitch and note name of its input 60 times per second. These values are stored in <code>tuner.pitch</code> and <code>tuner.noteName</code>.
+
+var logPitch = function(){
+    console.log(tuner.pitch, tuner.noteName)
+    requestAnimationFrame(logPitch)
+}
+logPitch()
+// If you sing into your microphone, your pitch will be logged to the console in real time.
+
+stopUpdatingPitch() // Stop calculating the pitch if you don't need to know it anymore.
+
 </code></pre>
 
 <h3 id='exfx'>External FX</h3>

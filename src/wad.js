@@ -647,37 +647,22 @@ then finally play the sound by calling playEnv() **/
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    var isPlaying = false;
-    var sourceNode = null;
-    var analyser = null;
-    var theBuffer = null;
-    var DEBUGCANVAS = null;
-    var detectorElem, 
-        canvasElem,
-        waveCanvas,
-        pitchElem,
-        noteElem,
-        detuneElem,
-        detuneAmount;
 
-    var rafID = null;
-    var tracks = null;
+
     var buflen = 2048;
     var buf = new Uint8Array( buflen );
     var MINVAL = 134;  // 128 == zero.  MINVAL is the "minimum detected signal" level.
 
-    var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-
-    function noteFromPitch( frequency ) {
+    var noteFromPitch = function( frequency ) {
         var noteNum = 12 * (Math.log( frequency / 440 )/Math.log(2) );
         return Math.round( noteNum ) + 69;
     }
 
-    function frequencyFromNoteNumber( note ) {
+    var frequencyFromNoteNumber = function( note ) {
         return 440 * Math.pow(2,(note-69)/12);
     }
 
-    function centsOffFromPitch( frequency, note ) {
+    var centsOffFromPitch = function( frequency, note ) {
         return Math.floor( 1200 * Math.log( frequency / frequencyFromNoteNumber( note ))/Math.log(2) );
     }
 
@@ -694,9 +679,9 @@ then finally play the sound by calling playEnv() **/
         if (buf.length < (SIZE + MAX_SAMPLES - MIN_SAMPLES))
             return -1;  // Not enough data
 
-        for (var i=0;i<SIZE;i++) {
-            var val = (buf[i] - 128)/128;
-            rms += val*val;
+        for ( var i = 0; i < SIZE; i++ ) {
+            var val = ( buf[i] - 128 ) / 128;
+            rms += val * val;
         }
         rms = Math.sqrt(rms/SIZE);
         if (rms<0.01)
@@ -791,36 +776,29 @@ then finally play the sound by calling playEnv() **/
     }
     
     Wad.Poly.prototype.updatePitch = function( time ) {
-        var cycles = []
-
-        this.input.analyser.getByteTimeDomainData( buf );
-
+        this.input.getByteTimeDomainData( buf );
         var ac = autoCorrelate( buf, context.sampleRate );
 
+        if ( ac !== -1 && ac !== 11025 ) {
+            var pitch = ac;
+            this.pitch = Math.floor( pitch ) ;
+            var note = noteFromPitch( pitch );
+            this.noteName = Wad.pitchesArray[note - 12];
+            // Detune doesn't seem to work. 
+            // var detune = centsOffFromPitch( pitch, note );
+            // if (detune == 0 ) {
+            //     this.detuneEstimate = 0;
+            // } else {
 
-        if (ac == -1) {
-            detectorElem.className = "vague";
-            pitchElem.innerText = "--";
-            noteElem.innerText = "-";
-            detuneElem.className = "";
-            detuneAmount.innerText = "--";
-        } else {
-            pitch = ac;
-            this.pitchEstimate = Math.floor( pitch ) ;
-            var note =  noteFromPitch( pitch );
-            this.noteEstimate = noteStrings[note%12];
-            var detune = centsOffFromPitch( pitch, note );
-            if (detune == 0 ) {
-                this.detuneEstimate = 0;
-            } else {
-
-                this.detuneEstimate = Math.abs( detune );
-            }
+            //     this.detuneEstimate = detune 
+            // }
         }
+        var that = this;
+        that.rafID = window.requestAnimationFrame( function(){ that.updatePitch() } );
+    }
 
-        if (!window.requestAnimationFrame)
-            window.requestAnimationFrame = window.webkitRequestAnimationFrame;
-        this.rafID = window.requestAnimationFrame( this.updatePitch );
+    Wad.Poly.prototype.stopUpdatingPitch = function(){
+        cancelAnimationFrame(this.rafID)
     }
 
     Wad.Poly.prototype.setVolume = function(volume){

@@ -311,21 +311,21 @@ var compressor = new Wad.Poly({
 PolyWads can detect the frequency of their input. 
 
 <pre><code>
-var voice = new Wad({source : 'mic' })
+var voice = new Wad({source : 'mic' });
 var tuner = new Wad.Poly();
-tuner.add(voice)
-voice.play()
+tuner.add(voice);
+voice.play();
 
 tuner.updatePitch() // The tuner is now calculating the pitch and note name of its input 60 times per second. These values are stored in <code>tuner.pitch</code> and <code>tuner.noteName</code>.
 
 var logPitch = function(){
     console.log(tuner.pitch, tuner.noteName)
     requestAnimationFrame(logPitch)
-}
-logPitch()
+};
+logPitch();
 // If you sing into your microphone, your pitch will be logged to the console in real time.
 
-stopUpdatingPitch() // Stop calculating the pitch if you don't need to know it anymore.
+stopUpdatingPitch(); // Stop calculating the pitch if you don't need to know it anymore.
 
 </code></pre>
 
@@ -339,8 +339,8 @@ Sometimes you might want to incorporate external libraries into Wad, for example
 var tuna;
 Wad.prototype.constructExternalFx = function(arg, context){
     this.tuna   = new Tuna(context);
-    this.chorus = arg.chorus
-}
+    this.chorus = arg.chorus;
+};
 
 Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
     var chorus = new tuna.Chorus({
@@ -351,7 +351,7 @@ Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
     });
     chorus.input.connect = chorus.connect.bind(chorus) // we do this dance because tuna exposes its input differently.
     that.nodes.push(chorus.input) // you would generally want to do this at the end unless you are working with something that does not modulate the sound (i.e, a visualizer)
-}
+};
 </code></pre>
 
 
@@ -359,21 +359,23 @@ Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
 
 If you'd like to use a pre-configured Wad, check out the presets.  They should give you a better idea of the sorts of sounds that you can create with Wad.js.  For example, you can create a Wad using the preset 'hiHatClosed' like this:
 
-<pre><code>var hat = new Wad(Wad.presets.hiHatClosed)</code></pre>
+<pre><code>var hat = new Wad(Wad.presets.hiHatClosed);</code></pre>
 
 <h3 id='midi'>MIDI Input</h3>
 
 Wad.js can read MIDI data from MIDI instruments and controllers, and you can set handlers to respond to that data. When Wad.js initializes, it tries to automatically detect any connected MIDI devices, and creates a reference to it in the array <code>Wad.midiInputs</code>. To handle MIDI data, assign a MIDI handler function to a MIDI device's <code>onmidimessage</code> property.  By default, Wad is configured to log MIDI messages to the console, which should be sufficient if you are quickly testing your devices. If you want to quickly set up a MIDI keyboard to play a Wad, assign a Wad of your choice (or any object with <code>play()</code> and <code>stop()</code> methods) to <code>Wad.midiInstrument</code>.
 
-<pre><code>Wad.midiInstrument = new Wad({source : 'sine'})</code></pre>
+<pre><code>Wad.midiInstrument = new Wad({source : 'sine'});</code></pre>
 
 
 If you want to get creative with how Wad.js handles MIDI data, I strongly encourage you to write your own MIDI handler functions. For example, note-on velocity (how hard you press a key when playing a note) usually modulates the volume of a note, but it might sound interesting if you configure note-on velocity to modulate the attack or filter frequency instead. You could configure the right half of your keyboard to play a guitar, and configure the left half of your keyboard to play a bass. If you want to take that a step further, you can use a sustain pedal to toggle between slap and pop sounds on the bass, if you're into that style of music. Or maybe you'd like to map the lowest octave on your keyboard to a drum kit, and use a sustain pedal to play the kick-drum. You can do almost anything, if you're clever. Wad.js simply maps MIDI data to function calls, so your MIDI device can do anything that you can accomplish with Javascript. You can send MIDI data through websockets for some kind of WAN concert, or set up a Twitter bot that automatically tells your friends what key you've been playing in. If you can design a really cool and creative MIDI rig, I'd love to hear about it, and might include it in Wad.js.
 
-<pre><code>Wad.midiInputs[0].onmidimessage = function(event){
-    console.log(event.receivedTime, event.data)
-}
-Wad.midiInputs[1].onmidimessage = anotherMidiHandlerFunction // If you have multiple MIDI devices that you would like to use simultaneously, you will need multiple MIDI handler functions.</code></pre>
+<pre><code>
+Wad.midiInputs[0].onmidimessage = function(event){
+    console.log(event.receivedTime, event.data);
+};
+Wad.midiInputs[1].onmidimessage = anotherMidiHandlerFunction // If you have multiple MIDI devices that you would like to use simultaneously, you will need multiple MIDI handler functions.
+</code></pre>
 
 As of writing this, MIDI is poorly supported by most browsers. In Chrome, MIDI is an 'experimental feature', so you will need to <a href="http://stackoverflow.com/questions/21821121/web-midi-api-not-implemented-in-chrome-canary">enable it manually</a>. 
 

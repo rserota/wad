@@ -775,11 +775,16 @@ then finally play the sound by calling playEnv() **/
         if ( arg.callback ) { arg.callback(this); }
     }
     
+/**
+    The MIT License (MIT)
+
+Copyright (c) 2014 Chris Wilson
+**/
     Wad.Poly.prototype.updatePitch = function( time ) {
         this.input.getByteTimeDomainData( buf );
         var ac = autoCorrelate( buf, context.sampleRate );
 
-        if ( ac !== -1 && ac !== 11025 ) {
+        if ( ac !== -1 && ac !== 11025 && ac !== 12000 ) {
             var pitch = ac;
             this.pitch = Math.floor( pitch ) ;
             var note = noteFromPitch( pitch );

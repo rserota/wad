@@ -639,7 +639,7 @@ then finally play the sound by calling playEnv() **/
                 this.gain[0].gain.setValueAtTime(this.gain[0].gain.value, context.currentTime);
                 this.gain[0].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release);
             }
-            // this.soundSource.stop(context.currentTime+this.env.release)
+            this.soundSource.stop(context.currentTime+this.env.release)
         }
         else {
             this.mediaStreamSource.disconnect(0);

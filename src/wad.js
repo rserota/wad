@@ -409,12 +409,16 @@ with special handling for reverb (ConvolverNode). **/
             that.panning.node = context.createPanner();
             // var panning = (arg && arg.panning) ? arg.panning : that.panning.location
             if ( arg && arg.panning ) {
+                console.log('arg!', arg.panning)
                 if ( typeof(arg.panning) === 'number' ) {
                     var panning = [ arg.panning, 0, 0 ];
                 }
                 else {
                     var panning = [ arg.panning[0], arg.panning[1], arg.panning[2] ];
                 }
+            }
+            else if ( that.panning ) {
+                var panning = that.panning.location;
             }
             else {
                 var panning = [ 0, 0, 0 ];
@@ -639,7 +643,6 @@ then finally play the sound by calling playEnv() **/
                 this.gain[0].gain.setValueAtTime(this.gain[0].gain.value, context.currentTime);
                 this.gain[0].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release);
             }
-            this.soundSource.stop(context.currentTime+this.env.release)
         }
         else {
             this.mediaStreamSource.disconnect(0);

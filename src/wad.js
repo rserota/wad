@@ -7,7 +7,7 @@
     if ( getUserMedia ) {
         // console.log('get user media is supported')
         getUserMedia = getUserMedia.bind(navigator);
-    } 
+    }
     else {
         console.log('get user media is not supported');
     }
@@ -152,7 +152,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         }
     };
 
-    var constructPanning = function(that, arg){        
+    var constructPanning = function(that, arg){
         if ( 'panning' in arg ) {
             if ( typeof(arg.panning) === "number" ) {
                 that.panning = { location : [ arg.panning, 0, 0 ] };
@@ -226,7 +226,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.defaultVolume = this.volume;
         this.playable      = 1; // if this is less than 1, this Wad is still waiting for a file to download before it can play
         this.pitch         = Wad.pitches[arg.pitch] || arg.pitch || 440;
-        this.detune        = arg.detune || 0 // In Cents. 
+        this.detune        = arg.detune || 0 // In Cents.
         this.globalReverb  = arg.globalReverb || false;
         this.gain          = [];
 
@@ -639,7 +639,7 @@ then finally play the sound by calling playEnv() **/
                 }
             }
             if ( !label ) {
-                this.gain[0].gain.cancelScheduledValues(context.currentTime); 
+                this.gain[0].gain.cancelScheduledValues(context.currentTime);
                 this.gain[0].gain.setValueAtTime(this.gain[0].gain.value, context.currentTime);
                 this.gain[0].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release);
             }
@@ -732,7 +732,7 @@ then finally play the sound by calling playEnv() **/
         }
     };
 
-    Wad.Poly.prototype.setUp = function(arg){ // Anything that needs to happen before reverb is set up can go here. 
+    Wad.Poly.prototype.setUp = function(arg){ // Anything that needs to happen before reverb is set up can go here.
         this.wads              = [];
         this.input             = context.createAnalyser();
         this.input.fftSize     = 2048
@@ -777,7 +777,7 @@ then finally play the sound by calling playEnv() **/
         this.isSetUp = true;
         if ( arg.callback ) { arg.callback(this); }
     }
-    
+
 /**
     The MIT License (MIT)
 
@@ -792,13 +792,13 @@ Copyright (c) 2014 Chris Wilson
             this.pitch = Math.floor( pitch ) ;
             var note = noteFromPitch( pitch );
             this.noteName = Wad.pitchesArray[note - 12];
-            // Detune doesn't seem to work. 
+            // Detune doesn't seem to work.
             // var detune = centsOffFromPitch( pitch, note );
             // if (detune == 0 ) {
             //     this.detuneEstimate = 0;
             // } else {
 
-            //     this.detuneEstimate = detune 
+            //     this.detuneEstimate = detune
             // }
         }
         var that = this;
@@ -828,7 +828,7 @@ Copyright (c) 2014 Chris Wilson
             else {
                 if ( arg && arg.volume ) {
                     this.output.gain.value = arg.volume; // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
-                    arg.volume = undefined; // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad. 
+                    arg.volume = undefined; // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad.
                 }
                 for ( var i = 0; i < this.wads.length; i++ ) {
                     this.wads[i].play(arg);
@@ -842,7 +842,7 @@ Copyright (c) 2014 Chris Wilson
     };
 
     Wad.Poly.prototype.stop = function(arg){
-        if ( this.isSetUp ) {   
+        if ( this.isSetUp ) {
             for ( var i = 0; i < this.wads.length; i++ ) {
                 this.wads[i].stop(arg);
             }
@@ -1041,7 +1041,7 @@ grab it from the defaultImpulse URL **/
     };
 
 
-    Wad.pitchesArray = [ // Just an array of note names. This can be useful for mapping MIDI data to notes. 
+    Wad.pitchesArray = [ // Just an array of note names. This can be useful for mapping MIDI data to notes.
         'C0',
         'C#0',
         'D0',
@@ -1147,7 +1147,7 @@ grab it from the defaultImpulse URL **/
         stop : function() { console.log('stopping midi') }
     };
     Wad.midiInputs  = [];
-    
+
     midiMap = function(event){
         console.log(event.receivedTime, event.data);
         if ( event.data[0] === 144 ) { // 144 means the midi message has note data
@@ -1176,7 +1176,7 @@ grab it from the defaultImpulse URL **/
 
 
     var m = null;   // m = MIDIAccess object for you to make calls on
-    var onSuccessCallback = function(access){ 
+    var onSuccessCallback = function(access){
         m = access;
 
         // Things you can do with the MIDIAccess object:
@@ -1194,7 +1194,7 @@ grab it from the defaultImpulse URL **/
         console.log("uh-oh! Something went wrong!  Error code: " + err.code );
     };
 
-if ( navigator && navigator.requestMIDIAccess ) {       
+if ( navigator && navigator.requestMIDIAccess ) {
     try {
         navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
     }
@@ -1218,3 +1218,6 @@ if ( navigator && navigator.requestMIDIAccess ) {
 
 })()
 
+if(typeof module !== 'undefined' && module.exports) {
+    module.exports = Wad;
+}

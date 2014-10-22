@@ -325,7 +325,7 @@ var logPitch = function(){
 logPitch();
 // If you sing into your microphone, your pitch will be logged to the console in real time.
 
-stopUpdatingPitch(); // Stop calculating the pitch if you don't need to know it anymore.
+tuner.stopUpdatingPitch(); // Stop calculating the pitch if you don't need to know it anymore.
 
 </code></pre>
 
@@ -350,7 +350,7 @@ Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
         bypass   : arg.chorus.bypass   || this.chorus.bypass
     });
     chorus.input.connect = chorus.connect.bind(chorus) // we do this dance because tuna exposes its input differently.
-    that.nodes.push(chorus.input) // you would generally want to do this at the end unless you are working with something that does not modulate the sound (i.e, a visualizer)
+    this.nodes.push(chorus.input) // you would generally want to do this at the end unless you are working with something that does not modulate the sound (i.e, a visualizer)
 };
 </code></pre>
 

@@ -229,6 +229,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.detune        = arg.detune || 0 // In Cents.
         this.globalReverb  = arg.globalReverb || false;
         this.gain          = [];
+        this.loop          = arg.loop || false;
 
         constructEnv(this, arg);
         constructFilter(this, arg);
@@ -545,7 +546,7 @@ then finally play the sound by calling playEnv() **/
             else {
                 this.soundSource = context.createBufferSource();
                 this.soundSource.buffer = this.decodedBuffer;
-                if ( this.source === 'noise' ) {
+                if ( this.source === 'noise' || this.loop || arg.loop ) {
                     this.soundSource.loop = true;
                 }
             }

@@ -88,6 +88,7 @@ The Wad constructor supports many optional arguments to modify your sound, from 
 var saw = new Wad({
     source  : 'sawtooth',
     volume  : 1.0,  // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
+    loop    : false, // If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators. 
     pitch   : 'A4', // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
     detune  : 0,    // Set a default detune on the constructor if you don't want to set detune on <code>play()</code>. Detune is measured in cents. 100 cents is equal to 1 semitone.
     panning : -5,   // Horizontal placement of the sound source. Sensible values are from 10 to -10.
@@ -169,9 +170,10 @@ The <code>play()</code> method also accepts many optional arguments, such as vol
 var saw = new Wad({source : 'sawtooth'})
 saw.play({
     volume  : 0.8,
-    wait    : 0,    // Time in seconds between calling play() and actually triggering the note.
-    pitch   : 'A4', // A4 is 440 hertz.
-    label   : 'A',  // A label that identifies this note.
+    wait    : 0,     // Time in seconds between calling play() and actually triggering the note.
+    loop    : false, // This overrides the value for loop on the constructor, if it was set. 
+    pitch   : 'A4',  // A4 is 440 hertz.
+    label   : 'A',   // A label that identifies this note.
     env     : {hold : 9001},
     panning : [1, -1, 10],
     filter  : {frequency : 900},

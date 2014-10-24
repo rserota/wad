@@ -752,7 +752,7 @@ then finally play the sound by calling playEnv() **/
                 that.rec.recordings.unshift(new Wad(that.rec.createWadArg));
             };
             this.rec.createWad = function(arg){
-                this.createWadArg = arg || {};
+                this.createWadArg = arg || { env : { hold : 9001 } };
                 this.getBuffer(getRecorderBufferCallback);
             };
         }

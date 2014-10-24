@@ -87,16 +87,16 @@ The Wad constructor supports many optional arguments to modify your sound, from 
 <pre><code>
 var saw = new Wad({
     source  : 'sawtooth',
-    volume  : 1.0,  // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
+    volume  : 1.0,   // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
     loop    : false, // If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators. 
-    pitch   : 'A4', // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
-    detune  : 0,    // Set a default detune on the constructor if you don't want to set detune on <code>play()</code>. Detune is measured in cents. 100 cents is equal to 1 semitone.
-    panning : -5,   // Horizontal placement of the sound source. Sensible values are from 10 to -10.
-    env     : {     // This is the ADSR envelope.
+    pitch   : 'A4',  // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
+    detune  : 0,     // Set a default detune on the constructor if you don't want to set detune on <code>play()</code>. Detune is measured in cents. 100 cents is equal to 1 semitone.
+    panning : -5,    // Horizontal placement of the sound source. Sensible values are from 10 to -10.
+    env     : {      // This is the ADSR envelope.
         attack  : 0.0,  // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
         decay   : 0.0,  // Time in seconds from peak volume to sustain volume.
         sustain : 1.0,  // Sustain volume level. This is a percent of the peak volume, so sensible values are between 0 and 1.
-        hold    : 9001, // Time in seconds to maintain the sustain volume level. If this is not set to a lower value, oscillators must be manually stopped by calling their stop() method.
+        hold    : 3.14, // Time in seconds to maintain the sustain volume level. If this is not set to a lower value, oscillators must be manually stopped by calling their stop() method.
         release : 0     // Time in seconds from the end of the hold period to zero volume, or from calling stop() to zero volume.
     },
     filter  : {

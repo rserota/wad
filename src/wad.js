@@ -584,7 +584,7 @@ then finally play the sound by calling playEnv() **/
 
             plugEmIn(this, arg);
 
-            if ( this.filter && this.filter.env ) { filterEnv(this, arg); }
+            if ( this.filter && this.filter[0].env ) { filterEnv(this, arg); }
             playEnv(this, arg);
 
             //sets up vibrato LFO
@@ -742,7 +742,7 @@ then finally play the sound by calling playEnv() **/
         this.volume            = arg.volume || 1;
         this.output            = context.createGain();
         this.output.gain.value = this.volume;
-        if ( !( typeof Recorder === 'undefined' ) ) { // Recorder should be defined, unless you're running the unconcatenated source version and forgot to include recorder.js.
+        if ( !( typeof Recorder === 'undefined' ) && arg.recConfig ) { // Recorder should be defined, unless you're running the unconcatenated source version and forgot to include recorder.js.
             this.rec               = new Recorder(this.output, arg.recConfig);
             this.rec.recordings    = [];
 

@@ -89,7 +89,7 @@ Don't let the Wad play until all necessary files have been downloaded. **/
         request.onload = function(){
             context.decodeAudioData(request.response, function (decodedBuffer){
                 that.decodedBuffer = decodedBuffer;
-                if ( callback ) { callback(); }
+                if ( callback ) { callback(that); }
                 that.playable++;
                 if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
             })
@@ -271,7 +271,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             requestAudioFile(this, arg.callback);
         }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        else { arg.callback && arg.callback(this) }
     };
 
 

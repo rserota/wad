@@ -116,7 +116,7 @@ var saw = new Wad({
         delayTime : .5,  // Time in seconds between each delayed playback.
         wet       : .25, // Relative volume change between the original sound and the first delayed playback.
         feedback  : .25, // Relative volume change between each delayed playback and the next. 
-    }
+    },
     vibrato : { // A vibrating pitch effect.  Only works for oscillators.
         shape     : 'sine', // shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'.
         magnitude : 3,      // how much the pitch changes. Sensible values are from 1 to 10.

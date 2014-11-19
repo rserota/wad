@@ -1,4 +1,4 @@
-
+﻿
 
 /** Let's do the vendor-prefix dance. **/
     var audioContext = window.AudioContext || window.webkitAudioContext;
@@ -279,19 +279,19 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 as specified by the volume envelope and filter envelope **/
     var filterEnv = function(wad, arg){
         wad.filter.forEach(function (filter, index){
-            filter.node.frequency.linearRampToValueAtTime(filter.frequency, context.currentTime + arg.wait);
-            filter.node.frequency.linearRampToValueAtTime(filter.env.frequency, context.currentTime + filter.env.attack + arg.wait);
+            filter.node.frequency.linearRampToValueAtTime(filter.frequency, arg.exactTime);
+            filter.node.frequency.linearRampToValueAtTime(filter.env.frequency, arg.exactTime + filter.env.attack);
         });
     };
 
     var playEnv = function(wad, arg){
-        wad.gain[0].gain.linearRampToValueAtTime(0.0001, context.currentTime + arg.wait);
-        wad.gain[0].gain.linearRampToValueAtTime(wad.volume, context.currentTime + wad.env.attack + arg.wait + 0.00001);
-        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, context.currentTime + wad.env.attack + wad.env.decay + arg.wait + 0.00002);
-        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + arg.wait + 0.00003);
-        wad.gain[0].gain.linearRampToValueAtTime(0.0001, context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait  + 0.00004);
-        wad.soundSource.start(context.currentTime + arg.wait);
-        wad.soundSource.stop(context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait);
+        wad.gain[0].gain.linearRampToValueAtTime(0.0001, arg.exactTime);
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume, arg.exactTime + wad.env.attack + 0.00001);
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, arg.exactTime + wad.env.attack + wad.env.decay + 0.00002);
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, arg.exactTime + wad.env.attack + wad.env.decay + wad.env.hold + 0.00003);
+        wad.gain[0].gain.linearRampToValueAtTime(0.0001, arg.exactTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + 0.00004);
+        wad.soundSource.start(arg.exactTime);
+        wad.soundSource.stop(arg.exactTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release);
     };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -549,6 +549,10 @@ then finally play the sound by calling playEnv() **/
                 if ( this.source === 'noise' || this.loop || arg.loop ) {
                     this.soundSource.loop = true;
                 }
+            }
+
+            if (arg.exactTime === undefined) {
+                arg.exactTime = context.currentTime + arg.wait;
             }
 
             this.nodes.push(this.soundSource);

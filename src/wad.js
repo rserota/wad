@@ -1176,13 +1176,19 @@ grab it from the defaultImpulse URL **/
     };
 
 
-    var m = null;   // m = MIDIAccess object for you to make calls on
-    var onSuccessCallback = function(access){
-        m = access;
-
+    var onSuccessCallback = function(midiAccess){
+        // console.log('inputs: ', m.inputs)
         // Things you can do with the MIDIAccess object:
-        Wad.midiInputs = m.inputs();   // inputs = array of MIDIPorts
-        console.log(Wad.midiInputs)
+        for ( var input of midiAccess.inputs.values() ) {
+            console.log(input) 
+        }
+        Wad.midiInputs = []
+        var val = midiAccess.inputs.values();
+        for ( var o = val.next(); !o.done; o = val.next() ) {
+            Wad.midiInputs.push(o.value)
+        }
+        // Wad.midiInputs = [m.inputs.values().next().value];   // inputs = array of MIDIPorts
+        console.log('inputs: ', Wad.midiInputs)
         // var outputs = m.outputs(); // outputs = array of MIDIPorts
         for ( var i = 0; i < Wad.midiInputs.length; i++ ) {
             Wad.midiInputs[i].onmidimessage = midiMap; // onmidimessage( event ), event.data & event.receivedTime are populated
@@ -1195,17 +1201,17 @@ grab it from the defaultImpulse URL **/
         console.log("uh-oh! Something went wrong!  Error code: " + err.code );
     };
 
-if ( navigator && navigator.requestMIDIAccess ) {
-    try {
-        navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
+    if ( navigator && navigator.requestMIDIAccess ) {
+        try {
+            navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
+        }
+        catch(err) {
+            var text = "There was an error on this page.\n\n";
+            text += "Error description: " + err.message + "\n\n";
+            text += "Click OK to continue.\n\n";
+            console.log(text);
+        }
     }
-    catch(err) {
-        var text = "There was an error on this page.\n\n";
-        text += "Error description: " + err.message + "\n\n";
-        text += "Click OK to continue.\n\n";
-        console.log(text);
-    }
-}
 
 
     Wad.presets = {

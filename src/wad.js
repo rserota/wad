@@ -1,4 +1,4 @@
-
+﻿
 
 /** Let's do the vendor-prefix dance. **/
     var audioContext = window.AudioContext || window.webkitAudioContext;
@@ -45,18 +45,18 @@ var Wad = (function(){
 /** Set up the default ADSR envelope. **/
     var constructEnv = function(that, arg){
         that.env = { //default envelope, if one is not specified on play
-            attack  : arg.env ? ( arg.env.attack  || 0    )    : 0,    // time in seconds from onset to peak volume
-            decay   : arg.env ? ( arg.env.decay   || 0    )    : 0,    // time in seconds from peak volume to sustain volume
-            sustain : arg.env ? ( arg.env.sustain || 1    )    : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
-            hold    : arg.env ? ( arg.env.hold    || 3.14 )    : 3.14, // time in seconds to maintain sustain volume
-            release : arg.env ? ( arg.env.release || 0    )    : 0     // time in seconds from sustain volume to zero volume
+            attack  : arg.env ? valueOrDefault(arg.env.attack,  1) : 0,    // time in seconds from onset to peak volume
+            decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
+            sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
+            hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14) : 3.14, // time in seconds to maintain sustain volume
+            release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
         };
         that.defaultEnv = {
-            attack  : arg.env ? ( arg.env.attack  || 0    )    : 0,    // time in seconds from onset to peak volume
-            decay   : arg.env ? ( arg.env.decay   || 0    )    : 0,    // time in seconds from peak volume to sustain volume
-            sustain : arg.env ? ( arg.env.sustain || 1    )    : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
-            hold    : arg.env ? ( arg.env.hold    || 3.14 )    : 3.14, // time in seconds to maintain sustain volume
-            release : arg.env ? ( arg.env.release || 0    )    : 0     // time in seconds from sustain volume to zero volume
+            attack  : arg.env ? valueOrDefault(arg.env.attack,  1) : 0,    // time in seconds from onset to peak volume
+            decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
+            sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
+            hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14) : 3.14, // time in seconds to maintain sustain volume
+            release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
         };
     }
 /////////////////////////////////////////
@@ -98,15 +98,14 @@ Don't let the Wad play until all necessary files have been downloaded. **/
     };
 //////////////////////////////////////////////////////////////////////////
 
-
 /** Set up the vibrato LFO **/
     var constructVibrato = function(that, arg){
         if ( arg.vibrato ) {
             that.vibrato = {
-                shape     : arg.vibrato.shape     || 'sine',
-                speed     : arg.vibrato.speed     || 1,
-                magnitude : arg.vibrato.magnitude || 5,
-                attack    : arg.vibrato.attack    || 0
+                shape     : valueOrDefault(arg.vibrato.shape, 'sine'),
+                speed     : valueOrDefault(arg.vibrato.speed, 1),
+                magnitude : valueOrDefault(arg.vibrato.magnitude, 5),
+                attack    : valueOrDefault(arg.vibrato.attack, 0)
             };
         }
     };
@@ -117,22 +116,21 @@ Don't let the Wad play until all necessary files have been downloaded. **/
     var constructTremolo = function(that, arg){
         if ( arg.tremolo ) {
             that.tremolo = {
-                shape     : arg.tremolo.shape     || 'sine',
-                speed     : arg.tremolo.speed     || 1,
-                magnitude : arg.tremolo.magnitude || 5,
-                attack    : arg.tremolo.attack    || 1
+                shape     : valueOrDefault(arg.vibrato.shape, 'sine'),
+                speed     : valueOrDefault(arg.vibrato.speed, 1),
+                magnitude : valueOrDefault(arg.vibrato.magnitude, 5),
+                attack    : valueOrDefault(arg.vibrato.attack, 1)
             };
         }
     };
 //////////////////////////////
-
 
 /** Grab the reverb impulse response file from a server.
 You may want to change Wad.defaultImpulse to serve files from your own server.
 Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
     var constructReverb = function(that, arg){
         if ( arg.reverb ) {
-            that.reverb = { wet : arg.reverb.wet || 1 };
+            that.reverb = { wet : valueOrDefault(arg.reverb.wet, 1) };
             var impulseURL = arg.reverb.impulse || Wad.defaultImpulse;
             var request = new XMLHttpRequest();
             request.open("GET", impulseURL, true);
@@ -171,15 +169,13 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
     var constructDelay = function(that, arg){
         if ( arg.delay ) {
             that.delay = {
-                delayTime    : arg.delay.delayTime    || .5,
-                maxDelayTime : arg.delay.maxDelayTime || 2,
-                feedback     : arg.delay.feedback     || .25,
-                wet          : arg.delay.wet          || .25
+                delayTime    : valueOrDefault(arg.delay.delayTime, .5),
+                maxDelayTime : valueOrDefault(arg.delay.maxDelayTime, 2),
+                feedback     : valueOrDefault(arg.delay.feedback, .25),
+                wet          : valueOrDefault(arg.delay.wet, .25)
             };
         }
     };
-
-
 /** Special initialization and configuration for microphone Wads **/
     var setUpMic = function(that, arg){
         getUserMedia({ audio : true , video : false}, function (stream){
@@ -222,7 +218,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 /** Set basic Wad properties **/
         this.source        = arg.source;
         this.destination   = arg.destination || context.destination; // the last node the sound is routed to
-        this.volume        = arg.volume || 1; // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
+        this.volume        = valueOrDefault(arg.volume, 1); // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
         this.defaultVolume = this.volume;
         this.playable      = 1; // if this is less than 1, this Wad is still waiting for a file to download before it can play
         this.pitch         = Wad.pitches[arg.pitch] || arg.pitch || 440;
@@ -279,19 +275,19 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 as specified by the volume envelope and filter envelope **/
     var filterEnv = function(wad, arg){
         wad.filter.forEach(function (filter, index){
-            filter.node.frequency.linearRampToValueAtTime(filter.frequency, context.currentTime + arg.wait);
-            filter.node.frequency.linearRampToValueAtTime(filter.env.frequency, context.currentTime + filter.env.attack + arg.wait);
+            filter.node.frequency.linearRampToValueAtTime(filter.frequency, arg.exactTime);
+            filter.node.frequency.linearRampToValueAtTime(filter.env.frequency, arg.exactTime + filter.env.attack);
         });
     };
 
     var playEnv = function(wad, arg){
-        wad.gain[0].gain.linearRampToValueAtTime(0.0001, context.currentTime + arg.wait);
-        wad.gain[0].gain.linearRampToValueAtTime(wad.volume, context.currentTime + wad.env.attack + arg.wait + 0.00001);
-        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, context.currentTime + wad.env.attack + wad.env.decay + arg.wait + 0.00002);
-        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + arg.wait + 0.00003);
-        wad.gain[0].gain.linearRampToValueAtTime(0.0001, context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait  + 0.00004);
-        wad.soundSource.start(context.currentTime + arg.wait);
-        wad.soundSource.stop(context.currentTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + arg.wait);
+        wad.gain[0].gain.linearRampToValueAtTime(0.0001, arg.exactTime);
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume, arg.exactTime + wad.env.attack + 0.00001);
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, arg.exactTime + wad.env.attack + wad.env.decay + 0.00002);
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, arg.exactTime + wad.env.attack + wad.env.decay + wad.env.hold + 0.00003);
+        wad.gain[0].gain.linearRampToValueAtTime(0.0001, arg.exactTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + 0.00004);
+        wad.soundSource.start(arg.exactTime);
+        wad.soundSource.stop(arg.exactTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release);
     };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -338,15 +334,14 @@ with special handling for reverb (ConvolverNode). **/
     };
 ///////////////////////////////////////////////////
 
-
 /** Set the ADSR volume envelope according to play() arguments, or revert to defaults **/
     var setUpEnvOnPlay = function(that, arg){
         if ( arg && arg.env ) {
-            that.env.attack  = arg.env.attack  || that.defaultEnv.attack;
-            that.env.decay   = arg.env.decay   || that.defaultEnv.decay;
-            that.env.sustain = arg.env.sustain || that.defaultEnv.sustain;
-            that.env.hold    = arg.env.hold    || that.defaultEnv.hold;
-            that.env.release = arg.env.release || that.defaultEnv.release;
+            that.env.attack  = valueOrDefault(arg.env.attack, that.defaultEnv.attack);
+            that.env.decay   = valueOrDefault(arg.env.decay, that.defaultEnv.decay);
+            that.env.sustain = valueOrDefault(arg.env.sustain, that.defaultEnv.sustain);
+            that.env.hold    = valueOrDefault(arg.env.hold, that.defaultEnv.hold);
+            that.env.release = valueOrDefault(arg.env.release, that.defaultEnv.release);
         }
         else {
             that.env = {
@@ -474,9 +469,9 @@ with special handling for reverb (ConvolverNode). **/
             that.delay.wetNode       = context.createGain();
 
             //set some decent values
-            that.delay.delayNode.delayTime.value = arg.delay.delayTime || that.delay.delayTime;
-            that.delay.feedbackNode.gain.value   = arg.delay.feedback  || that.delay.feedback;
-            that.delay.wetNode.gain.value        = arg.delay.wet       || that.delay.wet;
+            that.delay.delayNode.delayTime.value = valueOrDefault(arg.delay.delayTime, that.delay.delayTime);
+            that.delay.feedbackNode.gain.value   = valueOrDefault(arg.delay.feedback, that.delay.feedback);
+            that.delay.wetNode.gain.value        = valueOrDefault(arg.delay.wet, that.delay.wet);
 
 
             //set up the routing
@@ -494,11 +489,11 @@ with special handling for reverb (ConvolverNode). **/
 /** **/
     var constructCompressor = function(that, arg){
         that.compressor = context.createDynamicsCompressor();
-        that.compressor.attack.value    = arg.compressor.attack    || that.compressor.attack.value;
-        that.compressor.knee.value      = arg.compressor.knee      || that.compressor.knee.value;
-        that.compressor.ratio.value     = arg.compressor.ratio     || that.compressor.ratio.value;
-        that.compressor.release.value   = arg.compressor.release   || that.compressor.release.value;
-        that.compressor.threshold.value = arg.compressor.threshold || that.compressor.threshold.value;
+        that.compressor.attack.value    = valueOrDefault(arg.compressor.attack, that.compressor.attack.value);
+        that.compressor.knee.value      = valueOrDefault(arg.compressor.knee, that.compressor.knee.value);
+        that.compressor.ratio.value     = valueOrDefault(arg.compressor.ratio, that.compressor.ratio.value);
+        that.compressor.release.value   = valueOrDefault(arg.compressor.release, that.compressor.release.value);
+        that.compressor.threshold.value = valueOrDefault(arg.compressor.threshold, that.compressor.threshold.value);
         that.nodes.push(that.compressor);
     };
 
@@ -549,6 +544,10 @@ then finally play the sound by calling playEnv() **/
                 if ( this.source === 'noise' || this.loop || arg.loop ) {
                     this.soundSource.loop = true;
                 }
+            }
+
+            if (arg.exactTime === undefined) {
+                arg.exactTime = context.currentTime + arg.wait;
             }
 
             this.nodes.push(this.soundSource);
@@ -911,8 +910,14 @@ grab it from the defaultImpulse URL **/
 
     };
 //////////////////////////////////////////////////////////////////////////////////////
+//  Utility function to avoid javascript type conversion bug checking zero values   //
 
+var valueOrDefault = function(value, def) {
+    var val = (value == null) ? def : value;
+    return val;
+};
 
+//////////////////////////////////////////////////////////////////////////////////////
 /** This object is a mapping of note names to frequencies. **/
     Wad.pitches = {
         'A0'  : 27.5000,

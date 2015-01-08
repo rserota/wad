@@ -1184,7 +1184,7 @@ var valueOrDefault = function(value, def) {
     var onSuccessCallback = function(midiAccess){
         // console.log('inputs: ', m.inputs)
         // Things you can do with the MIDIAccess object:
-        for ( var input of midiAccess.inputs.values() ) {
+        for ( var input in midiAccess.inputs.values() ) {
             console.log(input) 
         }
         Wad.midiInputs = []

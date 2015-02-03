@@ -294,14 +294,23 @@ as specified by the volume envelope and filter envelope **/
 
 
 /** When all the nodes are set up for this Wad, this function plugs them into each other,
-with special handling for reverb (ConvolverNode). **/
+with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
     var plugEmIn = function(that, arg){
         var destination = ( arg && arg.destination ) || that.destination;
         for ( var i = 1; i < that.nodes.length; i++ ) {
-            that.nodes[i - 1].connect(that.nodes[i]);
-            if ( that.nodes[i] instanceof ConvolverNode ) {
-                that.nodes[i - 1].connect(that.nodes[i + 2]);
+            if ( that.nodes[i-1].interface === 'custom' ) {
+                var from = that.nodes[i-1].output;
             }
+            else { // assume native interface
+                var from = that.nodes[i-1];
+            }
+            if ( that.nodes[i].interface === 'custom' ) {
+                var to = that.nodes[i].input
+            }
+            else { // assume native interface
+                var to = that.nodes[i]
+            }
+            from.connect(to);
         }
 
         that.nodes[that.nodes.length - 1].connect(destination);
@@ -403,7 +412,7 @@ with special handling for reverb (ConvolverNode). **/
         reverbNode.input.connect(reverbNode.output);
         reverbNode.convolver.connect(reverbNode.wet);
         reverbNode.wet.connect(reverbNode.output);
-        
+
         that.reverb.node                = reverbNode;
         that.nodes.push(that.reverb.node);
     };

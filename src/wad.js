@@ -389,12 +389,23 @@ with special handling for reverb (ConvolverNode). **/
 
 /** Initialize and configure a convolver node for playback **/
     var setUpReverbOnPlay = function(that, arg){
-        that.reverb.node            = context.createConvolver();
-        that.reverb.node.buffer     = that.reverb.buffer;
-        that.reverb.gain            = context.createGain();
-        that.reverb.gain.gain.value = that.reverb.wet;
+        var reverbNode = {
+            interface : 'custom',
+            input : context.createGain();
+            convolver : context.createConvolver();
+            wet : context.createGain()
+            output : context.createGain()
+        }
+        reverbNode.convolver.buffer     = that.reverb.buffer;
+        reverbNode.wet.gain.value       = that.reverb.wet;
+
+        reverbNode.input.connect(reverbNode.convolver);
+        reverbNode.input.connect(reverbNode.output);
+        reverbNode.convolver.connect(reverbNode.wet);
+        reverbNode.wet.connect(reverbNode.output);
+        
+        that.reverb.node                = reverbNode;
         that.nodes.push(that.reverb.node);
-        that.nodes.push(that.reverb.gain);
     };
 //////////////////////////////////////////////////////////////
 

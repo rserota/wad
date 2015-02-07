@@ -189,14 +189,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
             if ( that.filter ) { createFilters(that, arg); }
 
-            if ( that.reverb ) {
-                that.reverb.node            = context.createConvolver();
-                that.reverb.node.buffer     = that.reverb.buffer;
-                that.reverb.gain            = context.createGain();
-                that.reverb.gain.gain.value = that.reverb.wet;
-                that.nodes.push(that.reverb.node);
-                that.nodes.push(that.reverb.gain);
-            }
+            if ( that.reverb ) { setUpReverbOnPlay(that, arg) }
 
             if ( that.panning ) {
                 that.panning.node = context.createPanner();
@@ -314,11 +307,14 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
         }
 
         that.nodes[that.nodes.length - 1].connect(destination);
+
+        /** Global reverb is super deprecated, and should be removed at some point. **/
         if ( Wad.reverb && that.globalReverb ) {
             that.nodes[that.nodes.length - 1].connect(Wad.reverb.node);
             Wad.reverb.node.connect(Wad.reverb.gain);
             Wad.reverb.gain.connect(destination);
         }
+        /**************************************************************************/
     };
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -405,15 +401,15 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
             wet : context.createGain(),
             output : context.createGain()
         }
-        reverbNode.convolver.buffer     = that.reverb.buffer;
-        reverbNode.wet.gain.value       = that.reverb.wet;
+        reverbNode.convolver.buffer = that.reverb.buffer;
+        reverbNode.wet.gain.value   = that.reverb.wet;
 
         reverbNode.input.connect(reverbNode.convolver);
         reverbNode.input.connect(reverbNode.output);
         reverbNode.convolver.connect(reverbNode.wet);
         reverbNode.wet.connect(reverbNode.output);
 
-        that.reverb.node                = reverbNode;
+        that.reverb.node = reverbNode;
         that.nodes.push(that.reverb.node);
     };
 //////////////////////////////////////////////////////////////
@@ -482,27 +478,31 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
         if ( that.delay ) {
             if ( !arg.delay ) { arg.delay = {}; }
             //create the nodes we’ll use
-            that.delay.input         = context.createGain();
-            that.delay.output        = context.createGain();
-            that.delay.delayNode     = context.createDelay(maxDelayTime = that.delay.maxDelayTime);
-            that.delay.feedbackNode  = context.createGain();
-            that.delay.wetNode       = context.createGain();
+            var delayNode = { // the custom delay node
+                interface    : 'custom',
+                input        : context.createGain(),
+                output       : context.createGain(),
+                delayNode    : context.createDelay(maxDelayTime = that.delay.maxDelayTime), // the native delay node inside the custom delay node.
+                feedbackNode : context.createGain(),
+                wetNode      : context.createGain(),
+            }
 
             //set some decent values
-            that.delay.delayNode.delayTime.value = valueOrDefault(arg.delay.delayTime, that.delay.delayTime);
-            that.delay.feedbackNode.gain.value   = valueOrDefault(arg.delay.feedback, that.delay.feedback);
-            that.delay.wetNode.gain.value        = valueOrDefault(arg.delay.wet, that.delay.wet);
+            delayNode.delayNode.delayTime.value = valueOrDefault(arg.delay.delayTime, that.delay.delayTime);
+            delayNode.feedbackNode.gain.value   = valueOrDefault(arg.delay.feedback, that.delay.feedback);
+            delayNode.wetNode.gain.value        = valueOrDefault(arg.delay.wet, that.delay.wet);
 
 
             //set up the routing
-            that.delay.input.connect(that.delay.delayNode);
-            that.delay.delayNode.connect(that.delay.feedbackNode);
-            that.delay.delayNode.connect(that.delay.wetNode);
-            that.delay.feedbackNode.connect(that.delay.delayNode);
-            that.delay.wetNode.connect(that.delay.output);
+            delayNode.input.connect(delayNode.delayNode);
+            delayNode.input.connect(delayNode.output);
+            delayNode.delayNode.connect(delayNode.feedbackNode);
+            delayNode.delayNode.connect(delayNode.wetNode);
+            delayNode.feedbackNode.connect(delayNode.delayNode);
+            delayNode.wetNode.connect(delayNode.output);
+            that.delay.delayNode = delayNode;
 
-            that.nodes.push(that.delay.input);
-            that.nodes.push(that.delay.output);
+            that.nodes.push(delayNode)
         }
     };
 

@@ -400,9 +400,9 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
     var setUpReverbOnPlay = function(that, arg){
         var reverbNode = {
             interface : 'custom',
-            input : context.createGain();
-            convolver : context.createConvolver();
-            wet : context.createGain()
+            input : context.createGain(),
+            convolver : context.createConvolver(),
+            wet : context.createGain(),
             output : context.createGain()
         }
         reverbNode.convolver.buffer     = that.reverb.buffer;
@@ -590,6 +590,10 @@ then finally play the sound by calling playEnv() **/
             this.gain.unshift(context.createGain()); // sets up the gain node
             this.gain[0].label = arg.label;
             this.nodes.push(this.gain[0]);
+
+            if ( this.gain.length > 15 ) {
+                this.gain.length = 15
+            }
 
             // sets up reverb
             if ( this.reverb ) { setUpReverbOnPlay(this, arg); }

@@ -224,8 +224,11 @@ var voice = new Wad({
     panning : -2
 }
 
+// You must give your browser permission to use your microphone before calling play().
 voice.play()
 </code></pre>
+
+If <code>voice.play()</code> is called with no arguments, it uses the arguments from the constructor. However, if it is called with any arguments, all arguments from the constructor are discarded (except for source), and the arguments passed to <code>voice.play()</code> are used instead. 
 
 <h3>PolyWads</h3>
 

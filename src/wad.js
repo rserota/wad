@@ -64,9 +64,9 @@ var Wad = (function(){
 
 /** Set up the default filter and filter envelope. **/
     var constructFilter = function(that, arg){
-        if ( !arg.filter ) { return; }
+        if ( !arg.filter ) { arg.filter = null; }
 
-        if ( isArray(arg.filter) ) {
+        else if ( isArray(arg.filter) ) {
             arg.filter.forEach(function(filterArg){
                 constructFilter(that, { filter : filterArg })
             });
@@ -108,6 +108,7 @@ Don't let the Wad play until all necessary files have been downloaded. **/
                 attack    : valueOrDefault(arg.vibrato.attack, 0)
             };
         }
+        else { that.vibrato = null; }
     };
 //////////////////////////////
 
@@ -122,6 +123,7 @@ Don't let the Wad play until all necessary files have been downloaded. **/
                 attack    : valueOrDefault(arg.vibrato.attack, 1)
             };
         }
+        else { that.tremolo = null; }
     };
 //////////////////////////////
 
@@ -147,6 +149,9 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 })
             };
             request.send();
+        }
+        else {
+            that.reverb = null;
         }
     };
 
@@ -175,37 +180,45 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 wet          : valueOrDefault(arg.delay.wet, .25)
             };
         }
+        else { that.delay = null; }
     };
 /** Special initialization and configuration for microphone Wads **/
-    var setUpMic = function(that, arg){
+    var getConsent = function(that, arg){
+        that.nodes             = [];
+        that.mediaStreamSource = null;
+        that.gain              = null;
         getUserMedia({ audio : true , video : false}, function (stream){
             // console.log('got stream')
-            that.nodes             = [];
             that.mediaStreamSource = context.createMediaStreamSource(stream);
-            that.gain              = context.createGain();
-            that.gain.gain.value   = that.volume;
-            that.nodes.push(that.mediaStreamSource);
-            that.nodes.push(that.gain);
 
-            if ( that.filter ) { createFilters(that, arg); }
-
-            if ( that.reverb ) { setUpReverbOnPlay(that, arg) }
-
-            if ( that.panning ) {
-                that.panning.node = context.createPanner();
-
-                that.panning.node.setPosition(that.panning.location[0], that.panning.location[1], that.panning.location[2]);
-                that.nodes.push(that.panning.node);
-            }
-
-            if ( that.delay ) {
-                setUpDelayOnPlay(that, arg);
-            }
+            setUpMic(that, arg);
 
         }, function(error) { console.log('Error setting up microphone input: ', error); }); // This is the error callback.
     };
 ////////////////////////////////////////////////////////////////////
+    
+    var setUpMic = function(that, arg){
+        that.nodes           = [];
+        that.gain            = context.createGain();
+        that.gain.gain.value = that.volume;
+        that.nodes.push(that.mediaStreamSource);
+        that.nodes.push(that.gain);
 
+        if ( that.filter || arg.filter ) { createFilters(that, arg); }
+
+        if ( that.reverb || arg.reverb ) { setUpReverbOnPlay(that, arg) }
+
+        if ( that.panning || arg.panning ) {
+            var panning = arg.panning || that.panning;
+            that.panning.node = context.createPanner();
+            that.panning.node.setPosition(panning.location[0], panning.location[1], panning.location[2]);
+            that.nodes.push(that.panning.node);
+        }
+
+        if ( that.delay || arg.delay ) {
+            setUpDelayOnPlay(that, arg);
+        }
+    }
 
     var Wad = function(arg){
 /** Set basic Wad properties **/
@@ -240,7 +253,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
 /** If the Wad's source is the microphone, the rest of the setup happens here. **/
         else if ( this.source === 'mic' ) {
-            setUpMic(this, arg);
+            getConsent(this, arg);
         }
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -289,6 +302,7 @@ as specified by the volume envelope and filter envelope **/
 /** When all the nodes are set up for this Wad, this function plugs them into each other,
 with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
     var plugEmIn = function(that, arg){
+        // console.log('nodes? ', that.nodes)
         var destination = ( arg && arg.destination ) || that.destination;
         for ( var i = 1; i < that.nodes.length; i++ ) {
             if ( that.nodes[i-1].interface === 'custom' ) {
@@ -367,13 +381,13 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
         that.filter.forEach(function (filter, i) {
             filter.node                 = context.createBiquadFilter();
             filter.node.type            = filter.type;
-            filter.node.frequency.value = arg.filter[i] ? ( arg.filter[i].frequency || filter.frequency ) : filter.frequency;
-            filter.node.Q.value         = arg.filter[i] ? ( arg.filter[i].q         || filter.q )         : filter.q;
+            filter.node.frequency.value = ( arg.filter && arg.filter[i] ) ? ( arg.filter[i].frequency || filter.frequency ) : filter.frequency;
+            filter.node.Q.value         = ( arg.filter && arg.filter[i] ) ? ( arg.filter[i].q         || filter.q )         : filter.q;
 
-            if ( ( arg.filter[i].env || that.filter[i].env ) && !( that.source === "mic" ) ) {
+            if ( ( arg.filter && arg.filter[i].env || that.filter[i].env ) && !( that.source === "mic" ) ) {
                 filter.env = {
-                    attack    : ( arg.filter[i].env && arg.filter[i].env.attack )    || that.filter[i].env.attack,
-                    frequency : ( arg.filter[i].env && arg.filter[i].env.frequency ) || that.filter[i].env.frequency
+                    attack    : ( arg.filter && arg.filter[i].env && arg.filter[i].env.attack )    || that.filter[i].env.attack,
+                    frequency : ( arg.filter && arg.filter[i].env && arg.filter[i].env.frequency ) || that.filter[i].env.frequency
                 };
             }
 
@@ -421,7 +435,7 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
             that.panning.node = context.createPanner();
             // var panning = (arg && arg.panning) ? arg.panning : that.panning.location
             if ( arg && arg.panning ) {
-                console.log('arg!', arg.panning)
+                // console.log('arg!', arg.panning)
                 if ( typeof(arg.panning) === 'number' ) {
                     var panning = [ arg.panning, 0, 0 ];
                 }
@@ -540,13 +554,28 @@ set properties on those nodes according to the constructor arguments and play() 
 plug the nodes into each other with plugEmIn(),
 then finally play the sound by calling playEnv() **/
     Wad.prototype.play = function(arg){
-        arg = arg || {};
+        arg = arg || { arg : null };
         if ( this.playable < 1 ) {
             this.playOnLoad    = true;
             this.playOnLoadArg = arg;
         }
 
-        else if ( this.source === 'mic' ) { plugEmIn(this, arg); }
+        else if ( this.source === 'mic' ) { 
+            if ( arg.arg === null ) {
+                plugEmIn(this, arg);
+            }
+            else {
+                constructFilter(this, arg);
+                constructVibrato(this, arg);
+                constructTremolo(this, arg);
+                constructReverb(this, arg);
+                this.constructExternalFx(arg, context);
+                constructPanning(this, arg);
+                constructDelay(this, arg);
+                setUpMic(this, arg);
+                plugEmIn(this, arg);
+            }
+        }
 
         else {
             this.nodes = [];

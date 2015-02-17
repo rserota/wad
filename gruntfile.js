@@ -20,16 +20,26 @@ module.exports = function(grunt) {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
             },
             build: {
-                src: '<%= concat.build.dest %>',
+                src: '<%= umd.all.options.dest %>',
                 dest: 'build/<%= pkg.name %>-min.js'
+            }
+        },
+        umd: {
+            all: {
+                options: {
+                    src: '<%= concat.build.dest %>',
+                    dest: 'build/<%= pkg.name %>-min.js',
+                    objectToExport: 'Wad'
+                }
             }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-umd');
     
     // Default task(s).
-    grunt.registerTask('default', ['concat', 'uglify']);
+    grunt.registerTask('default', ['concat', 'umd', 'uglify']);
 
 };

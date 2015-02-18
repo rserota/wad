@@ -2,7 +2,7 @@
   "name": "wad",
   "version": "1.1.1",
   "description": "Web Audio DAW. It's like jQuery for your ears.",
-  "main": "build/wad-min.js",
+  "main": "build/wad.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

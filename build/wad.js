@@ -252,6 +252,9 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                     that.playable++;
                     if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
                     if ( that instanceof Wad.Poly ) { that.setUp(arg); }
+                    if ( that.source === 'mic' && that.reverb && that.reverb.buffer && that.reverb.node && !that.reverb.node.buffer ) { // I think this is only relevant when calling play() with args on a mic
+                        that.reverb.node.convolver.buffer = that.reverb.buffer;
+                    }
 
                 })
             };
@@ -426,8 +429,13 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
             }
             from.connect(to);
         }
-
-        that.nodes[that.nodes.length - 1].connect(destination);
+        if ( that.nodes[that.nodes.length-1].interface === 'custom') { 
+            var lastStop = that.nodes[that.nodes.length-1].output;
+        }
+        else { // assume native interface
+            var lastStop = that.nodes[that.nodes.length-1];
+        }
+        lastStop.connect(destination);
 
         /** Global reverb is super deprecated, and should be removed at some point. **/
         if ( Wad.reverb && that.globalReverb ) {

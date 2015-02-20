@@ -221,6 +221,8 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         if ( that.delay || arg.delay ) {
             setUpDelayOnPlay(that, arg);
         }
+
+        that.setUpExternalFxOnPlay(arg, context)[;
     }
 
     var Wad = function(arg){

@@ -222,7 +222,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             setUpDelayOnPlay(that, arg);
         }
 
-        that.setUpExternalFxOnPlay(arg, context)[;
+        that.setUpExternalFxOnPlay(arg, context);
     }
 
     var Wad = function(arg){

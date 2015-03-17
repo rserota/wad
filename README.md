@@ -91,7 +91,7 @@ var saw = new Wad({
     loop    : false, // If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators. 
     pitch   : 'A4',  // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
     detune  : 0,     // Set a default detune on the constructor if you don't want to set detune on <code>play()</code>. Detune is measured in cents. 100 cents is equal to 1 semitone.
-    panning : -5,    // Horizontal placement of the sound source. Sensible values are from 10 to -10.
+    panning : -.5,    // Horizontal placement of the sound source. Possible values are from 1 to -1.
     env     : {      // This is the ADSR envelope.
         attack  : 0.0,  // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
         decay   : 0.0,  // Time in seconds from peak volume to sustain volume.
@@ -134,10 +134,10 @@ var saw = new Wad({
 
 
 <h3>Panning</h3>
+Wad.js supports two types of panning: stereo-panning, and 3d-panning. Stereo-panning works the same way panning works in most audio software. With stereo panning, you can specify the left/right balance of the sound using a number between 1 and -1. A value of 1 means the sound is panned hard-right, and a value of -1 means the sound is panned hard-left. 
 
-If you've used other audio software before, you probably know what most of these settings do, though panning works a little bit differently.  With Web Audio, you don't directly set the left/right stereo balance. Rather, the panning setting describes the distance of the sound source from the audio listener, along the X axis. You can set the panning to arbitrarily high or low values, but it will make the sound very quiet, since it's very far away.
+With 3d-panning, you don't directly set the left/right stereo balance. Rather, the panning setting describes the distance of the sound source from the audio listener. Any time you would pass in a panning parameter (either to the constructor, the <code>play()</code> method, or the <code>setPanning()</code> method), you can pass it in as a three element array to specify the X, Y, and Z location of the sound. You can set the panning to arbitrarily high or low values, but it will make the sound very quiet, since it's very far away.
 
-Wad.js supports 3D panning. Any time you would pass in a panning parameter (either to the constructor, the <code>play()</code> method, or the <code>setPanning()</code> method), you can pass it in as a three element array to specify the X, Y, and Z location of the sound.
 
 <pre><code>
 var saw = new Wad({
@@ -221,7 +221,7 @@ var voice = new Wad({
         type      : 'highpass',
         frequency : 700
     },
-    panning : -2
+    panning : -.2
 }
 
 // You must give your browser permission to use your microphone before calling play().

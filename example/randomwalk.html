@@ -1,0 +1,127 @@
+<html>
+<head><title>wad random walk</title></head>
+<script src="../build/wad.min.js"></script>
+<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+<body>
+	<a href="#" id="playstop">stop</a>
+<script type="text/javascript">
+	$('#playstop').click(function(){
+		if(stopped){
+			$(this).html("stop");
+			stopped = false;
+			playRandom();
+		} else {
+			$(this).html("play");
+			stopped = true;
+		}
+	});
+
+	var stopped = false;
+	// first, create two beautiful instruments globally
+	var bass;
+	var tripleOscillator;
+
+	// fire of with a timeout, or however you want.
+	setTimeout(function(){
+		// define the bass:
+		bass = new Wad({
+		    source : 'sine',
+		    env : {
+		        attack : .02,
+		        decay : .1,
+		        sustain : .9,
+		        hold : .4,
+		        release : .1
+		    }, 
+		    filter : {
+		        type : 'bandpass', 
+		        frequency : 100, 
+		        q : .180
+		    }
+		});
+
+		// define a triple oscillator:
+		tripleOscillator = new Wad.Poly();
+		var sine     = new Wad({ source : 'sine',
+		    env : {
+		        attack : .02,
+		        decay : .1,
+		        sustain : .9,
+		        hold : .4,
+		        release : .1
+		    }, 
+		    filter : {
+		        type : 'bandpass', 
+		        frequency : 100, 
+		        q : .180
+		    }
+		});
+		var square   = new Wad({ source : 'square',
+		    env : {
+		        attack : .02,
+		        decay : .1,
+		        sustain : 2.9,
+		        hold : .4,
+		        release : .1
+		    }, 
+		    filter : {
+		        type : 'bandpass', 
+		        frequency : 300, 
+		        q : .180
+		    }
+		});
+		var triangle = new Wad({ source : 'triangle',
+		    env : {
+		        attack : .02,
+		        decay : .1,
+		        sustain : 4.9,
+		        hold : .4,
+		        release : .1
+		    }, 
+		    filter : {
+		        type : 'bandpass', 
+		        frequency : 200, 
+		        q : .180
+		    }
+		});
+		tripleOscillator.add(sine).add(square).add(triangle);// Many methods are chainable for convenience.
+		tripleOscillator.setVolume(.2); // throttle down volume
+
+ 		playRandom(); // hit it
+	},0);
+
+	function playRandom(){
+		if(!stopped){
+			bass.play({ pitch : Math.round(Math.random()*200 + 100) }); // access pitch etc like this
+
+			tripleOscillator.wads[0].pitch = Math.random() * 40 + 120; // or this
+			tripleOscillator.wads[1].pitch = 440 + Math.random() * 20;
+			tripleOscillator.wads[2].pitch = 660 - Math.random() * 20;
+
+			tripleOscillator.wads[0].panning.location = [Math.random(),Math.random(),Math.random()];
+			tripleOscillator.wads[1].panning.location = [Math.random(),Math.random(),Math.random()]; 
+			tripleOscillator.wads[2].panning.location = [Math.random(),Math.random(),Math.random()]; 
+
+			tripleOscillator.wads[1].defaultEnv.sustain = Math.random() * 1;
+			tripleOscillator.wads[1].defaultEnv.hold = Math.random() * 1;
+			tripleOscillator.wads[1].defaultEnv.decay = Math.random() * 1;
+			tripleOscillator.wads[1].defaultEnv.attack = Math.random() * 1;
+
+			tripleOscillator.wads[2].defaultEnv.sustain = Math.random() * 1;
+			tripleOscillator.wads[2].defaultEnv.hold = Math.random() * 1;
+			tripleOscillator.wads[2].defaultEnv.decay = Math.random() * 1;
+			tripleOscillator.wads[2].defaultEnv.attack = Math.random() * 1;
+
+			tripleOscillator.wads[0].defaultEnv.sustain = Math.random() * 1;
+			tripleOscillator.wads[0].defaultEnv.hold = Math.random() * 1;
+			tripleOscillator.wads[0].defaultEnv.decay = Math.random() * 1;
+			tripleOscillator.wads[0].defaultEnv.attack = Math.random() * 1;
+			tripleOscillator.setVolume(Math.random());
+			tripleOscillator.play();
+
+			setTimeout(playRandom,1000 + Math.random()*500); // and loop it in an annoying way
+		}
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<html>
+<head><title>wad growingDisharmony</title></head>
+<script src="../build/wad.min.js"></script>
+<body>
+<script type="text/javascript">
+	// first, create two beautiful instruments globally
+	var notes = [];
+
+	// fire of with a timeout, or however you want.
+	setTimeout(function(){
+		for(var i = 0; i < 10; ++i){
+			var f = 20;
+			for(var ff = 0; ff < i; ++ff)
+				f += f;
+		addNote(f);
+		}
+ 		play(); // hit it
+	},100);
+
+	function play(){
+		for(var i = 0; i < notes.length; ++i){
+			notes[i].play();
+			notes[i].pitch += i%2 == 0 ? Math.random() * 2.7 : Math.random() * -2.6 ;
+		}
+
+		console.log("just played " + notes.length + "notes");
+		setTimeout(play,1000);
+	}
+
+	function addNote(frequ){
+		var note = new Wad({
+		    source : 'sine',
+		    pitch : frequ,
+		    env : {
+		        attack : .02,
+		        decay : .1,
+		        sustain : .9,
+		        hold : .4,
+		        release : .1
+		    }
+		});
+		notes.push(note);
+	}
+</script>
+</body>
+</html>

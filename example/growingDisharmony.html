@@ -1,30 +1,48 @@
 <html>
 <head><title>wad growingDisharmony</title></head>
 <script src="../build/wad.min.js"></script>
+<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
 <body>
+
+	<a href="#" id="playstop">stop</a>
 <script type="text/javascript">
-	// first, create two beautiful instruments globally
+	$('#playstop').click(function(){
+		if(stopped){
+			$(this).html("stop");
+			stopped = false;
+			play();
+		} else {
+			$(this).html("play");
+			stopped = true;
+		}
+	});
+
+	var stopped = false;
+
 	var notes = [];
 
-	// fire of with a timeout, or however you want.
 	setTimeout(function(){
-		for(var i = 0; i < 10; ++i){
-			var f = 20;
-			for(var ff = 0; ff < i; ++ff)
-				f += f;
-		addNote(f);
-		}
- 		play(); // hit it
+ 		start();
 	},100);
 
-	function play(){
-		for(var i = 0; i < notes.length; ++i){
-			notes[i].play();
-			notes[i].pitch += i%2 == 0 ? Math.random() * 2.7 : Math.random() * -2.6 ;
+	function start(){
+		for(var i = 0; i < 20; ++i){
+			var f = 10;
+			for(var ff = 0; ff < i; ++ff)
+				f += f;
+			addNote(f);
 		}
+		play();
+	}
 
-		console.log("just played " + notes.length + "notes");
-		setTimeout(play,1000);
+	function play(){
+		if(!stopped){
+			for(var i = 0; i < notes.length; ++i){
+				notes[i].play({ volume : (1.0 - i*0.05) });
+				notes[i].pitch += Math.random() * 100.0 - 50.0 ;
+			}
+			setTimeout(play,600);
+		}
 	}
 
 	function addNote(frequ){

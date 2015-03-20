@@ -6,19 +6,18 @@
 
 	<a href="#" id="playstop">play</a>
 <script type="text/javascript">
-	// first, create two beautiful instruments globally
 	$('#playstop').click(function(){
-		if(stop){
+		if(stopped){
 			$(this).html("stop");
-			stop = false;
+			stopped = false;
 			play();
 		} else {
 			$(this).html("play");
-			stop = true;
+			stopped = true;
 		}
 	});
 
-	var stop = true;
+	var stopped = true;
 
 	var scales = [
 			{
@@ -71,7 +70,7 @@
 	// },100);
 
 	function play(){
-		if(!stop){
+		if(!stopped){
 
 			if(currentNote == 0 && currentChord == 0 && currentScale == 0)
 				console.log(":::::::\n:::::::\n:::::::\nNEW ROUND");

@@ -267,17 +267,21 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
     var constructPanning = function(that, arg){
         if ( 'panning' in arg ) {
+            that.panning = { location : arg.panning };
             if ( typeof(arg.panning) === "number" ) {
-                that.panning = { location : [ arg.panning, 0, 0 ] };
+                that.panning.type = 'stereo';
             }
 
             else {
-                that.panning = { location : [ arg.panning[0], arg.panning[1], arg.panning[2] ] };
+                that.panning.type = '3d'
             }
         }
 
         else {
-            that.panning = { location : [ 0, 0, 0 ] };
+            that.panning = { 
+                location : 0,
+                type     : 'stereo',
+            };
         }
     };
 //////////////////////////////////////////////////////////////////////////////
@@ -316,14 +320,10 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
         if ( that.filter || arg.filter ) { createFilters(that, arg); }
 
-        if ( that.reverb || arg.reverb ) { setUpReverbOnPlay(that, arg) }
+        if ( that.reverb || arg.reverb ) { setUpReverbOnPlay(that, arg); }
 
-        if ( that.panning || arg.panning ) {
-            var panning = arg.panning || that.panning;
-            that.panning.node = context.createPanner();
-            that.panning.node.setPosition(panning.location[0], panning.location[1], panning.location[2]);
-            that.nodes.push(that.panning.node);
-        }
+        constructPanning(that, arg);
+        setUpPanningOnPlay(that, arg);
 
         if ( that.delay || arg.delay ) {
             setUpDelayOnPlay(that, arg);
@@ -548,27 +548,19 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
 
 /** Initialize and configure a panner node for playback **/
     var setUpPanningOnPlay = function(that, arg){
-        if ( ( arg && arg.panning ) || that.panning ) {
+        var panning = ( arg && arg.panning ) || that.panning.location
+
+        if ( that.panning.type === '3d' ) {
             that.panning.node = context.createPanner();
-            // var panning = (arg && arg.panning) ? arg.panning : that.panning.location
-            if ( arg && arg.panning ) {
-                // console.log('arg!', arg.panning)
-                if ( typeof(arg.panning) === 'number' ) {
-                    var panning = [ arg.panning, 0, 0 ];
-                }
-                else {
-                    var panning = [ arg.panning[0], arg.panning[1], arg.panning[2] ];
-                }
-            }
-            else if ( that.panning ) {
-                var panning = that.panning.location;
-            }
-            else {
-                var panning = [ 0, 0, 0 ];
-            }
             that.panning.node.setPosition(panning[0], panning[1], panning[2]);
-            that.nodes.push(that.panning.node);
+
         }
+        else if ( that.panning.type === 'stereo') {
+            that.panning.node = context.createStereoPanner();
+            that.panning.node.pan.value = panning;
+        }
+
+        that.nodes.push(that.panning.node);
     };
 ///////////////////////////////////////////////////////////
 
@@ -783,12 +775,13 @@ then finally play the sound by calling playEnv() **/
 
 /** Change the panning of a Wad at any time, including during playback **/
     Wad.prototype.setPanning = function(panning){
-        if ( typeof(panning) === 'number' ) {
-            this.panning.node.setPosition(panning, this.panning.location[1], this.panning.location[2]);
-        }
-
-        else {
+        this.panning.location = panning;
+        if ( this.panning.type === '3d' && this.panning.node ) {
             this.panning.node.setPosition(panning[0], panning[1], panning[2]);
+
+        }
+        else if ( this.panning.type === 'stereo' && this.panning.node) {
+            this.panning.node.pan.value = panning;
         }
         return this;
     };
@@ -926,7 +919,7 @@ then finally play the sound by calling playEnv() **/
             };
         }
 
-        this.globalReverb = arg.globalReverb || false;
+        this.globalReverb = arg.globalReverb || false; // deprecated
 
         constructFilter(this, arg);
         if ( this.filter ) { createFilters(this, arg); }

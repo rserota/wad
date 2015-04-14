@@ -1,12 +1,4 @@
 app.init.dom = function(app){
-
-    // Timing stuff goes here
-    var beat = ( 60 / app.bpm ) * 1000 // length of one beat
-    var b = function(numBeats) {
-        return ( numBeats * beat ) / 1000;
-    }
-
-    ////////////////////////////////
     
     $(document).ready(function(){
 
@@ -34,8 +26,8 @@ app.init.dom = function(app){
         var start;
         var animateFrame = function(){
             var now = performance.now()
-            var progressInBeat = ( ( ( now - start ) % beat ) / beat )
-            var progressInLoop = ( ( ( now - start ) % ( beat * 16 ) ) / ( beat * 16 ) )
+            var progressInBeat = ( ( ( now - start ) % app.beatLen ) / app.beatLen )
+            var progressInLoop = ( ( ( now - start ) % ( app.beatLen * 16 ) ) / ( app.beatLen * 16 ) )
             // console.log(Math.floor(progressInLoop / 0.0625) + 1)
             app.prevBeat = app.curBeat
             app.curBeat = Math.floor(progressInLoop / 0.0625) + 1
@@ -107,20 +99,8 @@ app.init.dom = function(app){
 
             if ( e.which >= 49 && e.which <= 56 ) { //for multi-track mixer
                 console.log(e.which - 49)
-                if ( app.recordingTo == null ) { // start recording to this track
-                    app.recordingTo = e.which-49
-                    app.loopTracks[e.which-49].add(app.soundSources)
-                }
-                else if ( (e.which-49) === app.recordingTo ) { // stop recording on this track
-                    app.recordingTo = null
-                    app.loopTracks[e.which-49].remove(app.soundSources)
-                    app.preDest.add(app.soundSources)
-                }
-                else if ( (e.which-49) !== app.recordingTo ) { // stop recording on old track, start on this track
-                    app.recordingTo = e.which-49
-                    app.loopTracks[app.recordingTo].remove(app.soundSources)
-                    app.loopTracks[e.which-49].add(app.soundSources)
-                }
+                app.trackActions.recordToTrack(e.which - 49)
+
             //     var $selectedTrack = $('.mixer-track:nth-child(' + (event.which - 48) + ')')
             //     if ( $selectedTrack.hasClass('selected') ) {
             //         $selectedTrack.removeClass('selected')
@@ -132,16 +112,16 @@ app.init.dom = function(app){
             }
         })
 
-        $('#reset').on('click', function(){
-            console.log('reset')
-            app.reset()
-        })
+        // $('#reset').on('click', function(){
+        //     console.log('reset')
+        //     app.reset()
+        // })
 
         $('.note').on('mousedown', function(){
-            piano.play({ pitch : $(this).text() })
+            app.instruments.alpha.play({ pitch : $(this).text() })
         })
         $('.note').on('mouseup', function(){
-            piano.stop()
+            app.instruments.alpha.stop()
             // console.log(mt.noteEstimate)
         })
         // $('.mixer-track').on('click', function(){

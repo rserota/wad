@@ -15,7 +15,7 @@ app.init.trackActions = function(app){
 
 
     }
-    app.reset = function(trackNum){
+    var reset = function(trackNum){
         disconnectDelay(trackNum)
         // app.bar()
         setTimeout(function(){ reconnectDelay(trackNum) }, 100)
@@ -23,20 +23,33 @@ app.init.trackActions = function(app){
 
     app.trackActions = { // 'track' as in 'mixer-track', not 'watch/observe'
 
-        selectTrack : function(trackNum){
-            console.log(app.$loopTracks[trackNum-1])
-        },
+        // I don't think 'selecting' a track needs to be a thing.
+        // selectTrack : function(trackNum){
+        //     console.log(app.$loopTracks[trackNum-1])
+        // },
         recordToTrack : function(trackNum){
-            if ( app.recordingTo === null ) {
+            if ( app.recordingTo == null ) { // start recording to this track
+                console.log('recording to track ', trackNum)
                 app.recordingTo = trackNum
-                // move nodes, record on this track
+                app.preDest.remove(app.soundSources)
+                app.loopTracks[trackNum].add(app.soundSources)
             }
-            else if ( app.recordingTo === trackNum) {
-                app.recordingTo = null;
+            else if ( app.recordingTo === trackNum ) { // stop recording on this track
+                console.log('stopping recording to track ', trackNum)
+                app.recordingTo = null
+                app.loopTracks[trackNum].remove(app.soundSources)
+                app.preDest.add(app.soundSources)
+            }
+            else if ( app.recordingTo !== trackNum ) { // stop recording on old track, start on this track
+                console.log('stop rec on ', app.recordingTo, ', start on ', trackNum)
+                app.loopTracks[app.recordingTo].remove(app.soundSources)
+                app.recordingTo = trackNum
+                app.loopTracks[trackNum].add(app.soundSources)
             }
         },
         eraseTrack : function(trackNum){
-
+            disconnectDelay(trackNum)
+            setTimeout(function(){ reconnectDelay(trackNum) }, 100)
         },
         muteTrack : function(trackNum){
 

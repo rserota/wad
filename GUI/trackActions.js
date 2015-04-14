@@ -52,7 +52,18 @@ app.init.trackActions = function(app){
             setTimeout(function(){ reconnectDelay(trackNum) }, 100)
         },
         muteTrack : function(trackNum){
-
+            var track = app.loopTracks[trackNum]
+            if ( track.state.muted === false ) {
+                // console.log('it was not muted')
+                track.output.gain.oldValue = track.output.gain.value
+                track.output.gain.value = 0;
+                track.state.muted = true
+            }
+            else if ( track.state.muted === true ) {
+                // console.log('it was muted')
+                track.output.gain.value = track.output.gain.oldValue
+                track.state.muted = false
+            }
         },
     }
 }

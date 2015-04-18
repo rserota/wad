@@ -13,7 +13,6 @@ app.init.trackActions = function(app){
         app.loopTracks[trackNum].delay.delayNode.input.connect(app.loopTracks[trackNum].delay.delayNode.delayNode);
         app.loopTracks[trackNum].delay.delayNode.input.connect(app.loopTracks[trackNum].delay.delayNode.output);
 
-
     }
     var reset = function(trackNum){
         disconnectDelay(trackNum)
@@ -33,19 +32,26 @@ app.init.trackActions = function(app){
                 app.recordingTo = trackNum
                 app.preDest.remove(app.soundSources)
                 app.loopTracks[trackNum].add(app.soundSources)
+                app.loopTracks[trackNum].state.recording = true;
+
             }
             else if ( app.recordingTo === trackNum ) { // stop recording on this track
                 console.log('stopping recording to track ', trackNum)
                 app.recordingTo = null
                 app.loopTracks[trackNum].remove(app.soundSources)
                 app.preDest.add(app.soundSources)
+                app.loopTracks[trackNum].state.recording = false;
             }
             else if ( app.recordingTo !== trackNum ) { // stop recording on old track, start on this track
                 console.log('stop rec on ', app.recordingTo, ', start on ', trackNum)
                 app.loopTracks[app.recordingTo].remove(app.soundSources)
+                app.loopTracks[app.recordingTo].state.recording = false;
+                app.trackActions.updateTrackDOM(app.recordingTo)
                 app.recordingTo = trackNum
                 app.loopTracks[trackNum].add(app.soundSources)
+                app.loopTracks[trackNum].state.recording = true;
             }
+            app.trackActions.updateTrackDOM(trackNum)
         },
         eraseTrack : function(trackNum){
             disconnectDelay(trackNum)
@@ -65,5 +71,14 @@ app.init.trackActions = function(app){
                 track.state.muted = false
             }
         },
+        updateTrackDOM : function(trackNum){
+            console.log(app.loopTracks[trackNum].state)
+            if ( app.loopTracks[trackNum].state.recording === true ) {
+                $(app.$loopTracks[trackNum]).find('i').addClass('recording')
+            }
+            else if ( app.loopTracks[trackNum].state.recording === false ) {
+                $(app.$loopTracks[trackNum]).find('i').removeClass('recording')
+            }
+        }
     }
 }

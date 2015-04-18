@@ -10,8 +10,19 @@ var app = {
     detune        : 0,
     curBeat       : 1,
     prevBeat      : 1,
-    init          : {},
+    init          : {}, // an object that will be populated with initialization functions
+    keys          : { // info about keys on the computer-keyboard
+        record   : [91, 93],
+        schedule : [32],
+        erase    : [],
+        mode     : {
+            record   : false,
+            schedule : false,
+            erase    : false
+        }
+    },
     rig           : 'midiRig88',
+
     instruments   : {
         alpha     : null,
         beta      : null,

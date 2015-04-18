@@ -13,7 +13,7 @@
 }
 body {
     background-color: slategray;
-    padding: 20px;
+    /*padding: 20px;*/
 }
 #controls {
     vertical-align: top;
@@ -43,10 +43,10 @@ button:focus {
     /*border: 2px solid black;*/
     padding: 15px;
 }
-.note, .mixer-track {
+.note, .loop-track {
     display : inline-block;
-    height : 70px;
-    width : 90px;
+    height : 200px;
+    width : 130px;
     /*border : 3px solid black;*/
     /*text-align: center;*/
     /*vertical-align: middle;*/
@@ -87,6 +87,10 @@ button:focus {
     margin-top:5%;
     margin-left: auto;
     margin-right: auto;
+}
+
+.recording {
+    color: red;
 }
 
 #metronome-container {

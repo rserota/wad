@@ -21,7 +21,7 @@ app.init.dom = function(app){
             $('.b15'),
             $('.b16'),
         ]
-        app.$loopTracks = $('.mixer-track')
+        app.$loopTracks = $('.loop-track')
 
         var start;
         var animateFrame = function(){
@@ -48,13 +48,7 @@ app.init.dom = function(app){
             requestAnimationFrame(animateFrame)
         }
 
-        var $micInfo = $('#micInfo')
-        var logPitch = function(){
-            if ( mt.noteName && mt.pitch ) {
-                $micInfo.text(mt.noteName + ' : ' + mt.pitch + ' hz')
-            }
-            app.pitchDetectRaf = requestAnimationFrame(logPitch)
-        }
+
 
         $('#start').on('click', function(){
             $('.beatBox').removeClass('on')
@@ -77,58 +71,34 @@ app.init.dom = function(app){
             }
         })
 
-        $('#detectPitch').on('click', function(){
-            if ( $(this).hasClass('detecting') ) {
-                $(this).removeClass('detecting')
-                $(this).text('Detect Pitch')
-                mt.stopUpdatingPitch()
-                cancelAnimationFrame(app.pitchDetectRaf)
-                $micInfo.text('')
-            }
-            else {
-                $(this).addClass('detecting')
-                $(this).text('Stop Detecting')
-                mt.updatePitch()
-                logPitch()
-            }
+        $(document).on('keyup', function(e){
+           if ( app.keys.record.indexOf(e.which) > -1 ){
+               app.keys.mode.record = false;
+               console.log(app.keys.mode)
+           } 
         })
 
-
-        var looping = false
         $(document).on('keydown', function(e){
-
+            console.log(e)
+            // if ( e.which === 32 || e.metaKey === true ) { e.preventDefault(); }
+            if ( app.keys.record.indexOf(e.which) > -1 ){
+                app.keys.mode.record = true;
+               console.log(app.keys.mode)
+            }
             if ( e.which >= 49 && e.which <= 56 ) { //for multi-track mixer
-                console.log(e.which - 49)
+                // console.log(e.which - 49)
                 app.trackActions.recordToTrack(e.which - 49)
-
-            //     var $selectedTrack = $('.mixer-track:nth-child(' + (event.which - 48) + ')')
-            //     if ( $selectedTrack.hasClass('selected') ) {
-            //         $selectedTrack.removeClass('selected')
-            //     }
-            //     else {
-            //         $('.mixer-track').removeClass('selected')
-            //         $selectedTrack.addClass('selected')
-            //     }
+                e.preventDefault();
             }
         })
-
-        // $('#reset').on('click', function(){
-        //     console.log('reset')
-        //     app.reset()
-        // })
 
         $('.note').on('mousedown', function(){
-            app.instruments.alpha.play({ pitch : $(this).text() })
+            console.log('hi')
+            app.instruments.alpha.play()
         })
         $('.note').on('mouseup', function(){
             app.instruments.alpha.stop()
-            // console.log(mt.noteEstimate)
         })
-        // $('.mixer-track').on('click', function(){
-        //     $('.mixer-track').removeClass('selected')
-        //     $(this).addClass('selected')
-        // })
-
 
 
     })

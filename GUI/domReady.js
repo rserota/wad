@@ -86,9 +86,11 @@ app.init.dom = function(app){
                console.log(app.keys.mode)
             }
             if ( e.which >= 49 && e.which <= 56 ) { //for multi-track mixer
-                // console.log(e.which - 49)
-                app.trackActions.recordToTrack(e.which - 49)
                 e.preventDefault();
+                if ( app.keys.mode.record === true && app.keys.mode.schedule === false ) {
+                    app.trackActions.recordToTrack(e.which - 49)
+                }
+                // else if ( app.keys) blah blah 
             }
         })
 

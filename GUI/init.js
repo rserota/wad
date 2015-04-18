@@ -15,7 +15,7 @@ var app = {
         record   : [91, 93],
         schedule : [32],
         erase    : [],
-        mode     : {
+        mode     : { // which keys are currently pressed down?
             record   : false,
             schedule : false,
             erase    : false

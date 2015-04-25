@@ -70,15 +70,30 @@ app.init.trackActions = function(app){
                 track.output.gain.value = track.output.gain.oldValue
                 track.state.muted = false
             }
+            app.trackActions.updateTrackDOM(trackNum)
         },
         updateTrackDOM : function(trackNum){
+            var track  = app.loopTracks[trackNum];
+            var $track = $(app.$loopTracks[trackNum]);
             console.log(app.loopTracks[trackNum].state)
-            if ( app.loopTracks[trackNum].state.recording === true ) {
-                $(app.$loopTracks[trackNum]).find('i').addClass('recording')
+            if ( track.state.recording === true ) {
+                $track.find('i').addClass('recording')
             }
-            else if ( app.loopTracks[trackNum].state.recording === false ) {
-                $(app.$loopTracks[trackNum]).find('i').removeClass('recording')
+            else if ( track.state.recording === false ) {
+                $track.find('i').removeClass('recording')
             }
+
+            if ( track.state.muted === true ) {
+                $track.find('i').removeClass('fa-volume-up')
+                $track.find('i').addClass('fa-volume-off')
+            }
+            else if ( track.state.muted === false ) {
+                $track.find('i').addClass('fa-volume-up')
+                $track.find('i').removeClass('fa-volume-off')
+
+            }
+
+
         }
     }
 }

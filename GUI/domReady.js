@@ -85,12 +85,21 @@ app.init.dom = function(app){
                 app.keys.mode.record = true;
                console.log(app.keys.mode)
             }
-            if ( e.which >= 49 && e.which <= 56 ) { //for multi-track mixer
+
+            if ( e.which >= 49 && e.which <= 56 ) { //pressed a number key for multi-track mixer
                 e.preventDefault();
-                if ( app.keys.mode.record === true && app.keys.mode.schedule === false ) {
-                    app.trackActions.recordToTrack(e.which - 49)
+
+                if ( app.keys.mode.schedule === false ) {
+
+                    if ( app.keys.mode.record === true ) {
+                        app.trackActions.recordToTrack(e.which - 49)
+                    }
+                    else if ( app.keys.mode.record === false) {
+                        console.log('mute!')
+                        app.trackActions.muteTrack(e.which - 49)
+                    }
+
                 }
-                // else if ( app.keys) blah blah 
             }
         })
 

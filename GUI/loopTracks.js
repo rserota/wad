@@ -20,7 +20,14 @@ app.init.loopTracks = function(app){
             //     frequency : 1300
             // }
         })
-        loopTrack.state = { muted : false, recording : false }
+        loopTrack.state = {
+            muted     : false, 
+            recording : false,
+            scheduled : { // state is scheduled to change to at the start of each loop
+                muted     : false,
+                recording : false,
+            }
+        }
         app.preDest.add(loopTrack)
         app.loopTracks.push(loopTrack)
     }

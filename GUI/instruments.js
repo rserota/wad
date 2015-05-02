@@ -31,20 +31,20 @@ app.init.instruments = function(app){
     })
 
 
-    app.instruments.piano = new Wad({source:'sine', env:{attack:.005, decay:.2, sustain:.8, hold:4, release:.3}, filter : {type:'lowpass', q: 1, frequency:700}})
+    app.instruments.piano = new Wad({source:'sine', env:{attack:.005, decay:.2, sustain:.8, hold:4, release:.3}, filter : {type:'lowpass', frequency:700}})
 
     // var bass = new Wad({})
 
 
 
     Wad.prototype.constructExternalFx = function(arg, ctx) {
-      console.log('constructExternalFx called');
+      // console.log('constructExternalFx called');
       this.tuna = new Tuna(ctx);
       this.chorus = arg.chorus;
     }
 
     Wad.prototype.setUpExternalFxOnPlay = function(arg, context) {
-      console.log('setUpExternalFxOnPlay called');
+      // console.log('setUpExternalFxOnPlay called');
       if (arg.chorus) {
         var chorus = new this.tuna.Chorus({
           rate: arg.chorus.rate || this.chorus.rate,
@@ -71,17 +71,17 @@ app.init.instruments = function(app){
 
     app.instruments.voice = new Wad({ 
         source : 'mic',
-        // filter : {
-        //     type : 'highpass',
-        //     frequency : 600
-        // },
+        filter : {
+            type : 'highpass',
+            frequency : 900
+        },
         // delay : {
         //     delayTime: 1,
         //     maxDelayTime: 20,
         //     feedback : 1,
         //     wet      : 1
         // },
-        panning: -1
+        panning: -1,
         // reverb : { 
         //     impulse :'http://localhost:8000/widehall.wav',
         //     wet : .21

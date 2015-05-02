@@ -217,18 +217,18 @@ app.init.midiRigs = function(app){
 
         /** A simple rig for a full-size piano-keyboard. **/
         midiRig88 : function(event){
-            console.log(event.receivedTime, event.data)
+            // console.log(event.receivedTime, event.data)
             if ( event.data[0] === 128 ) {
                 Wad.midiInstrument.stop(Wad.pitchesArray[event.data[1]-12])
             }
             else if ( event.data[0] === 144 ) { // 144 means the midi message has note data
 
                 if ( event.data[2] === 0 ) { // noteOn velocity of 0 means this is actually a noteOff message
-                    console.log('|| stopping note: ', Wad.pitchesArray[event.data[1]-12])
+                    // console.log('|| stopping note: ', Wad.pitchesArray[event.data[1]-12])
                     Wad.midiInstrument.stop(Wad.pitchesArray[event.data[1]-12])
                 }
                 else if ( event.data[2] > 0 ) {
-                    console.log('> playing note: ', Wad.pitchesArray[event.data[1]-12])
+                    // console.log('> playing note: ', Wad.pitchesArray[event.data[1]-12])
                     var detune = ( event.data[2] - 64 ) * ( 100 / 64 ) * 12
                     Wad.midiInstrument.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], detune : app.detune, callback : function(that){
                     }})

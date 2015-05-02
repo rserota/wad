@@ -67,7 +67,7 @@ app.init.dom = function(app){
             else {
                 $(this).addClass('micOn')
                 $(this).text('Mic Off')
-                voice.play()
+                app.instruments.voice.play()
             }
         })
 

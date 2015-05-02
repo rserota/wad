@@ -31,7 +31,7 @@ app.init.instruments = function(app){
     })
 
 
-    app.instruments.piano = new Wad({source:'sine', env:{attack:.005, decay:.2, sustain:.8, hold:4, release:.3}, filter : {type:'lowpass', frequency:700}})
+    app.instruments.piano = new Wad({source:'sine', env:{attack:.005, decay:.2, sustain:.8, hold:4, release:.3}, filter : {type:'lowpass', q: 1, frequency:700}})
 
     // var bass = new Wad({})
 

@@ -1,3 +1,6 @@
+.container {
+    padding: 0;
+}
 .beatBox {
     display : inline-block;
     height : 50px;
@@ -44,6 +47,7 @@ button:focus {
     display : inline-block;
     height : 200px;
     width : 130px;
+    max-width: 9vw;
     /*border : 3px solid black;*/
     /*text-align: center;*/
     /*vertical-align: middle;*/
@@ -110,6 +114,16 @@ button:focus {
     width: 110px;
 }
 
+#controls .btn:focus, #controls .btn:active, #controls .btn:active:focus {
+    outline: none;
+}
+
+#controls .btn:focus {
+    background-color: #fff;
+}
+#controls .btn-default:hover {
+    background-color: #e6e6e6;
+}
 
 .spin {
   -webkit-animation: spin .6666s infinite linear;

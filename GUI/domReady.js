@@ -43,7 +43,6 @@ app.init.dom = function(app){
                 beatBoxes[15].removeClass('on')
             }
 
-            // $metronome.css('transform', 'rotate(' + (( progressInBeat * 360 ) - 90 ) + 'deg)')
 
             requestAnimationFrame(animateFrame)
         }
@@ -52,21 +51,20 @@ app.init.dom = function(app){
 
         $('#start').on('click', function(){
             $('.beatBox').removeClass('on')
-            $(this).text('Restart')
+            $(this).find('i').removeClass('fa-play-circle-o')
+            $(this).find('i').addClass('fa-undo')
             start = performance.now() -16000
             animateFrame()
         })
 
 
         $('#micOn').on('click', function(){
-            if ( $(this).hasClass('micOn') ) {
-                $(this).removeClass('micOn')
-                $(this).text('Mic On')
+            if ( !($('#ban').hasClass('fa-ban')) ) {
+                $('#ban').addClass('fa-ban')
                 app.instruments.voice.stop()
             }
             else {
-                $(this).addClass('micOn')
-                $(this).text('Mic Off')
+                $('#ban').removeClass('fa-ban')
                 app.instruments.voice.play()
             }
         })

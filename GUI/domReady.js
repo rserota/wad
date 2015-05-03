@@ -62,7 +62,7 @@ app.init.dom = function(app){
             if ( $(this).hasClass('micOn') ) {
                 $(this).removeClass('micOn')
                 $(this).text('Mic On')
-                voice.stop()
+                app.instruments.voice.stop()
             }
             else {
                 $(this).addClass('micOn')

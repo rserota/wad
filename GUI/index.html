@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Wad.js Demo…</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body id="home">
+        <div class="container">
+            <div class="beatBoxes">
+                <div class = "beatBox b1"></div>
+                <div class = "beatBox b2"></div>
+                <div class = "beatBox b3"></div>
+                <div class = "beatBox b4"></div><br>
+                <div class = "beatBox b5"></div>
+                <div class = "beatBox b6"></div>
+                <div class = "beatBox b7"></div>
+                <div class = "beatBox b8"></div><br>
+                <div class = "beatBox b9"></div>
+                <div class = "beatBox b10"></div>
+                <div class = "beatBox b11"></div>
+                <div class = "beatBox b12"></div><br>
+                <div class = "beatBox b13"></div>
+                <div class = "beatBox b14"></div>
+                <div class = "beatBox b15"></div>
+                <div class = "beatBox b16"></div><br>
+               
+            </div>
+            <div id="controls">
+                <button class="btn btn-default btn-round" id="start">
+                    <i class="fa fa-5x fa-play-circle-o"></i>
+                </button>
+                <button class="btn btn-default btn-round" id="micOn">
+                    <span class="fa-stack fa-3x">
+                        <i class="fa fa-stack-1x fa-microphone"></i>
+                        <i class="fa fa-stack-2x text-danger fa-ban"></i>
+                    </span>
+                </button>
+                <button class="btn btn-default btn-round" id="start">
+                    <i class="fa fa-5x fa-cog"></i>
+                </button>
+            </div>
+            <div id="reset" class="note" style="border:2px solid black;width: 80px;">Reset</div>
+            <!-- <div class="space"></div> -->
+            <div class="loop-tracks text-center">
+                <div class = " btn btn-default loop-track">
+                    <label>Track 1</label><hr class="slim">
+                    <div class="current-state-icon text-center"><i class="fa fa-volume-up fa-2x"></i></div>
+                    <div class="upcoming-state-icon "></div>
+                </div>
+                <div class = " btn btn-default loop-track">
+                    <label>Track 2</label><hr class="slim">
+                    <div class="current-state-icon text-center"><i class="fa fa-volume-up fa-2x"></i></div>
+                    <div class="upcoming-state-icon "></div>
+                </div>
+                <div class = " btn btn-default loop-track">
+                    <label>Track 3</label><hr class="slim">
+                    <div class="current-state-icon text-center"><i class="fa fa-volume-up fa-2x"></i></div>
+                    <div class="upcoming-state-icon "></div>
+                </div>
+                <div class = " btn btn-default loop-track">
+                    <label>Track 4</label><hr class="slim">
+                    <div class="current-state-icon text-center"><i class="fa fa-volume-up fa-2x"></i></div>
+                    <div class="upcoming-state-icon "></div>
+                </div>
+                <div class = " btn btn-default loop-track">
+                    <label>Track 5</label><hr class="slim">
+                    <div class="current-state-icon text-center"><i class="fa fa-volume-up fa-2x"></i></div>
+                    <div class="upcoming-state-icon "></div>
+                </div>
+                <div class = " btn btn-default loop-track">
+                    <label>Track 6</label><hr class="slim">
+                    <div class="current-state-icon text-center"><i class="fa fa-volume-up fa-2x"></i></div>
+                    <div class="upcoming-state-icon "></div>
+                </div>
+                <div class = " btn btn-default loop-track">
+                    <label>Track 7</label><hr class="slim">
+                    <div class="current-state-icon text-center"><i class="fa fa-volume-up fa-2x"></i></div>
+                    <div class="upcoming-state-icon "></div>
+                </div>
+                <div class = " btn btn-default loop-track">
+                    <label>Track 8</label><hr class="slim">
+                    <div class="current-state-icon text-center"><i class="fa fa-volume-up fa-2x"></i></div>
+                    <div class="upcoming-state-icon "></div>
+                </div>
+            </div>
+
+
+
+
+    <!--         <div id="metronome-container">
+                <div id='metronome'></div>
+            </div> -->
+
+            <div class="space"></div>
+            <div class="space"></div>
+
+
+
+            <!-- // <script src="./src/Recorderjs/recorder.js"></script> -->
+        </div>
+        <script src="../src/wad.js"></script>
+        <script src="./tuna.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="./init.js"></script>
+        <script src="./utils.js"></script>
+        <script src="./instruments.js"></script>
+        <script src="./loopTracks.js"></script>
+        <script src="./trackActions.js"></script>
+        <script src="./midiRigs.js"></script>
+        <script src="./domReady.js"></script>
+        <script src="./looper.js"></script>
+ 
+    </body>
+</html>

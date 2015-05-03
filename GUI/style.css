@@ -20,10 +20,7 @@ body {
 }
 
 #controls button {
-    border: 2px solid black;
     margin: 5px;
-    height: 40px;
-    width: 115px;
 }
 button:focus {
     outline:0;
@@ -106,6 +103,14 @@ button:focus {
     transform: rotate(135deg);
     background-color: ghostwhite;
 }
+
+.btn-round {
+    border-radius: 200px;
+    height: 110px;
+    width: 110px;
+}
+
+
 .spin {
   -webkit-animation: spin .6666s infinite linear;
   animation: spin .6666s infinite linear;

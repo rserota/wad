@@ -7,8 +7,8 @@ app.init.loopTracks = function(app){
             //     impulse : 'http://localhost:8000/widehall.wav'
             // },
             delay : {
-                delayTime: app.b(16),
-                maxDelayTime: 20,
+                delayTime: app.b(app.beatsPerBar * app.barsPerLoop),
+                maxDelayTime: app.b(app.beatsPerBar * app.barsPerLoop + 1),
                 feedback : 1,
                 wet      : 1
             },

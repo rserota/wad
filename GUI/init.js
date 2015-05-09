@@ -1,6 +1,8 @@
 var app = { 
     recordingTo   : null,
-    bpm           : 100,
+    bpm           : 100, // beats per minute
+    beatsPerBar   : 4,
+    barsPerLoop   : 4,
     numLoopTracks : 8,
     trackActions  : {},
     soundSources  : {},

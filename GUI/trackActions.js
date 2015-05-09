@@ -94,6 +94,9 @@ app.init.trackActions = function(app){
             }
 
 
+        },
+        resizeLoop : function(bpm, beatsPerBar, barsPerLoop){
+            
         }
     }
 }

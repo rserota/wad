@@ -120,7 +120,7 @@
                         <p><strong>Schedule</strong> a track to <strong>mute</strong> or unmute itself at the start of the next loop by holding <code>[schedule]</code> while pressing the number key for that track.</p>
                         <p><strong>Schedule</strong> a track to <strong>record</strong> at the start of the next loop by holding <code>[schedule]</code> and <code>[record]</code> while pressing the number key for that track.</p>
                         <h3 class="text-center">Controls Settings</h3>
-                        <div class="">
+                        <div class="controls-settings">
                             <div class="row">
                                 <div class="col-sm-6 text-center">
                                     <h4>Action</h4>
@@ -131,19 +131,17 @@
                             </div>
                         </div>
                         <h3 class="text-center">Timing Settings</h3>
-                        <div class="">
+                        <div class="timing-settings">
                             <div class="row">
-                                <div class="col-sm-6 text-center">
-                                    <h4>Option Name</h4>
-                                    <label>Beats Per Minute</label>
-                                    <label>Beats Per Bar</label>
+                                <div class="col-sm-6">
+                                    <label>Beats Per Minute</label><br>
+                                    <label>Beats Per Bar</label><br>
                                     <label>Bars Per Loop</label>
                                 </div>
-                                <div class="col-sm-6 text-center">
-                                    <h4>Value</h4>
-                                    <input type="text" name="bpm" value="100">
-                                    <input type="text" name="beats-per-bar" value="4">
-                                    <input type="text" name="bars-per-loop" value="4">
+                                <div class="col-sm-6 ">
+                                    <input type="range" title="hi" min="1" max="300" name="bpm" value="100"><label for="bpm">100</label>
+                                    <input type="range" name="beats-per-bar" min="3" max="16" value="4"><label for="beats-per-bar">4</label>
+                                    <input type="range" name="bars-per-loop" min="1" max="8" value="4"><label for="bars-per-loop">4</label
                                 </div>
                             </div>
                         </div>
@@ -151,7 +149,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="button" name="save" class="btn btn-primary">Save changes</button>
                     </div>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->

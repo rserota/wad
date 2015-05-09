@@ -125,6 +125,13 @@ button:focus {
     background-color: #e6e6e6;
 }
 
+
+.timing-settings input[type="range"] {
+    display: inline-block;
+    width: 80%;
+    margin-right: 5px;
+}
+
 .spin {
   -webkit-animation: spin .6666s infinite linear;
   animation: spin .6666s infinite linear;

@@ -26,8 +26,9 @@ app.init.dom = function(app){
         var start;
         var animateFrame = function(){
             var now = performance.now()
+            var beatsPerLoop = app.beatsPerBar * app.barsPerLoop
             var progressInBeat = ( ( ( now - start ) % app.beatLen ) / app.beatLen )
-            var progressInLoop = ( ( ( now - start ) % ( app.beatLen * 16 ) ) / ( app.beatLen * 16 ) )
+            var progressInLoop = ( ( ( now - start ) % ( app.beatLen * beatsPerLoop ) ) / ( app.beatLen * beatsPerLoop ) )
             // console.log(Math.floor(progressInLoop / 0.0625) + 1)
             app.prevBeat = app.curBeat
             app.curBeat = Math.floor(progressInLoop / 0.0625) + 1
@@ -109,6 +110,18 @@ app.init.dom = function(app){
             app.instruments.alpha.stop()
         })
 
+        $('.timing-settings input[type="range"]').on('change', function(){
+            var thisName = $(this).attr('name')
+            $('[for="' + thisName + '"]').text($(this).val())
+
+        })
+        $('[name="save"]').on('click', function(){
+            var bpm         = $('[name="bpm"]').val()
+            var beatsPerBar = $('[name="beats-per-bar"]').val()
+            var barsPerLoop = $('[name="bars-per-loop"]').val()
+            console.log(bpm,beatsPerBar,barsPerLoop)
+            app.resizeLoop(bpm, beatsPerBar, barsPerLoop)
+        })
 
     })
 }

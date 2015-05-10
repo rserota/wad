@@ -3,24 +3,7 @@ app.init.dom = function(app){
     $(document).ready(function(){
 
         // $metronome = $('#metronome')
-        var beatBoxes = [
-            $('.b1'),
-            $('.b2'),
-            $('.b3'),
-            $('.b4'),
-            $('.b5'),
-            $('.b6'),
-            $('.b7'),
-            $('.b8'),
-            $('.b9'),
-            $('.b10'),
-            $('.b11'),
-            $('.b12'),
-            $('.b13'),
-            $('.b14'),
-            $('.b15'),
-            $('.b16'),
-        ]
+        app.$beatBoxes = $('.beatBox')
         app.$loopTracks = $('.loop-track')
 
         var start;
@@ -36,12 +19,13 @@ app.init.dom = function(app){
                 console.log('fire!')
             }
             if      ( Math.floor(progressInLoop / 0.0625) > 0 ) {
-                beatBoxes[ Math.floor(progressInLoop / 0.0625) ].addClass('on')
-                beatBoxes[ Math.floor(progressInLoop / 0.0625) - 1 ].removeClass('on')
+                $(app.$beatBoxes[ Math.floor(progressInLoop / 0.0625) ]).addClass('on')
+                $(app.$beatBoxes[ Math.floor(progressInLoop / 0.0625) - 1 ]).removeClass('on')
             }
             else if ( Math.floor(progressInLoop / 0.0625) === 0 ) {
-                beatBoxes[0].addClass('on')
-                beatBoxes[15].removeClass('on')
+                var end = app.$beatBoxes.length - 1
+                $(app.$beatBoxes[0]).addClass('on')
+                $(app.$beatBoxes[end]).removeClass('on')
             }
 
 
@@ -120,7 +104,7 @@ app.init.dom = function(app){
             var beatsPerBar = $('[name="beats-per-bar"]').val()
             var barsPerLoop = $('[name="bars-per-loop"]').val()
             console.log(bpm,beatsPerBar,barsPerLoop)
-            app.resizeLoop(bpm, beatsPerBar, barsPerLoop)
+            app.trackActions.resizeLoop(bpm, beatsPerBar, barsPerLoop)
         })
 
     })

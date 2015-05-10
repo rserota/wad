@@ -76,14 +76,15 @@ app.init.trackActions = function(app){
             var track  = app.loopTracks[trackNum];
             var $track = $(app.$loopTracks[trackNum]);
             console.log(app.loopTracks[trackNum].state)
-            if ( track.state.recording === true ) {
+
+            if      ( track.state.recording === true ) {
                 $track.find('i').addClass('recording')
             }
             else if ( track.state.recording === false ) {
                 $track.find('i').removeClass('recording')
             }
 
-            if ( track.state.muted === true ) {
+            if      ( track.state.muted === true ) {
                 $track.find('i').removeClass('fa-volume-up')
                 $track.find('i').addClass('fa-volume-off')
             }
@@ -96,7 +97,11 @@ app.init.trackActions = function(app){
 
         },
         resizeLoop : function(bpm, beatsPerBar, barsPerLoop){
-            
+            app.bpm         = bpm;
+            app.beatsPerBar = beatsPerBar;
+            app.barsPerLoop = barsPerLoop;
+            app.beatLen     = ( 60 / app.bpm ) * 1000 // length of one beat in milliseconds 
+
         }
     }
 }

@@ -2,18 +2,18 @@ app.init.instruments = function(app){
 
     // Audio preloading/initialization/whatever goes here.
     app.instruments.kick = new Wad({
-        source : 'http://localhost:8000/GUI/kick.mp3',
+        source : 'http://localhost:8000/GUI/audio/kick.mp3',
         // callback : function(that){that.play()}
     })
     // kick.play()
     app.instruments.hat = new Wad(Wad.presets.hiHatClosed)
 
     app.instruments.hatOpen = new Wad({
-        source : 'http://localhost:8000/GUI/hatOpen.wav'
+        source : 'http://localhost:8000/GUI/audio/hatOpen.wav'
     })
     // var snare = new Wad({ source : 'noise', volume : 6, env : {attack : .001, decay : .01, sustain : .2, hold : .03, release : .02}, filter : {type : 'bandpass', frequency : 300, q : .180 }, delay : { delayTime : .05} })
     app.instruments.snare = new Wad({
-        source : 'http://localhost:8000/GUI/snare.wav',
+        source : 'http://localhost:8000/GUI/audio/snare.wav',
         delay  : {
             delayTime : .1,
             feedback  : .6,
@@ -27,7 +27,7 @@ app.init.instruments = function(app){
     // var midTom = new Wad({})
     // var lowTom = new Wad({})
     app.instruments.cowbell = new Wad({
-        source : 'http://localhost:8000/GUI/cowbell.wav',
+        source : 'http://localhost:8000/GUI/audio/cowbell.wav',
     })
 
 

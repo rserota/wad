@@ -1,7 +1,7 @@
 app.init.dom = function(app){
     
     $(document).ready(function(){
-
+        jade.render($('.beatBoxes')[0], 'beatBoxes', { barsPerLoop : app.barsPerLoop, beatsPerBar : app.beatsPerBar })
         // $metronome = $('#metronome')
         app.$beatBoxes = $('.beatBox')
         app.$loopTracks = $('.loop-track')
@@ -14,15 +14,15 @@ app.init.dom = function(app){
             var progressInLoop = ( ( ( now - start ) % ( app.beatLen * beatsPerLoop ) ) / ( app.beatLen * beatsPerLoop ) )
             // console.log(Math.floor(progressInLoop / 0.0625) + 1)
             app.prevBeat = app.curBeat
-            app.curBeat = Math.floor(progressInLoop / 0.0625) + 1
+            app.curBeat = Math.floor(progressInLoop / ( 1/beatsPerLoop )) + 1
             if ( app.curBeat < app.prevBeat ) {
                 console.log('fire!')
             }
-            if      ( Math.floor(progressInLoop / 0.0625) > 0 ) {
-                $(app.$beatBoxes[ Math.floor(progressInLoop / 0.0625) ]).addClass('on')
-                $(app.$beatBoxes[ Math.floor(progressInLoop / 0.0625) - 1 ]).removeClass('on')
+            if      ( Math.floor(progressInLoop / ( 1/beatsPerLoop )) > 0 ) {
+                $(app.$beatBoxes[ Math.floor(progressInLoop / ( 1/beatsPerLoop )) ]).addClass('on')
+                $(app.$beatBoxes[ Math.floor(progressInLoop / ( 1/beatsPerLoop )) - 1 ]).removeClass('on')
             }
-            else if ( Math.floor(progressInLoop / 0.0625) === 0 ) {
+            else if ( Math.floor(progressInLoop / ( 1/beatsPerLoop )) === 0 ) {
                 var end = app.$beatBoxes.length - 1
                 $(app.$beatBoxes[0]).addClass('on')
                 $(app.$beatBoxes[end]).removeClass('on')
@@ -38,7 +38,7 @@ app.init.dom = function(app){
             $('.beatBox').removeClass('on')
             $(this).find('i').removeClass('fa-play-circle-o')
             $(this).find('i').addClass('fa-undo')
-            start = performance.now() -16000
+            start = performance.now() - ( app.beatLen * app.beatsPerBar * ( app.barsPerLoop - 1 ) )
             animateFrame()
         })
 

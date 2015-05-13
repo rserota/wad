@@ -100,7 +100,15 @@ app.init.trackActions = function(app){
             app.bpm         = bpm;
             app.beatsPerBar = beatsPerBar;
             app.barsPerLoop = barsPerLoop;
-            app.beatLen     = ( 60 / app.bpm ) * 1000 // length of one beat in milliseconds 
+            app.beatLen     = ( 60 / app.bpm ) * 1000; // length of one beat in milliseconds 
+            jade.render($('.beatBoxes')[0], 'beatBoxes', { barsPerLoop : app.barsPerLoop, beatsPerBar : app.beatsPerBar });
+            app.$beatBoxes = $('.beatBox');
+            for ( var i = 0; i < app.loopTracks.length; i++ ) {
+                console.log(app.loopTracks[i].delay)
+                app.loopTracks[i].delay.delayTime = app.b(app.beatsPerBar * app.barsPerLoop)
+                app.loopTracks[i].delay.maxDelayTime = app.b(app.beatsPerBar * app.barsPerLoop + 1)
+                app.loopTracks[i].delay.delayNode.delayNode.delayTime.value = app.b(app.beatsPerBar * app.barsPerLoop)
+            }
 
         }
     }

@@ -29,30 +29,33 @@ app.init.midiRigs = function(app){
                         app.instruments.alpha.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], detune : app.detune, panning: app.panning, volume : 2.5 })
                     }
                     else {
+                        console.log('play')
                         app.instruments.alpha.play({
-                            volume : .5,
-                            pitch : Wad.pitchesArray[event.data[1]-12], 
-                            label : Wad.pitchesArray[event.data[1]-12], 
-                            detune : app.detune, panning: app.panning,
-                            env    : {
+                            volume  : .5,
+                            pitch   : Wad.pitchesArray[event.data[1]-12], 
+                            label   : Wad.pitchesArray[event.data[1]-12], 
+                            detune  : app.detune,
+                            panning : app.panning,
+                            env     : {
                                 attack  : .4,
                                 sustain : 1,
                                 decay   : 0
                             } 
                         })
                     }
-                    console.log(app.detune)
+                    console.log(app.panning)
                 }
                 else if ( event.data[0] === 224 ) { // 224 means the midi message has pitch bend data
                     console.log('pitch bend')
                     console.log( ( event.data[2] - 64 ) * ( 100 / 64 ) )
-                    alpha.setDetune( ( event.data[2] - 64 ) * ( 100 / 64 ) * 12 )
+                    app.instruments.alpha.setDetune( ( event.data[2] - 64 ) * ( 100 / 64 ) * 12 )
                     app.detune =    ( event.data[2] - 64 ) * ( 100 / 64 ) * 12
                     // console.log(app.detune)
                 }
                 else if ( event.data[0] === 176 && event.data[1] === 22 ) {
-                    app.panning[0] = ( event.data[2] - 64 ) * ( 10 / 64 )
-                    alpha.setPanning(app.panning)
+                    console.log(event.data[2])
+                    app.panning = ( ( event.data[2] - 64 ) * ( 10 / 64 ) ) / 10
+                    app.instruments.alpha.setPanning(app.panning)
                     console.log('panning: ', app.panning)
                 }
                 if      ( event.data[0] === 176 && event.data[1] === 64 && event.data[2] === 127 ) { // pedal data
@@ -114,8 +117,8 @@ app.init.midiRigs = function(app){
                         })
                     }
                     else if ( event.data[0] === 176 && event.data[1] === 22 ) {
-                        app.panning[0] = ( event.data[2] - 64 ) * ( 10 / 64 )
-                        beta.setPanning(app.panning)
+                        app.panning = ( ( event.data[2] - 64 ) * ( 10 / 64 ) ) / 10
+                        app.instruments.beta.setPanning(app.panning)
                         console.log('panning: ', app.panning)
                     }
                 }
@@ -132,7 +135,7 @@ app.init.midiRigs = function(app){
                 else if ( event.data[0] === 224 ) { // 224 means the midi message has pitch bend data
                     console.log('pitch bend')
                     console.log( ( event.data[2] - 64 ) * ( 100 / 64 ) )
-                    beta.setDetune( ( event.data[2] - 64 ) * ( 100 / 64 ) * 2 )
+                    app.instruments.beta.setDetune( ( event.data[2] - 64 ) * ( 100 / 64 ) * 2 )
                     app.detune =    ( event.data[2] - 64 ) * ( 100 / 64 ) * 2
                     // console.log(app.detune)
                 }        
@@ -195,7 +198,7 @@ app.init.midiRigs = function(app){
                 }
 
                 else if ( event.data[0] === 176 && event.data[1] === 22 ) {
-                    app.panning[0] = ( event.data[2] - 64 ) * ( 10 / 64 )
+                    app.panning = ( ( event.data[2] - 64 ) * ( 10 / 64 ) ) / 10
                     // cowbell.setPanning(app.panning)
                     console.log('panning: ', app.panning)
                 }

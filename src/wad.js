@@ -455,6 +455,7 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
 /** Initialize and configure a panner node for playback **/
     var setUpPanningOnPlay = function(that, arg){
         var panning = ( arg && arg.panning ) || that.panning.location
+        console.log(panning)
 
         if ( that.panning.type === '3d' ) {
             that.panning.node = context.createPanner();

@@ -8,7 +8,7 @@ var app = {
     soundSources  : {},
     preDest       : new Wad.Poly(),
     loopTracks    : [],
-    panning       : [0, 0, 4], // change to 2-d panning
+    panning       : 0, // change to 2-d panning
     detune        : 0,
     curBeat       : 1,
     prevBeat      : 1,
@@ -23,13 +23,13 @@ var app = {
             erase    : false
         }
     },
-    rig           : 'midiRig88',
+    rig           : 'midiRig25',
 
     instruments   : {
         alpha     : null,
         beta      : null,
         gamma     : null,
-        mode      : 'gamma',
+        mode      : 'alpha',
         pedalDown : false,
     },
 }

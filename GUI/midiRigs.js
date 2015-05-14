@@ -75,9 +75,9 @@ app.init.midiRigs = function(app){
                 if ( event.data[0] === 144 && event.data[1] >= 60 ) { // note data
                     if ( app.instruments.pedalDown === false ) {
                         app.instruments.beta.play({
-                            pitch : Wad.pitchesArray[event.data[1]-48], 
-                            label : Wad.pitchesArray[event.data[1]-48], 
-                            detune : app.detune,
+                            pitch   : Wad.pitchesArray[event.data[1]-48], 
+                            label   : Wad.pitchesArray[event.data[1]-48], 
+                            detune  : app.detune,
                             panning : app.panning,
                             env : {
                                 release : .5
@@ -159,7 +159,7 @@ app.init.midiRigs = function(app){
                 //     else if ( event.data[1] === 71 ) { foo.play({ volume : , env : { attack : } }); }
                     else if ( event.data[1] === 72 ) {
                         console.log('data: ', ( event.data[2] * ( .2 / 127 ) + 1 ) )
-                        hat.play({
+                        app.instruments.hat.play({
                             volume : ( event.data[2] * ( .2 / 127 ) + 1 ),
                             env : {
                                 attack : ( event.data[2] * ( .01 / 127 ) * .8 )
@@ -170,13 +170,13 @@ app.init.midiRigs = function(app){
                             }
                         }); 
                     }
-                    else if ( event.data[1] === 73 ) { hatOpen.play({ volume : 1 }); }
-                    else if ( event.data[1] === 74 ) { kick.play({ volume : .81 }); }
+                    else if ( event.data[1] === 73 ) { app.instruments.hatOpen.play({ volume : 1 }); }
+                    else if ( event.data[1] === 74 ) { app.instruments.kick.play({ volume : .81 }); }
                 //     else if ( event.data[1] === 75 ) { foo.play({ volume : , env : { attack : } }); }
                     else if ( event.data[1] === 76 ) {
-                        if ( app.instruments.pedalDown === false ) { snare.play({ volume : 1 })}
+                        if ( app.instruments.pedalDown === false ) { app.instruments.snare.play({ volume : 1 })}
                         else {  
-                            snare.play({ 
+                            app.instruments.snare.play({ 
                                 volume : 1,
                                 env    : {
                                     attack : .01
@@ -187,7 +187,7 @@ app.init.midiRigs = function(app){
                             }); 
                         }
                     }
-                    else if ( event.data[1] === 77 ) { cowbell.play({ volume : 2.7, panning: app.panning }); }
+                    else if ( event.data[1] === 77 ) { app.instruments.cowbell.play({ volume : 2.7, panning: app.panning }); }
                     // else if ( event.data[1] === 79 ) { lowTom.play({ volume : 1 }); }
                 //     else if ( event.data[1] === 78 ) { foo.play({ volume : , env : { attack : } }); }
                     // else if ( event.data[1] === 81 ) { midTom.play({ volume : 1 }); }

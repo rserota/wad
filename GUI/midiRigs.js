@@ -8,7 +8,7 @@ app.init.midiRigs = function(app){
         // using octave shift, so lowest note is [144, 60, 1]
         // I need to make sure that the keyboard is shifted up one octave.
         midiRig25 : function(event){
-            console.log(event.receivedTime, event.data)
+            // console.log(event.receivedTime, event.data)
             if ( event.data[0] === 177 && event.data[1] === 49 ) {
                 app.instruments.alpha.play({pitch : Wad.pitchesArray[event.data[2]+24], env : { hold : .2 }})
             }
@@ -29,7 +29,6 @@ app.init.midiRigs = function(app){
                         app.instruments.alpha.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], detune : app.detune, panning: app.panning, volume : 2.5 })
                     }
                     else {
-                        console.log('play')
                         app.instruments.alpha.play({
                             volume  : .5,
                             pitch   : Wad.pitchesArray[event.data[1]-12], 
@@ -43,7 +42,6 @@ app.init.midiRigs = function(app){
                             } 
                         })
                     }
-                    console.log(app.panning)
                 }
                 else if ( event.data[0] === 224 ) { // 224 means the midi message has pitch bend data
                     console.log('pitch bend')
@@ -143,7 +141,7 @@ app.init.midiRigs = function(app){
 
 
             else if ( app.instruments.mode === 'gamma' ) {
-                console.log('gamma') 
+                // console.log('gamma') 
                 if ( event.data[0] === 144 && event.data[1] >= 60 ) { // stop note.
                     if      ( event.data[1] === 60 ) { console.log() }
                 //     else if ( event.data[1] === 61 ) { foo.play({ volume : , env : { attack : } }); }
@@ -158,7 +156,7 @@ app.init.midiRigs = function(app){
                 //     else if ( event.data[1] === 70 ) { foo.play({ volume : , env : { attack : } }); }
                 //     else if ( event.data[1] === 71 ) { foo.play({ volume : , env : { attack : } }); }
                     else if ( event.data[1] === 72 ) {
-                        console.log('data: ', ( event.data[2] * ( .2 / 127 ) + 1 ) )
+                        // console.log('data: ', ( event.data[2] * ( .2 / 127 ) + 1 ) )
                         app.instruments.hat.play({
                             volume : ( event.data[2] * ( .2 / 127 ) + 1 ),
                             env : {
@@ -167,7 +165,8 @@ app.init.midiRigs = function(app){
                             filter : {
                                 frequency : ( event.data[2] * ( 100 / 127 ) * 8 ) + 300,
                                 q         : ( event.data[2] * ( 10 / 127 ) * .7 )
-                            }
+                            },
+                            panning : app.panning
                         }); 
                     }
                     else if ( event.data[1] === 73 ) { app.instruments.hatOpen.play({ volume : 1 }); }
@@ -213,7 +212,14 @@ app.init.midiRigs = function(app){
             }
 
             else if ( app.instruments.mode === 'delta' ) {
-                console.log('delta') 
+                // console.log('delta') 
+                if ( event.data[0] === 128 && event.data[1] >= 60 ) { // stop note.
+                    app.instruments.delta.stop(Wad.pitchesArray[event.data[1]-12])
+                }
+
+                else if ( event.data[0] === 144 && event.data[1] >= 60 ) { // note data
+                    app.instruments.delta.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], detune : app.detune, panning: app.panning, volume : 2.5 })
+                }
             }
         },
 

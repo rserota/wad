@@ -1,6 +1,6 @@
 var app = { 
     recordingTo   : null,
-    bpm           : 100, // beats per minute
+    bpm           : 120, // beats per minute
     beatsPerBar   : 4,
     barsPerLoop   : 4,
     numLoopTracks : 8,
@@ -29,7 +29,7 @@ var app = {
         alpha     : null,
         beta      : null,
         gamma     : null,
-        mode      : 'alpha',
+        mode      : 'gamma',
         pedalDown : false,
     },
 }

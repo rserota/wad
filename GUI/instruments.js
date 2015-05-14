@@ -31,7 +31,7 @@ app.init.instruments = function(app){
     })
 
 
-    app.instruments.piano = new Wad({source:'sine', env:{attack:.005, decay:.2, sustain:.8, hold:4, release:.3}, filter : {type:'lowpass', frequency:700}})
+    app.instruments.piano = new Wad({source:'sine', volume:.8, env:{attack:.005, decay:.2, sustain:.8, hold:4, release:.3}, filter : {type:'lowpass', frequency:700}})
 
     // var bass = new Wad({})
 
@@ -99,7 +99,11 @@ app.init.instruments = function(app){
             sustain : .6,
             decay   : .1
         },
-        panning : -.51
+        filter : {
+            type : 'lowpass',
+            frequency : 600,
+            q : 1,
+        }
     })
 
     app.instruments.beta = new Wad({
@@ -130,15 +134,15 @@ app.init.instruments = function(app){
         // }
     })
     app.instruments.gamma = new Wad({ source : 'sine' })
-
+    app.instruments.delta = app.instruments.piano
     app.soundSources = new Wad.Poly({ 
         // recConfig : { 
         //     workerPath : '/src/Recorderjs/recorderWorker.js'
         // },
-        // reverb : { 
-        //     impulse :'http://localhost:8000/widehall.wav',
-        //     wet : .11
-        // },
+        reverb : { 
+            impulse :'http://localhost:8000/GUI/audio/widehall.wav',
+            wet : .11
+        },
         // delay   : {
         //     delayTime : .3,  // Time in seconds between each delayed playback.
         //     wet       : .1, // Relative volume change between the original sound and the first delayed playback.
@@ -146,7 +150,7 @@ app.init.instruments = function(app){
         // },
 
         callback : function(that){
-            that.add(app.instruments.kick).add(app.instruments.hat).add(app.instruments.hatOpen).add(app.instruments.snare).add(app.instruments.cowbell).add(app.instruments.alpha).add(app.instruments.beta);
+            that.add(app.instruments.kick).add(app.instruments.hat).add(app.instruments.hatOpen).add(app.instruments.snare).add(app.instruments.cowbell).add(app.instruments.alpha).add(app.instruments.beta).add(app.instruments.delta);
             app.preDest.add(that)
         }
     })

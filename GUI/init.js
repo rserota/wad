@@ -14,16 +14,20 @@ var app = {
     prevBeat      : 1,
     init          : {}, // an object that will be populated with initialization functions
     keys          : { // info about keys on the computer-keyboard
-        record   : [91, 93],
-        schedule : [32],
-        erase    : [],
-        mode     : { // which keys are currently pressed down?
+        record     : [91, 93],
+        erase      : [16],
+        microphone : [77],
+        alpha      : [],
+        beta       : [],
+        gamma      : [],
+        delta      : [],
+        mode       : { // which keys are currently pressed down?
             record   : false,
             schedule : false,
             erase    : false
         }
     },
-    rig           : 'midiRig25',
+    rig           : 'midiRig88',
 
     instruments   : {
         alpha     : null,

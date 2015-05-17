@@ -132,27 +132,6 @@ button:focus {
     margin-right: 5px;
 }
 
-.spin {
-  -webkit-animation: spin .6666s infinite linear;
-  animation: spin .6666s infinite linear;
-}
-@-webkit-keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
-  }
-}
-@keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(359deg);
-    transform: rotate(359deg);
-  }
+.option-row {
+    height: 30px;
 }

@@ -42,8 +42,7 @@ app.init.dom = function(app){
             animateFrame()
         })
 
-
-        $('#micOn').on('click', function(){
+        var toggleMic = function(){
             if ( !($('#ban').hasClass('fa-ban')) ) {
                 $('#ban').addClass('fa-ban')
                 app.instruments.voice.stop()
@@ -52,21 +51,39 @@ app.init.dom = function(app){
                 $('#ban').removeClass('fa-ban')
                 app.instruments.voice.play()
             }
-        })
+            
+        }
+
+
+        $('#micOn').on('click', toggleMic)
 
         $(document).on('keyup', function(e){
            if ( app.keys.record.indexOf(e.which) > -1 ){
                app.keys.mode.record = false;
                console.log(app.keys.mode)
-           } 
+           }
+           if ( app.keys.erase.indexOf(e.which) > -1 ){
+               app.keys.mode.record = false;
+               console.log(app.keys.mode)
+           }  
         })
+
+
 
         $(document).on('keydown', function(e){
             console.log(e)
-            // if ( e.which === 32 || e.metaKey === true ) { e.preventDefault(); }
+            /* Handle modal keys (record, erase, etc) */
             if ( app.keys.record.indexOf(e.which) > -1 ){
                 app.keys.mode.record = true;
                console.log(app.keys.mode)
+            }
+            else if ( app.keys.erase.indexOf(e.which) > -1 ){
+                app.keys.mode.erase = true;
+               console.log(app.keys.mode)
+            }
+            ///////////////////////////////////////////
+            if ( app.keys.microphone.indexOf(e.which) > -1 ){
+                toggleMic();
             }
 
             if ( e.which >= 49 && e.which <= 56 ) { //pressed a number key for multi-track mixer

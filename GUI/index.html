@@ -27,8 +27,9 @@
                     <i class="fa fa-5x fa-cog"></i>
                 </button>
             </div>
-            <div id="reset" class="note" style="border:2px solid black;width: 80px;">Reset</div>
-            <!-- <div class="space"></div> -->
+            <!-- <div id="reset" class="note" style="border:2px solid black;width: 80px;">Reset</div> -->
+            <div class="space"></div>
+            <div class="space"></div>
             <div class="loop-tracks text-center">
                 <div class = " btn btn-default loop-track">
                     <label>Track 1</label><hr class="slim">
@@ -90,50 +91,73 @@
         <div class="modal fade" id="configModal">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h2 class="modal-title text-center">Configuration</h2>
-                    </div>
-                    <div class="modal-body">
-                        <p>This application is an 8-track live looper.</p>
-                        <h3 class="text-center">Controls Overview</h3>
-                        <p><strong>Mute</strong> or unmute any track by pressing the number key for that track (1 - 8). </p>
-                        <p><strong>Record</strong> to a track by holding <code>[record]</code> while pressing the number key for that track. Repeat this action to stop recording, or record to a different track. You can only record to one track at a time.</p>
-                        <p>By default, if a <strong>mute</strong> or <strong>record</strong> action is triggered, 
-                        <h3 class="text-center">Controls Settings</h3>
-                        <div class="controls-settings">
-                            <div class="row">
-                                <div class="col-sm-6 text-center">
-                                    <h4>Action</h4>
-                                </div>
-                                <div class="col-sm-6 text-center">
-                                    <h4>Bound Key</h4>
-                                </div>
-                            </div>
+                    <form>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h2 class="modal-title text-center">8-Track Live Looper</h2>
                         </div>
-                        <h3 class="text-center">Timing Settings</h3>
-                        <div class="timing-settings">
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <label>Beats Per Minute</label><br>
-                                    <label>Beats Per Bar</label><br>
-                                    <label>Bars Per Loop</label>
-                                </div>
-                                <div class="col-sm-6 ">
-                                    <input type="range" title="hi" min="1" max="300" name="bpm" value="120"><label for="bpm">100</label>
-                                    <input type="range" name="beats-per-bar" min="3" max="16" value="4"><label for="beats-per-bar">4</label>
-                                    <input type="range" name="bars-per-loop" min="1" max="8" value="4"><label for="bars-per-loop">4</label>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="modal-body">
+                            <h3 class="text-center">Controls Overview</h3>
+                            <p><strong>Mute</strong> or unmute any track by pressing the number key for that track (1 - 8). </p>
+                            <p><strong>Record</strong> to a track by holding <code>[record]</code> and pressing the number key for the track you want to record to. Repeat this action to stop recording, or record to a different track. You can only record to one track at a time.</p>
+                            <p>By default, if a <strong>mute</strong> or <strong>record</strong> action is triggered, that action happens immediately. If you prefer, you can configure these actions to occur at the start of the next loop.</p>
+                            <p>You can <strong>erase</strong> a track by holding <code>[erase]</code> and pressing the number key for the track you want to erase.</p>
+                            <p>Toggle microphone input on or off by pressing <code>[microphone]</code>.</p>
+                            <p>Start or restart the looping animation by pressing <code>[animate]</code>.</p>
+                            <p>This application contains 4 different instruments which you can switch between at any time. The first three are synthesized with oscillators, while the fourth instrument is a drum kit, which includes several samples.</p>
+                            <h3 class="text-center">Controls Settings</h3>
+                            <div class="controls-settings">
+                                <div class="row">
+                                    <div class="col-sm-6 text-right">
+                                        <h4>Action</h4>
+                                        <div class="option-row"><code>[record]</code></div>
+                                        <div class="option-row"><code>[erase]</code></div>
+                                        <div class="option-row"><code>[microphone]</code></div>
+                                        <div class="option-row"><code>[animate]</code></div>
+                                        <div class="option-row"><code>[switch to instrument 1]</code></div>
+                                        <div class="option-row"><code>[switch to instrument 2]</code></div>
+                                        <div class="option-row"><code>[switch to instrument 3]</code></div>
+                                        <div class="option-row"><code>[switch to instrument 4]</code></div>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" name="save" class="btn btn-primary">Save changes</button>
-                    </div>
+                                    </div>
+                                    <div class="col-sm-6 text-left">
+                                        <h4>Bound Key</h4>
+                                        <div class="option-row"><input name="record" value="space"></div>
+                                        <div class="option-row"><input name="erase" value="shift"></div>
+                                        <div class="option-row"><input name="microphone" value="m"></div>
+                                        <div class="option-row"><input name="animate" value="."></div>
+                                        <div class="option-row"><input name="alpha" value="z"></div>
+                                        <div class="option-row"><input name="beta" value="x"></div>
+                                        <div class="option-row"><input name="gamma" value="c"></div>
+                                        <div class="option-row"><input name="delta" value="v"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3 class="text-center">Timing Settings</h3>
+                            <div class="timing-settings">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Beats Per Minute</label><br>
+                                        <label>Beats Per Bar</label><br>
+                                        <label>Bars Per Loop</label>
+                                    </div>
+                                    <div class="col-sm-6 ">
+                                        <input type="range" title="hi" min="1" max="300" name="bpm" value="120"><label for="bpm">100</label>
+                                        <input type="range" name="beats-per-bar" min="3" max="16" value="4"><label for="beats-per-bar">4</label>
+                                        <input type="range" name="bars-per-loop" min="1" max="8" value="4"><label for="bars-per-loop">4</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="reset" class="btn btn-default">Reset to Default</button>
+                            <button type="button" name="save" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->

@@ -12,11 +12,13 @@ var app = {
     detune        : 0,
     curBeat       : 1,
     prevBeat      : 1,
+    rafID         : null, // request animation frame ID
     init          : {}, // an object that will be populated with initialization functions
     keys          : { // info about keys on the computer-keyboard
         record     : [91, 93],
         erase      : [16],
         microphone : [77],
+        animate    : [190],
         alpha      : [],
         beta       : [],
         gamma      : [],

@@ -7,7 +7,7 @@ app.init.dom = function(app){
         app.$loopTracks = $('.loop-track')
 
         var start;
-        var animateFrame = function(){
+        var animateFrame = function(){ // recursive RAF callback
             var now = performance.now()
             var beatsPerLoop = app.beatsPerBar * app.barsPerLoop
             var progressInBeat = ( ( ( now - start ) % app.beatLen ) / app.beatLen )
@@ -29,18 +29,18 @@ app.init.dom = function(app){
             }
 
 
-            requestAnimationFrame(animateFrame)
+            app.rafID = requestAnimationFrame(animateFrame)
         }
 
-
-
-        $('#start').on('click', function(){
+        var startAnimation = function(){            
             $('.beatBox').removeClass('on')
-            $(this).find('i').removeClass('fa-play-circle-o')
-            $(this).find('i').addClass('fa-undo')
+            $('#start').find('i').removeClass('fa-play-circle-o')
+            $('#start').find('i').addClass('fa-undo')
             start = performance.now() - ( app.beatLen * app.beatsPerBar * ( app.barsPerLoop - 1 ) )
+            cancelAnimationFrame(app.rafID)
             animateFrame()
-        })
+        }
+        $('#start').on('click', startAnimation)
 
         var toggleMic = function(){
             if ( !($('#ban').hasClass('fa-ban')) ) {
@@ -84,6 +84,9 @@ app.init.dom = function(app){
             ///////////////////////////////////////////
             if ( app.keys.microphone.indexOf(e.which) > -1 ){
                 toggleMic();
+            }
+            if ( app.keys.animate.indexOf(e.which) > -1 ){
+                startAnimation();
             }
 
             if ( e.which >= 49 && e.which <= 56 ) { //pressed a number key for multi-track mixer

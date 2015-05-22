@@ -35,6 +35,7 @@ var app = {
         alpha     : null,
         beta      : null,
         gamma     : null,
+        delta     : [null], // delta is an array of drum samples
         mode      : 'gamma',
         pedalDown : false,
     },

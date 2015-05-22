@@ -73,22 +73,36 @@ app.init.dom = function(app){
         $(document).on('keydown', function(e){
             console.log(e)
             /* Handle modal keys (record, erase, etc) */
-            if ( app.keys.record.indexOf(e.which) > -1 ){
+            if ( e.which === 32 ) {
+                e.preventDefault();
+            }
+            if ( app.keys.record.indexOf(e.which) > -1 ) {
                 app.keys.mode.record = true;
                console.log(app.keys.mode)
             }
-            else if ( app.keys.erase.indexOf(e.which) > -1 ){
+            else if ( app.keys.erase.indexOf(e.which) > -1 ) {
                 app.keys.mode.erase = true;
                console.log(app.keys.mode)
             }
             ///////////////////////////////////////////
-            if ( app.keys.microphone.indexOf(e.which) > -1 ){
+            if ( app.keys.microphone.indexOf(e.which) > -1 ) {
                 toggleMic();
             }
-            if ( app.keys.animate.indexOf(e.which) > -1 ){
+            if ( app.keys.animate.indexOf(e.which) > -1 ) {
                 startAnimation();
             }
-
+            if ( app.keys.alpha.indexOf(e.which) > -1 ) {
+                app.instruments.mode = 'alpha';
+            }
+            if ( app.keys.beta.indexOf(e.which) > -1 ) {
+                app.instruments.mode = 'beta';
+            }
+            if ( app.keys.gamma.indexOf(e.which) > -1 ) {
+                app.instruments.mode = 'gamma';
+            }
+            if ( app.keys.delta.indexOf(e.which) > -1 ) {
+                app.instruments.mode = 'delta';
+            }
             if ( e.which >= 49 && e.which <= 56 ) { //pressed a number key for multi-track mixer
                 e.preventDefault();
 
@@ -119,10 +133,25 @@ app.init.dom = function(app){
             $('[for="' + thisName + '"]').text($(this).val())
 
         })
+        $('.controls-settings input').on('keydown', function(e){
+            $(this).val('')
+            $(this).attr('data-which', e.which)
+        })
         $('[name="save"]').on('click', function(){
             var bpm         = $('[name="bpm"]').val()
             var beatsPerBar = $('[name="beats-per-bar"]').val()
             var barsPerLoop = $('[name="bars-per-loop"]').val()
+
+
+            app.keys.record     = [parseInt($('[name="record"]').attr('data-which'))]
+            app.keys.erase      = [parseInt($('[name="erase"]').attr('data-which'))]
+            app.keys.microphone = [parseInt($('[name="microphone"]').attr('data-which'))]
+            app.keys.animate    = [parseInt($('[name="animate"]').attr('data-which'))]
+            app.keys.alpha      = [parseInt($('[name="alpha"]').attr('data-which'))]
+            app.keys.beta       = [parseInt($('[name="beta"]').attr('data-which'))]
+            app.keys.gamma      = [parseInt($('[name="gamma"]').attr('data-which'))]
+            app.keys.delta      = [parseInt($('[name="delta"]').attr('data-which'))]
+
             console.log(bpm,beatsPerBar,barsPerLoop)
             app.trackActions.resizeLoop(bpm, beatsPerBar, barsPerLoop)
         })

@@ -140,8 +140,8 @@ app.init.midiRigs = function(app){
             }
 
 
-            else if ( app.instruments.mode === 'gamma' ) {
-                // console.log('gamma') 
+            else if ( app.instruments.mode === 'delta' ) {
+                // console.log('delta') 
                 if ( event.data[0] === 144 && event.data[1] >= 60 ) { // stop note.
                     if      ( event.data[1] === 60 ) { console.log() }
                 //     else if ( event.data[1] === 61 ) { foo.play({ volume : , env : { attack : } }); }
@@ -211,14 +211,14 @@ app.init.midiRigs = function(app){
                 }
             }
 
-            else if ( app.instruments.mode === 'delta' ) {
+            else if ( app.instruments.mode === 'gamma' ) {
                 // console.log('delta') 
                 if ( event.data[0] === 128 && event.data[1] >= 60 ) { // stop note.
-                    app.instruments.delta.stop(Wad.pitchesArray[event.data[1]-12])
+                    app.instruments.gamma.stop(Wad.pitchesArray[event.data[1]-12])
                 }
 
                 else if ( event.data[0] === 144 && event.data[1] >= 60 ) { // note data
-                    app.instruments.delta.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], detune : app.detune, panning: app.panning, volume : 2.5 })
+                    app.instruments.gamma.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], detune : app.detune, panning: app.panning, volume : 2.5 })
                 }
             }
         },

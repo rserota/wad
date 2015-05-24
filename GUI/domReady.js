@@ -152,6 +152,8 @@ app.init.dom = function(app){
             app.keys.gamma      = [parseInt($('[name="gamma"]').attr('data-which'))]
             app.keys.delta      = [parseInt($('[name="delta"]').attr('data-which'))]
 
+            app.keys.mode.schedule = $('.schedule-mode').val() ? true : false
+
             console.log(bpm,beatsPerBar,barsPerLoop)
             app.trackActions.resizeLoop(bpm, beatsPerBar, barsPerLoop)
         })

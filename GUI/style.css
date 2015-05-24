@@ -135,3 +135,7 @@ button:focus {
 .option-row {
     height: 30px;
 }
+
+.short-select {
+    width: 151px;
+}

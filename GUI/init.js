@@ -25,8 +25,8 @@ var app = {
         delta      : [86],
         mode       : { // which keys are currently pressed down?
             record   : false,
+            erase    : false,
             schedule : false,
-            erase    : false
         }
     },
     rig           : 'midiRig88',

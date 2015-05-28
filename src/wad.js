@@ -186,6 +186,13 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 type     : 'stereo',
             };
         }
+        if ( that.panning.type === 'stereo' && !context.createStereoPanner ) {
+            console.log("Your browser does not support stereo panning. Falling back to 3D panning.")
+            that.panning = {
+                location : [0,0,0],
+                type     : '3d',
+            }
+        }
     };
 //////////////////////////////////////////////////////////////////////////////
     var constructDelay = function(that, arg){

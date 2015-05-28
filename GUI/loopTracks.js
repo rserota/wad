@@ -8,7 +8,7 @@ app.init.loopTracks = function(app){
             // },
             delay : {
                 delayTime: app.b(app.beatsPerBar * app.barsPerLoop),
-                maxDelayTime: app.b(app.beatsPerBar * app.barsPerLoop + 1),
+                maxDelayTime: 40,
                 feedback : 1,
                 wet      : 1
             },

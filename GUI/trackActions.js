@@ -16,7 +16,6 @@ app.init.trackActions = function(app){
     }
     var reset = function(trackNum){
         disconnectDelay(trackNum)
-        // app.bar()
         setTimeout(function(){ reconnectDelay(trackNum) }, 100)
     }
 
@@ -110,6 +109,14 @@ app.init.trackActions = function(app){
                 app.loopTracks[i].delay.delayNode.delayNode.delayTime.value = app.b(app.beatsPerBar * app.barsPerLoop)
             }
 
+        },
+        schedule : {
+            recordToTrack : function(){
+
+            },
+            muteTrack : function(){
+                
+            }
         }
     }
 }

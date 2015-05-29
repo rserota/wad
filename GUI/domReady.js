@@ -111,6 +111,9 @@ app.init.dom = function(app){
                     if ( app.keys.mode.record === true ) {
                         app.trackActions.recordToTrack(e.which - 49)
                     }
+                    else if ( app.keys.mode.erase === true ) {
+                        app.trackActions.eraseTrack(e.which - 49)
+                    }
                     else if ( app.keys.mode.record === false) {
                         console.log('mute!')
                         app.trackActions.muteTrack(e.which - 49)
@@ -120,14 +123,13 @@ app.init.dom = function(app){
 
                 else if ( app.keys.mode.schedule === true ) {
                     if ( app.keys.mode.record === true ) {
-                        app.trackActions.recordToTrack(e.which - 49)
+                        app.trackActions.schedule.recordToTrack(e.which - 49)
                     }
                     else if ( app.keys.mode.record === false) {
                         console.log('mute!')
-                        app.trackActions.muteTrack(e.which - 49)
+                        app.trackActions.schedule.muteTrack(e.which - 49)
                     }
                 }
-
 
             }
         })

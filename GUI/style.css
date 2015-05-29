@@ -139,3 +139,11 @@ button:focus {
 .short-select {
     width: 151px;
 }
+
+.option-row code {
+    vertical-align: sub;
+}
+
+.pad-top {
+    padding-top: 5px;
+}

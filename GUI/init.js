@@ -39,4 +39,14 @@ var app = {
         mode      : 'gamma',
         pedalDown : false,
     },
+    schedule      : [ // scheduled actions. This is not relevant in the default 'immediate action' mode.
+        { record : false, mute : false },
+        { record : false, mute : false },
+        { record : false, mute : false },
+        { record : false, mute : false },
+        { record : false, mute : false },
+        { record : false, mute : false },
+        { record : false, mute : false },
+        { record : false, mute : false },
+    ]
 }

@@ -171,16 +171,26 @@ var Wad = (function(){
 
 /** Set up the default filter and filter envelope. **/
     var constructFilter = function(that, arg){
+
         if ( !arg.filter ) { arg.filter = null; }
 
         else if ( isArray(arg.filter) ) {
+            that.filter = [];
             arg.filter.forEach(function(filterArg){
+                var thisFilter = {
+                    type : filterArg.filter.type || 'lowpass',
+                    frequency : filterArg.filter.frequency || 600,
+                    q : filterArg.filter.q || 1
+                }
                 constructFilter(that, { filter : filterArg })
             });
         }
         else {
-            arg.filter  = [ arg.filter ];
-            that.filter = arg.filter;
+            that.filter  = [{
+                type : arg.filter.type || 'lowpass',
+                frequency : arg.filter.frequency || 600,
+                q : arg.filter.q || 1
+            }];
         }
     }
 //////////////////////////////////////////////////////
@@ -283,6 +293,13 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 type     : 'stereo',
             };
         }
+        if ( that.panning.type === 'stereo' && !context.createStereoPanner ) {
+            console.log("Your browser does not support stereo panning. Falling back to 3D panning.")
+            that.panning = {
+                location : [0,0,0],
+                type     : '3d',
+            }
+        }
     };
 //////////////////////////////////////////////////////////////////////////////
     var constructDelay = function(that, arg){
@@ -317,6 +334,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         that.gain.gain.value = that.volume;
         that.nodes.push(that.mediaStreamSource);
         that.nodes.push(that.gain);
+        // console.log('that ', arg)
 
         if ( that.filter || arg.filter ) { createFilters(that, arg); }
 
@@ -495,12 +513,14 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
 /** Set the filter and filter envelope according to play() arguments, or revert to defaults **/
 
     var createFilters = function(that, arg){
+        if ( arg.filter && !isArray(arg.filter) ) {
+            arg.filter = [arg.filter];
+        }
         that.filter.forEach(function (filter, i) {
             filter.node                 = context.createBiquadFilter();
             filter.node.type            = filter.type;
             filter.node.frequency.value = ( arg.filter && arg.filter[i] ) ? ( arg.filter[i].frequency || filter.frequency ) : filter.frequency;
             filter.node.Q.value         = ( arg.filter && arg.filter[i] ) ? ( arg.filter[i].q         || filter.q )         : filter.q;
-
             if ( ( arg.filter && arg.filter[i].env || that.filter[i].env ) && !( that.source === "mic" ) ) {
                 filter.env = {
                     attack    : ( arg.filter && arg.filter[i].env && arg.filter[i].env.attack )    || that.filter[i].env.attack,
@@ -1347,9 +1367,7 @@ var valueOrDefault = function(value, def) {
     var onSuccessCallback = function(midiAccess){
         // console.log('inputs: ', m.inputs)
         // Things you can do with the MIDIAccess object:
-        for ( var input in midiAccess.inputs.values() ) {
-            console.log(input) 
-        }
+
         Wad.midiInputs = []
         var val = midiAccess.inputs.values();
         for ( var o = val.next(); !o.done; o = val.next() ) {

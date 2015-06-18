@@ -568,19 +568,22 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
 
 /** Initialize and configure a panner node for playback **/
     var setUpPanningOnPlay = function(that, arg){
-        var panning = ( arg && arg.panning ) || that.panning.location
+        var panning = arg && arg.panning; // can be zero provided as argument
+        if (typeof panning === 'undefined') panning = that.panning.location;
 
-        if ( that.panning.type === '3d' ) {
-            that.panning.node = context.createPanner();
-            that.panning.node.setPosition(panning[0], panning[1], panning[2]);
-
-        }
-        else if ( that.panning.type === 'stereo') {
+        if (typeof panning  === 'number') {
             that.panning.node = context.createStereoPanner();
             that.panning.node.pan.value = panning;
+            that.panning.type = 'stereo';
+        }
+        else {
+            that.panning.node = context.createPanner();
+            that.panning.node.setPosition(panning[0], panning[1], panning[2]);
+            that.panning.type = '3d';
         }
 
         that.nodes.push(that.panning.node);
+
     };
 ///////////////////////////////////////////////////////////
 
@@ -796,11 +799,11 @@ then finally play the sound by calling playEnv() **/
 /** Change the panning of a Wad at any time, including during playback **/
     Wad.prototype.setPanning = function(panning){
         this.panning.location = panning;
-        if ( this.panning.type === '3d' && this.panning.node ) {
+        if ( isArray(panning) && this.panning.type === '3d' && this.panning.node ) {
             this.panning.node.setPosition(panning[0], panning[1], panning[2]);
 
         }
-        else if ( this.panning.type === 'stereo' && this.panning.node) {
+        else if ( typeof panning === 'number' && this.panning.type === 'stereo' && this.panning.node) {
             this.panning.node.pan.value = panning;
         }
         return this;

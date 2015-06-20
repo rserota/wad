@@ -474,7 +474,7 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
         else {
             that.panning.node = context.createPanner();
             that.panning.node.setPosition(panning[0], panning[1], panning[2]);
-            that.panning.node.panningModel = arg.panningModel || that.panningModel || 'equalpower'
+            that.panning.node.panningModel = arg.panningModel || that.panningModel || 'equalpower';
             that.panning.type = '3d';
         }
 

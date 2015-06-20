@@ -806,6 +806,9 @@ then finally play the sound by calling playEnv() **/
         else if ( typeof panning === 'number' && this.panning.type === 'stereo' && this.panning.node) {
             this.panning.node.pan.value = panning;
         }
+        
+        if ( isArray(panning) ) { this.panning.type = '3d' }
+        else if ( typeof panning === 'number' ) { this.panning.type = 'stereo' }
         return this;
     };
 

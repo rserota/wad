@@ -69,11 +69,37 @@ app.init.dom = function(app){
         })
 
 
+        var preventDefaultKeys = {
+            32 : null, // space
+            9  : null, // tab
+            17 : null, // control
+            18 : null, // alt
+            13 : null, // enter
+            20 : null, // caps lock
+            27 : null, // escape
+            33 : null, // page up
+            34 : null, // page down
+            35 : null, // end
+            36 : null, // home
+            37 : null, // left
+            38 : null, // up
+            39 : null, // right
+            40 : null, // down
+            46 : null, // delete
+            91 : null, // left meta
+            92 : null, // right meta
+            93 : null, // right meta
+
+        }
+
+
+        
 
         $(document).on('keydown', function(e){
             console.log(e)
             /* Handle modal keys (record, erase, etc) */
-            if ( e.which === 32 ) {
+            if ( e.which in preventDefaultKeys ) {
+                console.log('nope!')
                 e.preventDefault();
             }
             if ( app.keys.record.indexOf(e.which) > -1 ) {
@@ -148,8 +174,41 @@ app.init.dom = function(app){
 
         })
         $('.controls-settings input').on('keydown', function(e){
-            $(this).val('')
             $(this).attr('data-which', e.which)
+            if ( e.which === 16 ) {
+                $(this).val('shift')
+            }
+            else if ( e.which === 32 ) {
+                $(this).val('space')
+            }
+            else if ( e.which === 8 ) {
+                $(this).val('delete')
+            }
+            else if ( e.which === 9 ) {
+                $(this).val('tab')
+            }
+            else if ( e.which === 17 ) {
+                $(this).val('control')
+            }
+            else if ( e.which === 18 ) {
+                $(this).val('alt')
+            }
+            else if ( e.which === 27 ) {
+                $(this).val('escape')
+            }
+            else if ( e.which === 91 ) {
+                $(this).val('left meta')  
+            }
+            else if ( e.which === 92 ) {
+                $(this).val('right meta')
+            }
+            else if ( e.which === 93 ) {
+                $(this).val('right meta')
+            }
+            else {
+                $(this).val('')
+            }
+            console.log(e.which)
         })
         $('[name="save"]').on('click', function(){
             var bpm         = $('[name="bpm"]').val()
@@ -170,6 +229,18 @@ app.init.dom = function(app){
 
             console.log(bpm,beatsPerBar,barsPerLoop)
             app.trackActions.resizeLoop(bpm, beatsPerBar, barsPerLoop)
+        })
+        $('.controls-reset').on('click', function(){
+            var bpm         = $('[name="bpm"]').prop('defaultValue')
+            var beatsPerBar = $('[name="beats-per-bar"]').prop('defaultValue')
+            var barsPerLoop = $('[name="bars-per-loop"]').prop('defaultValue')
+
+            $('label[for="bpm"]').text(bpm)
+            $('label[for="beats-per-bar"]').text(beatsPerBar)
+            $('label[for="bars-per-loop"]').text(barsPerLoop)
+
+
+
         })
 
     })

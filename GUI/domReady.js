@@ -160,6 +160,7 @@ app.init.dom = function(app){
             }
         })
 
+// test code //
         $('.note').on('mousedown', function(){
             console.log('hi')
             app.instruments.alpha.play()
@@ -167,12 +168,16 @@ app.init.dom = function(app){
         $('.note').on('mouseup', function(){
             app.instruments.alpha.stop()
         })
+///////////////
 
+        // set the label for a range input to match the value of that range input
         $('.timing-settings input[type="range"]').on('change', function(){
             var thisName = $(this).attr('name')
             $('[for="' + thisName + '"]').text($(this).val())
 
         })
+
+        // set the text box to say the key they pressed, even for non-printing keys
         $('.controls-settings input').on('keydown', function(e){
             $(this).attr('data-which', e.which)
             if ( e.which === 16 ) {
@@ -208,7 +213,6 @@ app.init.dom = function(app){
             else {
                 $(this).val('')
             }
-            console.log(e.which)
         })
         $('[name="save"]').on('click', function(){
             var bpm         = $('[name="bpm"]').val()

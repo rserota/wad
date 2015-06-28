@@ -131,11 +131,12 @@
                                 </div>
                             </div>
                             <div class="space"></div>
-                            <p>By default, if a <strong>mute</strong> or <strong>record</strong> action is triggered, that action happens immediately. If you prefer, you can configure these actions to occur at the start of the next loop.</p>
+                            <p>By default, if a <strong>mute</strong> or <strong>record</strong> action is triggered, that action happens immediately. If you prefer, you can configure these actions to occur at the start of the next loop instead.</p>
                             <div class="row">
                                 <div class="col-sm-6 text-right pad-top">Action Timing</div>
                                 <div class="col-sm-6">
                                     <select class="form-control schedule-mode short-select">
+                                                <!-- empty string value is intentional -->
                                         <option value="">Immediate</option>
                                         <option value="scheduled">Scheduled</option>
                                     </select>
@@ -175,19 +176,55 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3>Task List</h3>
+                        <h3>Instrument Settings</h3>
                     </div>
                     <div class="modal-body">
                         <div class="tabbable"> <!-- Only required for left/right tabs -->
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#tab1" data-toggle="tab">Section 1</a></li>
-                                <li><a href="#tab2" data-toggle="tab">Section 2</a></li>
+                                <li class="active"><a href="#tab1" data-toggle="tab">Instrument 1</a></li>
+                                <li><a href="#tab2" data-toggle="tab">Instrument 2</a></li>
+                                <li><a href="#tab3" data-toggle="tab">Instrument 3</a></li>
+                                <li><a href="#tab4" data-toggle="tab">Instrument 4</a></li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="tab1">
-                                    Data 1
+                                    <div class="space"></div>
+                                    <div class="instrument-settings">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label class="pad-top">Wave Shape</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <select class="form-control wave-shape short-select">
+                                                    <option value="sine">Sine</option> 
+                                                    <option value="square">Square</option>
+                                                    <option value="sawtooth">Sawtooth</option>
+                                                    <option value="triangle">Triangle</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="space"></div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label>Volume</label><br>
+                                                <label>Panning</label><br>
+                                                <label>Bars Per Loop</label>
+                                            </div>
+                                            <div class="col-sm-6 ">
+                                                <input class="" type="range" title="hi" min="0" max="1" name="volume" value="1" step="0.05"><label for="volume">1</label>
+                                                <input class="" type="range" name="panning" min="-1" max="1" step="0.1" value="0"><label for="panning">0</label>
+                                                <input class="" type="range" name="bars-per-loop" min="1" max="8" value="4"><label for="bars-per-loop">4</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane" id="tab2">
+                                    <p>Data 2.</p>
+                                </div>
+                                <div class="tab-pane" id="tab3">
+                                    <p>Data 2.</p>
+                                </div>
+                                <div class="tab-pane" id="tab4">
                                     <p>Data 2.</p>
                                 </div>
                             </div>

@@ -171,7 +171,7 @@ app.init.dom = function(app){
 ///////////////
 
         // set the label for a range input to match the value of that range input
-        $('.timing-settings input[type="range"]').on('change', function(){
+        $('.timing-settings input[type="range"], .instrument-settings input[type="range"]').on('change', function(){
             var thisName = $(this).attr('name')
             $('[for="' + thisName + '"]').text($(this).val())
 

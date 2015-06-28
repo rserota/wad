@@ -126,7 +126,7 @@ button:focus {
 }
 
 
-.timing-settings input[type="range"] {
+.timing-settings input[type="range"], .instrument-settings input[type="range"] {
     display: inline-block;
     width: 80%;
     margin-right: 5px;

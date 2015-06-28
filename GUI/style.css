@@ -1,3 +1,11 @@
+body {
+    background-color: slategray;
+    /*padding: 20px;*/
+}
+h3 {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
 .container {
     padding: 0;
 }
@@ -13,10 +21,6 @@
     line-height:150px;
     vertical-align: middle;
     background-color: rgb(110,150,120);
-}
-body {
-    background-color: slategray;
-    /*padding: 20px;*/
 }
 #controls {
     vertical-align: top;
@@ -60,7 +64,7 @@ button:focus {
 }
 
 .space {
-    height: 40px;
+    height: 30px;
 }
 
 #micInfo {
@@ -126,18 +130,25 @@ button:focus {
 }
 
 
-.timing-settings input[type="range"], .instrument-settings input[type="range"] {
+.settings-modal input[type="range"] {
     display: inline-block;
     width: 80%;
     margin-right: 5px;
+}
+.settings-modal label {
+    position: relative;
+    bottom: 3px;
 }
 
 .option-row {
     height: 30px;
 }
 
-.short-select {
+#configModal .short-select {
     width: 151px;
+}
+#instrumentsModal .short-select {
+    width: 215px;
 }
 
 .option-row code {

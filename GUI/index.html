@@ -84,7 +84,7 @@
 
         </div>
 
-        <div class="modal fade" id="configModal">
+        <div class="modal fade settings-modal" id="configModal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form>
@@ -92,7 +92,7 @@
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <h2 class="modal-title text-center">8-Track Live Looper</h2>
+                            <h2 class="modal-title text-center">Looper Settings</h2>
                         </div>
                         <div class="modal-body">
                             <h3 class="text-center">Controls Overview</h3>
@@ -149,12 +149,12 @@
                             <div class="timing-settings">
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <label>Beats Per Minute</label><br>
+                                        <label title="Higher number = faster song">Beats Per Minute</label><br>
                                         <label>Beats Per Bar</label><br>
                                         <label>Bars Per Loop</label>
                                     </div>
                                     <div class="col-sm-6 ">
-                                        <input type="range" title="hi" min="1" max="300" name="bpm" value="120"><label for="bpm">120</label>
+                                        <input type="range" title="Higher number = faster song" min="1" max="300" name="bpm" value="120"><label for="bpm">120</label>
                                         <input type="range" name="beats-per-bar" min="3" max="16" value="4"><label for="beats-per-bar">4</label>
                                         <input type="range" name="bars-per-loop" min="1" max="8" value="4"><label for="bars-per-loop">4</label>
                                     </div>
@@ -172,11 +172,11 @@
             </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
-        <div id="instrumentsModal" class="modal fade">
+        <div id="instrumentsModal" class="modal settings-modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3>Instrument Settings</h3>
+                        <h2 class="modal-title text-center">Instrument Settings</h2>
                     </div>
                     <div class="modal-body">
                         <div class="tabbable"> <!-- Only required for left/right tabs -->
@@ -190,6 +190,7 @@
                                 <div class="tab-pane active" id="tab1">
                                     <div class="space"></div>
                                     <div class="instrument-settings">
+                                        <h3 class="text-center">Basic Settings</h3>
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <label class="pad-top">Wave Shape</label>
@@ -208,12 +209,49 @@
                                             <div class="col-sm-6">
                                                 <label>Volume</label><br>
                                                 <label>Panning</label><br>
-                                                <label>Bars Per Loop</label>
                                             </div>
                                             <div class="col-sm-6 ">
                                                 <input class="" type="range" title="hi" min="0" max="1" name="volume" value="1" step="0.05"><label for="volume">1</label>
                                                 <input class="" type="range" name="panning" min="-1" max="1" step="0.1" value="0"><label for="panning">0</label>
-                                                <input class="" type="range" name="bars-per-loop" min="1" max="8" value="4"><label for="bars-per-loop">4</label>
+                                            </div>
+                                        </div>
+                                        <div class="space"></div>
+                                        <h3 class="text-center">Pitch Shift</h3>
+                                        <!-- <div class="space"></div> -->
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label>Course</label><br>
+                                                <label>Fine</label><br>
+                                            </div>
+                                            <div class="col-sm-6 ">
+                                                <input class="" type="range" title="hi" min="-36" max="36" name="pitch-shift-course" value="0" step="1"><label for="pitch-shift-course">0</label>
+                                                <input class="" type="range" name="pitch-shift-fine" min="-100" max="100" step="1" value="0"><label for="pitch-shift-fine">0</label>
+                                            </div>
+                                        </div>
+                                        <h3 class="text-center">Volume Envelope</h3>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label>Attack</label><br>
+                                                <label>Decay</label><br>
+                                                <label>Sustain</label><br>
+                                                <label>Release</label><br>
+                                            </div>
+                                            <div class="col-sm-6 ">
+                                                <input class="" type="range" title="hi" min="0" max="1" name="volume-attack" value="0" step="0.01"><label for="volume-attack">0</label>
+                                                <input class="" type="range" name="volume-decay" min="0" max="1" step="0.01" value="0"><label for="volume-decay">0</label>
+                                                <input class="" type="range" name="volume-sustain" min="0" max="1" step="0.05" value="1"><label for="volume-sustain">1</label>
+                                                <input class="" type="range" name="volume-release" min="0" max="1" step="0.01" value="0"><label for="volume-release">0</label>
+                                            </div>
+                                        </div>
+                                        <h3 class="text-center">Filter</h3>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label>Frequency</label><br>
+                                                <label>Q</label><br>
+                                            </div>
+                                            <div class="col-sm-6 ">
+                                                <input class="" type="range" title="hi" min="1" max="100" name="filter-frequency" value="1" step="1"><label for="filter-frequency">600</label>
+                                                <input class="" type="range" name="volume-decay" min="0" max="1" step="0.01" value="0"><label for="volume-decay">0</label>
                                             </div>
                                         </div>
                                     </div>

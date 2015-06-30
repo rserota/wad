@@ -193,10 +193,10 @@
                                         <h3 class="text-center">Basic Settings</h3>
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <label class="pad-top">Wave Shape</label>
+                                                <label data-tooltip="waveform" class="pad-top" >Waveform</label>
                                             </div>
                                             <div class="col-sm-6">
-                                                <select class="form-control wave-shape short-select">
+                                                <select data-tooltip="waveform" class="form-control short-select" >
                                                     <option value="sine">Sine</option> 
                                                     <option value="square">Square</option>
                                                     <option value="sawtooth">Sawtooth</option>
@@ -251,7 +251,7 @@
                                             </div>
                                             <div class="col-sm-6 ">
                                                 <input class="" type="range" title="hi" min="1" max="100" name="filter-frequency" value="1" step="1"><label for="filter-frequency">600</label>
-                                                <input class="" type="range" name="volume-decay" min="0" max="1" step="0.01" value="0"><label for="volume-decay">0</label>
+                                                <input class="" type="range" name="volume-q" min="0" max="10" step="0.1" value="1"><label for="volume-q">1</label>
                                             </div>
                                         </div>
                                     </div>
@@ -289,6 +289,7 @@
         <script src="./trackActions.js"></script>
         <script src="./midiRigs.js"></script>
         <script src="./domReady.js"></script>
+        <script src="./tooltips.js"></script>
         <script src="./looper.js"></script>
  
     </body>

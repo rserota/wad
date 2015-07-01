@@ -207,12 +207,12 @@
                                         <div class="space"></div>
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <label>Volume</label><br>
-                                                <label>Panning</label><br>
+                                                <label data-tooltip="volume">Volume</label><br>
+                                                <label data-tooltip="panning">Panning</label><br>
                                             </div>
                                             <div class="col-sm-6 ">
-                                                <input class="" type="range" title="hi" min="0" max="1" name="volume" value="1" step="0.05"><label for="volume">1</label>
-                                                <input class="" type="range" name="panning" min="-1" max="1" step="0.1" value="0"><label for="panning">0</label>
+                                                <input data-tooltip="volume" class="" type="range" title="hi" min="0" max="1" name="volume" value="1" step="0.05"><label for="volume">1</label>
+                                                <input data-tooltip="panning" class="" type="range" name="panning" min="-1" max="1" step="0.1" value="0"><label for="panning">0</label>
                                             </div>
                                         </div>
                                         <div class="space"></div>
@@ -220,38 +220,38 @@
                                         <!-- <div class="space"></div> -->
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <label>Course</label><br>
-                                                <label>Fine</label><br>
+                                                <label data-tooltip="pitch-shift-coarse">Coarse</label><br>
+                                                <label data-tooltip="pitch-shift-fine">Fine</label><br>
                                             </div>
                                             <div class="col-sm-6 ">
-                                                <input class="" type="range" title="hi" min="-36" max="36" name="pitch-shift-course" value="0" step="1"><label for="pitch-shift-course">0</label>
-                                                <input class="" type="range" name="pitch-shift-fine" min="-100" max="100" step="1" value="0"><label for="pitch-shift-fine">0</label>
+                                                <input data-tooltip="pitch-shift-coarse" class="" type="range" title="hi" min="-36" max="36" name="pitch-shift-coarse" value="0" step="1"><label for="pitch-shift-coarse">0</label>
+                                                <input data-tooltip="pitch-shift-fine" class="" type="range" name="pitch-shift-fine" min="-100" max="100" step="1" value="0"><label for="pitch-shift-fine">0</label>
                                             </div>
                                         </div>
                                         <h3 class="text-center">Volume Envelope</h3>
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <label>Attack</label><br>
-                                                <label>Decay</label><br>
-                                                <label>Sustain</label><br>
-                                                <label>Release</label><br>
+                                                <label data-tooltip="volume-attack">Attack</label><br>
+                                                <label data-tooltip="volume-decay">Decay</label><br>
+                                                <label data-tooltip="volume-sustain">Sustain</label><br>
+                                                <label data-tooltip="volume-release">Release</label><br>
                                             </div>
                                             <div class="col-sm-6 ">
-                                                <input class="" type="range" title="hi" min="0" max="1" name="volume-attack" value="0" step="0.01"><label for="volume-attack">0</label>
-                                                <input class="" type="range" name="volume-decay" min="0" max="1" step="0.01" value="0"><label for="volume-decay">0</label>
-                                                <input class="" type="range" name="volume-sustain" min="0" max="1" step="0.05" value="1"><label for="volume-sustain">1</label>
-                                                <input class="" type="range" name="volume-release" min="0" max="1" step="0.01" value="0"><label for="volume-release">0</label>
+                                                <input data-tooltip="volume-attack" class="" type="range" title="hi" min="0" max="1" name="volume-attack" value="0" step="0.01"><label for="volume-attack">0</label>
+                                                <input data-tooltip="volume-decay" class="" type="range" name="volume-decay" min="0" max="1" step="0.01" value="0"><label for="volume-decay">0</label>
+                                                <input data-tooltip="volume-sustain" class="" type="range" name="volume-sustain" min="0" max="1" step="0.05" value="1"><label for="volume-sustain">1</label>
+                                                <input data-tooltip="volume-release" class="" type="range" name="volume-release" min="0" max="1" step="0.01" value="0"><label for="volume-release">0</label>
                                             </div>
                                         </div>
-                                        <h3 class="text-center">Filter</h3>
+                                        <h3 class="text-center">Filter <input name="filter-toggle" checked type="checkbox"></h3>
                                         <div class="row">
                                             <div class="col-sm-6">
                                                 <label>Frequency</label><br>
                                                 <label>Q</label><br>
                                             </div>
                                             <div class="col-sm-6 ">
-                                                <input class="" type="range" title="hi" min="1" max="100" name="filter-frequency" value="1" step="1"><label for="filter-frequency">600</label>
-                                                <input class="" type="range" name="volume-q" min="0" max="10" step="0.1" value="1"><label for="volume-q">1</label>
+                                                <input disabled class="" type="range" title="hi" min="1" max="100" name="filter-frequency" value="1" step="1"><label for="filter-frequency">600</label>
+                                                <input class="" type="range" name="filter-q" min="0" max="10" step="0.1" value="1"><label for="filter-q">1</label>
                                             </div>
                                         </div>
                                     </div>

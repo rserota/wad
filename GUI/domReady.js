@@ -1,3 +1,5 @@
+// This file handles most of the DOM manipulation and event handling.
+// DOM manipulation for tooltips is handled separately. 
 app.init.dom = function(app){
     
     $(document).ready(function(){

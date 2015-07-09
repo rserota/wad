@@ -1,7 +1,9 @@
+var coolSound;
+
 function soundOn (){
 
-if(coolSound) coolSound.stop();
-var coolSound;
+if(typeof coolSound !== 'undefined') coolSound.stop();
+
 var p = document.getElementById('WADsynth');
 var params = [];
 var settings = {};

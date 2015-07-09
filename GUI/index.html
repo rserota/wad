@@ -243,15 +243,45 @@
                                                 <input data-tooltip="volume-release" class="" type="range" name="volume-release" min="0" max="1" step="0.01" value="0"><label for="volume-release">0</label>
                                             </div>
                                         </div>
-                                        <h3 class="text-center">Filter <input name="filter-toggle" checked type="checkbox"></h3>
+                                        <h3 class="text-center" data-tooltip="filter">Filter <input name="filter-toggle" checked type="checkbox"></h3>
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <label>Frequency</label><br>
-                                                <label>Q</label><br>
+                                                <label data-tooltip="filter-type" class="pad-top" >Filter Type</label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <select data-tooltip="filter-type" class="form-control short-select" >
+                                                    <option value="lowpass">Low-pass</option> 
+                                                    <option value="highpass">High-pass</option>
+                                                    <option value="bandpass">Band-pass</option>
+                                                    <option value="lowshelf">Low-shelf</option>
+                                                    <option value="highshelf">High-shelf</option>
+                                                    <option value="peaking">Peaking</option>
+                                                    <option value="notch">Notch</option>
+                                                    <option value="allpass">All-pass</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="space"></div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label data-tooltip="filter-frequency">Frequency</label><br>
+                                                <label data-tooltip="filter-q">Q</label><br>
                                             </div>
                                             <div class="col-sm-6 ">
-                                                <input disabled class="" type="range" title="hi" min="1" max="100" name="filter-frequency" value="1" step="1"><label for="filter-frequency">600</label>
-                                                <input class="" type="range" name="filter-q" min="0" max="10" step="0.1" value="1"><label for="filter-q">1</label>
+                                                <input data-tooltip="filter-frequency" class="" type="range" min="1" max="100" name="filter-frequency" value="35" step="1"><label for="filter-frequency">600</label>
+                                                <input data-tooltip="filter-q" class="" type="range" name="filter-q" min="0" max="10" step="0.1" value="1"><label for="filter-q">1</label>
+                                            </div>
+                                        </div>
+                                        <h3 class="text-center">Filter Envelope <input name="filter-toggle" checked type="checkbox"></h3>
+                                        <div class="space"></div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label data-tooltip="filter-frequency">Frequency</label><br>
+                                                <label data-tooltip="filter-q">Q</label><br>
+                                            </div>
+                                            <div class="col-sm-6 ">
+                                                <input data-tooltip="filter-frequency" class="" type="range" min="1" max="100" name="filter-frequency" value="35" step="1"><label for="filter-frequency">600</label>
+                                                <input data-tooltip="filter-q" class="" type="range" name="filter-q" min="0" max="10" step="0.1" value="1"><label for="filter-q">1</label>
                                             </div>
                                         </div>
                                     </div>

@@ -8,8 +8,12 @@ app.init.tooltips = function(app){
         'pitch-shift-fine'   : "Notes played from this instrument are pitch-shifted up or down by this many cents. 100 cents = 1 semitone.",
         'volume-attack'      : "Time, in seconds, from the onset of a note to peak volume.",
         'volume-decay'       : "Time, in seconds, from peak volume to sustain volume.",
-        'volume-sustain'     : "Sustain volume level. This is a percent of the peak volume."
-        'volume-release'     : "Time, in seconds, from releasing a note to zero volume."
+        'volume-sustain'     : "Sustain volume level. This is a percent of the peak volume.",
+        'volume-release'     : "Time, in seconds, from releasing a note to zero volume.",
+        'filter'             : "Filters modify the instrument by removing certain frequencies from the sound. Uncheck the box next to \"Filter\" if you don't want to use a filter at all.",
+        'filter-type'        : "A low-pass filter removes high frequencies from the instrument, allowing low frequencies to 'pass' through. A high-pass filter does the opposite. A quick internet search can tell you what the other filters do.",
+        'filter-frequency'   : "The frequency, in hertz, to which the filter is applied.",
+        'filter-q'           : "Q-factor, also known as resonance. This affects how steep the cutoff is beyond the filter frequency."
 
     }
      

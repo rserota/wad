@@ -172,16 +172,16 @@ app.init.dom = function(app){
         })
 ///////////////
 
-        // converts values from the range input (1-100) to sensible frequencies (20-5000)
-        var range2freq = function(freq){
-            return Math.floor(Math.pow(freq, 1.8))
-        }
+
 
         // set the label for a range input to match the value of that range input
         $('.settings-modal input[type="range"]').on('change', function(){
             var thisName = $(this).attr('name')
             if ( thisName === 'filter-frequency' ) {
-                $('[for="filter-frequency').text(range2freq($(this).val()))    
+                $('[for="filter-frequency').text(app.range2freq($(this).val()))    
+            }
+            else if ( thisName === 'filter-env-frequency' ) {
+                $('[for="filter-env-frequency').text(app.range2freq($(this).val()))    
             }
             else {   
                 $('[for="' + thisName + '"]').text($(this).val())

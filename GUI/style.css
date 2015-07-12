@@ -158,3 +158,8 @@ button:focus {
 .pad-top {
     padding-top: 5px;
 }
+
+.settings-modal .modal-body {
+    max-height: 65vh;
+    overflow:scroll;
+}

@@ -227,7 +227,7 @@ app.init.dom = function(app){
                 $(this).val('')
             }
         })
-        $('[name="save"]').on('click', function(){
+        $('#configModal [name="save"]').on('click', function(){
             var bpm         = $('[name="bpm"]').val()
             var beatsPerBar = $('[name="beats-per-bar"]').val()
             var barsPerLoop = $('[name="bars-per-loop"]').val()
@@ -247,7 +247,7 @@ app.init.dom = function(app){
             console.log(bpm,beatsPerBar,barsPerLoop)
             app.trackActions.resizeLoop(bpm, beatsPerBar, barsPerLoop)
         })
-        $('.controls-reset').on('click', function(){
+        $('#configModal [type="reset"]').on('click', function(){
             var bpm         = $('[name="bpm"]').prop('defaultValue')
             var beatsPerBar = $('[name="beats-per-bar"]').prop('defaultValue')
             var barsPerLoop = $('[name="bars-per-loop"]').prop('defaultValue')
@@ -256,7 +256,21 @@ app.init.dom = function(app){
             $('label[for="beats-per-bar"]').text(beatsPerBar)
             $('label[for="bars-per-loop"]').text(barsPerLoop)
 
+        })
 
+
+        $('#instrumentsModal [name="save"]').on('click', function(){
+            
+            
+        })
+        $('#instrumentsModal [type="reset"]').on('click', function(){
+            var bpm         = $('[name="bpm"]').prop('defaultValue')
+            var beatsPerBar = $('[name="beats-per-bar"]').prop('defaultValue')
+            var barsPerLoop = $('[name="bars-per-loop"]').prop('defaultValue')
+
+            $('label[for="bpm"]').text(bpm)
+            $('label[for="beats-per-bar"]').text(beatsPerBar)
+            $('label[for="bars-per-loop"]').text(barsPerLoop)
 
         })
 

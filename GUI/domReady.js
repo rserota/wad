@@ -260,17 +260,27 @@ app.init.dom = function(app){
 
 
         $('#instrumentsModal [name="save"]').on('click', function(){
-            
+
             
         })
         $('#instrumentsModal [type="reset"]').on('click', function(){
-            var bpm         = $('[name="bpm"]').prop('defaultValue')
-            var beatsPerBar = $('[name="beats-per-bar"]').prop('defaultValue')
-            var barsPerLoop = $('[name="bars-per-loop"]').prop('defaultValue')
 
-            $('label[for="bpm"]').text(bpm)
-            $('label[for="beats-per-bar"]').text(beatsPerBar)
-            $('label[for="bars-per-loop"]').text(barsPerLoop)
+            var $ranges = $('#instrumentsModal').find('[type="range"]');
+            [].forEach.call($ranges, function(el){
+                var which  = $(el).attr('name')
+                var defVal = $(el).prop('defaultValue')
+                if ( which.search('frequency') > 0 ) {
+                    $('label[for="' + which + '"]').text(app.range2freq(defVal))
+                }
+                else {
+                    $('label[for="' + which + '"]').text(defVal)
+                }
+            })
+
+        })
+
+        $('#instrumentsModal [type="checkbox"]').on('change', function(){
+            $(this).closest('.settings-section').find('[type="range"], select').prop('disabled', !$(this).prop('checked'))
 
         })
 

@@ -254,119 +254,127 @@
                                                 </div>
                                             </div>
                                             <div class="space"></div>
-                                            <h3 class="text-center" data-tooltip="filter">Filter <input name="filter-toggle" checked type="checkbox"></h3>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label data-tooltip="filter-type" class="pad-top" >Filter Type</label>
+                                            <section class="settings-section">
+                                                <h3 class="text-center" data-tooltip="filter">Filter <input name="filter-toggle" checked type="checkbox"></h3>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label data-tooltip="filter-type" class="pad-top" >Filter Type</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <select data-tooltip="filter-type" class="form-control short-select" >
+                                                            <option value="lowpass">Low-pass</option> 
+                                                            <option value="highpass">High-pass</option>
+                                                            <option value="bandpass">Band-pass</option>
+                                                            <option value="lowshelf">Low-shelf</option>
+                                                            <option value="highshelf">High-shelf</option>
+                                                            <option value="peaking">Peaking</option>
+                                                            <option value="notch">Notch</option>
+                                                            <option value="allpass">All-pass</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    <select data-tooltip="filter-type" class="form-control short-select" >
-                                                        <option value="lowpass">Low-pass</option> 
-                                                        <option value="highpass">High-pass</option>
-                                                        <option value="bandpass">Band-pass</option>
-                                                        <option value="lowshelf">Low-shelf</option>
-                                                        <option value="highshelf">High-shelf</option>
-                                                        <option value="peaking">Peaking</option>
-                                                        <option value="notch">Notch</option>
-                                                        <option value="allpass">All-pass</option>
-                                                    </select>
+                                                <div class="space"></div>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label data-tooltip="filter-frequency">Frequency</label><br>
+                                                        <label data-tooltip="filter-q">Q</label><br>
+                                                    </div>
+                                                    <div class="col-sm-6 ">
+                                                        <input data-tooltip="filter-frequency" class="" type="range" min="1" max="100" name="filter-frequency" value="35" step="1"><label for="filter-frequency">601</label>
+                                                        <input data-tooltip="filter-q" class="" type="range" name="filter-q" min="0" max="10" step="0.1" value="1"><label for="filter-q">1</label>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </section>
                                             <div class="space"></div>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label data-tooltip="filter-frequency">Frequency</label><br>
-                                                    <label data-tooltip="filter-q">Q</label><br>
+                                            <section class="settings-section">
+                                                <h3 data-tooltip="filter-env" class="text-center">Filter Envelope <input name="filter-env-toggle" checked type="checkbox"></h3>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label data-tooltip="filter-env-frequency">Frequency</label><br>
+                                                        <label data-tooltip="filter-env-attack">Attack</label><br>
+                                                    </div>
+                                                    <div class="col-sm-6 ">
+                                                        <input data-tooltip="filter-env-frequency" class="" type="range" min="1" max="100" name="filter-env-frequency" value="45" step="1"><label for="filter-env-frequency">945</label>
+                                                        <input data-tooltip="filter-env-attack" class="" type="range" name="filter-env-attack" min="0" max="1" step="0.01" value=".5"><label for="filter-env-attack">1</label>
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-6 ">
-                                                    <input data-tooltip="filter-frequency" class="" type="range" min="1" max="100" name="filter-frequency" value="35" step="1"><label for="filter-frequency">600</label>
-                                                    <input data-tooltip="filter-q" class="" type="range" name="filter-q" min="0" max="10" step="0.1" value="1"><label for="filter-q">1</label>
-                                                </div>
-                                            </div>
-                                            <div class="space"></div>
-                                            <h3 data-tooltip="filter-env" class="text-center">Filter Envelope <input name="filter-env-toggle" checked type="checkbox"></h3>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label data-tooltip="filter-env-frequency">Frequency</label><br>
-                                                    <label data-tooltip="filter-env-attack">Attack</label><br>
-                                                </div>
-                                                <div class="col-sm-6 ">
-                                                    <input data-tooltip="filter-env-frequency" class="" type="range" min="1" max="100" name="filter-env-frequency" value="45" step="1"><label for="filter-env-frequency">945</label>
-                                                    <input data-tooltip="filter-env-attack" class="" type="range" name="filter-env-attack" min="0" max="1" step="0.01" value=".5"><label for="filter-env-attack">1</label>
-                                                </div>
-                                            </div>
+                                            </section>
 
                                             <div class="space"></div>
-                                            <h3 data-tooltip="delay" class="text-center">Delay <input name="delay-toggle" checked type="checkbox"></h3>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label data-tooltip="delay-time">Delay Time</label><br>
-                                                    <label data-tooltip="delay-wet-level">Wet Level</label><br>
-                                                    <label data-tooltip="delay-feedback">Feedback</label><br>
+                                            <section class="settings-section">
+                                                <h3 data-tooltip="delay" class="text-center">Delay <input name="delay-toggle" checked type="checkbox"></h3>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label data-tooltip="delay-time">Delay Time</label><br>
+                                                        <label data-tooltip="delay-wet-level">Wet Level</label><br>
+                                                        <label data-tooltip="delay-feedback">Feedback</label><br>
+                                                    </div>
+                                                    <div class="col-sm-6 ">
+                                                        <input data-tooltip="delay-time" class="" type="range" min="0" max="2" name="delay-time" value=".5" step=".01"><label for="delay-time">0.5</label>
+                                                        <input data-tooltip="delay-wet-level" class="" type="range" name="delay-wet-level" min="0" max="2" step="0.01" value=".25"><label for="delay-wet-level">0.25</label>
+                                                        <input data-tooltip="delay-feedback" class="" type="range" name="delay-feedback" min="0" max="1" step="0.01" value=".25"><label for="delay-feedback">0.25</label>
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-6 ">
-                                                    <input data-tooltip="delay-time" class="" type="range" min="0" max="2" name="delay-time" value=".5" step=".01"><label for="delay-time">0.5</label>
-                                                    <input data-tooltip="delay-wet-level" class="" type="range" name="delay-wet-level" min="0" max="2" step="0.01" value=".25"><label for="delay-wet-level">0.25</label>
-                                                    <input data-tooltip="delay-feedback" class="" type="range" name="delay-feedback" min="0" max="1" step="0.01" value=".25"><label for="delay-feedback">0.25</label>
+                                            </section>
+                                            <section class="settings-section">
+                                                <h3 data-tooltip="vibrato" class="text-center">Vibrato <input name="vibrato-toggle" checked type="checkbox"></h3>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label data-tooltip="vibrato-waveform" class="pad-top" >Waveform</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <select data-tooltip="vibrato-waveform" name="vibrato-waveform" class="form-control short-select" >
+                                                            <option value="sine">Sine</option> 
+                                                            <option value="square">Square</option>
+                                                            <option value="sawtooth">Sawtooth</option>
+                                                            <option value="triangle">Triangle</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        
-                                            <h3 data-tooltip="vibrato" class="text-center">Vibrato</h3>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label data-tooltip="vibrato-waveform" class="pad-top" >Waveform</label>
+                                                <div class="space"></div>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label data-tooltip="vibrato-magnitude">Magnitude</label><br>
+                                                        <label data-tooltip="vibrato-speed">Speed</label><br>
+                                                        <label data-tooltip="vibrato-attack">Attack</label><br>
+                                                    </div>
+                                                    <div class="col-sm-6 ">
+                                                        <input data-tooltip="vibrato-magnitude" class="" type="range" title="" min="0" max="10" name="vibrato-magnitude" value="3" step="0.1"><label for="vibrato-magnitude">3</label>
+                                                        <input data-tooltip="vibrato-speed" class="" type="range" name="vibrato-speed" min="0" max="10" step="0.1" value="4"><label for="vibrato-speed">4</label>
+                                                        <input data-tooltip="vibrato-attack" class="" type="range" name="vibrato-attack" min="0" max="5" step="0.1" value="0"><label for="vibrato-attack">0</label>
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-6">
-                                                    <select data-tooltip="vibrato-waveform" name="vibrato-waveform" class="form-control short-select" >
-                                                        <option value="sine">Sine</option> 
-                                                        <option value="square">Square</option>
-                                                        <option value="sawtooth">Sawtooth</option>
-                                                        <option value="triangle">Triangle</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                            </section>
                                             <div class="space"></div>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label data-tooltip="vibrato-magnitude">Magnitude</label><br>
-                                                    <label data-tooltip="vibrato-speed">Speed</label><br>
-                                                    <label data-tooltip="vibrato-attack">Attack</label><br>
+                                            <section class="settings-section">
+                                                <h3 data-tooltip="tremolo" class="text-center">Tremolo <input name="tremolo-toggle" checked type="checkbox"></h3>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label data-tooltip="tremolo-waveform" class="pad-top" >Waveform</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <select data-tooltip="tremolo-waveform" name="tremolo-waveform" class="form-control short-select" >
+                                                            <option value="sine">Sine</option> 
+                                                            <option value="square">Square</option>
+                                                            <option value="sawtooth">Sawtooth</option>
+                                                            <option value="triangle">Triangle</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                                <div class="col-sm-6 ">
-                                                    <input data-tooltip="vibrato-magnitude" class="" type="range" title="" min="0" max="10" name="vibrato-magnitude" value="3" step="0.1"><label for="vibrato-magnitude">3</label>
-                                                    <input data-tooltip="vibrato-speed" class="" type="range" name="vibrato-speed" min="0" max="10" step="0.1" value="4"><label for="vibrato-speed">4</label>
-                                                    <input data-tooltip="vibrato-attack" class="" type="range" name="vibrato-attack" min="0" max="5" step="0.1" value="0"><label for="vibrato-attack">0</label>
+                                                <div class="space"></div>
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label data-tooltip="tremolo-magnitude">Magnitude</label><br>
+                                                        <label data-tooltip="tremolo-speed">Speed</label><br>
+                                                        <label data-tooltip="tremolo-attack">Attack</label><br>
+                                                    </div>
+                                                    <div class="col-sm-6 ">
+                                                        <input data-tooltip="tremolo-magnitude" class="" type="range" title="" min="0" max="10" name="tremolo-magnitude" value="3" step="0.1"><label for="tremolo-magnitude">3</label>
+                                                        <input data-tooltip="tremolo-speed" class="" type="range" name="tremolo-speed" min="0" max="10" step="0.1" value="4"><label for="tremolo-speed">4</label>
+                                                        <input data-tooltip="tremolo-attack" class="" type="range" name="tremolo-attack" min="0" max="5" step="0.1" value="0"><label for="tremolo-attack">0</label>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="space"></div>
-
-                                            <h3 data-tooltip="tremolo" class="text-center">Tremolo</h3>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label data-tooltip="tremolo-waveform" class="pad-top" >Waveform</label>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <select data-tooltip="tremolo-waveform" name="tremolo-waveform" class="form-control short-select" >
-                                                        <option value="sine">Sine</option> 
-                                                        <option value="square">Square</option>
-                                                        <option value="sawtooth">Sawtooth</option>
-                                                        <option value="triangle">Triangle</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="space"></div>
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <label data-tooltip="tremolo-magnitude">Magnitude</label><br>
-                                                    <label data-tooltip="tremolo-speed">Speed</label><br>
-                                                    <label data-tooltip="tremolo-attack">Attack</label><br>
-                                                </div>
-                                                <div class="col-sm-6 ">
-                                                    <input data-tooltip="tremolo-magnitude" class="" type="range" title="" min="0" max="10" name="tremolo-magnitude" value="3" step="0.1"><label for="tremolo-magnitude">3</label>
-                                                    <input data-tooltip="tremolo-speed" class="" type="range" name="tremolo-speed" min="0" max="10" step="0.1" value="4"><label for="tremolo-speed">4</label>
-                                                    <input data-tooltip="tremolo-attack" class="" type="range" name="tremolo-attack" min="0" max="5" step="0.1" value="0"><label for="tremolo-attack">0</label>
-                                                </div>
-                                            </div>
+                                            </section>
                                             <div class="space"></div>
                                         </div>
                                     </div>

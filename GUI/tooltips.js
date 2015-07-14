@@ -15,7 +15,7 @@ app.init.tooltips = function(app){
         'filter-type'          : "A low-pass filter removes high frequencies from the instrument, allowing low frequencies to 'pass' through. A high-pass filter does the opposite. A quick internet search can tell you what the other filters do.",
         'filter-frequency'     : "The frequency, in hertz, to which the filter is applied.",
         'filter-q'             : "Q-factor, also known as resonance. This affects how steep the cutoff is beyond the filter frequency.",
-        'filter-env'           : "The filter envelope changes the frequency of the filter applied to a note over the course of the note's duration.",
+        'filter-env'           : "The filter envelope changes the frequency of the filter applied to a note over the course of the note's duration. This does nothing if a filter is not set.",
         'filter-env-frequency' : "The filter frequency will transition from the starting value (set above) to this value, over the course of each note's duration.",
         'filter-env-attack'    : "Time, in seconds, for the filter frequency to transition from the starting value to the final value.",
         delay                  : "A delay effect causes each note to play repeatedly at progressively lower volume, like an echo.",

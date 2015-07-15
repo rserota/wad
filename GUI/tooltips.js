@@ -42,5 +42,7 @@ app.init.tooltips = function(app){
         for ( var tooltip in tooltips ) {
             $('[data-tooltip="' + tooltip + '"]').attr('title', tooltips[tooltip])
         }
+
+        $('[data-toggle="tooltip"]').tooltip()
     })
 }

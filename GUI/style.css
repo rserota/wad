@@ -47,7 +47,7 @@ button:focus {
     /*border: 2px solid black;*/
     padding: 15px;
 }
-.note, .loop-track {
+.loop-track {
     display : inline-block;
     height : 200px;
     width : 130px;

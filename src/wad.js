@@ -1268,7 +1268,6 @@ var valueOrDefault = function(value, def) {
 
     var onSuccessCallback = function(midiAccess){
         // console.log('inputs: ', m.inputs)
-        // Things you can do with the MIDIAccess object:
 
         Wad.midiInputs = []
         var val = midiAccess.inputs.values();
@@ -1276,7 +1275,7 @@ var valueOrDefault = function(value, def) {
             Wad.midiInputs.push(o.value)
         }
         // Wad.midiInputs = [m.inputs.values().next().value];   // inputs = array of MIDIPorts
-        console.log('inputs: ', Wad.midiInputs)
+        console.log('MIDI inputs: ', Wad.midiInputs)
         // var outputs = m.outputs(); // outputs = array of MIDIPorts
         for ( var i = 0; i < Wad.midiInputs.length; i++ ) {
             Wad.midiInputs[i].onmidimessage = midiMap; // onmidimessage( event ), event.data & event.receivedTime are populated

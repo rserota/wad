@@ -163,7 +163,8 @@ app.init.dom = function(app){
         })
 
 // test code //
-        $('.note').on('mousedown', function(){
+        $('.note').on('mousedown', function(event){
+            event.preventDefault()
             console.log('hi')
             app.instruments.alpha.play()
         })
@@ -178,13 +179,13 @@ app.init.dom = function(app){
         $('.settings-modal input[type="range"]').on('change', function(){
             var thisName = $(this).attr('name')
             if ( thisName === 'filter-frequency' ) {
-                $('[for="filter-frequency').text(app.range2freq($(this).val()))    
+                $(this).closest('.tab-pane').find('[for="filter-frequency').text(app.range2freq($(this).val()))    
             }
             else if ( thisName === 'filter-env-frequency' ) {
-                $('[for="filter-env-frequency').text(app.range2freq($(this).val()))    
+                $(this).closest('.tab-pane').find('[for="filter-env-frequency').text(app.range2freq($(this).val()))    
             }
             else {   
-                $('[for="' + thisName + '"]').text($(this).val())
+                $(this).closest('.tab-pane, #configModal').find('[for="' + thisName + '"]').text($(this).val())
             }
             console.log(thisName)
 

@@ -261,8 +261,12 @@ app.init.midiRigs = function(app){
 
 
 
-    console.log(Wad.midiInputs)
     if ( Wad.midiInputs[0] ) { Wad.midiInputs[0].onmidimessage = midiRigs[app.rig] }
-    else { setTimeout(function(){ Wad.midiInputs[0].onmidimessage = midiRigs[app.rig] }, 1000)}
+    else { 
+        setTimeout(function(){ 
+            if ( Wad.midiInputs[0] ) { Wad.midiInputs[0].onmidimessage = midiRigs[app.rig] }
+            else { console.log('No MIDI devices detected.')}
+            }, 1000)
+    }
 
 }

@@ -165,8 +165,9 @@ app.init.dom = function(app){
 // test code //
         $('.note').on('mousedown', function(event){
             event.preventDefault()
-            console.log('hi')
-            app.instruments.alpha.play()
+            var whichInstrument = $('#instrumentsModal .tab-pane.active').attr('id')
+            if ( whichInstrument !== 'delta')
+            app.instruments[whichInstrument].play()
         })
         $('.note').on('mouseup', function(){
             app.instruments.alpha.stop()

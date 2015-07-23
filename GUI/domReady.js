@@ -164,13 +164,17 @@ app.init.dom = function(app){
 
 // test code //
         $('.note').on('mousedown', function(event){
-            event.preventDefault()
+            var whichNote = $(this).attr('data-note')
             var whichInstrument = $('#instrumentsModal .tab-pane.active').attr('id')
-            if ( whichInstrument !== 'delta')
-            app.instruments[whichInstrument].play()
+            if ( whichInstrument !== 'delta') {
+                app.instruments[whichInstrument].play({pitch : whichNote })
+            }
         })
         $('.note').on('mouseup', function(){
-            app.instruments.alpha.stop()
+            var whichInstrument = $('#instrumentsModal .tab-pane.active').attr('id')
+            if ( whichInstrument !== 'delta') {
+                app.instruments[whichInstrument].stop()
+            }
         })
 ///////////////
 
@@ -180,15 +184,15 @@ app.init.dom = function(app){
         $('.settings-modal input[type="range"]').on('change', function(){
             var thisName = $(this).attr('name')
             if ( thisName === 'filter-frequency' ) {
-                $(this).closest('.tab-pane').find('[for="filter-frequency').text(app.range2freq($(this).val()))    
+                $(this).closest('.tab-pane').find('[for="filter-frequency"]').text(app.range2freq($(this).val()))    
             }
             else if ( thisName === 'filter-env-frequency' ) {
-                $(this).closest('.tab-pane').find('[for="filter-env-frequency').text(app.range2freq($(this).val()))    
+                $(this).closest('.tab-pane').find('[for="filter-env-frequency"]').text(app.range2freq($(this).val()))    
             }
             else {   
                 $(this).closest('.tab-pane, #configModal').find('[for="' + thisName + '"]').text($(this).val())
             }
-            console.log(thisName)
+            // console.log(thisName)
 
         })
 
@@ -261,8 +265,9 @@ app.init.dom = function(app){
         })
 
 
-        $('#instrumentsModal [name="save"]').on('click', function(){
-
+        $('#instrumentsModal input, #instrumentsModal select').on('change', function(){
+            var whichInstrument = $(this).closest('.tab-pane.active').attr('id')
+            console.log(whichInstrument)
             
         })
         $('#instrumentsModal [type="reset"]').on('click', function(){

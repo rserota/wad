@@ -164,10 +164,11 @@ app.init.dom = function(app){
 
 // test code //
         $('.note').on('mousedown', function(event){
-            var whichNote = $(this).attr('data-note')
+            var whichNote = +$(this).attr('data-note')
             var whichInstrument = $('#instrumentsModal .tab-pane.active').attr('id')
             if ( whichInstrument !== 'delta') {
-                app.instruments[whichInstrument].play({pitch : whichNote })
+                console.log(36 + whichNote + app.instruments[whichInstrument].pitchShiftCoarse)
+                app.instruments[whichInstrument].play({pitch : Wad.pitchesArray[42 + whichNote + app.instruments[whichInstrument].pitchShiftCoarse] })
             }
         })
         $('.note').on('mouseup', function(){
@@ -239,14 +240,14 @@ app.init.dom = function(app){
             var barsPerLoop = $('[name="bars-per-loop"]').val()
 
 
-            app.keys.record     = [parseInt($('[name="record"]').attr('data-which'))]
-            app.keys.erase      = [parseInt($('[name="erase"]').attr('data-which'))]
-            app.keys.microphone = [parseInt($('[name="microphone"]').attr('data-which'))]
-            app.keys.animate    = [parseInt($('[name="animate"]').attr('data-which'))]
-            app.keys.alpha      = [parseInt($('[name="alpha"]').attr('data-which'))]
-            app.keys.beta       = [parseInt($('[name="beta"]').attr('data-which'))]
-            app.keys.gamma      = [parseInt($('[name="gamma"]').attr('data-which'))]
-            app.keys.delta      = [parseInt($('[name="delta"]').attr('data-which'))]
+            app.keys.record     = [+$('[name="record"]').attr('data-which')]
+            app.keys.erase      = [+$('[name="erase"]').attr('data-which')]
+            app.keys.microphone = [+$('[name="microphone"]').attr('data-which')]
+            app.keys.animate    = [+$('[name="animate"]').attr('data-which')]
+            app.keys.alpha      = [+$('[name="alpha"]').attr('data-which')]
+            app.keys.beta       = [+$('[name="beta"]').attr('data-which')]
+            app.keys.gamma      = [+$('[name="gamma"]').attr('data-which')]
+            app.keys.delta      = [+$('[name="delta"]').attr('data-which')]
 
             app.keys.mode.schedule = $('.schedule-mode').val() ? true : false
 
@@ -266,9 +267,18 @@ app.init.dom = function(app){
 
 
         $('#instrumentsModal input, #instrumentsModal select').on('change', function(){
-            var whichInstrument = $(this).closest('.tab-pane.active').attr('id')
-            console.log(whichInstrument)
-            
+            var $whichInst = $(this).closest('.tab-pane.active')
+            var whichInst = app.instruments[$whichInst.attr('id')]
+            console.log(whichInst)
+            whichInst.source           = $whichInst.find('[name="waveform"]').val()
+            whichInst.defaultVolume    = +$whichInst.find('[name="volume"]').val()
+            whichInst.panning.location = +$whichInst.find('[name="panning"]').val()
+            whichInst.detune           = +$whichInst.find('[name="pitch-shift-fine"]').val()
+            whichInst.pitchShiftCoarse = +$whichInst.find('[name="pitch-shift-coarse"]').val()
+            whichInst.defaultEnv.attack       = +$whichInst.find('[name="volume-attack"]').val()
+            whichInst.defaultEnv.decay        = +$whichInst.find('[name="volume-decay"]').val()
+            whichInst.defaultEnv.sustain      = +$whichInst.find('[name="volume-sustain"]').val()
+            whichInst.defaultEnv.release      = +$whichInst.find('[name="volume-release"]').val()
         })
         $('#instrumentsModal [type="reset"]').on('click', function(){
 

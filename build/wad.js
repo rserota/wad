@@ -234,10 +234,10 @@ Don't let the Wad play until all necessary files have been downloaded. **/
     var constructTremolo = function(that, arg){
         if ( arg.tremolo ) {
             that.tremolo = {
-                shape     : valueOrDefault(arg.vibrato.shape, 'sine'),
-                speed     : valueOrDefault(arg.vibrato.speed, 1),
-                magnitude : valueOrDefault(arg.vibrato.magnitude, 5),
-                attack    : valueOrDefault(arg.vibrato.attack, 1)
+                shape     : valueOrDefault(arg.tremolo.shape, 'sine'),
+                speed     : valueOrDefault(arg.tremolo.speed, 1),
+                magnitude : valueOrDefault(arg.tremolo.magnitude, 5),
+                attack    : valueOrDefault(arg.tremolo.attack, 1)
             };
         }
         else { that.tremolo = null; }
@@ -284,6 +284,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
             else {
                 that.panning.type = '3d'
+                that.panning.panningModel = arg.panningModel || 'equalpower';
             }
         }
 
@@ -296,8 +297,9 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         if ( that.panning.type === 'stereo' && !context.createStereoPanner ) {
             console.log("Your browser does not support stereo panning. Falling back to 3D panning.")
             that.panning = {
-                location : [0,0,0],
-                type     : '3d',
+                location     : [0,0,0],
+                type         : '3d',
+                panningModel : 'equalpower',
             }
         }
     };
@@ -569,7 +571,7 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
 /** Initialize and configure a panner node for playback **/
     var setUpPanningOnPlay = function(that, arg){
         var panning = arg && arg.panning; // can be zero provided as argument
-        if (typeof panning === 'undefined') panning = that.panning.location;
+        if (typeof panning === 'undefined') { panning = that.panning.location; }
 
         if (typeof panning  === 'number') {
             that.panning.node = context.createStereoPanner();
@@ -579,6 +581,7 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
         else {
             that.panning.node = context.createPanner();
             that.panning.node.setPosition(panning[0], panning[1], panning[2]);
+            that.panning.node.panningModel = arg.panningModel || that.panningModel || 'equalpower';
             that.panning.type = '3d';
         }
 

@@ -127,10 +127,10 @@ Don't let the Wad play until all necessary files have been downloaded. **/
     var constructTremolo = function(that, arg){
         if ( arg.tremolo ) {
             that.tremolo = {
-                shape     : valueOrDefault(arg.vibrato.shape, 'sine'),
-                speed     : valueOrDefault(arg.vibrato.speed, 1),
-                magnitude : valueOrDefault(arg.vibrato.magnitude, 5),
-                attack    : valueOrDefault(arg.vibrato.attack, 1)
+                shape     : valueOrDefault(arg.tremolo.shape, 'sine'),
+                speed     : valueOrDefault(arg.tremolo.speed, 1),
+                magnitude : valueOrDefault(arg.tremolo.magnitude, 5),
+                attack    : valueOrDefault(arg.tremolo.attack, 1)
             };
         }
         else { that.tremolo = null; }
@@ -474,7 +474,7 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
         else {
             that.panning.node = context.createPanner();
             that.panning.node.setPosition(panning[0], panning[1], panning[2]);
-            that.panning.node.panningModel = arg.panningModel || that.panningModel || 'equalpower'
+            that.panning.node.panningModel = arg.panningModel || that.panningModel || 'equalpower';
             that.panning.type = '3d';
         }
 

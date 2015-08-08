@@ -73,10 +73,7 @@ var Wad = (function(){
                     type : filterArg.type || 'lowpass',
                     frequency : filterArg.frequency || 600,
                     q : filterArg.q || 1,
-                    env : {
-                        frequency : filterArg.env && filterArg.env.frequency || 800,
-                        attack    : filterArg.env && filterArg.env.attack || 0.5,
-                    },
+                    env : filterArg.env || null,
                 }
             });
         }
@@ -85,10 +82,7 @@ var Wad = (function(){
                 type : arg.filter.type || 'lowpass',
                 frequency : arg.filter.frequency || 600,
                 q : arg.filter.q || 1,
-                env : {
-                    frequency : arg.filter.env && arg.filter.env.frequency || 800,
-                    attack : arg.filter.env && arg.filter.env.attack || .5,
-                },
+                env : arg.filter.env ||null,
             }];
         }
     }

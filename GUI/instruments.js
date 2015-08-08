@@ -93,7 +93,7 @@ app.init.instruments = function(app){
     app.instruments.alpha = new Wad({
         source  : 'sawtooth',
         env     : {
-            hold    : 3,
+            hold    : 5,
             attack  : 0.02,
             release : 0.3,
             sustain : .6,
@@ -113,7 +113,7 @@ app.init.instruments = function(app){
             attack : .02,
             decay  : .2,
             sustain : .8,
-            hold    : 4,
+            hold    : 5,
             release : .1
         },
         filter : { // slap

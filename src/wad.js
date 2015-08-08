@@ -524,7 +524,7 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
                 interface    : 'custom',
                 input        : context.createGain(),
                 output       : context.createGain(),
-                delayNode    : context.createDelay(maxDelayTime = that.delay.maxDelayTime), // the native delay node inside the custom delay node.
+                delayNode    : context.createDelay(that.delay.maxDelayTime), // the native delay node inside the custom delay node.
                 feedbackNode : context.createGain(),
                 wetNode      : context.createGain(),
             }
@@ -731,6 +731,9 @@ then finally play the sound by calling playEnv() **/
         }
         else {
             this.mediaStreamSource.disconnect(0);
+        }
+        if ( this.tremolo ) {
+            this.tremolo.wad.stop()
         }
     };
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////

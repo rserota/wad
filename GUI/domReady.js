@@ -302,6 +302,42 @@ app.init.dom = function(app){
                 $whichInst.find('[name="filter-env-frequency"]').prop('disabled', true)
                 $whichInst.find('[name="filter-env-attack"]').prop('disabled', true)
             }
+
+            if ( $whichInst.find('[name="delay-toggle"]').prop('checked')) {
+                whichInst.delay = {
+                    delayTime : +$whichInst.find('[name="delay-time"]').val(),
+                    maxDelayTime : 2.1,
+                    feedback : +$whichInst.find('[name="delay-feedback"]').val(),
+                    wet : +$whichInst.find('[name="delay-wet-level"]').val()
+                }
+            }
+            else {
+                whichInst.delay = null
+            }
+            if ( $whichInst.find('[name="vibrato-toggle"]').prop('checked')) {
+                whichInst.vibrato = {
+                    shape : $whichInst.find('[name="vibrato-waveform"]').val(),
+                    speed : +$whichInst.find('[name="vibrato-speed"]').val(),
+                    magnitude : +$whichInst.find('[name="vibrato-magnitude"]').val(),
+                    attack : +$whichInst.find('[name="vibrato-attack"]').val(),
+                }
+            }
+            else {
+                whichInst.vibrato = null
+            }
+
+            if ( $whichInst.find('[name="tremolo-toggle"]').prop('checked')) {
+                whichInst.tremolo = {
+                    shape : $whichInst.find('[name="tremolo-waveform"]').val(),
+                    speed : +$whichInst.find('[name="tremolo-speed"]').val(),
+                    magnitude : +$whichInst.find('[name="tremolo-magnitude"]').val(),
+                    attack : +$whichInst.find('[name="tremolo-attack"]').val(),
+                }
+            }
+            else {
+                whichInst.tremolo = null
+            }
+
         })
         $('#instrumentsModal [type="reset"]').on('click', function(){
 

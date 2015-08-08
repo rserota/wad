@@ -175,21 +175,27 @@ var Wad = (function(){
         if ( !arg.filter ) { arg.filter = null; }
 
         else if ( isArray(arg.filter) ) {
-            that.filter = [];
-            arg.filter.forEach(function(filterArg){
-                var thisFilter = {
-                    type : filterArg.filter.type || 'lowpass',
-                    frequency : filterArg.filter.frequency || 600,
-                    q : filterArg.filter.q || 1
+            that.filter = arg.filter.map(function(filterArg){
+                return {
+                    type : filterArg.type || 'lowpass',
+                    frequency : filterArg.frequency || 600,
+                    q : filterArg.q || 1,
+                    env : {
+                        frequency : filterArg.env && filterArg.env.frequency || 800,
+                        attack    : filterArg.env && filterArg.env.attack || 0.5,
+                    },
                 }
-                constructFilter(that, { filter : filterArg })
             });
         }
         else {
             that.filter  = [{
                 type : arg.filter.type || 'lowpass',
                 frequency : arg.filter.frequency || 600,
-                q : arg.filter.q || 1
+                q : arg.filter.q || 1,
+                env : {
+                    frequency : arg.filter.env && arg.filter.env.frequency || 800,
+                    attack : arg.filter.env && arg.filter.env.attack || .5,
+                },
             }];
         }
     }
@@ -1375,7 +1381,6 @@ var valueOrDefault = function(value, def) {
 
     var onSuccessCallback = function(midiAccess){
         // console.log('inputs: ', m.inputs)
-        // Things you can do with the MIDIAccess object:
 
         Wad.midiInputs = []
         var val = midiAccess.inputs.values();
@@ -1383,7 +1388,7 @@ var valueOrDefault = function(value, def) {
             Wad.midiInputs.push(o.value)
         }
         // Wad.midiInputs = [m.inputs.values().next().value];   // inputs = array of MIDIPorts
-        console.log('inputs: ', Wad.midiInputs)
+        console.log('MIDI inputs: ', Wad.midiInputs)
         // var outputs = m.outputs(); // outputs = array of MIDIPorts
         for ( var i = 0; i < Wad.midiInputs.length; i++ ) {
             Wad.midiInputs[i].onmidimessage = midiMap; // onmidimessage( event ), event.data & event.receivedTime are populated

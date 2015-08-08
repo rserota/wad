@@ -283,15 +283,24 @@ app.init.dom = function(app){
                 whichInst.filter = [{
                     type      : $whichInst.find('[name="filter-type"]').val(),
                     frequency : app.range2freq(+$whichInst.find('[name="filter-frequency"]').val()),
-                    q         : +$whichInst.find('[name="filter-q"]').val()
+                    q         : +$whichInst.find('[name="filter-q"]').val(),
                 }]
 
                 if ( $whichInst.find('[name="filter-env-toggle"]').prop('checked') ) {
-                    
+                    whichInst.filter[0].env = {
+                        frequency : app.range2freq(+$whichInst.find('[name="filter-env-frequency"]').val()),
+                        attack    : +$whichInst.find('[name="filter-env-attack"]').val(),
+                    }
+                }
+                else {
+                    whichInst.filter[0].env = null
                 }
             }
             else {
                 whichInst.filter = null
+                $whichInst.find('[name="filter-env-toggle"]').prop('checked', false)
+                $whichInst.find('[name="filter-env-frequency"]').prop('disabled', true)
+                $whichInst.find('[name="filter-env-attack"]').prop('disabled', true)
             }
         })
         $('#instrumentsModal [type="reset"]').on('click', function(){

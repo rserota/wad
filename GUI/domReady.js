@@ -270,15 +270,29 @@ app.init.dom = function(app){
             var $whichInst = $(this).closest('.tab-pane.active')
             var whichInst = app.instruments[$whichInst.attr('id')]
             console.log(whichInst)
-            whichInst.source           = $whichInst.find('[name="waveform"]').val()
-            whichInst.defaultVolume    = +$whichInst.find('[name="volume"]').val()
-            whichInst.panning.location = +$whichInst.find('[name="panning"]').val()
-            whichInst.detune           = +$whichInst.find('[name="pitch-shift-fine"]').val()
-            whichInst.pitchShiftCoarse = +$whichInst.find('[name="pitch-shift-coarse"]').val()
-            whichInst.defaultEnv.attack       = +$whichInst.find('[name="volume-attack"]').val()
-            whichInst.defaultEnv.decay        = +$whichInst.find('[name="volume-decay"]').val()
-            whichInst.defaultEnv.sustain      = +$whichInst.find('[name="volume-sustain"]').val()
-            whichInst.defaultEnv.release      = +$whichInst.find('[name="volume-release"]').val()
+            whichInst.source             =  $whichInst.find('[name="waveform"]').val()
+            whichInst.defaultVolume      = +$whichInst.find('[name="volume"]').val()
+            whichInst.panning.location   = +$whichInst.find('[name="panning"]').val()
+            whichInst.detune             = +$whichInst.find('[name="pitch-shift-fine"]').val()
+            whichInst.pitchShiftCoarse   = +$whichInst.find('[name="pitch-shift-coarse"]').val()
+            whichInst.defaultEnv.attack  = +$whichInst.find('[name="volume-attack"]').val()
+            whichInst.defaultEnv.decay   = +$whichInst.find('[name="volume-decay"]').val()
+            whichInst.defaultEnv.sustain = +$whichInst.find('[name="volume-sustain"]').val()
+            whichInst.defaultEnv.release = +$whichInst.find('[name="volume-release"]').val()
+            if ( $whichInst.find('[name="filter-toggle"]').prop('checked') ) {
+                whichInst.filter = [{
+                    type      : $whichInst.find('[name="filter-type"]').val(),
+                    frequency : app.range2freq(+$whichInst.find('[name="filter-frequency"]').val()),
+                    q         : +$whichInst.find('[name="filter-q"]').val()
+                }]
+
+                if ( $whichInst.find('[name="filter-env-toggle"]').prop('checked') ) {
+                    
+                }
+            }
+            else {
+                whichInst.filter = null
+            }
         })
         $('#instrumentsModal [type="reset"]').on('click', function(){
 

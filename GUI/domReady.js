@@ -355,9 +355,15 @@ app.init.dom = function(app){
 
         })
 
+        // disable controls for effects that are not in use.
         $('#instrumentsModal [type="checkbox"]').on('change', function(){
             $(this).closest('.settings-section').find('[type="range"], select').prop('disabled', !$(this).prop('checked'))
 
+        })
+
+        $(document).on('midi', function(event, midiEvent){
+            console.log('event', event)
+            console.log('midiEvent', midiEvent)
         })
 
     })

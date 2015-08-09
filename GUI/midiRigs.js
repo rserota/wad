@@ -8,6 +8,7 @@ app.init.midiRigs = function(app){
         // using octave shift, so lowest note is [144, 60, 1]
         // I need to make sure that the keyboard is shifted up one octave.
         midiRig25 : function(event){
+            $(document).trigger('midi', [event])
             // console.log(event.receivedTime, event.data)
             if ( event.data[0] === 177 && event.data[1] === 49 ) {
                 app.instruments.alpha.play({pitch : Wad.pitchesArray[event.data[2]+24], env : { hold : .2 }})

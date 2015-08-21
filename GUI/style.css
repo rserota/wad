@@ -163,3 +163,8 @@ button:focus {
     max-height: 65vh;
     overflow:scroll;
 }
+
+.drums-settings [type="range"] {
+    position: relative;
+    top: 2px;
+}

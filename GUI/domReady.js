@@ -62,11 +62,11 @@ app.init.dom = function(app){
         $(document).on('keyup', function(e){
            if ( app.keys.record.indexOf(e.which) > -1 ){
                app.keys.mode.record = false;
-               console.log(app.keys.mode)
+               // console.log(app.keys.mode)
            }
            if ( app.keys.erase.indexOf(e.which) > -1 ){
                app.keys.mode.record = false;
-               console.log(app.keys.mode)
+               // console.log(app.keys.mode)
            }  
         })
 
@@ -98,7 +98,7 @@ app.init.dom = function(app){
         
 
         $(document).on('keydown', function(e){
-            console.log(e)
+            // console.log(e)
             /* Handle modal keys (record, erase, etc) */
             if ( e.which in preventDefaultKeys ) {
                 console.log('nope!')
@@ -106,11 +106,11 @@ app.init.dom = function(app){
             }
             if ( app.keys.record.indexOf(e.which) > -1 ) {
                 app.keys.mode.record = true;
-               console.log(app.keys.mode)
+               // console.log(app.keys.mode)
             }
             else if ( app.keys.erase.indexOf(e.which) > -1 ) {
                 app.keys.mode.erase = true;
-               console.log(app.keys.mode)
+               // console.log(app.keys.mode)
             }
             ///////////////////////////////////////////
             if ( app.keys.microphone.indexOf(e.which) > -1 ) {
@@ -167,8 +167,9 @@ app.init.dom = function(app){
             var whichNote = +$(this).attr('data-note')
             var whichInstrument = $('#instrumentsModal .tab-pane.active').attr('id')
             if ( whichInstrument !== 'delta') {
-                console.log(36 + whichNote + app.instruments[whichInstrument].pitchShiftCoarse)
-                app.instruments[whichInstrument].play({pitch : Wad.pitchesArray[42 + whichNote + app.instruments[whichInstrument].pitchShiftCoarse] })
+                console.log(Wad.pitchesArray[48 + whichNote + app.instruments[whichInstrument].pitchShiftCoarse])
+                
+                app.instruments[whichInstrument].play({pitch : Wad.pitchesArray[48 + whichNote + app.instruments[whichInstrument].pitchShiftCoarse] })
             }
         })
         $('.note').on('mouseup', function(){
@@ -362,8 +363,21 @@ app.init.dom = function(app){
         })
 
         $(document).on('midi', function(event, midiEvent){
-            console.log('event', event)
-            console.log('midiEvent', midiEvent)
+            // console.log('event', event)
+            // console.log('midiEvent', midiEvent)
+        })
+
+
+        $('.drums-settings [type="text"]').on('click', function(){
+            console.log('focus!')
+            var $this = $(this)
+            $this.one('midi', function(event, midiEvent){
+                console.log(midiEvent.data)
+            })
+        })
+
+        $('.drums-settings [type="text"]').on('blur', function(){
+            $(this).off('midi')
         })
 
     })

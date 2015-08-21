@@ -9,15 +9,17 @@ app.init.midiRigs = function(app){
         // I need to make sure that the keyboard is shifted up one octave.
         midiRig25 : function(event){
             $(document).trigger('midi', [event])
-            // console.log(event.receivedTime, event.data)
+            console.log(event.receivedTime, event.data)
             if ( event.data[0] === 177 && event.data[1] === 49 ) {
                 app.instruments.alpha.play({pitch : Wad.pitchesArray[event.data[2]+24], env : { hold : .2 }})
             }
 
-            if ( event.data[0] === 128 && event.data[1] === 48 && event.data[2] === 0 ) { app.instruments.mode = 'alpha' }
-            if ( event.data[0] === 128 && event.data[1] === 49 && event.data[2] === 0 ) { app.instruments.mode = 'beta'  }
-            if ( event.data[0] === 128 && event.data[1] === 50 && event.data[2] === 0 ) { app.instruments.mode = 'gamma' }
-            if ( event.data[0] === 128 && event.data[1] === 51 && event.data[2] === 0 ) { app.instruments.mode = 'delta' }
+
+            // This is controlled from the computer keyboard, not the MIDI keyboard.
+            // if ( event.data[0] === 128 && event.data[1] === 48 && event.data[2] === 0 ) { app.instruments.mode = 'alpha' }
+            // if ( event.data[0] === 128 && event.data[1] === 49 && event.data[2] === 0 ) { app.instruments.mode = 'beta'  }
+            // if ( event.data[0] === 128 && event.data[1] === 50 && event.data[2] === 0 ) { app.instruments.mode = 'gamma' }
+            // if ( event.data[0] === 128 && event.data[1] === 51 && event.data[2] === 0 ) { app.instruments.mode = 'delta' }
 
             if      ( app.instruments.mode === 'alpha' ) {
 
@@ -30,17 +32,14 @@ app.init.midiRigs = function(app){
                         app.instruments.alpha.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], detune : app.detune, panning: app.panning, volume : 2.5 })
                     }
                     else {
+                        var pitch = Wad.pitchesArray[event.data[1]-12]
+                        console.log('pitch', pitch)
                         app.instruments.alpha.play({
-                            volume  : .5,
+                            // volume  : .5,
                             pitch   : Wad.pitchesArray[event.data[1]-12], 
                             label   : Wad.pitchesArray[event.data[1]-12], 
                             detune  : app.detune,
-                            panning : app.panning,
-                            env     : {
-                                attack  : .4,
-                                sustain : 1,
-                                decay   : 0
-                            } 
+                            // panning : app.panning,
                         })
                     }
                 }

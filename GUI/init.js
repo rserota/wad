@@ -29,7 +29,7 @@ var app = {
             schedule : false,
         }
     },
-    rig           : 'midiRig88',
+    rig           : 'midiRig25',
 
     instruments   : {
         alpha     : null,

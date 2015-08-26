@@ -101,7 +101,7 @@ app.init.dom = function(app){
             // console.log(e)
             /* Handle modal keys (record, erase, etc) */
             if ( e.which in preventDefaultKeys ) {
-                console.log('nope!')
+                // console.log('nope!')
                 e.preventDefault();
             }
             if ( app.keys.record.indexOf(e.which) > -1 ) {
@@ -369,15 +369,16 @@ app.init.dom = function(app){
 
 
         $('.drums-settings [type="text"]').on('click', function(){
-            console.log('focus!')
-            var $this = $(this)
-            $this.one('midi', function(event, midiEvent){
-                console.log(midiEvent.data)
-            })
+            app.listenForMIDI = true
+        })
+        $('.drums-settings [type="text"]').on('midi', function(event, midiEvent){
+            console.log('!',midiEvent.data)
+            $(this).val(midiEvent.data[1])
+            app.keys.drums[$(this).attr('name')] = midiEvent.data[1]
         })
 
         $('.drums-settings [type="text"]').on('blur', function(){
-            $(this).off('midi')
+            app.listenForMIDI = false
         })
 
     })

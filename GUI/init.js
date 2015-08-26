@@ -19,10 +19,23 @@ var app = {
         erase      : [16],
         microphone : [77],
         animate    : [190],
+        // switch to different instruments
         alpha      : [90],
         beta       : [88],
         gamma      : [67],
         delta      : [86],
+        //////////////////////////////////
+        drums      : {
+            kick : null,
+            snare : null,
+            closedHihat : null,
+            openHihat : null,
+            crash : null,
+            highTom : null,
+            midTom : null,
+            lowTom : null,
+            cowbell : null,
+        },
         mode       : { // which keys are currently pressed down?
             record   : false,
             erase    : false,

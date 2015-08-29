@@ -168,3 +168,11 @@ button:focus {
     position: relative;
     top: 2px;
 }
+
+#help span {
+    font-size: 100px;
+    font-weight: bold;
+    font-family: ariel;
+    position:relative;
+    bottom: 20px;
+}

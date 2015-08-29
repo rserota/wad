@@ -211,12 +211,23 @@ app.init.midiRigs = function(app){
 
 
 
-    if ( Wad.midiInputs[0] ) { Wad.midiInputs[0].onmidimessage = midiRigs[app.rig] }
+    if ( Wad.midiInputs[0] ) { 
+        Wad.midiInputs[0].onmidimessage = midiRigs[app.rig] 
+        $('p#midi-detected').text('A connected MIDI device has been detected.')
+    }
     else { 
         setTimeout(function(){ 
-            if ( Wad.midiInputs[0] ) { Wad.midiInputs[0].onmidimessage = midiRigs[app.rig] }
-            else { console.log('No MIDI devices detected.')}
-            }, 1000)
+            if ( Wad.midiInputs[0] ) { 
+                Wad.midiInputs[0].onmidimessage = midiRigs[app.rig] 
+                $('p#midi-detected').text('A connected MIDI device has been detected.')
+            }
+            else { 
+                console.log('No MIDI devices detected.')
+                $('p#midi-detected').text('No MIDI device was detected. Try restarting your browser while the device is plugged in.')
+
+
+            }
+        }, 1000)
     }
 
 }

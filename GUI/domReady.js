@@ -171,11 +171,22 @@ app.init.dom = function(app){
                 
                 app.instruments[whichInstrument].play({pitch : Wad.pitchesArray[48 + whichNote + app.instruments[whichInstrument].pitchShiftCoarse] })
             }
+            else {
+                var whichDrum = $(':focus')
+                if ( whichDrum.attr('name') ) {
+                    console.log(whichDrum[0].name)
+                    app.instruments.delta[whichDrum.attr('name').split('-vol')[0]].play()
+                    setTimeout(function(){whichDrum[0].focus()},10)
+                }
+            }
         })
         $('.note').on('mouseup', function(){
             var whichInstrument = $('#instrumentsModal .tab-pane.active').attr('id')
             if ( whichInstrument !== 'delta') {
                 app.instruments[whichInstrument].stop()
+            }
+            else {
+                // console.log('delta')
             }
         })
 ///////////////
@@ -250,7 +261,7 @@ app.init.dom = function(app){
             app.keys.gamma      = [+$('[name="gamma"]').attr('data-which')]
             app.keys.delta      = [+$('[name="delta"]').attr('data-which')]
 
-            app.keys.mode.schedule = $('.schedule-mode').val() ? true : false
+            // app.keys.mode.schedule = $('.schedule-mode').val() ? true : false
 
             console.log(bpm,beatsPerBar,barsPerLoop)
             app.trackActions.resizeLoop(bpm, beatsPerBar, barsPerLoop)

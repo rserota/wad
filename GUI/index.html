@@ -31,6 +31,9 @@
                 <button class="btn btn-default btn-round" type="button" data-toggle="modal" data-target="#instrumentsModal" id="instruments">
                     <i class="fa fa-5x fa-music" style="padding-right:10px;"></i>
                 </button>
+                <button class="btn btn-default btn-round" type="button" data-toggle="modal" data-target="#helpModal" id="help">
+                    <span>?</span>
+                </button>
             </div>
             <!-- END BIG CIRCLE BUTTON MENU -->
 
@@ -106,6 +109,7 @@
                             <p>Toggle microphone input on or off by pressing <code>[microphone]</code>.</p>
                             <p>Start or restart the looping animation by pressing <code>[animate]</code>.</p>
                             <p>This application contains 4 different instruments which you can switch between at any time. The first three are synthesized with oscillators, while the fourth instrument is a drum kit, which includes several samples.</p>
+                            <div class="space"></div>
                             <h3 class="text-center">Controls Settings</h3>
                             <div class="controls-settings">
                                 <div class="row">
@@ -134,16 +138,17 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="space"></div>
-                            <p>By default, if a <strong>mute</strong> or <strong>record</strong> action is triggered, that action happens immediately. If you prefer, you can configure these actions to occur at the start of the next loop instead.</p>
-                            <div class="row">
-                                <div class="col-sm-6 text-right pad-top">Action Timing</div>
-                                <div class="col-sm-6">
-                                    <select class="form-control schedule-mode short-select">
-                                                <!-- empty string value is intentional -->
-                                        <option value="">Immediate</option>
-                                        <option value="scheduled">Scheduled</option>
-                                    </select>
+                            <div class="action-timing" style="display:none;">
+                                <p>By default, if a <strong>mute</strong> or <strong>record</strong> action is triggered, that action happens immediately. If you prefer, you can configure these actions to occur at the start of the next loop instead.</p>
+                                <div class="row">
+                                    <div class="col-sm-6 text-right pad-top">Action Timing</div>
+                                    <div class="col-sm-6">
+                                        <select class="form-control schedule-mode short-select">
+                                                    <!-- empty string value is intentional -->
+                                            <option value="">Immediate</option>
+                                            <option value="scheduled">Scheduled</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="space"></div>
@@ -827,6 +832,31 @@
             </div>
         </div>
         <!-- END INSTRUMENT SETTINGS MODAL -->
+
+
+
+        <div class="modal fade help-modal" id="helpModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h2 class="modal-title text-center">Help</h2>
+                        </div>
+                        <div class="modal-body">
+                            <p>This application is an 8-track live-looper. To use all the functionality of this application, you will need a MIDI keyboard connected to your computer. For the best experience, it is recommended that you use the latest version of Google Chrome.</p>
+                            <strong><p id="midi-detected"></p></strong>
+
+                            <p>If you want to use microphone input, you'll need to give your browser permission to use your microphone (a popup should appear asking for your consent when this page loads. If you don't see it, you may need to change your browser's settings). After giving your browser permission, enable microphone input by clicking the microphone button (the big circle with the microphone icon in it), or press the <code>[microphone]</code> button (m, by default).</p>
+                            <p>To use this application, start by clicking the animate button (the big circle with the triangle in it), or press the <code>[animate]</code> key (period, by default). When you're ready to start recording, hold the <code>[record]</code> button (spacebar, by default), and choose a track to record to by pressing a number key, 1-8. Next, make some noise with your MIDI keyboard using the instruments included in this application, or using microphone input. All sounds you make will be recorded to the chosen track. All tracks will loop indefinitely, allowing you to build a complex piece of music, one track at a time.</p> 
+                            <p>You can configure the keyboard controls and the length of the loop in the Looper-Settings menu (click the big gear button). The individual instruments can be configured with the Instruments-Settings menu (click the big music-note button).
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
 
 

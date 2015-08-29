@@ -35,28 +35,26 @@ app.init.midiRigs = function(app){
                     }
                     else {
                         var pitch = Wad.pitchesArray[event.data[1]-12]
-                        console.log('pitch', pitch)
+                        // console.log('pitch', pitch)
                         app.instruments.alpha.play({
                             // volume  : .5,
-                            pitch   : Wad.pitchesArray[event.data[1]-12], 
-                            label   : Wad.pitchesArray[event.data[1]-12], 
-                            detune  : app.detune,
-                            // panning : app.panning,
+                            pitch   : Wad.pitchesArray[event.data[1]-12 + app.instruments.alpha.pitchShiftCoarse], 
+                            label   : Wad.pitchesArray[event.data[1]-12 + app.instruments.alpha.pitchShiftCoarse], 
                         })
                     }
                 }
                 else if ( event.data[0] === 224 ) { // 224 means the midi message has pitch bend data
-                    console.log('pitch bend')
-                    console.log( ( event.data[2] - 64 ) * ( 100 / 64 ) )
+                    // console.log('pitch bend')
+                    // console.log( ( event.data[2] - 64 ) * ( 100 / 64 ) )
                     app.instruments.alpha.setDetune( ( event.data[2] - 64 ) * ( 100 / 64 ) * 12 )
                     app.detune =    ( event.data[2] - 64 ) * ( 100 / 64 ) * 12
                     // console.log(app.detune)
                 }
                 else if ( event.data[0] === 176 && event.data[1] === 22 ) {
-                    console.log(event.data[2])
+                    // console.log(event.data[2])
                     app.panning = ( ( event.data[2] - 64 ) * ( 10 / 64 ) ) / 10
                     app.instruments.alpha.setPanning(app.panning)
-                    console.log('panning: ', app.panning)
+                    // console.log('panning: ', app.panning)
                 }
                 if      ( event.data[0] === 176 && event.data[1] === 64 && event.data[2] === 127 ) { // pedal data
                     app.instruments.pedalDown = true
@@ -70,26 +68,13 @@ app.init.midiRigs = function(app){
 
             else if ( app.instruments.mode === 'beta' ) {
                 if ( event.data[0] === 128 ) { // stop note.
-                    app.instruments.beta.stop(Wad.pitchesArray[event.data[1]-48])
+                    app.instruments.beta.stop(Wad.pitchesArray[event.data[1]-12 + app.instruments.beta.pitchShiftCoarse])
                 }
                 if ( event.data[0] === 144 ) { // note data
                     if ( app.instruments.pedalDown === false ) {
                         app.instruments.beta.play({
-                            pitch   : Wad.pitchesArray[event.data[1]-48], 
-                            label   : Wad.pitchesArray[event.data[1]-48], 
-                            detune  : app.detune,
-                            panning : app.panning,
-                            env : {
-                                release : .5
-                            },
-                            filter : { // slap
-                                type : 'lowpass',
-                                frequency : 1700,
-                                env : {
-                                    attack : .3,
-                                    frequency : 400
-                                }
-                            } 
+                            pitch   : Wad.pitchesArray[event.data[1]-12 + app.instruments.beta.pitchShiftCoarse], 
+                            label   : Wad.pitchesArray[event.data[1]-12 + app.instruments.beta.pitchShiftCoarse], 
                         })
                     }
                     else if ( app.instruments.pedalDown === true ) {
@@ -116,11 +101,6 @@ app.init.midiRigs = function(app){
                             }
                         })
                     }
-                    else if ( event.data[0] === 176 && event.data[1] === 22 ) {
-                        app.panning = ( ( event.data[2] - 64 ) * ( 10 / 64 ) ) / 10
-                        app.instruments.beta.setPanning(app.panning)
-                        console.log('panning: ', app.panning)
-                    }
                 }
 
                 if      ( event.data[0] === 176 && event.data[1] === 64 && event.data[2] === 127 ) { // pedal data
@@ -132,9 +112,14 @@ app.init.midiRigs = function(app){
                     console.log(app.instruments.pedalDown)
                 }
 
+                else if ( event.data[0] === 176 && event.data[1] === 22 ) {
+                    app.panning = ( ( event.data[2] - 64 ) * ( 10 / 64 ) ) / 10
+                    app.instruments.beta.setPanning(app.panning)
+                    console.log('panning: ', app.panning)
+                }
                 else if ( event.data[0] === 224 ) { // 224 means the midi message has pitch bend data
-                    console.log('pitch bend')
-                    console.log( ( event.data[2] - 64 ) * ( 100 / 64 ) )
+                    // console.log('pitch bend')
+                    // console.log( ( event.data[2] - 64 ) * ( 100 / 64 ) )
                     app.instruments.beta.setDetune( ( event.data[2] - 64 ) * ( 100 / 64 ) * 2 )
                     app.detune =    ( event.data[2] - 64 ) * ( 100 / 64 ) * 2
                     // console.log(app.detune)
@@ -145,26 +130,30 @@ app.init.midiRigs = function(app){
             else if ( app.instruments.mode === 'gamma' ) {
                 // console.log('gamma') 
                 if ( event.data[0] === 128 ) { // stop note.
-                    app.instruments.gamma.stop(Wad.pitchesArray[event.data[1]-12])
+                    app.instruments.gamma.stop(Wad.pitchesArray[event.data[1]-12 + app.instruments.gamma.pitchShiftCoarse])
                 }
 
                 else if ( event.data[0] === 144 ) { // note data
-                    app.instruments.gamma.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], detune : app.detune, panning: app.panning, volume : 2.5 })
+                    app.instruments.gamma.play({
+                        pitch : Wad.pitchesArray[event.data[1]-12 + app.instruments.gamma.pitchShiftCoarse], 
+                        label : Wad.pitchesArray[event.data[1]-12 + app.instruments.gamma.pitchShiftCoarse], 
+
+                    })
                 }
             }
 
             else if ( app.instruments.mode === 'delta' ) {
                 // console.log('delta') 
                 if ( event.data[0] === 144 ) {
-                    if ( event.data[1] === app.keys.drums.kick )        { app.instruments.delta.kick.play() }
-                    if ( event.data[1] === app.keys.drums.snare )       { app.instruments.delta.snare.play() }
-                    if ( event.data[1] === app.keys.drums.closedHihat ) { app.instruments.delta.closedHihat.play() }
-                    if ( event.data[1] === app.keys.drums.openHihat )   { app.instruments.delta.openHihat.play() }
-                    if ( event.data[1] === app.keys.drums.crash )       { app.instruments.delta.crash.play() }
-                    if ( event.data[1] === app.keys.drums.highTom )     { app.instruments.delta.highTom.play() }
-                    if ( event.data[1] === app.keys.drums.midTom )      { app.instruments.delta.midTom.play() }
-                    if ( event.data[1] === app.keys.drums.lowTom )      { app.instruments.delta.lowTom.play() }
-                    if ( event.data[1] === app.keys.drums.cowbell )     { app.instruments.delta.cowbell.play() }
+                    if ( event.data[1] === app.keys.drums.kick )        { app.instruments.delta.kick.play({panning : app.panning}) }
+                    if ( event.data[1] === app.keys.drums.snare )       { app.instruments.delta.snare.play({panning : app.panning}) }
+                    if ( event.data[1] === app.keys.drums.closedHihat ) { app.instruments.delta.closedHihat.play({panning : app.panning}) }
+                    if ( event.data[1] === app.keys.drums.openHihat )   { app.instruments.delta.openHihat.play({panning : app.panning}) }
+                    if ( event.data[1] === app.keys.drums.crash )       { app.instruments.delta.crash.play({panning : app.panning}) }
+                    if ( event.data[1] === app.keys.drums.highTom )     { app.instruments.delta.highTom.play({panning : app.panning}) }
+                    if ( event.data[1] === app.keys.drums.midTom )      { app.instruments.delta.midTom.play({panning : app.panning}) }
+                    if ( event.data[1] === app.keys.drums.lowTom )      { app.instruments.delta.lowTom.play({panning : app.panning}) }
+                    if ( event.data[1] === app.keys.drums.cowbell )     { app.instruments.delta.cowbell.play({panning : app.panning}) }
                 }
 
                 if ( event.data[0] === 176 && event.data[1] === 22 ) {

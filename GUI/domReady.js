@@ -390,11 +390,6 @@ app.init.dom = function(app){
 
         })
 
-        $(document).on('midi', function(event, midiEvent){
-            // console.log('event', event)
-            // console.log('midiEvent', midiEvent)
-        })
-
 
         $('.drums-settings [type="text"]').on('click', function(){
             app.listenForMIDI = true

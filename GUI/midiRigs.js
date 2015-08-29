@@ -143,7 +143,7 @@ app.init.midiRigs = function(app){
 
 
             else if ( app.instruments.mode === 'gamma' ) {
-                // console.log('delta') 
+                // console.log('gamma') 
                 if ( event.data[0] === 128 ) { // stop note.
                     app.instruments.gamma.stop(Wad.pitchesArray[event.data[1]-12])
                 }
@@ -155,7 +155,17 @@ app.init.midiRigs = function(app){
 
             else if ( app.instruments.mode === 'delta' ) {
                 // console.log('delta') 
-
+                if ( event.data[0] === 144 ) {
+                    if ( event.data[1] === app.keys.drums.kick )        { app.instruments.delta.kick.play() }
+                    if ( event.data[1] === app.keys.drums.snare )       { app.instruments.delta.snare.play() }
+                    if ( event.data[1] === app.keys.drums.closedHihat ) { app.instruments.delta.closedHihat.play() }
+                    if ( event.data[1] === app.keys.drums.openHihat )   { app.instruments.delta.openHihat.play() }
+                    if ( event.data[1] === app.keys.drums.crash )       { app.instruments.delta.crash.play() }
+                    if ( event.data[1] === app.keys.drums.highTom )     { app.instruments.delta.highTom.play() }
+                    if ( event.data[1] === app.keys.drums.midTom )      { app.instruments.delta.midTom.play() }
+                    if ( event.data[1] === app.keys.drums.lowTom )      { app.instruments.delta.lowTom.play() }
+                    if ( event.data[1] === app.keys.drums.cowbell )     { app.instruments.delta.cowbell.play() }
+                }
 
                 if ( event.data[0] === 176 && event.data[1] === 22 ) {
                     app.panning = ( ( event.data[2] - 64 ) * ( 10 / 64 ) ) / 10

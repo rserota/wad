@@ -118,7 +118,7 @@
                                         <div class="option-row"><code>[switch to instrument 1]</code></div>
                                         <div class="option-row"><code>[switch to instrument 2]</code></div>
                                         <div class="option-row"><code>[switch to instrument 3]</code></div>
-                                        <div class="option-row"><code>[switch to instrument 4]</code></div>
+                                        <div class="option-row"><code>[switch to drum kit]</code></div>
 
                                     </div>
                                     <div class="col-sm-6 text-left">
@@ -191,7 +191,7 @@
                                     <li class="active"><a href="#alpha" data-toggle="tab">Instrument 1</a></li>
                                     <li><a href="#beta" data-toggle="tab">Instrument 2</a></li>
                                     <li><a href="#gamma" data-toggle="tab">Instrument 3</a></li>
-                                    <li><a href="#delta" data-toggle="tab">Instrument 4</a></li>
+                                    <li><a href="#delta" data-toggle="tab">Drum Kit</a></li>
                                 </ul>
                                 <div class="tab-content">
                                     <!-- INSTRUMENT 1 -->
@@ -752,6 +752,9 @@
                                     <!-- INSTRUMENT 4 -->
                                     <div class="tab-pane" id="delta">
                                         <div class="drums-settings">
+                                            <div class="space"></div>
+                                            <h3 class="text-center">Drumkit Configuration</h3>
+                                            <p>The Drumkit contains 9 different instruments. To bind an instrument to a key on your MIDI keyboard, click the box under the 'Bound Key' column next to the instrument you want to bind to. Then, press a key on your MIDI keyboard. The name of the key you pressed should appear in the 'Bound Key' box.</p>
                                             <div class="row">
                                                 <div class="col-sm-4 text-right">
                                                     <h4>Instrument</h4>
@@ -780,15 +783,15 @@
                                                 </div>
                                                 <div class="col-sm-4 text-center">
                                                     <h4>Volume</h4>
-                                                    <div class="option-row"><input type="range"></div>
-                                                    <div class="option-row"><input type="range"></div>
-                                                    <div class="option-row"><input type="range"></div>
-                                                    <div class="option-row"><input type="range"></div>
-                                                    <div class="option-row"><input type="range"></div>
-                                                    <div class="option-row"><input type="range"></div>
-                                                    <div class="option-row"><input type="range"></div>
-                                                    <div class="option-row"><input type="range"></div>
-                                                    <div class="option-row"><input type="range"></div>
+                                                    <div class="option-row"><input min="0" max="1" step="0.05" name="kick-vol" type="range"></div>
+                                                    <div class="option-row"><input min="0" max="1" step="0.05" name="snare-vol" type="range"></div>
+                                                    <div class="option-row"><input min="0" max="1" step="0.05" name="closedHihat-vol" type="range"></div>
+                                                    <div class="option-row"><input min="0" max="1" step="0.05" name="openHihat-vol" type="range"></div>
+                                                    <div class="option-row"><input min="0" max="1" step="0.05" name="crash-vol" type="range"></div>
+                                                    <div class="option-row"><input min="0" max="1" step="0.05" name="highTom-vol" type="range"></div>
+                                                    <div class="option-row"><input min="0" max="1" step="0.05" name="midTom-vol" type="range"></div>
+                                                    <div class="option-row"><input min="0" max="1" step="0.05" name="lowTom-vol" type="range"></div>
+                                                    <div class="option-row"><input min="0" max="1" step="0.05" name="cowbell-vol" type="range"></div>
                                                 </div>
                                             </div>
                                         </div>

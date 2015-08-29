@@ -8,7 +8,7 @@ var app = {
     soundSources  : {},
     preDest       : new Wad.Poly(),
     loopTracks    : [],
-    panning       : 0, // change to 2-d panning
+    panning       : 0,
     detune        : 0,
     curBeat       : 1,
     prevBeat      : 1,
@@ -48,8 +48,9 @@ var app = {
         alpha     : null,
         beta      : null,
         gamma     : null,
-        delta     : [null], // delta is an array of drum samples
-        mode      : 'gamma',
+        // delta is an object of drum samples
+        delta     : {}, 
+        mode      : 'alpha',
         pedalDown : false,
     },
     schedule      : [ // scheduled actions. This is not relevant in the default 'immediate action' mode.

@@ -1,18 +1,18 @@
 app.init.instruments = function(app){
 
     // Audio preloading/initialization/whatever goes here.
-    app.instruments.kick = new Wad({
+    app.instruments.delta.kick = new Wad({
         source : 'http://localhost:8000/GUI/audio/kick.mp3',
         // callback : function(that){that.play()}
     })
     // kick.play()
-    app.instruments.hat = new Wad(Wad.presets.hiHatClosed)
+    app.instruments.delta.closedHihat = new Wad(Wad.presets.hiHatClosed)
 
-    app.instruments.hatOpen = new Wad({
+    app.instruments.delta.openHihat = new Wad({
         source : 'http://localhost:8000/GUI/audio/hatOpen.wav'
     })
     // var snare = new Wad({ source : 'noise', volume : 6, env : {attack : .001, decay : .01, sustain : .2, hold : .03, release : .02}, filter : {type : 'bandpass', frequency : 300, q : .180 }, delay : { delayTime : .05} })
-    app.instruments.snare = new Wad({
+    app.instruments.delta.snare = new Wad({
         source : 'http://localhost:8000/GUI/audio/snare.wav',
         delay  : {
             delayTime : .1,
@@ -22,19 +22,14 @@ app.init.instruments = function(app){
     })
 
 
-    // var crash = new Wad({})
-    // var highTom = new Wad({})
-    // var midTom = new Wad({})
-    // var lowTom = new Wad({})
-    app.instruments.cowbell = new Wad({
+    app.instruments.delta.cowbell = new Wad({
         source : 'http://localhost:8000/GUI/audio/cowbell.wav',
     })
 
-
-    app.instruments.piano = new Wad({source:'sine', volume:.8, env:{attack:.005, decay:.2, sustain:.8, hold:4, release:.3}, filter : {type:'lowpass', frequency:700}})
-
-    // var bass = new Wad({})
-
+    app.instruments.delta.crash   = {}
+    app.instruments.delta.highTom = {}
+    app.instruments.delta.midTom  = {}
+    app.instruments.delta.lowTom  = {}
 
 
     Wad.prototype.constructExternalFx = function(arg, ctx) {
@@ -81,7 +76,7 @@ app.init.instruments = function(app){
         //     feedback : 1,
         //     wet      : 1
         // },
-        panning: -1,
+        panning: 0,
         // reverb : { 
         //     impulse :'http://localhost:8000/widehall.wav',
         //     wet : .21
@@ -139,7 +134,6 @@ app.init.instruments = function(app){
     app.instruments.gamma = new Wad({ source : 'sine' })
     app.instruments.gamma.pitchShiftCoarse = 0
 
-    app.instruments.delta = app.instruments.piano
     app.soundSources = new Wad.Poly({ 
         // recConfig : { 
         //     workerPath : '/src/Recorderjs/recorderWorker.js'
@@ -155,7 +149,7 @@ app.init.instruments = function(app){
         // },
 
         callback : function(that){
-            that.add(app.instruments.kick).add(app.instruments.hat).add(app.instruments.hatOpen).add(app.instruments.snare).add(app.instruments.cowbell).add(app.instruments.alpha).add(app.instruments.beta).add(app.instruments.delta);
+            that.add(app.instruments.delta.kick).add(app.instruments.delta.closedHihat).add(app.instruments.delta.openHihat).add(app.instruments.delta.snare).add(app.instruments.delta.cowbell).add(app.instruments.delta.crash).add(app.instruments.delta.highTom).add(app.instruments.delta.midTom).add(app.instruments.delta.lowTom).add(app.instruments.alpha).add(app.instruments.beta).add(app.instruments.gamma);
             app.preDest.add(that)
         }
     })

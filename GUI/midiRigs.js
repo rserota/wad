@@ -10,6 +10,8 @@ app.init.midiRigs = function(app){
         midiRig25 : function(event){
             if ( app.listenForMIDI ) { $(':focus').trigger('midi', [event])}
             // console.log(event.receivedTime, event.data)
+
+            // What does this code do? Can't remember. Should probably take it out.
             if ( event.data[0] === 177 && event.data[1] === 49 ) {
                 app.instruments.alpha.play({pitch : Wad.pitchesArray[event.data[2]+24], env : { hold : .2 }})
             }
@@ -140,63 +142,22 @@ app.init.midiRigs = function(app){
             }
 
 
-            else if ( app.instruments.mode === 'delta' ) {
+            else if ( app.instruments.mode === 'gamma' ) {
                 // console.log('delta') 
-                if ( event.data[0] === 144 ) { // stop note.
-                    if      ( event.data[1] === 60 ) { console.log() }
-                //     else if ( event.data[1] === 61 ) { foo.play({ volume : , env : { attack : } }); }
-                //     else if ( event.data[1] === 62 ) { foo.play({ volume : , env : { attack : } }); }
-                //     else if ( event.data[1] === 63 ) { foo.play({ volume : , env : { attack : } }); }
-                //     else if ( event.data[1] === 64 ) { foo.play({ volume : , env : { attack : } }); }
-                //     else if ( event.data[1] === 65 ) { foo.play({ volume : , env : { attack : } }); }
-                //     else if ( event.data[1] === 66 ) { foo.play({ volume : , env : { attack : } }); }
-                //     else if ( event.data[1] === 67 ) { foo.play({ volume : , env : { attack : } }); }
-                //     else if ( event.data[1] === 68 ) { foo.play({ volume : , env : { attack : } }); }
-                //     else if ( event.data[1] === 69 ) { foo.play({ volume : , env : { attack : } }); }
-                //     else if ( event.data[1] === 70 ) { foo.play({ volume : , env : { attack : } }); }
-                //     else if ( event.data[1] === 71 ) { foo.play({ volume : , env : { attack : } }); }
-                    else if ( event.data[1] === 72 ) {
-                        // console.log('data: ', ( event.data[2] * ( .2 / 127 ) + 1 ) )
-                        app.instruments.hat.play({
-                            volume : ( event.data[2] * ( .2 / 127 ) + 1 ),
-                            env : {
-                                attack : ( event.data[2] * ( .01 / 127 ) * .8 )
-                            },
-                            filter : {
-                                frequency : ( event.data[2] * ( 100 / 127 ) * 8 ) + 300,
-                                q         : ( event.data[2] * ( 10 / 127 ) * .7 )
-                            },
-                            panning : app.panning
-                        }); 
-                    }
-                    else if ( event.data[1] === 73 ) { app.instruments.hatOpen.play({ volume : 1 }); }
-                    else if ( event.data[1] === 74 ) { app.instruments.kick.play({ volume : .81 }); }
-                //     else if ( event.data[1] === 75 ) { foo.play({ volume : , env : { attack : } }); }
-                    else if ( event.data[1] === 76 ) {
-                        if ( app.instruments.pedalDown === false ) { app.instruments.snare.play({ volume : 1 })}
-                        else {  
-                            app.instruments.snare.play({ 
-                                volume : 1,
-                                env    : {
-                                    attack : .01
-                                },
-                                delay  : {
-                                    wet : .9
-                                } 
-                            }); 
-                        }
-                    }
-                    else if ( event.data[1] === 77 ) { app.instruments.cowbell.play({ volume : 2.7, panning: app.panning }); }
-                    // else if ( event.data[1] === 79 ) { lowTom.play({ volume : 1 }); }
-                //     else if ( event.data[1] === 78 ) { foo.play({ volume : , env : { attack : } }); }
-                    // else if ( event.data[1] === 81 ) { midTom.play({ volume : 1 }); }
-                //     else if ( event.data[1] === 80 ) { foo.play({ volume : , env : { attack : } }); }
-                    // else if ( event.data[1] === 83 ) { highTom.play({ volume : 1 }); }
-                //     else if ( event.data[1] === 82 ) { foo.play({ volume : , env : { attack : } }); }
-                    // else if ( event.data[1] === 84 ) { crash.play({ volume : 1 }); }
+                if ( event.data[0] === 128 ) { // stop note.
+                    app.instruments.gamma.stop(Wad.pitchesArray[event.data[1]-12])
                 }
 
-                else if ( event.data[0] === 176 && event.data[1] === 22 ) {
+                else if ( event.data[0] === 144 ) { // note data
+                    app.instruments.gamma.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], detune : app.detune, panning: app.panning, volume : 2.5 })
+                }
+            }
+
+            else if ( app.instruments.mode === 'delta' ) {
+                // console.log('delta') 
+
+
+                if ( event.data[0] === 176 && event.data[1] === 22 ) {
                     app.panning = ( ( event.data[2] - 64 ) * ( 10 / 64 ) ) / 10
                     // cowbell.setPanning(app.panning)
                     console.log('panning: ', app.panning)
@@ -208,17 +169,6 @@ app.init.midiRigs = function(app){
                 else if ( event.data[0] === 176 && event.data[1] === 64 && event.data[2] === 0 ) {
                     app.instruments.pedalDown = false
                     console.log(app.instruments.pedalDown)
-                }
-            }
-
-            else if ( app.instruments.mode === 'gamma' ) {
-                // console.log('delta') 
-                if ( event.data[0] === 128 ) { // stop note.
-                    app.instruments.gamma.stop(Wad.pitchesArray[event.data[1]-12])
-                }
-
-                else if ( event.data[0] === 144 ) { // note data
-                    app.instruments.gamma.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], detune : app.detune, panning: app.panning, volume : 2.5 })
                 }
             }
         },

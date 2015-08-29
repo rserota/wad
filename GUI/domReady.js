@@ -270,73 +270,90 @@ app.init.dom = function(app){
         $('#instrumentsModal input, #instrumentsModal select').on('change', function(){
             var $whichInst = $(this).closest('.tab-pane.active')
             var whichInst = app.instruments[$whichInst.attr('id')]
-            console.log(whichInst)
-            whichInst.source             =  $whichInst.find('[name="waveform"]').val()
-            whichInst.defaultVolume      = +$whichInst.find('[name="volume"]').val()
-            whichInst.panning.location   = +$whichInst.find('[name="panning"]').val()
-            whichInst.detune             = +$whichInst.find('[name="pitch-shift-fine"]').val()
-            whichInst.pitchShiftCoarse   = +$whichInst.find('[name="pitch-shift-coarse"]').val()
-            whichInst.defaultEnv.attack  = +$whichInst.find('[name="volume-attack"]').val()
-            whichInst.defaultEnv.decay   = +$whichInst.find('[name="volume-decay"]').val()
-            whichInst.defaultEnv.sustain = +$whichInst.find('[name="volume-sustain"]').val()
-            whichInst.defaultEnv.release = +$whichInst.find('[name="volume-release"]').val()
-            if ( $whichInst.find('[name="filter-toggle"]').prop('checked') ) {
-                whichInst.filter = [{
-                    type      : $whichInst.find('[name="filter-type"]').val(),
-                    frequency : app.range2freq(+$whichInst.find('[name="filter-frequency"]').val()),
-                    q         : +$whichInst.find('[name="filter-q"]').val(),
-                }]
+            console.log($whichInst.attr('id'))
+            if ( $whichInst.attr('id') === 'delta' ) {
+                app.instruments.delta.kick.defaultVolume        = $('[name="kick-vol"]').val()
+                app.instruments.delta.snare.defaultVolume       = $('[name="snare-vol"]').val()
+                app.instruments.delta.closedHihat.defaultVolume = $('[name="closedHihat-vol"]').val()
+                app.instruments.delta.openHihat.defaultVolume   = $('[name="openHihat-vol"]').val()
+                app.instruments.delta.crash.defaultVolume       = $('[name="crash-vol"]').val()
+                app.instruments.delta.highTom.defaultVolume     = $('[name="highTom-vol"]').val()
+                app.instruments.delta.midTom.defaultVolume      = $('[name="midTom-vol"]').val()
+                app.instruments.delta.lowTom.defaultVolume      = $('[name="lowTom-vol"]').val()
+                app.instruments.delta.cowbell.defaultVolume     = $('[name="cowbell-vol"]').val()
+                console.log(app.instruments.delta)
+            }
 
-                if ( $whichInst.find('[name="filter-env-toggle"]').prop('checked') ) {
-                    whichInst.filter[0].env = {
-                        frequency : app.range2freq(+$whichInst.find('[name="filter-env-frequency"]').val()),
-                        attack    : +$whichInst.find('[name="filter-env-attack"]').val(),
+            // else, it must be an oscillator-based instrument
+            else {
+
+                whichInst.source             =  $whichInst.find('[name="waveform"]').val()
+                whichInst.defaultVolume      = +$whichInst.find('[name="volume"]').val()
+                whichInst.panning.location   = +$whichInst.find('[name="panning"]').val()
+                whichInst.detune             = +$whichInst.find('[name="pitch-shift-fine"]').val()
+                whichInst.pitchShiftCoarse   = +$whichInst.find('[name="pitch-shift-coarse"]').val()
+                whichInst.defaultEnv.attack  = +$whichInst.find('[name="volume-attack"]').val()
+                whichInst.defaultEnv.decay   = +$whichInst.find('[name="volume-decay"]').val()
+                whichInst.defaultEnv.sustain = +$whichInst.find('[name="volume-sustain"]').val()
+                whichInst.defaultEnv.release = +$whichInst.find('[name="volume-release"]').val()
+                if ( $whichInst.find('[name="filter-toggle"]').prop('checked') ) {
+                    whichInst.filter = [{
+                        type      : $whichInst.find('[name="filter-type"]').val(),
+                        frequency : app.range2freq(+$whichInst.find('[name="filter-frequency"]').val()),
+                        q         : +$whichInst.find('[name="filter-q"]').val(),
+                    }]
+
+                    if ( $whichInst.find('[name="filter-env-toggle"]').prop('checked') ) {
+                        whichInst.filter[0].env = {
+                            frequency : app.range2freq(+$whichInst.find('[name="filter-env-frequency"]').val()),
+                            attack    : +$whichInst.find('[name="filter-env-attack"]').val(),
+                        }
+                    }
+                    else {
+                        whichInst.filter[0].env = null
                     }
                 }
                 else {
-                    whichInst.filter[0].env = null
+                    whichInst.filter = null
+                    $whichInst.find('[name="filter-env-toggle"]').prop('checked', false)
+                    $whichInst.find('[name="filter-env-frequency"]').prop('disabled', true)
+                    $whichInst.find('[name="filter-env-attack"]').prop('disabled', true)
                 }
-            }
-            else {
-                whichInst.filter = null
-                $whichInst.find('[name="filter-env-toggle"]').prop('checked', false)
-                $whichInst.find('[name="filter-env-frequency"]').prop('disabled', true)
-                $whichInst.find('[name="filter-env-attack"]').prop('disabled', true)
-            }
 
-            if ( $whichInst.find('[name="delay-toggle"]').prop('checked')) {
-                whichInst.delay = {
-                    delayTime : +$whichInst.find('[name="delay-time"]').val(),
-                    maxDelayTime : 2.1,
-                    feedback : +$whichInst.find('[name="delay-feedback"]').val(),
-                    wet : +$whichInst.find('[name="delay-wet-level"]').val()
+                if ( $whichInst.find('[name="delay-toggle"]').prop('checked')) {
+                    whichInst.delay = {
+                        delayTime : +$whichInst.find('[name="delay-time"]').val(),
+                        maxDelayTime : 2.1,
+                        feedback : +$whichInst.find('[name="delay-feedback"]').val(),
+                        wet : +$whichInst.find('[name="delay-wet-level"]').val()
+                    }
                 }
-            }
-            else {
-                whichInst.delay = null
-            }
-            if ( $whichInst.find('[name="vibrato-toggle"]').prop('checked')) {
-                whichInst.vibrato = {
-                    shape : $whichInst.find('[name="vibrato-waveform"]').val(),
-                    speed : +$whichInst.find('[name="vibrato-speed"]').val(),
-                    magnitude : +$whichInst.find('[name="vibrato-magnitude"]').val(),
-                    attack : +$whichInst.find('[name="vibrato-attack"]').val(),
+                else {
+                    whichInst.delay = null
                 }
-            }
-            else {
-                whichInst.vibrato = null
-            }
+                if ( $whichInst.find('[name="vibrato-toggle"]').prop('checked')) {
+                    whichInst.vibrato = {
+                        shape : $whichInst.find('[name="vibrato-waveform"]').val(),
+                        speed : +$whichInst.find('[name="vibrato-speed"]').val(),
+                        magnitude : +$whichInst.find('[name="vibrato-magnitude"]').val(),
+                        attack : +$whichInst.find('[name="vibrato-attack"]').val(),
+                    }
+                }
+                else {
+                    whichInst.vibrato = null
+                }
 
-            if ( $whichInst.find('[name="tremolo-toggle"]').prop('checked')) {
-                whichInst.tremolo = {
-                    shape : $whichInst.find('[name="tremolo-waveform"]').val(),
-                    speed : +$whichInst.find('[name="tremolo-speed"]').val(),
-                    magnitude : +$whichInst.find('[name="tremolo-magnitude"]').val(),
-                    attack : +$whichInst.find('[name="tremolo-attack"]').val(),
+                if ( $whichInst.find('[name="tremolo-toggle"]').prop('checked')) {
+                    whichInst.tremolo = {
+                        shape : $whichInst.find('[name="tremolo-waveform"]').val(),
+                        speed : +$whichInst.find('[name="tremolo-speed"]').val(),
+                        magnitude : +$whichInst.find('[name="tremolo-magnitude"]').val(),
+                        attack : +$whichInst.find('[name="tremolo-attack"]').val(),
+                    }
                 }
-            }
-            else {
-                whichInst.tremolo = null
+                else {
+                    whichInst.tremolo = null
+                }
             }
 
         })
@@ -373,7 +390,7 @@ app.init.dom = function(app){
         })
         $('.drums-settings [type="text"]').on('midi', function(event, midiEvent){
             console.log('!',midiEvent.data)
-            $(this).val(midiEvent.data[1])
+            $(this).val(Wad.pitchesArray[midiEvent.data[1]-12])
             app.keys.drums[$(this).attr('name')] = midiEvent.data[1]
         })
 

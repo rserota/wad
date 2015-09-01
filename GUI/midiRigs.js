@@ -26,7 +26,7 @@ app.init.midiRigs = function(app){
             if      ( app.instruments.mode === 'alpha' ) {
 
                 if ( event.data[0] === 128 ) { // stop note.
-                    app.instruments.alpha.stop(Wad.pitchesArray[event.data[1]-12])
+                    app.instruments.alpha.stop(Wad.pitchesArray[event.data[1]-12 + app.instruments.alpha.pitchShiftCoarse])
                 }
 
                 else if ( event.data[0] === 144 ) { // note data

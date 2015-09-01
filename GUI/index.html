@@ -211,7 +211,7 @@
                                                 <div class="col-sm-6">
                                                     <select data-toggle="tooltip" data-tooltip="waveform" name="waveform" class="form-control short-select" >
                                                         <option value="sine">Sine</option> 
-                                                        <option value="square">Square</option>
+                                                        <option selected="selected" value="square">Square</option>
                                                         <option value="sawtooth">Sawtooth</option>
                                                         <option value="triangle">Triangle</option>
                                                     </select>
@@ -224,8 +224,8 @@
                                                     <label data-placement="right" data-toggle="tooltip" data-tooltip="panning">Panning</label><br>
                                                 </div>
                                                 <div class="col-sm-6 ">
-                                                    <input data-toggle="tooltip" data-tooltip="volume" class="" type="range" title="hi" min="0" max="1" name="volume" value="1" step="0.05"><label for="volume">1</label>
-                                                    <input data-toggle="tooltip" data-tooltip="panning" class="" type="range" name="panning" min="-1" max="1" step="0.1" value="0"><label for="panning">0</label>
+                                                    <input data-toggle="tooltip" data-tooltip="volume" class="" type="range" title="hi" min="0" max="1" name="volume" value="8" step="0.05"><label for="volume">1</label>
+                                                    <input data-toggle="tooltip" data-tooltip="panning" class="" type="range" name="panning" min="-1" max="1" step="0.1" value="0.3"><label for="panning">0</label>
                                                 </div>
                                             </div>
                                             <div class="space"></div>
@@ -251,10 +251,10 @@
                                                     <label data-placement="right" data-toggle="tooltip" data-tooltip="volume-release">Release</label><br>
                                                 </div>
                                                 <div class="col-sm-6 ">
-                                                    <input data-toggle="tooltip" data-tooltip="volume-attack" class="" type="range" title="hi" min="0" max="1" name="volume-attack" value="0" step="0.01"><label for="volume-attack">0</label>
-                                                    <input data-toggle="tooltip" data-tooltip="volume-decay" class="" type="range" name="volume-decay" min="0" max="1" step="0.01" value="0"><label for="volume-decay">0</label>
-                                                    <input data-toggle="tooltip" data-tooltip="volume-sustain" class="" type="range" name="volume-sustain" min="0" max="1" step="0.05" value="1"><label for="volume-sustain">1</label>
-                                                    <input data-toggle="tooltip" data-tooltip="volume-release" class="" type="range" name="volume-release" min="0" max="1" step="0.01" value="0"><label for="volume-release">0</label>
+                                                    <input data-toggle="tooltip" data-tooltip="volume-attack" class="" type="range" min="0" max="1" name="volume-attack" value="0.01" step="0.01"><label for="volume-attack">0</label>
+                                                    <input data-toggle="tooltip" data-tooltip="volume-decay" class="" type="range" name="volume-decay" min="0" max="1" step="0.01" value="0.05"><label for="volume-decay">0</label>
+                                                    <input data-toggle="tooltip" data-tooltip="volume-sustain" class="" type="range" name="volume-sustain" min="0" max="1" step="0.05" value=".6"><label for="volume-sustain">1</label>
+                                                    <input data-toggle="tooltip" data-tooltip="volume-release" class="" type="range" name="volume-release" min="0" max="1" step="0.01" value="0.05"><label for="volume-release">0</label>
                                                 </div>
                                             </div>
                                             <div class="space"></div>
@@ -291,7 +291,7 @@
                                             </section>
                                             <div class="space"></div>
                                             <section class="settings-section">
-                                                <h3 data-toggle="tooltip" data-tooltip="filter-env" class="text-center">Filter Envelope <input name="filter-env-toggle" checked type="checkbox"></h3>
+                                                <h3 data-toggle="tooltip" data-tooltip="filter-env" class="text-center">Filter Envelope <input name="filter-env-toggle" type="checkbox"></h3>
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <label data-placement="right" data-toggle="tooltip" data-tooltip="filter-env-frequency">Frequency</label><br>
@@ -321,7 +321,7 @@
                                                 </div>
                                             </section>
                                             <section class="settings-section">
-                                                <h3 data-toggle="tooltip" data-tooltip="vibrato" class="text-center">Vibrato <input name="vibrato-toggle" checked type="checkbox"></h3>
+                                                <h3 data-toggle="tooltip" data-tooltip="vibrato" class="text-center">Vibrato <input name="vibrato-toggle" type="checkbox"></h3>
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <label data-placement="right" data-toggle="tooltip" data-tooltip="vibrato-waveform" class="pad-top" >Waveform</label>
@@ -351,7 +351,7 @@
                                             </section>
                                             <div class="space"></div>
                                             <section class="settings-section">
-                                                <h3 data-toggle="tooltip" data-tooltip="tremolo" class="text-center">Tremolo <input name="tremolo-toggle" checked type="checkbox"></h3>
+                                                <h3 data-toggle="tooltip" data-tooltip="tremolo" class="text-center">Tremolo <input name="tremolo-toggle" type="checkbox"></h3>
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <label data-placement="right" data-toggle="tooltip" data-tooltip="tremolo-waveform" class="pad-top" >Waveform</label>
@@ -776,15 +776,15 @@
                                                 </div>
                                                 <div class="col-sm-4 text-center">
                                                     <h4>Bound Key</h4>
-                                                    <div class="option-row"><input type="text" data-which="" name="kick" value=""></div>
-                                                    <div class="option-row"><input type="text" data-which="" name="snare" value=""></div>
-                                                    <div class="option-row"><input type="text" data-which="" name="closedHihat" value=""></div>
-                                                    <div class="option-row"><input type="text" data-which="" name="openHihat" value=""></div>
-                                                    <div class="option-row"><input type="text" data-which="" name="crash" value=""></div>
-                                                    <div class="option-row"><input type="text" data-which="" name="highTom" value=""></div>
-                                                    <div class="option-row"><input type="text" data-which="" name="midTom" value=""></div>
-                                                    <div class="option-row"><input type="text" data-which="" name="lowTom" value=""></div>
-                                                    <div class="option-row"><input type="text" data-which="" name="cowbell" value=""></div>
+                                                    <div class="option-row"><input type="text" data-which="" name="kick" value="C5"></div>
+                                                    <div class="option-row"><input type="text" data-which="" name="snare" value="D5"></div>
+                                                    <div class="option-row"><input type="text" data-which="" name="closedHihat" value="E5"></div>
+                                                    <div class="option-row"><input type="text" data-which="" name="openHihat" value="D#5"></div>
+                                                    <div class="option-row"><input type="text" data-which="" name="crash" value="F5"></div>
+                                                    <div class="option-row"><input type="text" data-which="" name="highTom" value="G5"></div>
+                                                    <div class="option-row"><input type="text" data-which="" name="midTom" value="A5"></div>
+                                                    <div class="option-row"><input type="text" data-which="" name="lowTom" value="B5"></div>
+                                                    <div class="option-row"><input type="text" data-which="" name="cowbell" value="C6"></div>
                                                 </div>
                                                 <div class="col-sm-4 text-center">
                                                     <h4>Volume</h4>

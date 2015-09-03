@@ -278,10 +278,14 @@ app.init.dom = function(app){
         })
 
 
-        $('#instrumentsModal input, #instrumentsModal select').on('change', function(){
-            var $whichInst = $(this).closest('.tab-pane.active')
+        var oscillators = {
+            alpha : null,
+            beta  : null,
+            gamma : null,
+        }
+        var setInstruments = function($whichInst){
             var whichInst = app.instruments[$whichInst.attr('id')]
-            console.log($whichInst.attr('id'))
+            // console.log($whichInst)
             if ( $whichInst.attr('id') === 'delta' ) {
                 app.instruments.delta.kick.defaultVolume        = $('[name="kick-vol"]').val()
                 app.instruments.delta.snare.defaultVolume       = $('[name="snare-vol"]').val()
@@ -296,7 +300,7 @@ app.init.dom = function(app){
             }
 
             // else, it must be an oscillator-based instrument
-            else {
+            else if ( $whichInst.attr('id') in oscillators ) {
 
                 whichInst.source             =  $whichInst.find('[name="waveform"]').val()
                 whichInst.defaultVolume      = +$whichInst.find('[name="volume"]').val()
@@ -366,6 +370,11 @@ app.init.dom = function(app){
                     whichInst.tremolo = null
                 }
             }
+        }
+        $('#instrumentsModal input, #instrumentsModal select').on('change', function(){
+
+            var $whichInst = $(this).closest('.tab-pane.active')
+            setInstruments($whichInst)
 
         })
         $('#instrumentsModal [type="reset"]').on('click', function(){
@@ -381,6 +390,20 @@ app.init.dom = function(app){
                     $('label[for="' + which + '"]').text(defVal)
                 }
             })
+            var $whichInst = $('#instrumentsModal .tab-pane.active')
+            setInstruments($whichInst)
+
+            app.keys.drums = {
+                kick : 60,
+                snare : 62,
+                closedHihat : 64,
+                openHihat : 63,
+                crash : 65,
+                highTom : 67,
+                midTom : 69,
+                lowTom : 71,
+                cowbell : 72,
+            }
 
         })
 
@@ -402,7 +425,10 @@ app.init.dom = function(app){
 
         $('.drums-settings [type="text"]').on('blur', function(){
             app.listenForMIDI = false
-        })
+        });
 
+        [].forEach.call($('#instrumentsModal .tab-pane'), function(el){
+            setInstruments($(el))
+        })
     })
 }

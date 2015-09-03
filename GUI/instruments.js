@@ -6,7 +6,9 @@ app.init.instruments = function(app){
         // callback : function(that){that.play()}
     })
     // kick.play()
-    app.instruments.delta.closedHihat = new Wad(Wad.presets.hiHatClosed)
+    app.instruments.delta.closedHihat = new Wad({
+        source : 'http://localhost:8000/GUI/audio/hatClosed.wav'
+    })
 
     app.instruments.delta.openHihat = new Wad({
         source : 'http://localhost:8000/GUI/audio/hatOpen.wav'
@@ -26,10 +28,18 @@ app.init.instruments = function(app){
         source : 'http://localhost:8000/GUI/audio/cowbell.wav',
     })
 
-    app.instruments.delta.crash   = {}
-    app.instruments.delta.highTom = {}
-    app.instruments.delta.midTom  = {}
-    app.instruments.delta.lowTom  = {}
+    app.instruments.delta.crash   = new Wad({
+        source : 'http://localhost:8000/GUI/audio/crash.wav'
+    })
+    app.instruments.delta.highTom = new Wad({
+        source : 'http://localhost:8000/GUI/audio/highTom.wav'
+    })
+    app.instruments.delta.midTom  = new Wad({
+        source : 'http://localhost:8000/GUI/audio/midTom.wav'
+    })
+    app.instruments.delta.lowTom  = new Wad({
+                source : 'http://localhost:8000/GUI/audio/lowTom.wav'
+    })
 
 
     Wad.prototype.constructExternalFx = function(arg, ctx) {

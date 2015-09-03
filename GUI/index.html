@@ -224,8 +224,8 @@
                                                     <label data-placement="right" data-toggle="tooltip" data-tooltip="panning">Panning</label><br>
                                                 </div>
                                                 <div class="col-sm-6 ">
-                                                    <input data-toggle="tooltip" data-tooltip="volume" class="" type="range" title="hi" min="0" max="1" name="volume" value="8" step="0.05"><label for="volume">1</label>
-                                                    <input data-toggle="tooltip" data-tooltip="panning" class="" type="range" name="panning" min="-1" max="1" step="0.1" value="0.3"><label for="panning">0</label>
+                                                    <input data-toggle="tooltip" data-tooltip="volume" class="" type="range" title="hi" min="0" max="1" name="volume" value="1" step="0.05"><label for="volume">1</label>
+                                                    <input data-toggle="tooltip" data-tooltip="panning" class="" type="range" name="panning" min="-1" max="1" step="0.1" value="0.3"><label for="panning">0.3</label>
                                                 </div>
                                             </div>
                                             <div class="space"></div>
@@ -251,10 +251,10 @@
                                                     <label data-placement="right" data-toggle="tooltip" data-tooltip="volume-release">Release</label><br>
                                                 </div>
                                                 <div class="col-sm-6 ">
-                                                    <input data-toggle="tooltip" data-tooltip="volume-attack" class="" type="range" min="0" max="1" name="volume-attack" value="0.01" step="0.01"><label for="volume-attack">0</label>
-                                                    <input data-toggle="tooltip" data-tooltip="volume-decay" class="" type="range" name="volume-decay" min="0" max="1" step="0.01" value="0.05"><label for="volume-decay">0</label>
-                                                    <input data-toggle="tooltip" data-tooltip="volume-sustain" class="" type="range" name="volume-sustain" min="0" max="1" step="0.05" value=".6"><label for="volume-sustain">1</label>
-                                                    <input data-toggle="tooltip" data-tooltip="volume-release" class="" type="range" name="volume-release" min="0" max="1" step="0.01" value="0.05"><label for="volume-release">0</label>
+                                                    <input data-toggle="tooltip" data-tooltip="volume-attack" class="" type="range" min="0" max="1" name="volume-attack" value="0.01" step="0.01"><label for="volume-attack">0.01</label>
+                                                    <input data-toggle="tooltip" data-tooltip="volume-decay" class="" type="range" name="volume-decay" min="0" max="1" step="0.01" value="0.05"><label for="volume-decay">0.05</label>
+                                                    <input data-toggle="tooltip" data-tooltip="volume-sustain" class="" type="range" name="volume-sustain" min="0" max="1" step="0.05" value=".6"><label for="volume-sustain">0.6</label>
+                                                    <input data-toggle="tooltip" data-tooltip="volume-release" class="" type="range" name="volume-release" min="0" max="1" step="0.01" value="0.05"><label for="volume-release">0.05</label>
                                                 </div>
                                             </div>
                                             <div class="space"></div>
@@ -422,7 +422,7 @@
                                                     <label data-placement="right" data-toggle="tooltip" data-tooltip="pitch-shift-fine">Fine</label><br>
                                                 </div>
                                                 <div class="col-sm-6 ">
-                                                    <input data-toggle="tooltip" data-tooltip="pitch-shift-coarse" class="" type="range" title="hi" min="-36" max="36" name="pitch-shift-coarse" value="0" step="1"><label for="pitch-shift-coarse">0</label>
+                                                    <input data-toggle="tooltip" data-tooltip="pitch-shift-coarse" class="" type="range" title="hi" min="-36" max="36" name="pitch-shift-coarse" value="12" step="1"><label for="pitch-shift-coarse">0</label>
                                                     <input data-toggle="tooltip" data-tooltip="pitch-shift-fine" class="" type="range" name="pitch-shift-fine" min="-100" max="100" step="1" value="0"><label for="pitch-shift-fine">0</label>
                                                 </div>
                                             </div>
@@ -436,15 +436,15 @@
                                                     <label data-placement="right" data-toggle="tooltip" data-tooltip="volume-release">Release</label><br>
                                                 </div>
                                                 <div class="col-sm-6 ">
-                                                    <input data-toggle="tooltip" data-tooltip="volume-attack" class="" type="range" title="hi" min="0" max="1" name="volume-attack" value="0" step="0.01"><label for="volume-attack">0</label>
+                                                    <input data-toggle="tooltip" data-tooltip="volume-attack" class="" type="range" title="hi" min="0" max="1" name="volume-attack" value="0.15" step="0.01"><label for="volume-attack">0</label>
                                                     <input data-toggle="tooltip" data-tooltip="volume-decay" class="" type="range" name="volume-decay" min="0" max="1" step="0.01" value="0"><label for="volume-decay">0</label>
                                                     <input data-toggle="tooltip" data-tooltip="volume-sustain" class="" type="range" name="volume-sustain" min="0" max="1" step="0.05" value="1"><label for="volume-sustain">1</label>
-                                                    <input data-toggle="tooltip" data-tooltip="volume-release" class="" type="range" name="volume-release" min="0" max="1" step="0.01" value="0"><label for="volume-release">0</label>
+                                                    <input data-toggle="tooltip" data-tooltip="volume-release" class="" type="range" name="volume-release" min="0" max="1" step="0.01" value="0.2"><label for="volume-release">0</label>
                                                 </div>
                                             </div>
                                             <div class="space"></div>
                                             <section class="settings-section">
-                                                <h3 class="text-center" data-toggle="tooltip" data-tooltip="filter">Filter <input name="filter-toggle" checked type="checkbox"></h3>
+                                                <h3 class="text-center" data-toggle="tooltip" data-tooltip="filter">Filter <input name="filter-toggle"  type="checkbox"></h3>
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <label data-placement="right" data-toggle="tooltip" data-tooltip="filter-type" class="pad-top" >Filter Type</label>
@@ -476,7 +476,7 @@
                                             </section>
                                             <div class="space"></div>
                                             <section class="settings-section">
-                                                <h3 data-toggle="tooltip" data-tooltip="filter-env" class="text-center">Filter Envelope <input name="filter-env-toggle" checked type="checkbox"></h3>
+                                                <h3 data-toggle="tooltip" data-tooltip="filter-env" class="text-center">Filter Envelope <input name="filter-env-toggle" type="checkbox"></h3>
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <label data-placement="right" data-toggle="tooltip" data-tooltip="filter-env-frequency">Frequency</label><br>
@@ -491,7 +491,7 @@
 
                                             <div class="space"></div>
                                             <section class="settings-section">
-                                                <h3 data-toggle="tooltip" data-tooltip="delay" class="text-center">Delay <input name="delay-toggle" checked type="checkbox"></h3>
+                                                <h3 data-toggle="tooltip" data-tooltip="delay" class="text-center">Delay <input name="delay-toggle" type="checkbox"></h3>
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <label data-placement="right" data-toggle="tooltip" data-tooltip="delay-time">Delay Time</label><br>
@@ -506,7 +506,7 @@
                                                 </div>
                                             </section>
                                             <section class="settings-section">
-                                                <h3 data-toggle="tooltip" data-tooltip="vibrato" class="text-center">Vibrato <input name="vibrato-toggle" checked type="checkbox"></h3>
+                                                <h3 data-toggle="tooltip" data-tooltip="vibrato" class="text-center">Vibrato <input name="vibrato-toggle" type="checkbox"></h3>
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <label data-placement="right" data-toggle="tooltip" data-tooltip="vibrato-waveform" class="pad-top" >Waveform</label>

@@ -382,16 +382,22 @@ app.init.dom = function(app){
             var $ranges = $('#instrumentsModal').find('[type="range"]');
             [].forEach.call($ranges, function(el){
                 var which  = $(el).attr('name')
-                var defVal = $(el).prop('defaultValue')
+                var defVal = $(el)[0].defaultValue
+                var whichInst = '#' + $(el).closest('.tab-pane').attr('id')
+                var $whichInst = $(el).closest('.tab-pane')
                 if ( which.search('frequency') > 0 ) {
-                    $('label[for="' + which + '"]').text(app.range2freq(defVal))
+                    $(whichInst + ' label[for="' + which + '"]').text(app.range2freq(defVal))
                 }
                 else {
-                    $('label[for="' + which + '"]').text(defVal)
+                    // console.log(which, ' ', defVal, $('.tab-pane.active label[for="' + which + '"]'))
+
+                    $(whichInst + ' label[for="' + which + '"]').text(defVal)
                 }
+                setTimeout(function(){
+                    setInstruments($whichInst)
+                },20)
             })
-            var $whichInst = $('#instrumentsModal .tab-pane.active')
-            setInstruments($whichInst)
+            // var $whichInst = $('#instrumentsModal .tab-pane.active')
 
             app.keys.drums = {
                 kick : 60,

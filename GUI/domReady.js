@@ -18,7 +18,7 @@ app.init.dom = function(app){
             app.prevBeat = app.curBeat
             app.curBeat = Math.floor(progressInLoop / ( 1/beatsPerLoop )) + 1
             if ( app.curBeat < app.prevBeat ) {
-                console.log('fire!')
+                // console.log('fire!')
             }
             if      ( Math.floor(progressInLoop / ( 1/beatsPerLoop )) > 0 ) {
                 $(app.$beatBoxes[ Math.floor(progressInLoop / ( 1/beatsPerLoop )) ]).addClass('on')
@@ -143,7 +143,7 @@ app.init.dom = function(app){
                         app.trackActions.eraseTrack(e.which - 49)
                     }
                     else if ( app.keys.mode.record === false) {
-                        console.log('mute!')
+                        // console.log('mute!')f
                         app.trackActions.muteTrack(e.which - 49)
                     }
 
@@ -154,7 +154,7 @@ app.init.dom = function(app){
                         app.trackActions.schedule.recordToTrack(e.which - 49)
                     }
                     else if ( app.keys.mode.record === false) {
-                        console.log('mute!')
+                        // console.log('mute!')
                         app.trackActions.schedule.muteTrack(e.which - 49)
                     }
                 }
@@ -167,14 +167,14 @@ app.init.dom = function(app){
             var whichNote = +$(this).attr('data-note')
             var whichInstrument = $('#instrumentsModal .tab-pane.active').attr('id')
             if ( whichInstrument !== 'delta') {
-                console.log(Wad.pitchesArray[48 + whichNote + app.instruments[whichInstrument].pitchShiftCoarse])
+                // console.log(Wad.pitchesArray[48 + whichNote + app.instruments[whichInstrument].pitchShiftCoarse])
                 
                 app.instruments[whichInstrument].play({pitch : Wad.pitchesArray[48 + whichNote + app.instruments[whichInstrument].pitchShiftCoarse] })
             }
             else {
                 var whichDrum = $(':focus')
                 if ( whichDrum.attr('name') ) {
-                    console.log(whichDrum[0].name)
+                    // console.log(whichDrum[0].name)
                     app.instruments.delta[whichDrum.attr('name').split('-vol')[0]].play()
                     setTimeout(function(){whichDrum[0].focus()},10)
                 }
@@ -263,7 +263,7 @@ app.init.dom = function(app){
 
             // app.keys.mode.schedule = $('.schedule-mode').val() ? true : false
 
-            console.log(bpm,beatsPerBar,barsPerLoop)
+            // console.log(bpm,beatsPerBar,barsPerLoop)
             app.trackActions.resizeLoop(bpm, beatsPerBar, barsPerLoop)
         })
         $('#configModal [type="reset"]').on('click', function(){
@@ -296,7 +296,7 @@ app.init.dom = function(app){
                 app.instruments.delta.midTom.defaultVolume      = $('[name="midTom-vol"]').val()
                 app.instruments.delta.lowTom.defaultVolume      = $('[name="lowTom-vol"]').val()
                 app.instruments.delta.cowbell.defaultVolume     = $('[name="cowbell-vol"]').val()
-                console.log(app.instruments.delta)
+                // console.log(app.instruments.delta)
             }
 
             // else, it must be an oscillator-based instrument
@@ -424,7 +424,7 @@ app.init.dom = function(app){
             app.listenForMIDI = true
         })
         $('.drums-settings [type="text"]').on('midi', function(event, midiEvent){
-            console.log('!',midiEvent.data)
+            // console.log('!',midiEvent.data)
             $(this).val(Wad.pitchesArray[midiEvent.data[1]-12])
             app.keys.drums[$(this).attr('name')] = midiEvent.data[1]
         })
@@ -436,5 +436,7 @@ app.init.dom = function(app){
         [].forEach.call($('#instrumentsModal .tab-pane'), function(el){
             setInstruments($(el))
         })
+        $('#instrumentsModal [type="reset"]').trigger('click')
+
     })
 }

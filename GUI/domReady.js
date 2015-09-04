@@ -65,8 +65,8 @@ app.init.dom = function(app){
                // console.log(app.keys.mode)
            }
            if ( app.keys.erase.indexOf(e.which) > -1 ){
-               app.keys.mode.record = false;
-               // console.log(app.keys.mode)
+               app.keys.mode.erase = false;
+               console.log(app.keys.mode)
            }  
         })
 

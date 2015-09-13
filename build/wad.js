@@ -323,7 +323,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         getUserMedia({ audio : true , video : false}, function (stream){
             // console.log('got stream')
             that.mediaStreamSource = context.createMediaStreamSource(stream);
-
+            Wad.micConsent = true
             setUpMic(that, arg);
 
         }, function(error) { console.log('Error setting up microphone input: ', error); }); // This is the error callback.
@@ -333,7 +333,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
     var setUpMic = function(that, arg){
         that.nodes           = [];
         that.gain            = context.createGain();
-        that.gain.gain.value = that.volume;
+        that.gain.gain.value = valueOrDefault(arg.volume,that.volume);
         that.nodes.push(that.mediaStreamSource);
         that.nodes.push(that.gain);
         // console.log('that ', arg)
@@ -407,6 +407,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
         else { arg.callback && arg.callback(this) }
     };
+    Wad.micConsent = false
 
 
 /** When a note is played, these two functions will schedule changes in volume and filter frequency,
@@ -696,20 +697,23 @@ then finally play the sound by calling playEnv() **/
         }
 
         else if ( this.source === 'mic' ) { 
-            if ( arg.arg === null ) {
-                plugEmIn(this, arg);
+            if ( Wad.micConsent ) {
+                if ( arg.arg === null ) {
+                    plugEmIn(this, arg);
+                }
+                else {
+                    constructFilter(this, arg);
+                    constructVibrato(this, arg);
+                    constructTremolo(this, arg);
+                    constructReverb(this, arg);
+                    this.constructExternalFx(arg, context);
+                    constructPanning(this, arg);
+                    constructDelay(this, arg);
+                    setUpMic(this, arg);
+                    plugEmIn(this, arg);
+                }
             }
-            else {
-                constructFilter(this, arg);
-                constructVibrato(this, arg);
-                constructTremolo(this, arg);
-                constructReverb(this, arg);
-                this.constructExternalFx(arg, context);
-                constructPanning(this, arg);
-                constructDelay(this, arg);
-                setUpMic(this, arg);
-                plugEmIn(this, arg);
-            }
+            else { console.log('You have not given your browser permission to use your microphone.')}    
         }
 
         else {
@@ -836,9 +840,10 @@ then finally play the sound by calling playEnv() **/
                 this.gain[0].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release);
             }
         }
-        else {
+        else if (Wad.micConsent ) {
             this.mediaStreamSource.disconnect(0);
         }
+        else { console.log('You have not given your browser permission to use your microphone.')}
         if ( this.tremolo ) {
             this.tremolo.wad.stop()
         }

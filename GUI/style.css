@@ -49,7 +49,7 @@ button:focus {
 }
 .loop-track {
     display : inline-block;
-    height : 200px;
+    height : 120px;
     width : 130px;
     max-width: 9vw;
     /*border : 3px solid black;*/

@@ -50,8 +50,15 @@ var app = {
         gamma     : null,
         // delta is an object of drum samples
         delta     : {}, 
+        epsilon   : null,
         mode      : 'alpha',
         pedalDown : false,
+        micConfig : {
+            volume  : .8,
+            panning : 0,
+            filter  : null,
+            delay   : null,
+        }
     },
     schedule      : [ // scheduled actions. This is not relevant in the default 'immediate action' mode.
         { record : false, mute : false },

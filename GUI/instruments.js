@@ -76,10 +76,10 @@ app.init.instruments = function(app){
 
     app.instruments.voice = new Wad({ 
         source : 'mic',
-        filter : {
-            type : 'highpass',
-            frequency : 900
-        },
+        // filter : {
+        //     type : 'highpass',
+        //     frequency : 900
+        // },
         // delay : {
         //     delayTime: 1,
         //     maxDelayTime: 20,
@@ -93,7 +93,7 @@ app.init.instruments = function(app){
         // },
 
     })
-
+    app.instruments.epsilon = app.instruments.voice
 
     app.instruments.alpha = new Wad({
         source  : 'sawtooth',

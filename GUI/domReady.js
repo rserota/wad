@@ -51,7 +51,7 @@ app.init.dom = function(app){
             }
             else {
                 $('#ban').removeClass('fa-ban')
-                app.instruments.voice.play()
+                app.instruments.voice.play(app.instruments.micConfig)
             }
             
         }
@@ -297,6 +297,44 @@ app.init.dom = function(app){
                 app.instruments.delta.lowTom.defaultVolume      = $('[name="lowTom-vol"]').val()
                 app.instruments.delta.cowbell.defaultVolume     = $('[name="cowbell-vol"]').val()
                 // console.log(app.instruments.delta)
+            }
+            else if ( $whichInst.attr('id') === 'epsilon' ) {
+                if ( whichInst.gain ) {
+                    app.instruments.micConfig.volume      = +$whichInst.find('[name="volume"]').val()
+                }
+                if ( whichInst.panning.node ) {
+                    app.instruments.micConfig.panning     = +$whichInst.find('[name="panning"]').val()
+                }
+
+                if ( $whichInst.find('[name="filter-toggle"]').prop('checked') ) {
+                    console.log('hi')
+                    app.instruments.micConfig.filter = [{
+                        type      : $whichInst.find('[name="filter-type"]').val(),
+                        frequency : app.range2freq(+$whichInst.find('[name="filter-frequency"]').val()),
+                        q         : +$whichInst.find('[name="filter-q"]').val(),
+                    }]
+
+                }
+                else {
+                    app.instruments.micConfig.filter = null
+                    app.instruments.epsilon.filter = null
+                }
+
+                if ( $whichInst.find('[name="delay-toggle"]').prop('checked')) {
+                    app.instruments.micConfig.delay = {
+                        delayTime : +$whichInst.find('[name="delay-time"]').val(),
+                        maxDelayTime : 2.1,
+                        feedback : +$whichInst.find('[name="delay-feedback"]').val(),
+                        wet : +$whichInst.find('[name="delay-wet-level"]').val()
+                    }
+                }
+                else {
+                    app.instruments.micConfig.delay = null
+                }
+                if ( Wad.micConsent ) {
+                    toggleMic()
+                    toggleMic()
+                }
             }
 
             // else, it must be an oscillator-based instrument

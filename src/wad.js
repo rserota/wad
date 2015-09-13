@@ -1005,10 +1005,10 @@ grab it from the defaultImpulse URL **/
 //////////////////////////////////////////////////////////////////////////////////////
 //  Utility function to avoid javascript type conversion bug checking zero values   //
 
-var valueOrDefault = function(value, def) {
-    var val = (value == null) ? def : value;
-    return val;
-};
+    var valueOrDefault = function(value, def) {
+        var val = (value == null) ? def : value;
+        return val;
+    };
 
 //////////////////////////////////////////////////////////////////////////////////////
 /** This object is a mapping of note names to frequencies. **/

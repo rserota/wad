@@ -2,20 +2,20 @@ app.init.instruments = function(app){
 
     // Audio preloading/initialization/whatever goes here.
     app.instruments.delta.kick = new Wad({
-        source : 'http://localhost:8000/GUI/audio/kick.mp3',
+        source : '/GUI/audio/kick.mp3',
         // callback : function(that){that.play()}
     })
     // kick.play()
     app.instruments.delta.closedHihat = new Wad({
-        source : 'http://localhost:8000/GUI/audio/hatClosed.wav'
+        source : '/GUI/audio/hatClosed.wav'
     })
 
     app.instruments.delta.openHihat = new Wad({
-        source : 'http://localhost:8000/GUI/audio/hatOpen.wav'
+        source : '/GUI/audio/hatOpen.wav'
     })
     // var snare = new Wad({ source : 'noise', volume : 6, env : {attack : .001, decay : .01, sustain : .2, hold : .03, release : .02}, filter : {type : 'bandpass', frequency : 300, q : .180 }, delay : { delayTime : .05} })
     app.instruments.delta.snare = new Wad({
-        source : 'http://localhost:8000/GUI/audio/snare.wav',
+        source : '/GUI/audio/snare.wav',
         delay  : {
             delayTime : .1,
             feedback  : .6,
@@ -25,20 +25,20 @@ app.init.instruments = function(app){
 
 
     app.instruments.delta.cowbell = new Wad({
-        source : 'http://localhost:8000/GUI/audio/cowbell.wav',
+        source : '/GUI/audio/cowbell.wav',
     })
 
     app.instruments.delta.crash   = new Wad({
-        source : 'http://localhost:8000/GUI/audio/crash.wav'
+        source : '/GUI/audio/crash.wav'
     })
     app.instruments.delta.highTom = new Wad({
-        source : 'http://localhost:8000/GUI/audio/highTom.wav'
+        source : '/GUI/audio/highTom.wav'
     })
     app.instruments.delta.midTom  = new Wad({
-        source : 'http://localhost:8000/GUI/audio/midTom.wav'
+        source : '/GUI/audio/midTom.wav'
     })
     app.instruments.delta.lowTom  = new Wad({
-                source : 'http://localhost:8000/GUI/audio/lowTom.wav'
+                source : '/GUI/audio/lowTom.wav'
     })
 
 
@@ -154,7 +154,7 @@ app.init.instruments = function(app){
         //     workerPath : '/src/Recorderjs/recorderWorker.js'
         // },
         reverb : { 
-            impulse :'http://localhost:8000/GUI/audio/widehall.wav',
+            impulse :'/GUI/audio/widehall.wav',
             wet : .11
         },
         // delay   : {

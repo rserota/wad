@@ -407,8 +407,9 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
         else { arg.callback && arg.callback(this) }
     };
-    Wad.micConsent = false
 
+    Wad.micConsent = false
+    Wad.AudioContext = audioContext
 
 /** When a note is played, these two functions will schedule changes in volume and filter frequency,
 as specified by the volume envelope and filter envelope **/

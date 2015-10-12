@@ -42,26 +42,26 @@ app.init.instruments = function(app){
     })
 
 
-    Wad.prototype.constructExternalFx = function(arg, ctx) {
-      // console.log('constructExternalFx called');
-      this.tuna = new Tuna(ctx);
-      this.chorus = arg.chorus;
-    }
+    // Wad.prototype.constructExternalFx = function(arg, ctx) {
+    //   // console.log('constructExternalFx called');
+    //   this.tuna = new Tuna(ctx);
+    //   this.chorus = arg.chorus;
+    // }
 
-    Wad.prototype.setUpExternalFxOnPlay = function(arg, context) {
-      // console.log('setUpExternalFxOnPlay called');
-      if (arg.chorus) {
-        var chorus = new this.tuna.Chorus({
-          rate: arg.chorus.rate || this.chorus.rate,
-          feedback: arg.chorus.feedback || this.chorus.feedback,
-          delay: arg.chorus.delay || this.chorus.delay,
-          bypass: arg.chorus.bypass || this.chorus.bypass
-        });
+    // Wad.prototype.setUpExternalFxOnPlay = function(arg, context) {
+    //   // console.log('setUpExternalFxOnPlay called');
+    //   if (arg.chorus) {
+    //     var chorus = new this.tuna.Chorus({
+    //       rate: arg.chorus.rate || this.chorus.rate,
+    //       feedback: arg.chorus.feedback || this.chorus.feedback,
+    //       delay: arg.chorus.delay || this.chorus.delay,
+    //       bypass: arg.chorus.bypass || this.chorus.bypass
+    //     });
 
-        chorus.input.connect = chorus.connect.bind(chorus);
-        this.nodes.push(chorus.input);
-      }
-    }
+    //     chorus.input.connect = chorus.connect.bind(chorus);
+    //     this.nodes.push(chorus.input);
+    //   }
+    // }
 
     // voice.play({
     //   chorus: {
@@ -169,6 +169,18 @@ app.init.instruments = function(app){
         }
     })
 
+    window.tunaTest = new Wad({
+        source : 'sine',
+        tuna   : {
+            overdrive : {
+                outputGain: 0.5,         //0 to 1+
+                drive: 0.7,              //0 to 1
+                curveAmount: 1,          //0 to 1
+                algorithmIndex: 0,       //0 to 5, selects one of our drive algorithms
+                bypass: 0
+            }
+        }
+    })
     // var lfo = new Wad({source:'sine', volume: 1.5, destination: mt.delay.feedbackNode.gain})
     // lfo.play({pitch: 1})
 }

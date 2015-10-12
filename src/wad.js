@@ -257,7 +257,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.globalReverb  = arg.globalReverb || false;
         this.gain          = [];
         this.loop          = arg.loop || false;
-
+        this.tuna          = arg.tuna || {};
         constructEnv(this, arg);
         constructFilter(this, arg);
         constructVibrato(this, arg);
@@ -301,7 +301,10 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         else { arg.callback && arg.callback(this) }
     };
     Wad.micConsent = false
-
+    Wad.audioContext = context
+    if ( window.Tuna != undefined ) {
+        Wad.tuna = new Tuna(Wad.audioContext)
+    }
 
 /** When a note is played, these two functions will schedule changes in volume and filter frequency,
 as specified by the volume envelope and filter envelope **/

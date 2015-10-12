@@ -10,7 +10,7 @@ module.exports = function(grunt) {
             },
             build: {
             // the files to concatenate
-                src: ['src/Recorderjs/recorder.js', 'src/wad.js'],
+                src: ['src/Recorderjs/recorder.js', 'src/tuna.js', 'src/wad.js'],
             // the location of the resulting JS file
                 dest: 'build/<%= pkg.name %>.js'
             }

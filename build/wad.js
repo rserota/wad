@@ -2545,7 +2545,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.globalReverb  = arg.globalReverb || false;
         this.gain          = [];
         this.loop          = arg.loop || false;
-        this.tuna          = arg.tuna || {};
+        this.tuna          = arg.tuna || null;
         constructEnv(this, arg);
         constructFilter(this, arg);
         constructVibrato(this, arg);
@@ -2850,7 +2850,29 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
         that.compressor.threshold.value = valueOrDefault(arg.compressor.threshold, that.compressor.threshold.value);
         that.nodes.push(that.compressor);
     };
+    var setUpTunaOnPlay = function(that, arg){
+        if ( !( that.tuna || arg.tuna ) ) { return }
+        var tunaConfig = {}
+        if ( that.tuna ) {
+            for ( var key in that.tuna ) {
+                tunaConfig[key] = that.tuna[key]
+            }
+        }
 
+        // overwrite settings from `this` with settings from arg
+        if ( arg.tuna ) {
+            for ( var key in arg.tuna ) {
+                tunaConfig[key] = arg.tuna[key]
+            }
+        }
+        console.log('tunaconfig: ', tunaConfig)
+        for ( var key in tunaConfig) {
+            console.log(key)
+            var tunaEffect = new Wad.tuna[key](tunaConfig[key])
+            that.nodes.push(tunaEffect)
+        }
+        // console.log(that.nodes)
+    }
 ///
 
 /** Method to allow users to setup external fx in the constructor **/
@@ -2935,6 +2957,7 @@ then finally play the sound by calling playEnv() **/
     or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
             setUpFilterOnPlay(this, arg);
     ///////////////////////////////////////////////////////////////////////////////////////////////////
+            setUpTunaOnPlay(this, arg);
 
             this.setUpExternalFxOnPlay(arg, context);
 

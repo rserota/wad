@@ -386,9 +386,6 @@ Wad.midiInputs[0].onmidimessage = function(event){
 Wad.midiInputs[1].onmidimessage = anotherMidiHandlerFunction // If you have multiple MIDI devices that you would like to use simultaneously, you will need multiple MIDI handler functions.
 </code></pre>
 
-As of writing this, MIDI is poorly supported by most browsers. In Chrome, MIDI is an 'experimental feature', so you will need to <a href="http://stackoverflow.com/questions/21821121/web-midi-api-not-implemented-in-chrome-canary">enable it manually</a>. 
-
-You will also need to install the <a href="http://jazz-soft.net/doc/Jazz-Plugin/">jazz plugin</a> to give your browser access to MIDI input. 
 
 <h2>How To Contribute</h2>
 

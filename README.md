@@ -189,9 +189,9 @@ var letItBeTuna = new Wad({
             bypass: 0
         },
         Chorus : {
-            intensity: 0.3,    //0 to 1
+            intensity: 0.3,  //0 to 1
             rate: 4,         //0.001 to 8
-            stereoPhase: 0,    //0 to 180
+            stereoPhase: 0,  //0 to 180
             bypass: 0
         }
     }

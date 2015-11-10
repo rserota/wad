@@ -17,6 +17,7 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
             <li><a href='#panning'>Panning</a></li>
             <li><a href='#filters'>Filters</a></li>
             <li><a href='#configuring-reverb'>Configuring Reverb</a></li>
+            <li><a href='#tuna-effects'>Tuna Effects</a></li>
             <li>
                 <a href='#play'>Play()</a>
                 <ul>
@@ -48,7 +49,7 @@ To see a demo of an app that uses a small subset of the features in Wad.js, chec
 
 To use Wad.js in your project, simply include the script in your HTML file.
 
-<pre><code>&lt;script src="path/to/build/wad-min.js"&gt;&lt;/script&gt;</pre></code>
+<pre><code>&lt;script src="path/to/build/wad.min.js"&gt;&lt;/script&gt;</pre></code>
 
 Wad.js is also available as a bower package.
 
@@ -129,6 +130,14 @@ var saw = new Wad({
         magnitude : 3,      // how much the volume changes. Sensible values are from 1 to 10.
         speed     : 4,      // How quickly the volume changes, in cycles per second.  Sensible values are from 0.1 to 10.
         attack    : 0       // Time in seconds for the tremolo effect to reach peak magnitude.
+    },
+    tuna   : {
+        Chorus : {
+            intensity: 0.3,  //0 to 1
+            rate: 4,         //0.001 to 8
+            stereoPhase: 0, //0 to 180
+            bypass: 0
+        }
     }
 })
 </code></pre>
@@ -164,6 +173,32 @@ filter: [
 
 In order to use reverb, you will need a server to send an impulse response via XmlHttpRequest. An impulse response is a small audio file, like a wav or mp3, that describes the acoustic characteristics of a physical space.  By default, Wad.js serves a sample impulse response that you can use freely.  However, it is recommended that you use your own impulse response. To use your own impulse response, pass a URL to an impulse response file as an argument to the constructor, as shown above. You can also modify the attribute Wad.defaultImpulse to change the default impulse response. You can make your own impulse response, but it might be easier to just <a href="http://www.voxengo.com/impulses/">find one online</a>.
 
+<h3 id='tuna-effects'>Tuna Effects</h3>
+
+Tuna, everyone's favorite Web Audio effects library, is included in Wad.js. This makes it super easy to add effects from Tuna to any Wad or PolyWad.
+
+<pre><code>
+var letItBeTuna = new Wad({
+    source : 'sine',
+    tuna   : {
+        Overdrive : {
+            outputGain: 0.5,         //0 to 1+
+            drive: 0.7,              //0 to 1
+            curveAmount: 1,          //0 to 1
+            algorithmIndex: 0,       //0 to 5, selects one of our drive algorithms
+            bypass: 0
+        },
+        Chorus : {
+            intensity: 0.3,    //0 to 1
+            rate: 4,         //0.001 to 8
+            stereoPhase: 0,    //0 to 180
+            bypass: 0
+        }
+    }
+})
+</pre></code>
+
+For more information about the various Tuna effects and the arguments they take, <a href="https://github.com/Theodeus/tuna/wiki#the-nodes">check out the Tuna wiki</a>.
 
 <h3 id='play-arguments'>Play()</h3>
 

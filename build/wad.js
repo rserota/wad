@@ -2529,7 +2529,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         if ( that.delay || arg.delay ) {
             setUpDelayOnPlay(that, arg);
         }
-
+        setUpTunaOnPlay(that, arg)
         that.setUpExternalFxOnPlay(arg, context);
     }
 
@@ -3148,6 +3148,8 @@ then finally play the sound by calling playEnv() **/
         this.volume            = arg.volume || 1;
         this.output            = context.createGain();
         this.output.gain.value = this.volume;
+        this.tuna              = arg.tuna || null;
+
         if ( !( typeof Recorder === 'undefined' ) && arg.recConfig ) { // Recorder should be defined, unless you're running the unconcatenated source version and forgot to include recorder.js.
             this.rec               = new Recorder(this.output, arg.recConfig);
             this.rec.recordings    = [];
@@ -3178,7 +3180,7 @@ then finally play the sound by calling playEnv() **/
 
         constructDelay(this, arg);
         setUpDelayOnPlay(this, arg);
-
+        setUpTunaOnPlay(this, arg);
         this.nodes.push(this.output);
         plugEmIn(this, arg);
         this.isSetUp = true;

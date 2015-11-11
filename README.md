@@ -422,7 +422,7 @@ Wad.midiInputs[0].onmidimessage = function(event){
 Wad.midiInputs[1].onmidimessage = anotherMidiHandlerFunction // If you have multiple MIDI devices that you would like to use simultaneously, you will need multiple MIDI handler functions.
 </code></pre>
 
-<h3>Access to the Audio Context</h3>
+<h3 id="access-to-the-audio-context">Access to the Audio Context</h3>
 
 When Wad.js loads initially, it automatically creates an Audio Context. It shouldn't be necessary to access the Audio Context directly, but if you need it for some reason, it is exposed at <code>Wad.audioContext</code>.
 

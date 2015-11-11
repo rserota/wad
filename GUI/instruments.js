@@ -171,6 +171,7 @@ app.init.instruments = function(app){
 
     window.tunaTest = new Wad({
         source : 'sine',
+        env : { hold : 1, attack : .2, release : .4 },
         tuna   : {
             Overdrive : {
                 outputGain: 0.5,         //0 to 1+

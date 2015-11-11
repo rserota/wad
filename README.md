@@ -421,6 +421,9 @@ Wad.midiInputs[0].onmidimessage = function(event){
 Wad.midiInputs[1].onmidimessage = anotherMidiHandlerFunction // If you have multiple MIDI devices that you would like to use simultaneously, you will need multiple MIDI handler functions.
 </code></pre>
 
+<h3>Access to the Audio Context</h3>
+
+When Wad.js loads initially, it automatically creates an Audio Context. It shouldn't be necessary to access the audio context directly, but if you need it for some reason, it is exposed at <code>Wad.audioContext</code>.
 
 <h2>How To Contribute</h2>
 
@@ -429,15 +432,5 @@ I've put a lot of work into this project, but there's still plenty of room for i
 
 <h3>Cross-Browser Compatibility</h3>
 
-I tried to future-proof Wad.js by using standards-compliant methods, but the cross-browser compatibility is still not great. It works best in Chrome, decently in Safari for iOS, and it works very poorly in Firefox. I have not tested it in any other browsers. I would greatly appreciate contributions to help Wad.js run optimally in any browser that supports Web Audio, especially mobile browsers.
-
-
-<h3>Low Frequency Oscillators</h3>
-
-Originally, I had wanted to allow users to easily add an LFO to any parameter, such as pitch, volume, panning, resonance, filter cutoff frequency, etc, but this turned out to be fairly difficult for me to implement. Instead, I implemented LFOs specifically for pitch (vibrato) and volume (tremolo). If anyone can implement more versatile LFOs, that would be awesome.
-
-
-<h3>Presets</h3>
-
-It would be nice if there were more presets, so that users wouldn't have to make most of their sounds from scratch. If you enjoy making your own sounds with Wad.js, consider submitting them to be used as presets. Better yet, you can bundle together a bunch of presets as a 'preset-pack'.
+I tried to future-proof Wad.js by using standards-compliant methods, but the cross-browser compatibility is still not great. It works best in Chrome, decently in Safari for iOS, and it works poorly in Firefox. I have not tested it in any other browsers. I would greatly appreciate contributions to help Wad.js run optimally in any browser that supports Web Audio, especially mobile browsers.
 

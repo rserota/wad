@@ -424,7 +424,7 @@ Wad.midiInputs[1].onmidimessage = anotherMidiHandlerFunction // If you have mult
 
 <h3>Access to the Audio Context</h3>
 
-When Wad.js loads initially, it automatically creates an Audio Context. It shouldn't be necessary to access the audio context directly, but if you need it for some reason, it is exposed at <code>Wad.audioContext</code>.
+When Wad.js loads initially, it automatically creates an Audio Context. It shouldn't be necessary to access the Audio Context directly, but if you need it for some reason, it is exposed at <code>Wad.audioContext</code>.
 
 <h2>How To Contribute</h2>
 

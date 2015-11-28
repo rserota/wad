@@ -2291,14 +2291,44 @@
 /** Let's do the vendor-prefix dance. **/
     var audioContext = window.AudioContext || window.webkitAudioContext;
     var context      = new audioContext();
-    getUserMedia     = navigator.mozGetUserMedia || navigator.webkitGetUserMedia || navigator.getUserMedia;
-    if ( getUserMedia ) {
-        // console.log('get user media is supported')
-        getUserMedia = getUserMedia.bind(navigator);
-    }
-    else {
-        console.log('get user media is not supported');
-    }
+    var MediaStreamHelper = {
+        /*
+	        The browser have to support Promises if the browser supports only the deprecated version of getUserMedia.
+	        There is a polyfill for Promises!
+          Example:
+	          MediaStreamHelper.initialize(window);
+	          getUserMedia({audio: true}).then(function(stream) {}).catch(function(error) {});
+	*/
+		    UNSUPPORT: false,
+		    SUPPORT_STANDARD_VERSION: 1,
+		    SUPPORT_DEPRECATED_VERSION: 2,
+		    isGetUserMediaSupported: function isGetUserMediaSupported(window) {
+				    if(window.navigator.mediaDevices.getUserMedia) return this.SUPPORT_STANDARD_VERSION;
+				    else if(window.navigator.getUserMedia) return this.SUPPORT_DEPRECATED_VERSION;
+				    else
+					    return this.UNSUPPORT;
+			    },
+		    initialize: function initializeMediaStreamHelper(window) {
+				    window.navigator.mediaDevices = window.navigator.mediaDevices || {};
+				    window.navigator.getUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+
+				    var howIsItSupported = this.isGetUserMediaSupported(window);
+				    if(howIsItSupported != this.UNSUPPORT)
+				    {
+					    window.getUserMedia = howIsItSupported == this.SUPPORT_STANDARD_VERSION ?
+						    window.navigator.mediaDevices.getUserMedia.bind(window.navigator.mediaDevices) :
+						    function(constraints) {
+								    return new Promise(function(resolve, reject) {
+										    window.navigator.getUserMedia(constraints, resolve, reject);
+									    });
+							    };
+				    }
+			    }
+	    };
+    MediaStreamHelper.initialize(window);
+    if(window.getUserMedia) console.log("Your browser supports getUserMedia.");
+    else
+        console.log("Your browser does not support getUserMedia.");
 /////////////////////////////////////////
 
 var Wad = (function(){
@@ -2501,13 +2531,13 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         that.nodes             = [];
         that.mediaStreamSource = null;
         that.gain              = null;
-        getUserMedia({ audio : true , video : false}, function (stream){
+        getUserMedia({audio: true, video: false}).then(function(stream) {
             // console.log('got stream')
             that.mediaStreamSource = context.createMediaStreamSource(stream);
             Wad.micConsent = true
             setUpMic(that, arg);
 
-        }, function(error) { console.log('Error setting up microphone input: ', error); }); // This is the error callback.
+        }).catch(function(error) { console.log('Error setting up microphone input: ', error); }); // This is the error callback.
     };
 ////////////////////////////////////////////////////////////////////
     

@@ -78,14 +78,14 @@ var Wad = (function(){
             attack  : arg.env ? valueOrDefault(arg.env.attack,  1) : 0,    // time in seconds from onset to peak volume
             decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
             sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
-            hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14) : 3.14, // time in seconds to maintain sustain volume
+            hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14159) : 3.14159, // time in seconds to maintain sustain volume
             release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
         };
         that.defaultEnv = {
             attack  : arg.env ? valueOrDefault(arg.env.attack,  1) : 0,    // time in seconds from onset to peak volume
             decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
             sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
-            hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14) : 3.14, // time in seconds to maintain sustain volume
+            hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14159) : 3.14159, // time in seconds to maintain sustain volume
             release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
         };
     }
@@ -129,6 +129,9 @@ Don't let the Wad play until all necessary files have been downloaded. **/
         request.onload = function(){
             context.decodeAudioData(request.response, function (decodedBuffer){
                 that.decodedBuffer = decodedBuffer;
+                if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
+                    that.env.hold = that.decodedBuffer.duration + 1
+                }
                 if ( callback ) { callback(that); }
                 that.playable++;
                 if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }

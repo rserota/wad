@@ -215,7 +215,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         }
 
         else {
-            that.panning = { 
+            that.panning = {
                 location : 0,
                 type     : 'stereo',
             };
@@ -254,7 +254,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         }).catch(function(error) { console.log('Error setting up microphone input: ', error); }); // This is the error callback.
     };
 ////////////////////////////////////////////////////////////////////
-    
+
     var setUpMic = function(that, arg){
         that.nodes           = [];
         that.gain            = context.createGain();
@@ -380,7 +380,7 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
             }
             from.connect(to);
         }
-        if ( that.nodes[that.nodes.length-1].interface === 'custom') { 
+        if ( that.nodes[that.nodes.length-1].interface === 'custom') {
             var lastStop = that.nodes[that.nodes.length-1].output;
         }
         else { // assume native interface
@@ -646,7 +646,7 @@ then finally play the sound by calling playEnv() **/
             this.playOnLoadArg = arg;
         }
 
-        else if ( this.source === 'mic' ) { 
+        else if ( this.source === 'mic' ) {
             if ( Wad.micConsent ) {
                 if ( arg.arg === null ) {
                     plugEmIn(this, arg);
@@ -663,7 +663,7 @@ then finally play the sound by calling playEnv() **/
                     plugEmIn(this, arg);
                 }
             }
-            else { console.log('You have not given your browser permission to use your microphone.')}    
+            else { console.log('You have not given your browser permission to use your microphone.')}
         }
 
         else {
@@ -764,11 +764,91 @@ then finally play the sound by calling playEnv() **/
         else if ( typeof panning === 'number' && this.panning.type === 'stereo' && this.panning.node) {
             this.panning.node.pan.value = panning;
         }
-        
+
         if ( isArray(panning) ) { this.panning.type = '3d' }
         else if ( typeof panning === 'number' ) { this.panning.type = 'stereo' }
         return this;
     };
+
+    /**
+    Change the Delay of a Wad at any time, including during playback.
+    inputTime is a value of time > 0, and is the time in seconds between each delayed playback.
+    inputWet is a value of gain 0 < inputWet < 1, and is Relative volume change between the original sound and the first delayed playback.
+    inputFeedback is a value of gain 0 < inputFeedback < 1, and is Relative volume change between each delayed playback and the next.
+    **/
+    Wad.prototype.setDelay = function(inputTime, inputWet, inputFeedback){
+
+        //Check/Save the input
+        var time;
+        if(inputTime && inputTime > 0) time = inputTime;
+        else time = 0;
+
+        var wet;
+        if(inputWet && inputWet > 0 && inputWet < 1) wet = inputWet;
+        else wet = 0;
+
+        var feedback;
+        if(inputFeedback && inputFeedback > 0 && inputFeedback < 1) feedback = inputFeedback;
+        else feedback = 0;
+
+        //Check if we have delay
+        if(this.delay) {
+
+            //Set the value
+            this.delay.delayTime = time;
+            this.delay.wet = wet;
+            this.delay.feedback = feedback;
+
+            //Set the node's value, if it exists
+            if(this.delay.delayNode) {
+
+                this.delay.delayNode.delayNode.delayTime.value = time;
+                this.delay.delayNode.wetNode.gain.value = wet;
+                this.delay.delayNode.feedbackNode.gain.value = feedback;
+            }
+        }
+        else {
+
+            //Inform that there is no delay on the current wad
+            console.log("Sorry, but the wad does not contain delay!");
+        }
+
+        return this;
+    };
+
+    /**
+    Change the Reverb of a Wad at any time, including during playback.
+    inputWet is a value of 0 < wetness/gain < 1
+    **/
+    Wad.prototype.setReverb = function(inputWet){
+
+        //Check/Save the input
+
+        var wet;
+        if(inputWet && inputWet > 0 && inputWet < 1) wet = inputWet;
+        else wet = 0;
+
+        //Check if we have delay
+        if(this.reverb) {
+
+            //Set the value
+            this.reverb.wet = wet;
+
+            //Set the node's value, if it exists
+            if(this.reverb) {
+
+                this.reverb.node.wet.gain.value = wet;
+            }
+        }
+        else {
+
+            //Inform that there is no reverb on the current wad
+            console.log("Sorry, but the wad does not contain Reverb!");
+        }
+
+        return this;
+    };
+
 
 //////////////////////////////////////////////////////////////////////////
 

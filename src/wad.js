@@ -836,7 +836,7 @@ then finally play the sound by calling playEnv() **/
             this.reverb.wet = wet;
 
             //Set the node's value, if it exists
-            if(this.reverb) {
+            if(this.reverb.node) {
 
                 this.reverb.node.wet.gain.value = wet;
             }

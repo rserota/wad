@@ -829,17 +829,7 @@ then finally play the sound by calling playEnv() **/
             if(this.delay) {
 
                 //Set the value
-                this.delay.delayTime = time;
-                this.delay.wet = wet;
-                this.delay.feedback = feedback;
-
-                //Set the node's value, if it exists
-                if(this.delay.delayNode) {
-
-                    this.delay.delayNode.delayNode.delayTime.value = time;
-                    this.delay.delayNode.wetNode.gain.value = wet;
-                    this.delay.delayNode.feedbackNode.gain.value = feedback;
-                }
+                this.soundSource.playbackRate.value = speed;
             }
             else {
 

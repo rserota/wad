@@ -814,6 +814,42 @@ then finally play the sound by calling playEnv() **/
         return this;
     };
 
+        /**
+        Change the playback speed of a Wad at any time, including during playback.
+        inputSpeed is a value of 0 < speed < 1, and is the rate of playback of the audio.
+        **/
+        Wad.prototype.setSpeed = function(inputSpeed){
+
+            //Check/Save the input
+            var speed;
+            if(inputSpeed && inputSpeed > 0 && inputSpeed < 1) speed = inputSpeed;
+            else wet = 0;
+
+            //Check if we have a soundsource (Though we always should)
+            if(this.delay) {
+
+                //Set the value
+                this.delay.delayTime = time;
+                this.delay.wet = wet;
+                this.delay.feedback = feedback;
+
+                //Set the node's value, if it exists
+                if(this.delay.delayNode) {
+
+                    this.delay.delayNode.delayNode.delayTime.value = time;
+                    this.delay.delayNode.wetNode.gain.value = wet;
+                    this.delay.delayNode.feedbackNode.gain.value = feedback;
+                }
+            }
+            else {
+
+                //Inform that there is no delay on the current wad
+                console.log("Sorry, but the wad does not contain a soundSource!");
+            }
+
+            return this;
+        };
+
 
 
 //////////////////////////////////////////////////////////////////////////

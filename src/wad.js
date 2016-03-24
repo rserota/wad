@@ -770,10 +770,13 @@ then finally play the sound by calling playEnv() **/
         return this;
     };
 
-/** Change the Delay of a Wad at any time, including during playback.
+
+    /**
+    Change the Delay of a Wad at any time, including during playback.
     inputTime is a value of time > 0, and is the time in seconds between each delayed playback.
     inputWet is a value of gain 0 < inputWet < 1, and is Relative volume change between the original sound and the first delayed playback.
-    inputFeedback is a value of gain 0 < inputFeedback < 1, and is Relative volume change between each delayed playback and the next. **/
+    inputFeedback is a value of gain 0 < inputFeedback < 1, and is Relative volume change between each delayed playback and the next.
+    **/
     Wad.prototype.setDelay = function(inputTime, inputWet, inputFeedback){
 
         //Check/Save the input
@@ -814,6 +817,38 @@ then finally play the sound by calling playEnv() **/
         return this;
     };
 
+    /**
+    Change the Reverb of a Wad at any time, including during playback.
+    inputWet is a value of 0 < wetness/gain < 1
+    **/
+    Wad.prototype.setReverb = function(inputWet){
+
+        //Check/Save the input
+
+        var wet;
+        if(inputWet && inputWet > 0 && inputWet < 1) wet = inputWet;
+        else wet = 0;
+
+        //Check if we have delay
+        if(this.reverb) {
+
+            //Set the value
+            this.reverb.wet = wet;
+
+            //Set the node's value, if it exists
+            if(this.reverb.node) {
+
+                this.reverb.node.wet.gain.value = wet;
+            }
+        }
+        else {
+
+            //Inform that there is no reverb on the current wad
+            console.log("Sorry, but the wad does not contain Reverb!");
+        }
+
+        return this;
+    };
 
 
 //////////////////////////////////////////////////////////////////////////

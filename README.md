@@ -52,9 +52,10 @@ To use Wad.js in your project, simply include the script in your HTML file.
 
 <pre><code>&lt;script src="path/to/build/wad.min.js"&gt;&lt;/script&gt;</pre></code>
 
-Wad.js is also available as a bower package.
+Wad.js is also available as a bower package or as a node module.
 
 <pre><code>bower install wad</code></pre>
+<pre><code>npm install web-audio-daw</code></pre>
 
 
 

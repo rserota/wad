@@ -1,6 +1,7 @@
 node_modules
 Packs
 todo.md
+.DS_Store
 .idea/.name
 .idea/encodings.xml
 .idea/misc.xml

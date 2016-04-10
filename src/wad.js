@@ -1448,7 +1448,7 @@ grab it from the defaultImpulse URL **/
     };
     Wad.midiInputs  = [];
 
-    midiMap = function(event){
+    var midiMap = function(event){
         console.log(event.receivedTime, event.data);
         if ( event.data[0] === 144 ) { // 144 means the midi message has note data
             // console.log('note')

@@ -1,51 +1,34 @@
 
 
 /** Let's do the vendor-prefix dance. **/
-    var audioContext = window.AudioContext || window.webkitAudioContext;
-    var context      = new audioContext();
-    var MediaStreamHelper = {
-        /*
-            The browser have to support Promises if the browser supports only the deprecated version of getUserMedia.
-            There is a polyfill for Promises!
-          Example:
-              MediaStreamHelper.initialize(window);
-              getUserMedia({audio: true}).then(function(stream) {}).catch(function(error) {});
-    */
-            UNSUPPORT: false,
-            SUPPORT_STANDARD_VERSION: 1,
-            SUPPORT_DEPRECATED_VERSION: 2,
-            isGetUserMediaSupported: function isGetUserMediaSupported(window) {
-                if(window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) return this.SUPPORT_STANDARD_VERSION;
-                else if(window.navigator.getUserMedia) return this.SUPPORT_DEPRECATED_VERSION;
-                else
-                    return this.UNSUPPORT;
-            },
-            initialize: function initializeMediaStreamHelper(window) {
-                switch (this.isGetUserMediaSupported(window)) {
+var audioContext = window.AudioContext || window.webkitAudioContext;
+var context      = new audioContext();
 
-                case this.SUPPORT_STANDARD_VERSION:
-                    var mediaDevices =window.navigator.mediaDevices || {};
-                    return mediaDevices.getUserMedia.bind(mediaDevices);
-
-                case this.SUPPORT_DEPRECATED_VERSION:
-                    var getUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
-                    return function(constraints) {
-                        return new Promise(function(resolve, reject) {
-                                getUserMedia(constraints, resolve, reject);
-                            });
-                        };
-
-                default:
-                    return function() {
-                        throw "getUserMedia is unsupported";
-                    };
-                }
-            }
+// create a wrapper for old versions of `getUserMedia`
+var getUserMedia = (function(window) {
+    if (window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {
+        // Browser supports promise based `getUserMedia`
+        return window.navigator.mediaDevices.getUserMedia.bind(mediaDevices);
+    }
+    if (window.navigator.getUserMedia) {
+        // Browser supports old `getUserMedia` with callbacks.
+        var getUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+        return function(constraints) {
+            return new Promise(function(resolve, reject) {
+                getUserMedia(constraints, resolve, reject);
+            });
         };
-    var getUserMedia = MediaStreamHelper.initialize(window);
-    if(window.getUserMedia) console.log("Your browser supports getUserMedia.");
-    else
-        console.log("Your browser does not support getUserMedia.");
+    }
+
+    return function() {
+        throw "getUserMedia is unsupported";
+    };
+}(window));
+
+if (getUserMedia)
+    console.log("Your browser supports getUserMedia.");
+else
+    console.log("Your browser does not support getUserMedia.");
 /////////////////////////////////////////
 
 var Wad = (function(){

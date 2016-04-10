@@ -2298,12 +2298,12 @@ var getUserMedia = (function(window) {
         // Browser supports promise based `getUserMedia`
         return window.navigator.mediaDevices.getUserMedia.bind(mediaDevices);
     }
-    if (window.navigator.getUserMedia) {
+    var navigatorGetUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+    if (navigatorGetUserMedia) {
         // Browser supports old `getUserMedia` with callbacks.
-        var getUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
         return function(constraints) {
             return new Promise(function(resolve, reject) {
-                getUserMedia(constraints, resolve, reject);
+                navigatorGetUserMedia(constraints, resolve, reject);
             });
         };
     }

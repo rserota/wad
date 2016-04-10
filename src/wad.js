@@ -5,39 +5,44 @@
     var context      = new audioContext();
     var MediaStreamHelper = {
         /*
-	        The browser have to support Promises if the browser supports only the deprecated version of getUserMedia.
-	        There is a polyfill for Promises!
+            The browser have to support Promises if the browser supports only the deprecated version of getUserMedia.
+            There is a polyfill for Promises!
           Example:
-	          MediaStreamHelper.initialize(window);
-	          getUserMedia({audio: true}).then(function(stream) {}).catch(function(error) {});
-	*/
-		    UNSUPPORT: false,
-		    SUPPORT_STANDARD_VERSION: 1,
-		    SUPPORT_DEPRECATED_VERSION: 2,
-		    isGetUserMediaSupported: function isGetUserMediaSupported(window) {
-				    if(window.navigator.mediaDevices.getUserMedia) return this.SUPPORT_STANDARD_VERSION;
-				    else if(window.navigator.getUserMedia) return this.SUPPORT_DEPRECATED_VERSION;
-				    else
-					    return this.UNSUPPORT;
-			    },
-		    initialize: function initializeMediaStreamHelper(window) {
-				    window.navigator.mediaDevices = window.navigator.mediaDevices || {};
-				    window.navigator.getUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+              MediaStreamHelper.initialize(window);
+              getUserMedia({audio: true}).then(function(stream) {}).catch(function(error) {});
+    */
+            UNSUPPORT: false,
+            SUPPORT_STANDARD_VERSION: 1,
+            SUPPORT_DEPRECATED_VERSION: 2,
+            isGetUserMediaSupported: function isGetUserMediaSupported(window) {
+                if(window.navigator.mediaDevices.getUserMedia) return this.SUPPORT_STANDARD_VERSION;
+                else if(window.navigator.getUserMedia) return this.SUPPORT_DEPRECATED_VERSION;
+                else
+                    return this.UNSUPPORT;
+            },
+            initialize: function initializeMediaStreamHelper(window) {
+                switch (this.isGetUserMediaSupported(window)) {
 
-				    var howIsItSupported = this.isGetUserMediaSupported(window);
-				    if(howIsItSupported != this.UNSUPPORT)
-				    {
-					    window.getUserMedia = howIsItSupported == this.SUPPORT_STANDARD_VERSION ?
-						    window.navigator.mediaDevices.getUserMedia.bind(window.navigator.mediaDevices) :
-						    function(constraints) {
-								    return new Promise(function(resolve, reject) {
-										    window.navigator.getUserMedia(constraints, resolve, reject);
-									    });
-							    };
-				    }
-			    }
-	    };
-    MediaStreamHelper.initialize(window);
+                case this.SUPPORT_STANDARD_VERSION:
+                    var mediaDevices =window.navigator.mediaDevices || {};
+                    return mediaDevices.getUserMedia.bind(mediaDevices);
+
+                case this.SUPPORT_DEPRECATED_VERSION:
+                    var getUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+                    return function(constraints) {
+                        return new Promise(function(resolve, reject) {
+                                getUserMedia(constraints, resolve, reject);
+                            });
+                        };
+
+                default:
+                    return function() {
+                        throw "getUserMedia is unsupported";
+                    };
+                }
+            }
+        };
+    var getUserMedia = MediaStreamHelper.initialize(window);
     if(window.getUserMedia) console.log("Your browser supports getUserMedia.");
     else
         console.log("Your browser does not support getUserMedia.");

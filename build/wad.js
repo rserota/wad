@@ -2303,7 +2303,7 @@
             SUPPORT_STANDARD_VERSION: 1,
             SUPPORT_DEPRECATED_VERSION: 2,
             isGetUserMediaSupported: function isGetUserMediaSupported(window) {
-                if(window.navigator.mediaDevices.getUserMedia) return this.SUPPORT_STANDARD_VERSION;
+                if(window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) return this.SUPPORT_STANDARD_VERSION;
                 else if(window.navigator.getUserMedia) return this.SUPPORT_DEPRECATED_VERSION;
                 else
                     return this.UNSUPPORT;

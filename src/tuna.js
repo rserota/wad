@@ -156,10 +156,8 @@
         context.__connectified__ = true; // Prevent overriding connect more than once
 
         function shimConnect() {
-            var node = Array.prototype.shift.apply(arguments);
-            node = Super.isPrototypeOf ? (Super.isPrototypeOf(node) ? node.input : node) : (node.input || node);
-            arguments = Array.prototype.slice.call(arguments);
-            arguments.unshift(node);
+            var node = arguments[0];
+            arguments[0] = Super.isPrototypeOf ? (Super.isPrototypeOf(node) ? node.input : node) : (node.input || node);
             oconnect.apply(this, arguments);
             return node;
         }

@@ -8,14 +8,14 @@ var context      = new audioContext();
 var getUserMedia = (function(window) {
     if (window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {
         // Browser supports promise based `getUserMedia`
-        return window.navigator.mediaDevices.getUserMedia.bind(mediaDevices);
+        return window.navigator.mediaDevices.getUserMedia.bind(window.navigator.mediaDevices);
     }
     var navigatorGetUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
     if (navigatorGetUserMedia) {
         // Browser supports old `getUserMedia` with callbacks.
         return function(constraints) {
             return new Promise(function(resolve, reject) {
-                navigatorGetUserMedia(constraints, resolve, reject);
+                navigatorGetUserMedia.call(window.navigator, constraints, resolve, reject);
             });
         };
     }

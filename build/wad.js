@@ -2287,46 +2287,34 @@
 ;
 
 /** Let's do the vendor-prefix dance. **/
-    var audioContext = window.AudioContext || window.webkitAudioContext;
-    var context      = new audioContext();
-    var MediaStreamHelper = {
-        /*
-	        The browser have to support Promises if the browser supports only the deprecated version of getUserMedia.
-	        There is a polyfill for Promises!
-          Example:
-	          MediaStreamHelper.initialize(window);
-	          getUserMedia({audio: true}).then(function(stream) {}).catch(function(error) {});
-	*/
-		    UNSUPPORT: false,
-		    SUPPORT_STANDARD_VERSION: 1,
-		    SUPPORT_DEPRECATED_VERSION: 2,
-		    isGetUserMediaSupported: function isGetUserMediaSupported(window) {
-				    if(window.navigator.mediaDevices.getUserMedia) return this.SUPPORT_STANDARD_VERSION;
-				    else if(window.navigator.getUserMedia) return this.SUPPORT_DEPRECATED_VERSION;
-				    else
-					    return this.UNSUPPORT;
-			    },
-		    initialize: function initializeMediaStreamHelper(window) {
-				    window.navigator.mediaDevices = window.navigator.mediaDevices || {};
-				    window.navigator.getUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+var audioContext = window.AudioContext || window.webkitAudioContext;
+var context      = new audioContext();
 
-				    var howIsItSupported = this.isGetUserMediaSupported(window);
-				    if(howIsItSupported != this.UNSUPPORT)
-				    {
-					    window.getUserMedia = howIsItSupported == this.SUPPORT_STANDARD_VERSION ?
-						    window.navigator.mediaDevices.getUserMedia.bind(window.navigator.mediaDevices) :
-						    function(constraints) {
-								    return new Promise(function(resolve, reject) {
-										    window.navigator.getUserMedia(constraints, resolve, reject);
-									    });
-							    };
-				    }
-			    }
-	    };
-    MediaStreamHelper.initialize(window);
-    if(window.getUserMedia) console.log("Your browser supports getUserMedia.");
-    else
-        console.log("Your browser does not support getUserMedia.");
+// create a wrapper for old versions of `getUserMedia`
+var getUserMedia = (function(window) {
+    if (window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {
+        // Browser supports promise based `getUserMedia`
+        return window.navigator.mediaDevices.getUserMedia.bind(window.navigator.mediaDevices);
+    }
+    var navigatorGetUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+    if (navigatorGetUserMedia) {
+        // Browser supports old `getUserMedia` with callbacks.
+        return function(constraints) {
+            return new Promise(function(resolve, reject) {
+                navigatorGetUserMedia.call(window.navigator, constraints, resolve, reject);
+            });
+        };
+    }
+
+    return function() {
+        throw "getUserMedia is unsupported";
+    };
+}(window));
+
+if (getUserMedia)
+    console.log("Your browser supports getUserMedia.");
+else
+    console.log("Your browser does not support getUserMedia.");
 /////////////////////////////////////////
 
 var Wad = (function(){
@@ -3734,7 +3722,7 @@ grab it from the defaultImpulse URL **/
     };
     Wad.midiInputs  = [];
 
-    midiMap = function(event){
+    var midiMap = function(event){
         console.log(event.receivedTime, event.data);
         if ( event.data[0] === 144 ) { // 144 means the midi message has note data
             // console.log('note')

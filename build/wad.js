@@ -3050,6 +3050,16 @@ then finally play the sound by calling playEnv() **/
         return this;
     };
 
+    Wad.prototype.setPitch = function(pitch){
+        if ( pitch in Wad.pitches ) {
+          this.soundSource.frequency.value = Wad.pitches[pitch];
+        }
+        else {
+          this.soundSource.frequency.value = pitch;
+        }
+        return this;
+    };
+
     Wad.prototype.setDetune = function(detune){
         this.soundSource.detune.value = detune;
         return this;

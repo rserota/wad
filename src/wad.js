@@ -234,11 +234,12 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         that.nodes             = [];
         that.mediaStreamSource = null;
         that.gain              = null;
-        getUserMedia({audio: true, video: false}).then(function(stream) {
+        return getUserMedia({audio: true, video: false}).then(function(stream) {
             // console.log('got stream')
             that.mediaStreamSource = context.createMediaStreamSource(stream);
             Wad.micConsent = true
             setUpMic(that, arg);
+            return that;
         }).catch(function(error) { console.log('Error setting up microphone input: ', error); }); // This is the error callback.
     };
 ////////////////////////////////////////////////////////////////////
@@ -652,6 +653,10 @@ then finally play the sound by calling playEnv() **/
                 }
             }
             else { console.log('You have not given your browser permission to use your microphone.')}
+            getConsent(this, arg)
+              .then(function (that) {
+                that.play(arg);
+              });
         }
 
         else {

@@ -652,11 +652,12 @@ then finally play the sound by calling playEnv() **/
                     plugEmIn(this, arg);
                 }
             }
-            else { console.log('You have not given your browser permission to use your microphone.')}
-            getConsent(this, arg)
-              .then(function (that) {
-                that.play(arg);
-              });
+            else { 
+                console.log('You have not given your browser permission to use your microphone.')
+                getConsent(this, arg).then(function (that) {
+                    that.play(arg);
+                });
+            }
         }
 
         else {
@@ -1155,7 +1156,7 @@ Copyright (c) 2014 Chris Wilson
 
 /** If a Wad is created with reverb without specifying a URL for the impulse response,
 grab it from the defaultImpulse URL **/
-    Wad.defaultImpulse = 'http://www.codecur.io/us/sendaudio/widehall.wav';
+    Wad.defaultImpulse = 'https://www.codecur.io/audio/widehall.wav';
 
     // This method is deprecated.
     Wad.setGlobalReverb = function(arg){

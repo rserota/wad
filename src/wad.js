@@ -1445,7 +1445,13 @@ grab it from the defaultImpulse URL **/
         'C8'
     ];
 //////////////////////////////////////////////////////////////
+    Wad.assignMidiMap = function(midiMap, which){
+        var which = which || 0;
+        navigator.requestMIDIAccess().then(function(){
+            Wad.midiInputs[which].onmidimessage = midiMap;
+        })
 
+    }
     Wad.midiInstrument = {
         play : function() { console.log('playing midi')  },
         stop : function() { console.log('stopping midi') }
@@ -1498,7 +1504,7 @@ grab it from the defaultImpulse URL **/
         // o.send( [ 0x80, 0x45, 0x7f ], window.performance.now() + 1000 );  // full velocity A4 note off in one second.
     };
     var onErrorCallback = function(err){
-        console.log("uh-oh! Something went wrong!  Error code: " + err.code );
+        console.log("Failed to get MIDI access", err);
     };
 
     if ( navigator && navigator.requestMIDIAccess ) {
@@ -1506,10 +1512,7 @@ grab it from the defaultImpulse URL **/
             navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
         }
         catch(err) {
-            var text = "There was an error on this page.\n\n";
-            text += "Error description: " + err.message + "\n\n";
-            text += "Click OK to continue.\n\n";
-            console.log(text);
+            console.log("Failed to get MIDI access", err);
         }
     }
 

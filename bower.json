@@ -1,6 +1,6 @@
 {
   "name": "Wad",
-  "main": "wad.js",
+  "main": "build/wad.js",
   "version": "1.7.1",
   "homepage": "https://github.com/rserota/wad",
   "authors": [

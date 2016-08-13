@@ -1445,10 +1445,15 @@ grab it from the defaultImpulse URL **/
         'C8'
     ];
 //////////////////////////////////////////////////////////////
-    Wad.assignMidiMap = function(midiMap, which){
+    Wad.assignMidiMap = function(midiMap, which, success, failure){
         var which = which || 0;
         navigator.requestMIDIAccess().then(function(){
-            Wad.midiInputs[which].onmidimessage = midiMap;
+            if ( Wad.midiInputs[which] ) {
+                Wad.midiInputs[which].onmidimessage = midiMap;
+                if  ( typeof success === 'function' ) { success() }
+            }
+            else if ( typeof failure === 'function' ) { failure() }
+
         })
 
     }

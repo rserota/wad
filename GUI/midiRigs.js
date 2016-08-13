@@ -208,25 +208,29 @@ app.init.midiRigs = function(app){
         }
     }
 
-
-
-    if ( Wad.midiInputs[0] ) { 
-        Wad.midiInputs[0].onmidimessage = midiRigs[app.rig] 
+    Wad.assignMidiMap(midiRigs[app.rig], 0, function(){
         $('p#midi-detected').text('A connected MIDI device has been detected.')
-    }
-    else { 
-        setTimeout(function(){ 
-            if ( Wad.midiInputs[0] ) { 
-                Wad.midiInputs[0].onmidimessage = midiRigs[app.rig] 
-                $('p#midi-detected').text('A connected MIDI device has been detected.')
-            }
-            else { 
-                console.log('No MIDI devices detected.')
-                $('p#midi-detected').text('No MIDI device was detected. Try restarting your browser while the device is plugged in.')
+    }, function(){
+        $('p#midi-detected').text('No MIDI device was detected. Try restarting your browser while the device is plugged in.')
+    })
+
+    // if ( Wad.midiInputs[0] ) { 
+    //     Wad.midiInputs[0].onmidimessage = midiRigs[app.rig] 
+    //     $('p#midi-detected').text('A connected MIDI device has been detected.')
+    // }
+    // else { 
+    //     setTimeout(function(){ 
+    //         if ( Wad.midiInputs[0] ) { 
+    //             Wad.midiInputs[0].onmidimessage = midiRigs[app.rig] 
+    //             $('p#midi-detected').text('A connected MIDI device has been detected.')
+    //         }
+    //         else { 
+    //             console.log('No MIDI devices detected.')
+    //             $('p#midi-detected').text('No MIDI device was detected. Try restarting your browser while the device is plugged in.')
 
 
-            }
-        }, 1000)
-    }
+    //         }
+    //     }, 1000)
+    // }
 
 }

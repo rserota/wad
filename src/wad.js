@@ -2,7 +2,15 @@
 
 /** Let's do the vendor-prefix dance. **/
 var audioContext = window.AudioContext || window.webkitAudioContext;
-var context      = new audioContext();
+
+var aScene = document.querySelector('a-scene');
+var context;
+if ( aScene && aScene.audioListener && aScene.audioListener.context){
+    context = aScene.audioListener.context
+}
+else {
+    context = new audioContext();
+}
 
 // create a wrapper for old versions of `getUserMedia`
 var getUserMedia = (function(window) {

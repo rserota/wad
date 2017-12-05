@@ -2293,6 +2293,7 @@ var aScene = document.querySelector('a-scene');
 var context;
 if ( aScene && aScene.audioListener && aScene.audioListener.context){
     context = aScene.audioListener.context
+    console.log("An A-Frame scene has been detected.")
 }
 else {
     context = new audioContext();
@@ -2568,11 +2569,12 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.defaultVolume = this.volume;
         this.playable      = 1; // if this is less than 1, this Wad is still waiting for a file to download before it can play
         this.pitch         = Wad.pitches[arg.pitch] || arg.pitch || 440;
+        this.gain          = [];
         this.detune        = arg.detune || 0 // In Cents.
         this.globalReverb  = arg.globalReverb || false;
-        this.gain          = [];
-        this.loop          = arg.loop || false;
-        this.tuna          = arg.tuna || null;
+        this.offset        = arg.offset || 0
+        this.loop          = arg.loop   || false;
+        this.tuna          = arg.tuna   || null;
         constructEnv(this, arg);
         constructFilter(this, arg);
         constructVibrato(this, arg);
@@ -2615,11 +2617,13 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
         else { arg.callback && arg.callback(this) }
     };
+
     Wad.micConsent = false
     Wad.audioContext = context
     if ( window.Tuna != undefined ) {
         Wad.tuna = new Tuna(Wad.audioContext)
     }
+
 
 /** When a note is played, these two functions will schedule changes in volume and filter frequency,
 as specified by the volume envelope and filter envelope **/
@@ -2636,7 +2640,8 @@ as specified by the volume envelope and filter envelope **/
         wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, arg.exactTime + wad.env.attack + wad.env.decay + 0.00002);
         wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, arg.exactTime + wad.env.attack + wad.env.decay + wad.env.hold + 0.00003);
         wad.gain[0].gain.linearRampToValueAtTime(0.0001, arg.exactTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + 0.00004);
-        wad.soundSource.start(arg.exactTime);
+        // offset is only used by BufferSourceNodes. OscillatorNodes should safely ignore the offset.
+        wad.soundSource.start(arg.exactTime, arg.offset);
         wad.soundSource.stop(arg.exactTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release);
     };
 
@@ -2959,7 +2964,7 @@ then finally play the sound by calling playEnv() **/
             if ( !arg.wait ) { arg.wait = 0; }
             if ( arg.volume ) { this.volume = arg.volume; }
             else { this.volume = this.defaultVolume; }
-
+            arg.offset = arg.offset || this.offset || 0;
             if ( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) {
                 setUpOscillator(this, arg);
             }

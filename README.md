@@ -38,6 +38,7 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
             <li><a href='#presets'>Presets</a></li>
             <li><a href='#midi-input'>MIDI Input</a></li>
             <li><a href='#access-to-the-audio-context'>Access to the Audio Context</a></li>
+            <li><a href='#a-frame-integration'>A-Frame Integration</a></li>
         </ul>
     <li><a href='#how-to-contribute'>How To Contribute</a></li>
 </ul>
@@ -92,9 +93,10 @@ var saw = new Wad({
     source  : 'sawtooth',
     volume  : 1.0,   // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
     loop    : false, // If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators. 
+    offset  : 0,     // Where in the audio clip playback begins, measured in seconds from the start of the audio clip.
     pitch   : 'A4',  // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
     detune  : 0,     // Set a default detune on the constructor if you don't want to set detune on <code>play()</code>. Detune is measured in cents. 100 cents is equal to 1 semitone.
-    panning : -.5,    // Horizontal placement of the sound source. Possible values are from 1 to -1.
+    panning : -.5,   // Horizontal placement of the sound source. Possible values are from 1 to -1.
 
     env     : {      // This is the ADSR envelope.
         attack  : 0.0,  // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
@@ -212,6 +214,7 @@ saw.play({
     volume  : 0.8,
     wait    : 0,     // Time in seconds between calling play() and actually triggering the note.
     loop    : false, // This overrides the value for loop on the constructor, if it was set. 
+    offset  : 0,     // This overrides the value for offset on the constructor, if it was set.
     pitch   : 'A4',  // A4 is 440 hertz.
     label   : 'A',   // A label that identifies this note.
     env     : {hold : 9001},
@@ -435,7 +438,7 @@ If you have multiple MIDI devices that you would like to use simultaneously, you
 
 <h3 id="access-to-the-audio-context">Access to the Audio Context</h3>
 
-When Wad.js loads initially, it automatically creates an Audio Context. It shouldn't be necessary to access the Audio Context directly, but if you need it for some reason, it is exposed at <code>Wad.audioContext</code>.
+When Wad.js loads initially, it automatically creates an Audio Context. It shouldn't be necessary to access the Audio Context directly, but if you need it for some reason, it is exposed at <code>Wad.audioContext</code>. <span id="a-frame-integration">If you are using <a href="https://aframe.io/">A-Frame</a> in your application and Wad.js detects an `<a-scene>` element on the page, Wad.js will use A-Frame's Audio Context and Audio Listener, instead of creating its own.</span>
 
 <h2>How To Contribute</h2>
 

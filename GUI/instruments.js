@@ -29,7 +29,7 @@ app.init.instruments = function(app){
     })
 
     app.instruments.delta.crash   = new Wad({
-        source : '/GUI/audio/crash.wav'
+        source : '/GUI/audio/crash.wav',
     })
     app.instruments.delta.highTom = new Wad({
         source : '/GUI/audio/highTom.wav'

@@ -38,7 +38,7 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
             <li><a href='#presets'>Presets</a></li>
             <li><a href='#midi-input'>MIDI Input</a></li>
             <li><a href='#access-to-the-audio-context'>Access to the Audio Context</a></li>
-            <li><a href='#a-frame-integration'>A-Frame Integration</a></li>
+            <li><a href='#access-to-the-audio-context'>A-Frame Integration</a></li>
         </ul>
     <li><a href='#how-to-contribute'>How To Contribute</a></li>
 </ul>

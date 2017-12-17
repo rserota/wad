@@ -417,7 +417,6 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
         else {
             that.soundSource.frequency.value = that.pitch;
         }
-        that.soundSource.detune.value = arg.detune || that.detune;
     };
 ///////////////////////////////////////////////////
 
@@ -690,6 +689,8 @@ then finally play the sound by calling playEnv() **/
                     this.soundSource.loop = true;
                 }
             }
+            this.soundSource.detune.value = arg.detune || this.detune;
+
 
             if (arg.exactTime === undefined) {
                 arg.exactTime = context.currentTime + arg.wait;

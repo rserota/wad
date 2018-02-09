@@ -1,13 +1,4 @@
 node_modules
-Packs
-todo.md
+test
 package-lock.json
 .DS_Store
-.idea/.name
-.idea/encodings.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/scopes/scope_settings.xml
-.idea/vcs.xml
-.idea/wad.iml
-.idea/workspace.xml

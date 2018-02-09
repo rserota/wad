@@ -2975,8 +2975,10 @@ then finally play the sound by calling playEnv() **/
                     this.soundSource.loop = true;
                 }
             }
-            this.soundSource.detune.value = arg.detune || this.detune;
 
+            if ( this.soundSource.detune ) {
+                this.soundSource.detune.value = arg.detune || this.detune;
+            }
 
             if (arg.exactTime === undefined) {
                 arg.exactTime = context.currentTime + arg.wait;

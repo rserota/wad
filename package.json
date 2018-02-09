@@ -1,6 +1,6 @@
 {
   "name": "web-audio-daw",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "description": "Web Audio DAW. It's like jQuery for your ears.",
   "main": "build/wad.js",
   "scripts": {

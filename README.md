@@ -246,8 +246,16 @@ If you want to change an attribute of a Wad during playback, you can use the rel
 
 <pre><code>
 saw.play()
-saw.setPanning(-2)
+saw.setDetune(-50)
 </code></pre>
+
+By default, this change will occur smoothly over 10 milliseconds, to help prevent ugly clicks and pops. Optionally, you may pass in a second parameter to specify the duration of this transition, in seconds. 
+
+```javascript
+saw.play()
+saw.setPanning(1, .015) // pan to the right over 15 milliseconds
+
+```
 
 
 <h3 id='mic'>Microphone Input</h3>

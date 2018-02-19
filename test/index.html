@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./wad.js"></script>
+</head>
+<body>
+
+    <button id="ignition">PLAY CLIP</button>
+    <script>
+        var ignition = new Wad({source:'./ignition.mp3'})
+        document.getElementById('ignition').addEventListener('click', function(){
+            ignition.play()
+        })
+    </script>
+    <hr>
+
+    <button id="sine">PLAY SINE</button>
+    <button id="detune">DETUNE SINE</button>
+    <button id="pan">PAN SINE</button>
+
+
+    <script>
+        var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .3}})
+        document.getElementById('sine').addEventListener('click', function(){
+            sine.play()
+        })
+        document.getElementById('detune').addEventListener('click', function(){
+            sine.setDetune(100)
+        })
+        document.getElementById('pan').addEventListener('click', function(){
+            sine.setPanning(1)
+        })
+
+    </script>
+
+
+</body>
+</html>

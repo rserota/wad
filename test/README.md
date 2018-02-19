@@ -1,0 +1,1 @@
+Just a simple HTML page for manual testing of basic functionality in Wad.js.

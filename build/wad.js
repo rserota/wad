@@ -3082,20 +3082,22 @@ then finally play the sound by calling playEnv() **/
         return this;
     };
 
-    Wad.prototype.setDetune = function(detune){
-        this.soundSource.detune.value = detune;
+    Wad.prototype.setDetune = function(detune, timeConstant){
+        timeConstant = timeConstant || .01
+        this.soundSource.detune.setTargetAtTime(detune, context.currentTime, timeConstant)
         return this;
     };
 
     /** Change the panning of a Wad at any time, including during playback **/
-    Wad.prototype.setPanning = function(panning){
+    Wad.prototype.setPanning = function(panning, timeConstant){
+        timeConstant = timeConstant || .01
         this.panning.location = panning;
         if ( isArray(panning) && this.panning.type === '3d' && this.panning.node ) {
             this.panning.node.setPosition(panning[0], panning[1], panning[2]);
 
         }
         else if ( typeof panning === 'number' && this.panning.type === 'stereo' && this.panning.node) {
-            this.panning.node.pan.value = panning;
+            this.panning.node.pan.setTargetAtTime(panning, context.currentTime, timeConstant)
         }
 
         if ( isArray(panning) ) { this.panning.type = '3d' }

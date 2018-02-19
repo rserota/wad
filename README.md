@@ -65,30 +65,33 @@ Wad.js is also available as a bower package or as a node module.
 
 The simplest use case is loading and playing a single audio file.
 
-<pre><code>
+```javascript
 var bell = new Wad({source : 'http://www.myserver.com/audio/bell.wav'})
 bell.play()
 bell.stop()
-</code></pre>
-
+```
 
 Behind the scenes, Wad sends an XMLHttpRequest to the source URL, so you will need a server running to respond to the request. You can't simply test it with local files, like you can with an HTML &lt;audio> tag.
 
 You can also create oscillators using the same syntax, by specifying 'sine', 'square', 'sawtooth', or 'triangle' as the source.
 
-<pre><code>var saw = new Wad({source : 'sawtooth'})</code></pre>
+```javascript
+var saw = new Wad({source : 'sawtooth'})
+```
 
 The peak volume can be set during the creation of a wad, or any time afterwards. The default value is 1.
 
-<pre><code>var saw = new Wad({source : 'sawtooth', volume : .9})
-saw.setVolume(0.5)</code></pre>
+```javascript
+var saw = new Wad({source : 'sawtooth', volume : .9})
+saw.setVolume(0.5)
+```
 
 
 <h3>Constructor Arguments</h3>
 
 The Wad constructor supports many optional arguments to modify your sound, from simple settings such as peak volume, to more powerful things like ADSR envelopes and filters.  If not set explicitly, the ADSR envelope will have the values shown below. Filters, LFOs, and reverb are not used unless they are set explicitly. Filter type can be specified as either 'lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', or 'allpass'.
 
-<pre><code>
+```javascript
 var saw = new Wad({
     source  : 'sawtooth',
     volume  : 1.0,   // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
@@ -144,7 +147,7 @@ var saw = new Wad({
         }
     }
 })
-</code></pre>
+```
 
 
 <h3>Panning</h3>
@@ -154,24 +157,24 @@ With 3d-panning, you don't directly set the left/right stereo balance. Rather, t
 When using 3d-panning, there are two different panning models that can be used. The HRTF panning model is higher quality, but the equalpower panning model is more performant. If not specified, the equalpower panning model is used. 
 
 
-<pre><code>
+```javascript
 var saw = new Wad({
     source       : 'sawtooth',
     panning      : [0, 1, 10],
     panningModel : 'HRTF'
 })
-</code></pre>
+```
 
 <h3>Filters</h3>
 
 The filter constructor argument can be passed an object or an array of objects. If an array is passed, the filters are applied in that order. Whichever form is passed to the constructor should also be passed to the play argument.
 
-<pre><code>
+```javascript
 filter: [
     {type : 'lowpass', frequency : 600, q : 1, env : {frequency : 800, attack : 0.5}},
     {type : 'highpass', frequency : 1000, q : 5}
 ]
-</code></pre>
+```
 
 <h3 id='configuring-reverb'>Configuring Reverb</h3>
 
@@ -181,7 +184,7 @@ In order to use reverb, you will need a server to send an impulse response via X
 
 Tuna, everyone's favorite Web Audio effects library, is included in Wad.js. This makes it super easy to add effects from Tuna to any Wad or PolyWad.
 
-<pre><code>
+```javascript
 var letItBeTuna = new Wad({
     source : 'sine',
     tuna   : {
@@ -200,7 +203,7 @@ var letItBeTuna = new Wad({
         }
     }
 })
-</pre></code>
+```
 
 For more information about the various Tuna effects and the arguments they take, <a href="https://github.com/Theodeus/tuna/wiki#the-nodes">check out the Tuna wiki</a>.
 
@@ -208,7 +211,7 @@ For more information about the various Tuna effects and the arguments they take,
 
 The <code>play()</code> method also accepts many optional arguments, such as volume, wait, pitch, envelope, panning, and filter. If you intend to include a filter envelope or panning as an argument on <code>play()</code>, you should have set a filter envelope or panning when the Wad was first instantiated. Pitches can be named by the note name, followed by the octave number. Possible values are from A0 to C8. Sharp and flat notes can be named enharmonically as either sharps or flats (G#2/Ab2). Check the Wad.pitches attribute for a complete mapping of note-names to frequencies.
 
-<pre><code>
+```javascript
 var saw = new Wad({source : 'sawtooth'})
 saw.play({
     volume  : 0.8,
@@ -222,32 +225,34 @@ saw.play({
     filter  : {frequency : 900},
     delay   : {delayTime : .8}
 })
-</code></pre>
+```
 
 
 If you like, you can also select a pitch by frequency.
 
-<code>saw.play({pitch : 440})</code>
+
+```javascript
+saw.play({pitch : 440})
+```
 
 <h4 id='play-labels'>Play Labels</h4>
 
 When you call <code>stop()</code> on a Wad, it will only stop the most recently triggered note. If you want to retain control over multiple notes that played from the same Wad, you can label those notes when <code>play()</code> is called. When <code>stop()</code> is called, you can pass in a label argument to stop all currently sustained notes with that label. 
 
-<pre><code>
+```javascript
 saw.play({pitch : 'A4', label : 'A4'}) // The label can be any string, but using the same name as the note is often sensible.
 saw.play({pitch : 'G4', label : 'G4'})
 saw.stop('A4') // The first note will stop, but the second note will continue playing.
-</code></pre>
-
+```
 
 <h4 id='play-setters'>Changing Settings During Playback</h4>
 
 If you want to change an attribute of a Wad during playback, you can use the relevant setter method for that attribute.
 
-<pre><code>
+```javascript
 saw.play()
 saw.setDetune(-50)
-</code></pre>
+```
 
 By default, this change will occur smoothly over 10 milliseconds, to help prevent ugly clicks and pops. Optionally, you may pass in a second parameter to specify the duration of this transition, in seconds. 
 
@@ -262,7 +267,7 @@ saw.setPanning(1, .015) // pan to the right over 15 milliseconds
 
 You can also use microphone input as the source for a Wad. You can apply reverb or filters to the microphone input, but you cannot apply an envelope or filter envelope. If a Wad uses the microphone as the source, it will constantly stream the mic input through all applied effects (filters, reverb, etc) and out through your speakers or headphones as soon as you call the <code>play()</code> method on that Wad. Call the <code>stop()</code> method on a microphone Wad to disconnect your microphone from that Wad. You may experience problems with microphone feedback if you aren't using headphones.
 
-<pre><code>
+```javascript
 var voice = new Wad({
     source  : 'mic',
     reverb  : {
@@ -277,7 +282,7 @@ var voice = new Wad({
 
 // You must give your browser permission to use your microphone before calling play().
 voice.play()
-</code></pre>
+```
 
 If <code>voice.play()</code> is called with no arguments, it uses the arguments from the constructor. However, if it is called with any arguments, all arguments from the constructor are discarded (except for source), and the arguments passed to <code>voice.play()</code> are used instead. 
 
@@ -285,7 +290,7 @@ If <code>voice.play()</code> is called with no arguments, it uses the arguments 
 
 In many cases, it is useful to group multiple Wads together. This can be accomplished with a PolyWad, a multi-purpose object that can store other Wads and PolyWads. There are two main cases where you might want to group several Wads together. One case is when you want to make a complex instrument that uses multiple oscillators.  Other audio synthesis programs often have instruments that combine multiple oscillators, with names like 'TripleOscillator' or '3xOSC'.
 
-<pre><code>
+```javascript
 var sine     = new Wad({ source : 'sine' })
 var square   = new Wad({ source : 'square' })
 var triangle = new Wad({ source : 'triangle' })
@@ -299,11 +304,11 @@ tripleOscillator.setVolume(.5)
 tripleOscillator.stop() // play(), stop(), and various setter methods can be called on a PolyWad just as they would be called on a regular Wad.
 
 tripleOscillator.remove(triangle) // It's really just a double-oscillator at this point.
-</code></pre>
+```
 
 The second main case in which you would want to group several Wads together is to make a mixer track, where several Wads share a set of effects and filters.
 
-<pre><code>
+```javascript
 var mixerTrack = new Wad.Poly({
     filter  : {
         type      : 'lowpass',
@@ -315,13 +320,13 @@ var mixerTrack = new Wad.Poly({
 
 mixerTrack.add(tripleOscillator).add(triangle)
 tripleOscillator.play({ pitch : 'Eb3'}) // This note is filtered and panned.
-</code></pre>
+```
 
 <h4>Recording</h4>
 
 A PolyWad can be used to record the output produced by the Wads it contains.
 
-<pre><code>
+```javascript
 var sine = new Wad({source : 'sine'})
 var mixerTrack = new Wad.Poly({
     recConfig : { // The Recorder configuration object. The only required property is 'workerPath'.
@@ -339,7 +344,7 @@ mixerTrack.rec.stop()
 mixerTrack.rec.createWad()          // This method accepts the same arguments as the Wad constructor, except that the 'source' is implied, so it's fine to call this method with no arguments. 
 mixerTrack.rec.recordings[0].play() // The most recent recording is unshifted to the front of this array.
 mixerTrack.rec.clear()              // Clear the recording buffer when you're done with it, so you can record something else.
-</code></pre>
+```
 
 Wad.js uses Recorder.js for recording (the 'createWad()' method and the 'recordings' array are the only extensions that I've added). For more comprehensive documentation about the recorder object, <a href='https://github.com/mattdiamond/Recorderjs'>check out the Recorder.js documentation</a>. 
 
@@ -349,7 +354,7 @@ Note that the minified version of Wad.js has Recorder.js concatenated to it, but
 
 If you want to make a song that sounds rich and modern, it often helps to compress the dynamic range of the song. A compressor will make the loudest parts of your song quieter, and the quietest parts louder.
 
-<pre><code>
+```javascript
 var compressor = new Wad.Poly({
     compressor : {
         attack    : .003 // The amount of time, in seconds, to reduce the gain by 10dB. This parameter ranges from 0 to 1.
@@ -359,14 +364,14 @@ var compressor = new Wad.Poly({
         threshold : -24  // The decibel value above which the compression will start taking effect. This parameter ranges from -100 to 0.
     }
 })
-</code></pre>
+```
 
 
 <h4>Pitch Detection</h4>
 
 PolyWads can detect the frequency of their input. 
 
-<pre><code>
+```javascript
 var voice = new Wad({source : 'mic' }); // At this point, your browser will ask for permission to access your microphone.
 var tuner = new Wad.Poly();
 tuner.add(voice);
@@ -383,14 +388,13 @@ logPitch();
 // If you sing into your microphone, your pitch will be logged to the console in real time.
 
 tuner.stopUpdatingPitch(); // Stop calculating the pitch if you don't need to know it anymore.
-
-</code></pre>
+```
 
 <h3 id='exfx'>External FX</h3>
 
 Sometimes you might want to incorporate external libraries into Wad, for example FX or visualizers. You can override the constructExternalFx and setUpExternalFxOnPlay methods to add those nodes to the wad chain. In the following example the values are hardcoded, but they could easily have been passed as arguments to play.
 
-<pre><code>
+```javascript
 //For example to add a Tuna chorus you would put this somewhere in your own code, and also include the Tuna library:
 
 var tuna;
@@ -409,38 +413,42 @@ Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
     chorus.input.connect = chorus.connect.bind(chorus) // we do this dance because tuna exposes its input differently.
     this.nodes.push(chorus.input) // you would generally want to do this at the end unless you are working with something that does not modulate the sound (i.e, a visualizer)
 };
-</code></pre>
+```
 
 
 <h3>Presets</h3>
 
 If you'd like to use a pre-configured Wad, check out the presets.  They should give you a better idea of the sorts of sounds that you can create with Wad.js.  For example, you can create a Wad using the preset 'hiHatClosed' like this:
 
-<pre><code>var hat = new Wad(Wad.presets.hiHatClosed);</code></pre>
+```javascript
+var hat = new Wad(Wad.presets.hiHatClosed);
+```
 
 <h3 id='midi'>MIDI Input</h3>
 
 Wad.js can read MIDI data from MIDI instruments and controllers, and you can set handlers to respond to that data. When Wad.js initializes, it tries to automatically detect any connected MIDI devices, and creates a reference to it in the array <code>Wad.midiInputs</code>. To handle MIDI data, assign a MIDI handler function to a MIDI device's <code>onmidimessage</code> property.  By default, Wad is configured to log MIDI messages to the console, which should be sufficient if you are quickly testing your devices. If you want to quickly set up a MIDI keyboard to play a Wad, assign a Wad of your choice (or any object with <code>play()</code> and <code>stop()</code> methods) to <code>Wad.midiInstrument</code>.
 
-<pre><code>Wad.midiInstrument = new Wad({source : 'sine'});</code></pre>
+```javascript
+Wad.midiInstrument = new Wad({source : 'sine'});
+```
 
 
 If you want to get creative with how Wad.js handles MIDI data, I strongly encourage you to write your own MIDI handler functions. For example, note-on velocity (how hard you press a key when playing a note) usually modulates the volume of a note, but it might sound interesting if you configure note-on velocity to modulate the attack or filter frequency instead. You could configure the right half of your keyboard to play a guitar, and configure the left half of your keyboard to play a bass. If you want to take that a step further, you can use a sustain pedal to toggle between slap and pop sounds on the bass, if you're into that style of music. Or maybe you'd like to map the lowest octave on your keyboard to a drum kit, and use a sustain pedal to play the kick-drum. You can do almost anything, if you're clever. Wad.js simply maps MIDI data to function calls, so your MIDI device can do anything that you can accomplish with Javascript. You can send MIDI data through websockets for some kind of WAN concert, or set up a Twitter bot that automatically tells your friends what key you've been playing in. If you can design a really cool and creative MIDI rig, I'd love to hear about it, and might include it in Wad.js.
 
-<pre><code>
+```javascript
 var midiMap = function(event){
     console.log(event.receivedTime, event.data);
 }
 
 Wad.assignMidiMap(midiMap)
-</code></pre>
+```
 
 If you have multiple MIDI devices that you would like to use simultaneously, you will need multiple MIDI handler functions. The second argument to <code>Wad.assignMidiMap</code> is used to specify the index of the MIDI device you would like to assign to. 
 
-<pre><code>
+```javascript
     Wad.assignMidiMap(anotherMidiHandlerFunction, 1)  
     Wad.midiInputs[1].onmidimessage = anotherMidiHandlerFunction 
-</pre></code>
+```
 
 <code>Wad.assignMidiMap</code> can also accept success and failure callbacks as its third and fourth arguments, to handle cases where the MIDI device you are trying to assign to cannot be found. 
 

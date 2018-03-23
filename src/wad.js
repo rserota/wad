@@ -284,11 +284,12 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.playable      = 1; // if this is less than 1, this Wad is still waiting for a file to download before it can play
         this.pitch         = Wad.pitches[arg.pitch] || arg.pitch || 440;
         this.gain          = [];
-        this.detune        = arg.detune || 0 // In Cents.
+        this.detune        = arg.detune || 0; // In Cents.
         this.globalReverb  = arg.globalReverb || false;
-        this.offset        = arg.offset || 0
+        this.offset        = arg.offset || 0;
         this.loop          = arg.loop   || false;
         this.tuna          = arg.tuna   || null;
+        this.speed         = arg.speed  || 1;
         constructEnv(this, arg);
         constructFilter(this, arg);
         constructVibrato(this, arg);
@@ -688,6 +689,10 @@ then finally play the sound by calling playEnv() **/
                 if ( this.source === 'noise' || this.loop || arg.loop ) {
                     this.soundSource.loop = true;
                 }
+            }
+
+            if ( this.soundSource.playbackRate ) {
+                this.soundSource.playbackRate.value = arg.speed || this.speed;
             }
 
             if ( this.soundSource.detune ) {

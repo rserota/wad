@@ -8,10 +8,21 @@
 
     <button id="ignition">PLAY CLIP</button>
     <button id="ignition-faster">PLAY CLIP FASTER</button>
+    <button id="ignition-slower">PLAY CLIP SLOWER</button>
     <script>
         var ignition = new Wad({source:'./ignition.mp3'})
         document.getElementById('ignition').addEventListener('click', function(){
             ignition.play()
+        })
+        document.getElementById('ignition-faster').addEventListener('click', function(){
+            ignition.play({
+                speed: 2.0,
+            })
+        })
+        document.getElementById('ignition-slower').addEventListener('click', function(){
+            ignition.play({
+                speed: 0.5,
+            })
         })
     </script>
     <hr>
@@ -34,27 +45,55 @@
     <hr>
 
 
-    <button id="mic-consent">Grant Microphone Permission</button>
-    <button id="mic-play">Enable Microphone</button>
+    <button id="mic-consent">GRANT MICROPHONE PERMISSION</button>
+    <button id="mic-play">ENABLE MICROPHONE</button>
+    <button id="mic-stop">DISABLE MICROPHONE</button>
+    <button id="detect-pitch">DETECT PITCH</button>
+    <button id="stop-detect-pitch">STOP DETECTING PITCH</button>
+
     <script>
         var voice;
+        var tuner;
+        var rafId;
+        var logPitch = function(){
+            console.log(tuner.pitch, tuner.noteName)
+            rafId = requestAnimationFrame(logPitch)
+        };
         document.getElementById('mic-consent').addEventListener('click', function(){
             voice = new Wad({
                 source  : 'mic',
-                reverb  : {
-                    wet : .4
-                }
-                filter  : {
-                    type      : 'highpass',
-                    frequency : 700
-                },
-                panning : -.2
+                // reverb  : {
+                //     wet : .4
+                // },
+                // filter  : {
+                //     type      : 'highpass',
+                //     frequency : 700
+                // },
+                // panning : -.2
             })
+
+            tuner = new Wad.Poly();
+            // tuner.setVolume(0) // mute the tuner to avoid feedback
+            tuner.add(voice);
+
 
         })
 
         document.getElementById('mic-play').addEventListener('click', function(){
+            console.log("Play mic")
             voice.play()
+        })
+        document.getElementById('mic-stop').addEventListener('click', function(){
+            console.log("Play mic")
+            voice.stop()
+        })
+        document.getElementById('detect-pitch').addEventListener('click', function(){
+            tuner.updatePitch()
+            logPitch()
+        })
+        document.getElementById('stop-detect-pitch').addEventListener('click', function(){
+            tuner.stopUpdatingPitch()
+            cancelAnimationFrame(rafId)
         })
     </script>
 

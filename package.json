@@ -4,7 +4,9 @@
   "description": "Web Audio DAW. It's like jQuery for your ears.",
   "main": "build/wad.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --config webpack.config.js",
+    "build-tests": "webpack --config webpack.config.test.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +30,11 @@
     "grunt": "^0.4.4",
     "grunt-contrib-concat": "^0.5.0",
     "grunt-contrib-uglify": "^0.4.0",
-    "grunt-umd": "^2.3.1"
+    "grunt-umd": "^2.3.1",
+    "webpack": "^4.2.0",
+    "webpack-cli": "^2.0.13"
+  },
+  "dependencies": {
+    "tunajs": "^1.0.0"
   }
 }

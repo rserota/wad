@@ -1,4 +1,4 @@
-
+import Tuna from 'tunajs';
 
 /** Let's do the vendor-prefix dance. **/
 var audioContext = window.AudioContext || window.webkitAudioContext;
@@ -40,6 +40,7 @@ else
     console.log("Your browser does not support getUserMedia.");
 /////////////////////////////////////////
 
+console.log('export?')
 var Wad = (function(){
 
 /** Pre-render a noise buffer instead of generating noise on the fly. **/
@@ -335,7 +336,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
     Wad.micConsent = false
     Wad.audioContext = context
-    if ( window.Tuna != undefined ) {
+    if ( typeof Tuna != undefined ) {
         Wad.tuna = new Tuna(Wad.audioContext)
     }
 
@@ -1559,3 +1560,6 @@ grab it from the defaultImpulse URL **/
 if(typeof module !== 'undefined' && module.exports) {
     module.exports = Wad;
 }
+
+export default Wad;
+

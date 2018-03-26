@@ -4,6 +4,7 @@ var ignition = new Wad({source:'./ignition.mp3'})
 document.getElementById('ignition').addEventListener('click', function(){
     ignition.play()
 })
+console.log('faster!')
 document.getElementById('ignition-faster').addEventListener('click', function(){
     ignition.play({
         speed: 2.0,

@@ -7,6 +7,7 @@ module.exports = {
         filename: 'wad.js',
         path: path.resolve(__dirname, 'build'),
         library: 'Wad',
+        libraryTarget: 'umd',
         libraryExport: 'default'
     }
 };

@@ -40,7 +40,6 @@ else
     console.log("Your browser does not support getUserMedia.");
 /////////////////////////////////////////
 
-console.log('export?')
 var Wad = (function(){
 
 /** Pre-render a noise buffer instead of generating noise on the fly. **/

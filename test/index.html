@@ -96,6 +96,46 @@
             cancelAnimationFrame(rafId)
         })
     </script>
+    <hr>
+
+
+    <button id="no-tuna">NO TUNA</button>
+    <button id="tuna-chorus">TUNA CHORUS</button>
+
+    <script>
+        var tunaConfig = {
+            source: 'sawtooth',
+            env: {
+                attack: .1,
+                hold: 2,
+                release: .4
+            },
+            filter: {
+                type: 'lowpass',
+                frequency: 700
+            }
+        }
+        var withoutTuna = new Wad(tunaConfig)
+
+        tunaConfig.tuna = {
+            Chorus : {
+                intensity: 0.3,  //0 to 1
+                rate: 4,         //0.001 to 8
+                stereoPhase: 0, //0 to 180
+                bypass: 0
+            }
+        } 
+
+        var withTuna = new Wad(tunaConfig)
+
+        document.getElementById('no-tuna').addEventListener('click', function(){
+            withoutTuna.play()
+        })
+        document.getElementById('tuna-chorus').addEventListener('click', function(){
+            withTuna.play()
+        })
+    </script>
+
 
 </body>
 </html>

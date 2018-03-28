@@ -93,7 +93,7 @@ var saw = new Wad({
     source  : 'sawtooth',
     volume  : 1.0,   // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
     loop    : false, // If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators. 
-    speed   : 1.0, // How fast to play an audio clip, relative to its normal speed. 2.0 is double speed, 0.5 is half speed, etc.
+    rate    : 1.0, // How fast to play an audio clip, relative to its normal speed. 2.0 is double speed, 0.5 is half speed, etc.
     offset  : 0,     // Where in the audio clip playback begins, measured in seconds from the start of the audio clip.
     pitch   : 'A4',  // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
     detune  : 0,     // Set a default detune on the constructor if you don't want to set detune on <code>play()</code>. Detune is measured in cents. 100 cents is equal to 1 semitone.
@@ -216,7 +216,7 @@ saw.play({
     wait    : 0,     // Time in seconds between calling play() and actually triggering the note.
     loop    : false, // This overrides the value for loop on the constructor, if it was set. 
     offset  : 0,     // This overrides the value for offset on the constructor, if it was set.
-    speed   : 1.5,   // This overrides the value for speed set on the constructor, if it was set.
+    rate    : 1.5,   // This overrides the value for rate set on the constructor, if it was set.
     pitch   : 'A4',  // A4 is 440 hertz.
     label   : 'A',   // A label that identifies this note.
     env     : {hold : 9001},
@@ -246,7 +246,7 @@ saw.stop('A4') // The first note will stop, but the second note will continue pl
 
 <h4 id='play-setters'>Changing Settings During Playback</h4>
 
-If you want to change an attribute of a Wad during playback, you can use the relevant setter method for that attribute. Currently, the following attributes can be changed during playback: volume, pitch, detune, panning, reverb, and speed. 
+If you want to change an attribute of a Wad during playback, you can use the relevant setter method for that attribute. Currently, the following attributes can be changed during playback: volume, pitch, detune, panning, reverb, and rate. 
 
 ```javascript
 saw.play()

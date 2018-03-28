@@ -1,18 +1,17 @@
-import Wad from '../../wad.js';
+import Wad from '../../../build/wad.min.js';
 
 var ignition = new Wad({source:'./ignition.mp3'})
 document.getElementById('ignition').addEventListener('click', function(){
     ignition.play()
 })
-console.log('faster!')
 document.getElementById('ignition-faster').addEventListener('click', function(){
     ignition.play({
-        speed: 2.0,
+        rate: 2.0,
     })
 })
 document.getElementById('ignition-slower').addEventListener('click', function(){
     ignition.play({
-        speed: 0.5,
+        rate: 0.5,
     })
 })
 

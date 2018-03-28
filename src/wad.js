@@ -289,7 +289,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.offset        = arg.offset || 0;
         this.loop          = arg.loop   || false;
         this.tuna          = arg.tuna   || null;
-        this.speed         = arg.speed  || 1;
+        this.rate          = arg.rate   || 1;
         constructEnv(this, arg);
         constructFilter(this, arg);
         constructVibrato(this, arg);
@@ -313,16 +313,6 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             getConsent(this, arg);
         }
 //////////////////////////////////////////////////////////////////////////////////
-
-
-/** If the Wad's source is an object, assume it is a buffer from a recorder. There's probably a better way to handle this. **/
-        else if ( typeof this.source == 'object' ) {
-            var newBuffer = context.createBuffer(2, this.source[0].length, context.sampleRate);
-            newBuffer.getChannelData(0).set(this.source[0]);
-            newBuffer.getChannelData(1).set(this.source[1]);
-            this.decodedBuffer = newBuffer;
-        }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
@@ -611,9 +601,9 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
                 tunaConfig[key] = arg.tuna[key]
             }
         }
-        console.log('tunaconfig: ', tunaConfig)
+        // console.log('tunaconfig: ', tunaConfig)
         for ( var key in tunaConfig) {
-            console.log(key)
+            // console.log(key)
             var tunaEffect = new Wad.tuna[key](tunaConfig[key])
             that.nodes.push(tunaEffect)
         }
@@ -692,7 +682,7 @@ then finally play the sound by calling playEnv() **/
             }
 
             if ( this.soundSource.playbackRate ) {
-                this.soundSource.playbackRate.value = arg.speed || this.speed;
+                this.soundSource.playbackRate.value = arg.rate || this.rate;
             }
 
             if ( this.soundSource.detune ) {
@@ -765,11 +755,11 @@ then finally play the sound by calling playEnv() **/
     };
 
     /**
-    Change the playback speed of a Wad during playback.
+    Change the playback rate of a Wad during playback.
     inputSpeed is a value of 0 < speed, and is the rate of playback of the audio.
     E.g. if input speed = 2.0, the playback will be twice as fast
     **/
-    Wad.prototype.setSpeed = function(inputSpeed) {
+    Wad.prototype.setRate = function(inputSpeed) {
 
         //Check/Save the input
         var speed;
@@ -1031,21 +1021,6 @@ then finally play the sound by calling playEnv() **/
         this.output            = context.createGain();
         this.output.gain.value = this.volume;
         this.tuna              = arg.tuna || null;
-
-        if ( !( typeof Recorder === 'undefined' ) && arg.recConfig ) { // Recorder should be defined, unless you're running the unconcatenated source version and forgot to include recorder.js.
-            this.rec               = new Recorder(this.output, arg.recConfig);
-            this.rec.recordings    = [];
-
-            var that = this;
-            var getRecorderBufferCallback = function( buffers ) {
-                that.rec.createWadArg.source = buffers;
-                that.rec.recordings.unshift(new Wad(that.rec.createWadArg));
-            };
-            this.rec.createWad = function(arg){
-                this.createWadArg = arg || { env : { hold : 9001 } };
-                this.getBuffer(getRecorderBufferCallback);
-            };
-        }
 
         this.globalReverb = arg.globalReverb || false; // deprecated
 

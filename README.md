@@ -28,7 +28,6 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
             <li>
                 <a href='#polywads'>PolyWads</a>
                 <ul>
-                    <li><a href='#recording'>Recording</a></li>
                     <li><a href='#compression'>Compression</a></li>
                     <li><a href='#pitch-detection'>Pitch Detection</a></li>
                 </ul>
@@ -49,11 +48,13 @@ To use Wad.js in your project, simply include the script in your HTML file.
 
 <pre><code>&lt;script src="path/to/build/wad.min.js"&gt;&lt;/script&gt;</pre></code>
 
-Wad.js is also available as a bower package or as a node module.
+Wad.js is also available as an npm module.
 
-<pre><code>bower install wad</code></pre>
 <pre><code>npm install web-audio-daw</code></pre>
 
+```javascript
+import Wad from 'web-audio-daw';
+```
 
 
 <h2>Usage</h2>
@@ -319,34 +320,6 @@ var mixerTrack = new Wad.Poly({
 mixerTrack.add(tripleOscillator).add(triangle)
 tripleOscillator.play({ pitch : 'Eb3'}) // This note is filtered and panned.
 ```
-
-<h4>Recording</h4>
-
-A PolyWad can be used to record the output produced by the Wads it contains.
-
-```javascript
-var sine = new Wad({source : 'sine'})
-var mixerTrack = new Wad.Poly({
-    recConfig : { // The Recorder configuration object. The only required property is 'workerPath'.
-        workerPath : '/src/Recorderjs/recorderWorker.js' // The path to the Recorder.js web worker script.
-    }
-})
-mixerTrack.add(sine)
-
-mixerTrack.rec.record()             // Start recording output from this PolyWad.
-sine.play({pitch : 'C3'})           // Make some noise!
-mixerTrack.rec.stop()               // Take a break.
-mixerTrack.rec.record()             // Append to the same recording buffer.
-sine.play({pitch : 'G3'})
-mixerTrack.rec.stop()
-mixerTrack.rec.createWad()          // This method accepts the same arguments as the Wad constructor, except that the 'source' is implied, so it's fine to call this method with no arguments. 
-mixerTrack.rec.recordings[0].play() // The most recent recording is unshifted to the front of this array.
-mixerTrack.rec.clear()              // Clear the recording buffer when you're done with it, so you can record something else.
-```
-
-Wad.js uses Recorder.js for recording (the 'createWad()' method and the 'recordings' array are the only extensions that I've added). For more comprehensive documentation about the recorder object, <a href='https://github.com/mattdiamond/Recorderjs'>check out the Recorder.js documentation</a>. 
-
-Note that the minified version of Wad.js has Recorder.js concatenated to it, but the source version does not. If you want to tinker with recording in the source version, you will need to include recorder.js separately. Whichever version you use, recorderWorker.js is always a separate file, and its location must be specified in the recConfig object. 
 
 <h4>Compression</h4>
 

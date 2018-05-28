@@ -1,8 +1,9 @@
 import Wad from '../../../build/wad.min.js';
 
 var ignition = new Wad({source:'./ignition.mp3'})
-document.getElementById('ignition').addEventListener('click', function(){
-    ignition.play()
+document.getElementById('ignition').addEventListener('click', async function(){
+    await ignition.play()
+    await ignition.play()
 })
 document.getElementById('ignition-faster').addEventListener('click', function(){
     ignition.play({
@@ -16,8 +17,9 @@ document.getElementById('ignition-slower').addEventListener('click', function(){
 })
 
 var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .3}})
-document.getElementById('sine').addEventListener('click', function(){
-    sine.play()
+document.getElementById('sine').addEventListener('click', async function(){
+    await sine.play()
+    await sine.play()
 })
 document.getElementById('detune').addEventListener('click', function(){
     sine.setDetune(100)

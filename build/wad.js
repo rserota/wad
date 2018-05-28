@@ -2470,12 +2470,16 @@ Don't let the Wad play until all necessary files have been downloaded. **/
         request.onload = function(){
             context.decodeAudioData(request.response, function (decodedBuffer){
                 that.decodedBuffer = decodedBuffer;
+                console.log('129 that! ', that)
                 if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
+                    console.log('hold!')
+                    that.defaultEnv.hold = that.decodedBuffer.duration + 1
                     that.env.hold = that.decodedBuffer.duration + 1
                 }
                 if ( callback ) { callback(that); }
                 that.playable++;
                 if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
+                console.log('137', that)
             })
         };
         request.send();
@@ -3033,6 +3037,10 @@ then finally play the sound by calling playEnv() **/
                 this.soundSource.detune.value = arg.detune || this.detune;
             }
 
+            if ( arg.wait === undefined ) {
+                arg.wait = 0;
+            }
+
             if (arg.exactTime === undefined) {
                 arg.exactTime = context.currentTime + arg.wait;
             }
@@ -3085,7 +3093,16 @@ then finally play the sound by calling playEnv() **/
             if ( this.tremolo ) { setUpTremoloOnPlay(this, arg); }
         }
         if ( arg.callback ) { arg.callback(this); }
-        return this;
+        if ( window.Promise) {
+            return new Promise((resolve, reject)=>{
+                setTimeout(()=>{
+                    console.log('this?!? ', this)
+                    console.log(arg.wait + this.env.attack + this.env.decay + this.env.hold + this.env.release)
+                    resolve(this)
+                }, (arg.wait + this.env.attack + this.env.decay + this.env.hold + this.env.release) * 1000 )
+            })
+        }
+
     };
 
 //////////////////////////////////////////////////////////////////////////////////////////

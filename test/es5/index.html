@@ -15,13 +15,19 @@
             await ignition.play()
             await ignition.play()
         })
-        document.getElementById('ignition-faster').addEventListener('click', function(){
-            ignition.play({
+        document.getElementById('ignition-faster').addEventListener('click', async function(){
+            await ignition.play({
+                rate: 2.0,
+            })
+            await ignition.play({
                 rate: 2.0,
             })
         })
-        document.getElementById('ignition-slower').addEventListener('click', function(){
-            ignition.play({
+        document.getElementById('ignition-slower').addEventListener('click', async function(){
+            await ignition.play({
+                rate: 0.5,
+            })
+            await ignition.play({
                 rate: 0.5,
             })
         })

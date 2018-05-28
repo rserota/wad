@@ -126,7 +126,6 @@ Don't let the Wad play until all necessary files have been downloaded. **/
         request.onload = function(){
             context.decodeAudioData(request.response, function (decodedBuffer){
                 that.decodedBuffer = decodedBuffer;
-                console.log('129 that! ', that)
                 if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
                     that.defaultEnv.hold = that.decodedBuffer.duration + 1
                     that.env.hold = that.decodedBuffer.duration + 1
@@ -747,15 +746,11 @@ then finally play the sound by calling playEnv() **/
             if ( this.tremolo ) { setUpTremoloOnPlay(this, arg); }
         }
         if ( arg.callback ) { arg.callback(this); }
-        if ( window.Promise) {
-            return new Promise((resolve, reject)=>{
-                setTimeout(()=>{
-                    console.log('this?!? ', this)
-                    console.log(arg.wait + this.env.attack + this.env.decay + this.env.hold + this.env.release)
-                    resolve(this)
-                }, (arg.wait + this.env.attack + this.env.decay + this.env.hold + this.env.release) * 1000 )
-            })
-        }
+        return new Promise((resolve, reject)=>{
+            setTimeout(()=>{
+                resolve(this)
+            }, (arg.wait + this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(arg.rate||this.rate||1)) * 1000 )
+        })
 
     };
 

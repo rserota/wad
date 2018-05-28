@@ -63,7 +63,7 @@ import Wad from 'web-audio-daw';
 The simplest use case is loading and playing a single audio file.
 
 ```javascript
-var bell = new Wad({source : 'http://www.myserver.com/audio/bell.wav'})
+var bell = new Wad({source : 'https://www.myserver.com/audio/bell.wav'})
 bell.play()
 bell.stop()
 ```
@@ -233,6 +233,22 @@ If you like, you can also select a pitch by frequency.
 ```javascript
 saw.play({pitch : 440})
 ```
+
+The `play()` method returns a promise which resolves the wad itself, once the wad has finished playing. This makes it easy to play sounds sequentially in an async function.
+
+```javascript
+var tick = new Wad({source : 'https://www.myserver.com/audio/clockTick.wav'})
+var tock = new Wad({source : 'https://www.myserver.com/audio/clockTock.wav'})
+
+var tickTock = async function(){
+    await tick.play()
+    await tock.play()
+    await tick.play()
+    await tock.play()
+}
+tickTick();
+```
+
 
 <h4 id='play-labels'>Play Labels</h4>
 

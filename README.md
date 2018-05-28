@@ -246,7 +246,7 @@ var tickTock = async function(){
     await tick.play()
     await tock.play()
 }
-tickTick();
+tickTock();
 ```
 
 

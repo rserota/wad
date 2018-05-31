@@ -746,10 +746,11 @@ then finally play the sound by calling playEnv() **/
             if ( this.tremolo ) { setUpTremoloOnPlay(this, arg); }
         }
         if ( arg.callback ) { arg.callback(this); }
-        return new Promise((resolve, reject)=>{
-            setTimeout(()=>{
-                resolve(this)
-            }, (arg.wait + this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(arg.rate||this.rate||1)) * 1000 )
+        var thatWad = this
+        return new Promise(function(resolve, reject){
+            setTimeout(function(){
+                resolve(thatWad)
+            }, (arg.wait + thatWad.env.attack + thatWad.env.decay + thatWad.env.hold + thatWad.env.release) * (1/(arg.rate||thatWad.rate||1)) * 1000 )
         })
 
     };

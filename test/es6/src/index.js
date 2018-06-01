@@ -22,6 +22,26 @@ document.getElementById('ignition-slower').addEventListener('click', async funct
     })
 })
 
+var helloMan = new Wad({
+    source: './hello-man.wav',
+    sprite: {
+        hello: [0, .4],
+        man  : [.4,1]
+    }
+})
+document.getElementById('sprite-a').addEventListener('click', async function(){
+    await helloMan.hello.play({env:{release:.02}})
+    await helloMan.hello.play({rate: 1.1, volume:1.2, env:{release:.02}})
+})
+document.getElementById('sprite-b').addEventListener('click', async function(){
+    await helloMan.man.play({env:{attack: .1, release:.02}})
+    await helloMan.man.play({env:{attack: .1, release:.02}})
+})
+document.getElementById('sprite-ab').addEventListener('click', async function(){
+    await helloMan.play({env:{attack: .1, release:.02}})
+    await helloMan.play({env:{attack: .1, release:.02}})
+})
+
 var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .3}})
 document.getElementById('sine').addEventListener('click', async function(){
     await sine.play()

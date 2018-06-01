@@ -32,6 +32,7 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
                     <li><a href='#pitch-detection'>Pitch Detection</a></li>
                 </ul>
             </li>
+            <li><a href='#audio-sprites'>Audio Sprites</a></li>
             <li><a href='#external-fx'>External FX</a></li>
             <li><a href='#presets'>Presets</a></li>
             <li><a href='#midi-input'>MIDI Input</a></li>
@@ -117,7 +118,7 @@ var saw = new Wad({
     },
     reverb  : {
         wet     : 1,                                            // Volume of the reverberations.
-        impulse : 'http://www.myServer.com/path/to/impulse.wav' // A URL for an impulse response file, if you do not want to use the default impulse response.
+        impulse : 'https://www.myServer.com/path/to/impulse.wav' // A URL for an impulse response file, if you do not want to use the default impulse response.
     },
     delay   : {
         delayTime : .5,  // Time in seconds between each delayed playback.
@@ -376,6 +377,33 @@ logPitch();
 // If you sing into your microphone, your pitch will be logged to the console in real time.
 
 tuner.stopUpdatingPitch(); // Stop calculating the pitch if you don't need to know it anymore.
+```
+
+<h3 id='audio-sprites'>Audio Sprites</h3>
+
+If your project contains many short audio clips, you may be able to achieve better performance by loading them as a single, longer audio clip, and play sections from that longer clip as needed. 
+
+```javascript 
+var helloWorld = new Wad({
+    source: 'https://www.myserver.com/audio/hello-world.wav',
+
+    // add a key for each sprite 
+    sprite: {
+        hello : [0, .4], // the start and end time, in seconds
+        world : [.4,1]
+    }
+});
+
+// for each key on the sprite object in the constructor above, the wad that is created will have a key of the same name, with a play() method. 
+helloWorld.hello.play();
+helloWorld.world.play();
+
+// you can still play the entire clip normally, if you want. 
+helloWorld.play(); 
+
+// if you hear clicks or pops from starting and stopping playback in the middle of the clip, you can try adding some attack and release to the envelope. 
+helloWorld.hello.play({env:{attack: .1, release:.02}})
+
 ```
 
 <h3 id='exfx'>External FX</h3>

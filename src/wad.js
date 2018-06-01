@@ -291,6 +291,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.loop          = arg.loop   || false;
         this.tuna          = arg.tuna   || null;
         this.rate          = arg.rate   || 1;
+        this.sprite        = arg.sprite || null;
         constructEnv(this, arg);
         constructFilter(this, arg);
         constructVibrato(this, arg);
@@ -319,6 +320,23 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 /** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
         else if ( !( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) ) {
             requestAudioFile(this, arg.callback);
+
+            if ( this.sprite ) {
+                var thatWad = this;
+                for ( var sprite in this.sprite ) {
+                    this[sprite] = {
+                        sprite: this.sprite[sprite],
+                        play: async function(arg){
+                            arg = arg || {}
+                            arg.env = arg.env || {}
+                            arg.env.hold = this.sprite[1] - this.sprite[0]
+                            arg.offset = this.sprite[0]
+
+                            return thatWad.play(arg)
+                        }
+                    }
+                }
+            }
         }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
         else { arg.callback && arg.callback(this) }
@@ -680,6 +698,7 @@ then finally play the sound by calling playEnv() **/
                 if ( this.source === 'noise' || this.loop || arg.loop ) {
                     this.soundSource.loop = true;
                 }
+                
             }
 
             if ( this.soundSource.playbackRate ) {

@@ -9,8 +9,18 @@
     <button id="ignition">PLAY CLIP</button>
     <button id="ignition-faster">PLAY CLIP FASTER</button>
     <button id="ignition-slower">PLAY CLIP SLOWER</button>
+    <button id="sprite-a">SPRITE A</button>
+    <button id="sprite-b">SPRITE B</button>
+    <button id="sprite-ab">SPRITE AB</button>
     <script>
         var ignition = new Wad({source:'./ignition.mp3'})
+        var helloMan = new Wad({
+            source: './hello-man.wav',
+            sprite: {
+                hello: [0, .4],
+                man  : [.4,1]
+            }
+        })
         document.getElementById('ignition').addEventListener('click', async function(){
             await ignition.play()
             await ignition.play()
@@ -30,6 +40,18 @@
             await ignition.play({
                 rate: 0.5,
             })
+        })
+        document.getElementById('sprite-a').addEventListener('click', async function(){
+            await helloMan.hello.play({env:{release:.02}})
+            await helloMan.hello.play({rate: 1.1, volume:1.2, env:{release:.02}})
+        })
+        document.getElementById('sprite-b').addEventListener('click', async function(){
+            await helloMan.man.play({env:{attack: .1, release:.02}})
+            await helloMan.man.play({env:{attack: .1, release:.02}})
+        })
+        document.getElementById('sprite-ab').addEventListener('click', async function(){
+            await helloMan.play({env:{attack: .1, release:.02}})
+            await helloMan.play({env:{attack: .1, release:.02}})
         })
     </script>
     <hr>

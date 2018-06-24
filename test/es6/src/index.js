@@ -69,6 +69,13 @@ document.getElementById('polywad-set-pitch').addEventListener('click', function(
     polywad.setPitch('B3')
 })
 
+document.getElementById('stop').addEventListener('click', function(){
+    sine.stop()
+})
+document.getElementById('polywad-stop').addEventListener('click', function(){
+    polywad.stop()
+})
+
 var voice;
 var tuner;
 var rafId;

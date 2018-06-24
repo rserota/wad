@@ -359,14 +359,18 @@ as specified by the volume envelope and filter envelope **/
     };
 
     var playEnv = function(wad, arg){
+        if ( wad.env.hold === -1 ){
+            var hold = 999
+        }
+        else { var hold = wad.env.hold }
         wad.gain[0].gain.linearRampToValueAtTime(0.0001, arg.exactTime);
         wad.gain[0].gain.linearRampToValueAtTime(wad.volume, arg.exactTime + wad.env.attack + 0.00001);
         wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, arg.exactTime + wad.env.attack + wad.env.decay + 0.00002);
-        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, arg.exactTime + wad.env.attack + wad.env.decay + wad.env.hold + 0.00003);
-        wad.gain[0].gain.linearRampToValueAtTime(0.0001, arg.exactTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release + 0.00004);
+        wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, arg.exactTime + wad.env.attack + wad.env.decay + hold + 0.00003);
+        wad.gain[0].gain.linearRampToValueAtTime(0.0001, arg.exactTime + wad.env.attack + wad.env.decay + hold + wad.env.release + 0.00004);
         // offset is only used by BufferSourceNodes. OscillatorNodes should safely ignore the offset.
         wad.soundSource.start(arg.exactTime, arg.offset);
-        wad.soundSource.stop(arg.exactTime + wad.env.attack + wad.env.decay + wad.env.hold + wad.env.release);
+        wad.soundSource.stop(arg.exactTime + wad.env.attack + wad.env.decay + hold + wad.env.release);
     };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

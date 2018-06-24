@@ -58,7 +58,9 @@
 
     <button id="sine">PLAY SINE</button>
     <button id="detune">DETUNE SINE</button>
+    <button id="set-pitch">SET SINE PITCH</button>
     <button id="pan">PAN SINE</button>
+    <button id="stop">STOP SINE</button>
     <script>
         var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .3}})
         
@@ -71,6 +73,34 @@
         })
         document.getElementById('pan').addEventListener('click', function(){
             sine.setPanning(1)
+        })
+        document.getElementById('set-pitch').addEventListener('click', function(){
+            sine.setPitch('B3')
+        })
+        document.getElementById('stop').addEventListener('click', function(){
+            sine.stop()
+        })
+
+    </script>
+    <hr>
+
+    <button id="polywad">PLAY POLYWAD</button>
+    <button id="polywad-set-pitch">SET POLYWAD PITCH</button>
+    <button id="polywad-stop">POLYWAD STOP</button>
+    <script>
+        var sawtooth = new Wad({source:'sawtooth', env:{hold:1, release:.2}})
+        var triangle = new Wad({source:'triangle', env:{hold:1, release:.2}})
+        var polywad = new Wad.Poly()
+        polywad.add(sawtooth).add(triangle)
+
+        document.getElementById('polywad').addEventListener('click', function(){
+            polywad.play()
+        })
+        document.getElementById('polywad-set-pitch').addEventListener('click', function(){
+            polywad.setPitch('B3')
+        })
+        document.getElementById('polywad-stop').addEventListener('click', function(){
+            polywad.stop()
         })
     </script>
     <hr>

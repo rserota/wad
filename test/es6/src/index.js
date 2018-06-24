@@ -53,6 +53,21 @@ document.getElementById('detune').addEventListener('click', function(){
 document.getElementById('pan').addEventListener('click', function(){
     sine.setPanning(1)
 })
+document.getElementById('set-pitch').addEventListener('click', function(){
+    sine.setPitch('B3')
+})
+
+var sawtooth = new Wad({source:'sawtooth', env:{hold:1, release:.2}})
+var triangle = new Wad({source:'triangle', env:{hold:1, release:.2}})
+var polywad = new Wad.Poly()
+polywad.add(sawtooth).add(triangle)
+
+document.getElementById('polywad').addEventListener('click', function(){
+    polywad.play()
+})
+document.getElementById('polywad-set-pitch').addEventListener('click', function(){
+    polywad.setPitch('B3')
+})
 
 var voice;
 var tuner;

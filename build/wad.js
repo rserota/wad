@@ -2670,7 +2670,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
                 for ( var sprite in this.sprite ) {
                     this[sprite] = {
                         sprite: this.sprite[sprite],
-                        play: async function(arg){
+                        play: function(arg){
                             arg = arg || {}
                             arg.env = arg.env || {}
                             arg.env.hold = this.sprite[1] - this.sprite[0]
@@ -3157,10 +3157,17 @@ then finally play the sound by calling playEnv() **/
 
     Wad.prototype.setPitch = function(pitch){
         if ( pitch in Wad.pitches ) {
-          this.soundSource.frequency.value = Wad.pitches[pitch];
+            if ( this.soundSource ) {
+                this.soundSource.frequency.value = Wad.pitches[pitch];
+            }
+            this.pitch = Wad.pitches[pitch]
         }
         else {
-          this.soundSource.frequency.value = pitch;
+            console.log('else')
+            if ( this.soundSource ) {
+                this.soundSource.frequency.value = pitch;
+            }
+            this.pitch = pitch
         }
         return this;
     };
@@ -3278,7 +3285,11 @@ then finally play the sound by calling playEnv() **/
 /** If multiple instances of a sound are playing simultaneously, stop() only can stop the most recent one **/
     Wad.prototype.stop = function(label){
         if ( !( this.source === 'mic' ) ) {
-            if ( label ) {
+            if ( !(this.gain && this.gain.length) ){
+                console.log("You tried to stop a Wad that never played. ", this)
+                return // if the wad has never been played, there's no need to stop it
+            }
+            else if ( label ) {
                 for ( var i = 0; i < this.gain.length; i++ ) {
                     if ( this.gain[i].label === label ) {
                         this.gain[i].gain.cancelScheduledValues(context.currentTime);
@@ -3287,7 +3298,7 @@ then finally play the sound by calling playEnv() **/
                     }
                 }
             }
-            if ( !label ) {
+            else if ( !label ) {
                 this.gain[0].gain.cancelScheduledValues(context.currentTime);
                 this.gain[0].gain.setValueAtTime(this.gain[0].gain.value, context.currentTime);
                 this.gain[0].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release);
@@ -3457,6 +3468,26 @@ Copyright (c) 2014 Chris Wilson
             console.log('This PolyWad is not set up yet.');
         }
         return this;
+    }
+
+    Wad.Poly.prototype.setPitch = function(pitch){
+        this.wads.forEach(function(wad){
+            
+            if ( pitch in Wad.pitches ) {
+                if ( wad.soundSource ) {
+                    wad.soundSource.frequency.value = Wad.pitches[pitch];
+                }
+                wad.pitch = Wad.pitches[pitch]
+            }
+            else {
+                console.log('else')
+                if ( wad.soundSource ) {
+                    wad.soundSource.frequency.value = pitch;
+                }
+                wad.pitch = pitch
+            }
+            return this;
+        })
     }
 
     Wad.Poly.prototype.play = function(arg){

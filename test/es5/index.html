@@ -54,6 +54,17 @@
             await helloMan.play({env:{attack: .1, release:.02}})
         })
     </script>
+
+    <hr>
+
+
+    <button id="full-song">PLAY FULL SONG</button>
+    <script>
+        var fullSong = new Wad({source:'./the-chase.mp3'})
+        document.getElementById('full-song').addEventListener('click', function(){
+            fullSong.play()
+        })
+    </script>
     <hr>
 
     <button id="sine">PLAY SINE</button>

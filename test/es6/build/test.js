@@ -137,6 +137,11 @@ document.getElementById('sprite-ab').addEventListener('click', async function(){
     await helloMan.play({env:{attack: .1, release:.02}})
 })
 
+var fullSong = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'./the-chase.mp3'})
+document.getElementById('full-song').addEventListener('click', function(){
+    fullSong.play()
+})
+
 var sine = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'sine', env: {attack: .07, hold: 1.5, release: .3}})
 document.getElementById('sine').addEventListener('click', async function(){
     await sine.play()

@@ -2356,7 +2356,20 @@ if ( aScene && aScene.audioListener && aScene.audioListener.context){
 else {
     context = new audioContext();
 }
-
+var unlock = function(){
+    if ( context.state === 'suspended' ) {
+        context.resume()
+    }
+    else if ( context.state === 'running' ) {
+        console.log("The audio context is running.", context)
+        window.removeEventListener('mousemove', unlock)
+        window.removeEventListener('touchstart', unlock)
+        window.removeEventListener('touchend', unlock)
+    }
+}
+window.addEventListener('mousemove', unlock)
+window.addEventListener('touchstart', unlock)
+window.addEventListener('touchend', unlock)
 // create a wrapper for old versions of `getUserMedia`
 var getUserMedia = (function(window) {
     if (window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {

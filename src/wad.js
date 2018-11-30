@@ -105,10 +105,10 @@ var Wad = (function(){
 /** Set up the default filter and filter envelope. **/
     var constructFilter = function(that, arg){
 
-        if ( !arg.filters ) { arg.filters = null; }
+        if ( !arg.filter ) { arg.filter = null; }
 
-        else if ( isArray(arg.filters) ) {
-            that.filters = arg.filters.map(function(filterArg){
+        else if ( isArray(arg.filter) ) {
+            that.filter = arg.filter.map(function(filterArg){
                 return {
                     type : filterArg.type || 'lowpass',
                     frequency : filterArg.frequency || 600,
@@ -118,11 +118,11 @@ var Wad = (function(){
             });
         }
         else {
-            that.filters  = [{
-                type : arg.filters.type || 'lowpass',
-                frequency : arg.filters.frequency || 600,
-                q : arg.filters.q || 1,
-                env : arg.filters.env ||null,
+            that.filter  = [{
+                type : arg.filter.type || 'lowpass',
+                frequency : arg.filter.frequency || 600,
+                q : arg.filter.q || 1,
+                env : arg.filter.env ||null,
             }];
         }
     }
@@ -275,7 +275,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         that.nodes.push(that.gain);
         // console.log('that ', arg)
 
-        if ( that.filters || arg.filters ) { createFilters(that, arg); }
+        if ( that.filter || arg.filter ) { createFilters(that, arg); }
 
         if ( that.reverb || arg.reverb ) { setUpReverbOnPlay(that, arg); }
 
@@ -305,7 +305,6 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.tuna          = arg.tuna   || null;
         this.rate          = arg.rate   || 1;
         this.sprite        = arg.sprite || null;
-        arg.filters        = arg.filters || arg.filter
         constructEnv(this, arg);
         constructFilter(this, arg);
         constructVibrato(this, arg);
@@ -366,7 +365,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 /** When a note is played, these two functions will schedule changes in volume and filter frequency,
 as specified by the volume envelope and filter envelope **/
     var filterEnv = function(wad, arg){
-        wad.filters.forEach(function (filter, index){
+        wad.filter.forEach(function (filter, index){
             filter.node.frequency.linearRampToValueAtTime(filter.frequency, arg.exactTime);
             filter.node.frequency.linearRampToValueAtTime(filter.env.frequency, arg.exactTime + filter.env.attack);
         });
@@ -473,18 +472,18 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
 /** Set the filter and filter envelope according to play() arguments, or revert to defaults **/
 
     var createFilters = function(that, arg){
-        if ( arg.filters && !isArray(arg.filters) ) {
-            arg.filters = [arg.filters];
+        if ( arg.filter && !isArray(arg.filter) ) {
+            arg.filter = [arg.filter];
         }
-        that.filters.forEach(function (filter, i) {
+        that.filter.forEach(function (filter, i) {
             filter.node                 = context.createBiquadFilter();
             filter.node.type            = filter.type;
-            filter.node.frequency.value = ( arg.filters && arg.filters[i] ) ? ( arg.filters[i].frequency || filter.frequency ) : filter.frequency;
-            filter.node.Q.value         = ( arg.filters && arg.filters[i] ) ? ( arg.filters[i].q         || filter.q )         : filter.q;
-            if ( ( arg.filters && arg.filters[i].env || that.filters[i].env ) && !( that.source === "mic" ) ) {
+            filter.node.frequency.value = ( arg.filter && arg.filter[i] ) ? ( arg.filter[i].frequency || filter.frequency ) : filter.frequency;
+            filter.node.Q.value         = ( arg.filter && arg.filter[i] ) ? ( arg.filter[i].q         || filter.q )         : filter.q;
+            if ( ( arg.filter && arg.filter[i].env || that.filter[i].env ) && !( that.source === "mic" ) ) {
                 filter.env = {
-                    attack    : ( arg.filters && arg.filters[i].env && arg.filters[i].env.attack )    || that.filters[i].env.attack,
-                    frequency : ( arg.filters && arg.filters[i].env && arg.filters[i].env.frequency ) || that.filters[i].env.frequency
+                    attack    : ( arg.filter && arg.filter[i].env && arg.filter[i].env.attack )    || that.filter[i].env.attack,
+                    frequency : ( arg.filter && arg.filter[i].env && arg.filter[i].env.frequency ) || that.filter[i].env.frequency
                 };
             }
 
@@ -493,12 +492,12 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
     };
 
     var setUpFilterOnPlay = function(that, arg){
-        if ( arg && arg.filters && that.filters ) {
-            if ( !isArray(arg.filters) ) arg.filters = [arg.filters]
+        if ( arg && arg.filter && that.filter ) {
+            if ( !isArray(arg.filter) ) arg.filter = [arg.filter]
             createFilters(that, arg)
         }
-        else if ( that.filters ) {
-            createFilters(that, that)
+        else if ( that.filter ) {
+            createFilters(that, that);
         }
     };
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -670,7 +669,6 @@ plug the nodes into each other with plugEmIn(),
 then finally play the sound by calling playEnv() **/
     Wad.prototype.play = function(arg){
         arg = arg || { arg : null };
-        arg.filters = arg.filters || arg.filter
         if ( this.playable < 1 ) {
             this.playOnLoad    = true;
             this.playOnLoadArg = arg;
@@ -774,7 +772,7 @@ then finally play the sound by calling playEnv() **/
 
             plugEmIn(this, arg);
 
-            if ( this.filters && this.filters[0].env ) { filterEnv(this, arg); }
+            if ( this.filter && this.filter[0].env ) { filterEnv(this, arg); }
             playEnv(this, arg);
 
             //sets up vibrato LFO
@@ -1060,7 +1058,6 @@ then finally play the sound by calling playEnv() **/
 
     Wad.Poly = function(arg){
         if ( !arg ) { arg = {}; }
-
         this.isSetUp  = false;
         this.playable = 1;
 
@@ -1082,12 +1079,11 @@ then finally play the sound by calling playEnv() **/
         this.output            = context.createGain();
         this.output.gain.value = this.volume;
         this.tuna              = arg.tuna || null;
-        arg.filters            = arg.filters || arg.filter
 
         this.globalReverb = arg.globalReverb || false; // deprecated
 
         constructFilter(this, arg);
-        if ( this.filters ) { createFilters(this, arg); }
+        if ( this.filter ) { createFilters(this, arg); }
 
         if ( this.reverb ) { setUpReverbOnPlay(this, arg); }
 

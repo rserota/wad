@@ -62,16 +62,6 @@ document.getElementById('set-pitch').addEventListener('click', function(){
     sine.setPitch('B3')
 })
 
-var square = new Wad({
-    source:'square',
-    env : { attack: .1, release: .2, hold: .8 },
-    filter: { type: 'lowpass' }
-})
-document.getElementById('square').addEventListener('click', async function(){
-    await square.play()
-    await square.play()
-})
-
 var sawtooth = new Wad({source:'sawtooth', env:{hold:1, release:.2}})
 var triangle = new Wad({source:'triangle', env:{hold:1, release:.2}})
 var polywad = new Wad.Poly()

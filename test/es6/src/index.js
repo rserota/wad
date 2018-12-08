@@ -151,10 +151,24 @@ tunaConfig.tuna = {
 
 var withTuna = new Wad(tunaConfig)
 
+tunaConfig.tuna = {
+    Phaser: {
+        rate: 1.2,                     //0.01 to 8 is a decent range, but higher values are possible
+        depth: 0.3,                    //0 to 1
+        feedback: 0.2,                 //0 to 1+
+        stereoPhase: 30,               //0 to 180
+        baseModulationFrequency: 700,  //500 to 1500
+        bypass: 0
+    }
+}
+var tunaPhaser = new Wad(tunaConfig)
+
 document.getElementById('no-tuna').addEventListener('click', function(){
     withoutTuna.play()
 })
 document.getElementById('tuna-chorus').addEventListener('click', function(){
     withTuna.play()
 })
-
+document.getElementById('tuna-phaser').addEventListener('click', function(){
+    tunaPhaser.play()
+})

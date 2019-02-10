@@ -221,7 +221,7 @@ return /******/ (function(modules) { // webpackBootstrap
             return new Tuna(context);
         }
 
-        var _window = typeof window === 'undefined' ? {} : window;
+        var _window = typeof window === "undefined" ? {} : window;
 
         if (!_window.AudioContext) {
             _window.AudioContext = _window.webkitAudioContext;
@@ -341,7 +341,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.bits = properties.bits || this.defaults.bits.value;
         this.normfreq = initValue(properties.normfreq, this.defaults.normfreq.value);
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Bitcrusher.prototype = Object.create(Super, {
         name: {
@@ -412,8 +412,8 @@ return /******/ (function(modules) { // webpackBootstrap
         this.convolver.output.connect(this.makeupNode);
         this.makeupNode.connect(this.output);
 
-        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain);
-        this.bypass = properties.bypass || false;
+        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain.value);
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Cabinet.prototype = Object.create(Super, {
         name: {
@@ -442,7 +442,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.makeupNode.gain;
             },
             set: function(value) {
-                this.makeupNode.gain.value = value;
+                this.makeupNode.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
             }
         },
         newConvolver: {
@@ -500,7 +500,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.attenuator.gain.value = 0.6934; // 1 / (10 ^ (((20 * log10(3)) / 3) / 20))
         this.lfoL.activate(true);
         this.lfoR.activate(true);
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Chorus.prototype = Object.create(Super, {
         name: {
@@ -574,8 +574,8 @@ return /******/ (function(modules) { // webpackBootstrap
             },
             set: function(value) {
                 this._feedback = value;
-                this.feedbackGainNodeLR.gain.value = this._feedback;
-                this.feedbackGainNodeRL.gain.value = this._feedback;
+                this.feedbackGainNodeLR.gain.setTargetAtTime(this._feedback, userContext.currentTime, 0.01);
+                this.feedbackGainNodeRL.gain.setTargetAtTime(this._feedback, userContext.currentTime, 0.01);
             }
         },
         rate: {
@@ -610,7 +610,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.attack = initValue(properties.attack, this.defaults.attack.value);
         this.ratio = properties.ratio || this.defaults.ratio.value;
         this.knee = initValue(properties.knee, this.defaults.knee.value);
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Compressor.prototype = Object.create(Super, {
         name: {
@@ -744,7 +744,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.makeupNode.gain;
             },
             set: function(value) {
-                this.makeupNode.gain.value = dbToWAVolume(value);
+                this.makeupNode.gain.setTargetAtTime(dbToWAVolume(value), userContext.currentTime, 0.01);
             }
         }
     });
@@ -778,7 +778,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.level = initValue(properties.level, this.defaults.level.value);
         this.filterHigh.type = "lowpass";
         this.filterLow.type = "highpass";
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Convolver.prototype = Object.create(Super, {
         name: {
@@ -821,6 +821,11 @@ return /******/ (function(modules) { // webpackBootstrap
                     max: 1,
                     automatable: true,
                     type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
                 }
             }
         },
@@ -829,7 +834,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.filterLow.frequency;
             },
             set: function(value) {
-                this.filterLow.frequency.value = value;
+                this.filterLow.frequency.setTargetAtTime(value, userContext.currentTime, 0.01);
             }
         },
         highCut: {
@@ -837,7 +842,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.filterHigh.frequency;
             },
             set: function(value) {
-                this.filterHigh.frequency.value = value;
+                this.filterHigh.frequency.setTargetAtTime(value, userContext.currentTime, 0.01);
             }
         },
         level: {
@@ -845,7 +850,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.output.gain;
             },
             set: function(value) {
-                this.output.gain.value = value;
+                this.output.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
             }
         },
         dryLevel: {
@@ -853,7 +858,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.dry.gain;
             },
             set: function(value) {
-                this.dry.gain.value = value;
+                this.dry.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
             }
         },
         wetLevel: {
@@ -861,7 +866,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.wet.gain;
             },
             set: function(value) {
-                this.wet.gain.value = value;
+                this.wet.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
             }
         },
         buffer: {
@@ -922,7 +927,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
         this.cutoff = properties.cutoff || this.defaults.cutoff.value;
         this.filter.type = "lowpass";
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Delay.prototype = Object.create(Super, {
         name: {
@@ -965,6 +970,11 @@ return /******/ (function(modules) { // webpackBootstrap
                     max: 1,
                     automatable: true,
                     type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
                 }
             }
         },
@@ -983,7 +993,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.wet.gain;
             },
             set: function(value) {
-                this.wet.gain.value = value;
+                this.wet.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
             }
         },
         dryLevel: {
@@ -992,7 +1002,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.dry.gain;
             },
             set: function(value) {
-                this.dry.gain.value = value;
+                this.dry.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
             }
         },
         feedback: {
@@ -1001,7 +1011,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.feedbackNode.gain;
             },
             set: function(value) {
-                this.feedbackNode.gain.value = value;
+                this.feedbackNode.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
             }
         },
         cutoff: {
@@ -1010,7 +1020,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.filter.frequency;
             },
             set: function(value) {
-                this.filter.frequency.value = value;
+                this.filter.frequency.setTargetAtTime(value, userContext.currentTime, 0.01);
             }
         }
     });
@@ -1031,7 +1041,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.Q = properties.resonance || this.defaults.Q.value;
         this.filterType = initValue(properties.filterType, this.defaults.filterType.value);
         this.gain = initValue(properties.gain, this.defaults.gain.value);
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Filter.prototype = Object.create(Super, {
         name: {
@@ -1097,7 +1107,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.filter.gain;
             },
             set: function(value) {
-                this.filter.gain.value = value;
+                this.filter.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
             }
         },
         frequency: {
@@ -1106,7 +1116,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.filter.frequency;
             },
             set: function(value) {
-                this.filter.frequency.value = value;
+                this.filter.frequency.setTargetAtTime(value, userContext.currentTime, 0.01);
             }
         }
     });
@@ -1125,7 +1135,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.gainNode.connect(this.output);
 
         this.gain = initValue(properties.gain, this.defaults.gain.value);
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Gain.prototype = Object.create(Super, {
         name: {
@@ -1152,7 +1162,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.gainNode.gain;
             },
             set: function(value) {
-                this.gainNode.gain.value = value;
+                this.gainNode.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
             }
         }
     });
@@ -1175,10 +1185,10 @@ return /******/ (function(modules) { // webpackBootstrap
         in1 = in2 = in3 = in4 = out1 = out2 = out3 = out4 = 0.0;
         var input, output, f, fb, i, length, inputFactor;
         this.processor.onaudioprocess = function(e) {
-            input = e.inputBuffer.getChannelData(0),
-                output = e.outputBuffer.getChannelData(0),
-                f = this.cutoff * 1.16,
-                inputFactor = 0.35013 * (f * f) * (f * f);
+            input = e.inputBuffer.getChannelData(0);
+            output = e.outputBuffer.getChannelData(0);
+            f = this.cutoff * 1.16;
+            inputFactor = 0.35013 * (f * f) * (f * f);
             fb = this.resonance * (1.0 - 0.15 * f * f);
             length = input.length;
             for (i = 0; i < length; i++) {
@@ -1198,7 +1208,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.cutoff = initValue(properties.cutoff, this.defaults.cutoff.value);
         this.resonance = initValue(properties.resonance, this.defaults.resonance.value);
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.MoogFilter.prototype = Object.create(Super, {
         name: {
@@ -1276,7 +1286,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.outputGain = initValue(properties.outputGain, this.defaults.outputGain.value);
         this.curveAmount = initValue(properties.curveAmount, this.defaults.curveAmount.value);
         this.algorithmIndex = initValue(properties.algorithmIndex, this.defaults.algorithmIndex.value);
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Overdrive.prototype = Object.create(Super, {
         name: {
@@ -1294,9 +1304,9 @@ return /******/ (function(modules) { // webpackBootstrap
                     scaled: true
                 },
                 outputGain: {
-                    value: 1,
-                    min: 0,
-                    max: 1,
+                    value: 0,
+                    min: -46,
+                    max: 0,
                     automatable: true,
                     type: FLOAT,
                     scaled: true
@@ -1314,6 +1324,11 @@ return /******/ (function(modules) { // webpackBootstrap
                     max: 5,
                     automatable: false,
                     type: INT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
                 }
             }
         },
@@ -1347,6 +1362,7 @@ return /******/ (function(modules) { // webpackBootstrap
             },
             set: function(value) {
                 this._outputGain = dbToWAVolume(value);
+                this.outputDrive.gain.setValueAtTime(this._outputGain, userContext.currentTime, 0.01);
             }
         },
         algorithmIndex: {
@@ -1438,7 +1454,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.panner.connect(this.output);
 
         this.pan = initValue(properties.pan, this.defaults.pan.value);
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Panner.prototype = Object.create(Super, {
         name: {
@@ -1523,7 +1539,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.lfoL.activate(true);
         this.lfoR.activate(true);
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Phaser.prototype = Object.create(Super, {
         name: {
@@ -1569,6 +1585,11 @@ return /******/ (function(modules) { // webpackBootstrap
                     max: 1500,
                     automatable: false,
                     type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
                 }
             }
         },
@@ -1608,7 +1629,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 this._baseModulationFrequency = value;
                 this.lfoL.offset = this._baseModulationFrequency;
                 this.lfoR.offset = this._baseModulationFrequency;
-                this._depth = this._depth;
+                this.depth = this._depth;
             }
         },
         feedback: {
@@ -1617,8 +1638,8 @@ return /******/ (function(modules) { // webpackBootstrap
             },
             set: function(value) {
                 this._feedback = value;
-                this.feedbackGainNodeL.gain.value = this._feedback;
-                this.feedbackGainNodeR.gain.value = this._feedback;
+                this.feedbackGainNodeL.gain.setTargetAtTime(this._feedback, userContext.currentTime, 0.01);
+                this.feedbackGainNodeR.gain.setTargetAtTime(this._feedback, userContext.currentTime, 0.01);
             }
         },
         stereoPhase: {
@@ -1639,7 +1660,7 @@ return /******/ (function(modules) { // webpackBootstrap
             properties = this.getDefaults();
         }
         this.input = userContext.createGain();
-        this.wetLevel = userContext.createGain();
+        this.wet = userContext.createGain();
         this.stereoToMonoMix = userContext.createGain();
         this.feedbackLevel = userContext.createGain();
         this.output = userContext.createGain();
@@ -1654,9 +1675,9 @@ return /******/ (function(modules) { // webpackBootstrap
         this.splitter.connect(this.stereoToMonoMix, 0, 0);
         this.splitter.connect(this.stereoToMonoMix, 1, 0);
         this.stereoToMonoMix.gain.value = .5;
-        this.stereoToMonoMix.connect(this.wetLevel);
-        this.wetLevel.connect(this.delayLeft);
-        this.feedbackLevel.connect(this.delayLeft);
+        this.stereoToMonoMix.connect(this.wet);
+        this.wet.connect(this.delayLeft);
+        this.feedbackLevel.connect(this.wet);
         this.delayLeft.connect(this.delayRight);
         this.delayRight.connect(this.feedbackLevel);
         this.delayLeft.connect(this.merger, 0, 0);
@@ -1667,8 +1688,8 @@ return /******/ (function(modules) { // webpackBootstrap
         this.delayTimeLeft = properties.delayTimeLeft !== undefined ? properties.delayTimeLeft : this.defaults.delayTimeLeft.value;
         this.delayTimeRight = properties.delayTimeRight !== undefined ? properties.delayTimeRight : this.defaults.delayTimeRight.value;
         this.feedbackLevel.gain.value = properties.feedback !== undefined ? properties.feedback : this.defaults.feedback.value;
-        this.wetLevel.gain.value = properties.wetLevel !== undefined ? properties.wetLevel : this.defaults.wetLevel.value;
-        this.bypass = properties.bypass || false;
+        this.wet.gain.value = properties.wetLevel !== undefined ? properties.wetLevel : this.defaults.wetLevel.value;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.PingPongDelay.prototype = Object.create(Super, {
         name: {
@@ -1694,6 +1715,24 @@ return /******/ (function(modules) { // webpackBootstrap
                 this.delayRight.delayTime.value = value / 1000;
             }
         },
+        wetLevel: {
+            enumerable: true,
+            get: function () {
+                return this.wet.gain;
+            },
+            set: function (value) {
+                this.wet.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        }, 
+        feedback: {
+            enumerable: true,
+            get: function () {
+                return this.feedbackLevel.gain;
+            },
+            set: function (value) {
+                this.feedbackLevel.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        },
         defaults: {
             writable: true,
             value: {
@@ -1715,15 +1754,20 @@ return /******/ (function(modules) { // webpackBootstrap
                     value: 0.3,
                     min: 0,
                     max: 1,
-                    automatable: false,
+                    automatable: true,
                     type: FLOAT
                 },
                 wetLevel: {
                     value: 0.5,
                     min: 0,
                     max: 1,
-                    automatable: false,
+                    automatable: true,
                     type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
                 }
             }
         }
@@ -1734,12 +1778,11 @@ return /******/ (function(modules) { // webpackBootstrap
             properties = this.getDefaults();
         }
         this.input = userContext.createGain();
-        this.splitter = this.activateNode = userContext.createChannelSplitter(
-                2),
-            this.amplitudeL = userContext.createGain(),
-            this.amplitudeR = userContext.createGain(),
-            this.merger = userContext.createChannelMerger(2),
-            this.output = userContext.createGain();
+        this.splitter = this.activateNode = userContext.createChannelSplitter(2);
+        this.amplitudeL = userContext.createGain();
+        this.amplitudeR = userContext.createGain();
+        this.merger = userContext.createChannelMerger(2);
+        this.output = userContext.createGain();
         this.lfoL = new userInstance.LFO({
             target: this.amplitudeL.gain,
             callback: pipe
@@ -1766,7 +1809,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.lfoL.activate(true);
         this.lfoR.activate(true);
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Tremolo.prototype = Object.create(Super, {
         name: {
@@ -1795,6 +1838,11 @@ return /******/ (function(modules) { // webpackBootstrap
                     max: 11,
                     automatable: false,
                     type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
                 }
             }
         },
@@ -1868,7 +1916,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
         this.activateNode.gain.value = 2;
         this.envelopeFollower.activate(true);
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.WahWah.prototype = Object.create(Super, {
         name: {
@@ -1916,6 +1964,11 @@ return /******/ (function(modules) { // webpackBootstrap
                     max: 1,
                     automatable: false,
                     type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
                 }
             }
         },
@@ -2032,7 +2085,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.target = properties.target || {};
         this.callback = properties.callback || function() {};
 
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.EnvelopeFollower.prototype = Object.create(Super, {
         name: {
@@ -2053,6 +2106,11 @@ return /******/ (function(modules) { // webpackBootstrap
                     max: 0.5,
                     automatable: false,
                     type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
                 }
             }
         },
@@ -2177,7 +2235,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.phase = initValue(properties.phase, this.defaults.phase.value);
         this.target = properties.target || {};
         this.output.onaudioprocess = this.callback(properties.callback || function() {});
-        this.bypass = properties.bypass || false;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.LFO.prototype = Object.create(Super, {
         name: {
@@ -2218,6 +2276,11 @@ return /******/ (function(modules) { // webpackBootstrap
                     max: 2 * Math.PI,
                     automatable: false,
                     type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
                 }
             }
         },

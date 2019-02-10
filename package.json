@@ -1,6 +1,6 @@
 {
   "name": "web-audio-daw",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "description": "Web Audio DAW. It's like jQuery for your ears.",
   "main": "build/wad.js",
   "scripts": {
@@ -32,6 +32,6 @@
     "webpack-cli": "^2.0.13"
   },
   "dependencies": {
-    "tunajs": "^1.0.0"
+    "tunajs": "^1.0.8"
   }
 }

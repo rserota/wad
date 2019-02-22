@@ -33,6 +33,7 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
                 </ul>
             </li>
             <li><a href='#audio-sprites'>Audio Sprites</a></li>
+            <li><a href='#logging'>Logging</a></li>
             <li><a href='#external-fx'>External FX</a></li>
             <li><a href='#presets'>Presets</a></li>
             <li><a href='#midi-input'>MIDI Input</a></li>
@@ -249,7 +250,7 @@ var tickTock = async function(){
 }
 tickTock();
 ```
-
+The time it takes for the promise to resolve, in milliseconds, can be read on the wad at `tick.duration`. The `duration` property is calculated based on the wad's volume envelope (`env`), the duration of the audio file, and the `rate` parameter. Note that there are other ways to manipulate the duration of the sound (for example, `offset`) that can cause the `duration` parameter to be misleading. 
 
 <h4 id='play-labels'>Play Labels</h4>
 
@@ -403,6 +404,17 @@ helloWorld.play();
 
 // if you hear clicks or pops from starting and stopping playback in the middle of the clip, you can try adding some attack and release to the envelope. 
 helloWorld.hello.play({env:{attack: .1, release:.02}})
+
+```
+
+<h3 id='logging'>Logging</h3>
+
+Wad.js can log various warnings and notices to the console, but these are disabled by default. To view these messages in the console, you can increase Wad's verbosity.
+
+```javascript
+Wad.logs.verbosity = 0 // Wad.js will print nothing to your console. This is the default setting. 
+Wad.logs.verbosity = 1 // View some notices and warnings, e.g. audio context started, midi devices connected, etc. These logs should not print more than once.
+Wad.logs.verbosity = 2 // View all notices and warnings, including those from play() and stop(). These logs might print many times. 
 
 ```
 

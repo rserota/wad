@@ -1,59 +1,71 @@
 import Tuna from 'tunajs';
 
-/** Let's do the vendor-prefix dance. **/
-var audioContext = window.AudioContext || window.webkitAudioContext;
-
-var aScene = document.querySelector('a-scene');
-var context;
-if ( aScene && aScene.audioListener && aScene.audioListener.context){
-    context = aScene.audioListener.context
-    console.log("An A-Frame scene has been detected.")
-}
-else {
-    context = new audioContext();
-}
-var unlock = function(){
-    if ( context.state === 'suspended' ) {
-        context.resume()
-    }
-    else if ( context.state === 'running' ) {
-        console.log("The audio context is running.", context)
-        window.removeEventListener('mousemove', unlock)
-        window.removeEventListener('touchstart', unlock)
-        window.removeEventListener('touchend', unlock)
-    }
-}
-window.addEventListener('mousemove', unlock)
-window.addEventListener('touchstart', unlock)
-window.addEventListener('touchend', unlock)
-// create a wrapper for old versions of `getUserMedia`
-var getUserMedia = (function(window) {
-    if (window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {
-        // Browser supports promise based `getUserMedia`
-        return window.navigator.mediaDevices.getUserMedia.bind(window.navigator.mediaDevices);
-    }
-    var navigatorGetUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
-    if (navigatorGetUserMedia) {
-        // Browser supports old `getUserMedia` with callbacks.
-        return function(constraints) {
-            return new Promise(function(resolve, reject) {
-                navigatorGetUserMedia.call(window.navigator, constraints, resolve, reject);
-            });
-        };
-    }
-
-    return function() {
-        throw "getUserMedia is unsupported";
-    };
-}(window));
-
-if (getUserMedia)
-    console.log("Your browser supports getUserMedia.");
-else
-    console.log("Your browser does not support getUserMedia.");
-/////////////////////////////////////////
 
 var Wad = (function(){
+
+    var audioContext = window.AudioContext || window.webkitAudioContext;
+
+    var logStuff = {
+        verbosity: 0,
+        suppressedLogs: 0
+    }
+
+    var logMessage = function(message, logLevel){
+        var logLevel = logLevel || 1
+        if ( logStuff.verbosity >= logLevel ) {
+            console.log(message)
+        } 
+        else { logStuff.suppressedLogs++ }
+    }
+    
+    var aScene = document.querySelector('a-scene');
+    var context;
+    if ( aScene && aScene.audioListener && aScene.audioListener.context){
+        context = aScene.audioListener.context
+        logMessage("An A-Frame scene has been detected.")
+    }
+    else {
+        context = new audioContext();
+    }
+    var unlock = function(){
+        if ( context.state === 'suspended' ) {
+            context.resume()
+        }
+        else if ( context.state === 'running' ) {
+            logMessage("The audio context is running.")
+            logMessage(context)
+            window.removeEventListener('mousemove', unlock)
+            window.removeEventListener('touchstart', unlock)
+            window.removeEventListener('touchend', unlock)
+        }
+    }
+    window.addEventListener('mousemove', unlock)
+    window.addEventListener('touchstart', unlock)
+    window.addEventListener('touchend', unlock)
+    // create a wrapper for old versions of `getUserMedia`
+    var getUserMedia = (function(window) {
+        if (window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {
+            // Browser supports promise based `getUserMedia`
+            return window.navigator.mediaDevices.getUserMedia.bind(window.navigator.mediaDevices);
+        }
+        var navigatorGetUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+        if (navigatorGetUserMedia) {
+            // Browser supports old `getUserMedia` with callbacks.
+            return function(constraints) {
+                return new Promise(function(resolve, reject) {
+                    navigatorGetUserMedia.call(window.navigator, constraints, resolve, reject);
+                });
+            };
+        }
+    
+        return function() {
+            throw "getUserMedia is unsupported";
+        };
+    }(window));
+    
+    if (getUserMedia) { logMessage("Your browser supports getUserMedia."); }
+    else { logMessage("Your browser does not support getUserMedia."); }
+
 
 /** Pre-render a noise buffer instead of generating noise on the fly. **/
     var noiseBuffer = (function(){
@@ -140,9 +152,11 @@ Don't let the Wad play until all necessary files have been downloaded. **/
             context.decodeAudioData(request.response, function (decodedBuffer){
                 that.decodedBuffer = decodedBuffer;
                 if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
-                    that.defaultEnv.hold = that.decodedBuffer.duration + 1
-                    that.env.hold = that.decodedBuffer.duration + 1
+                    that.defaultEnv.hold = that.decodedBuffer.duration
+                    that.env.hold = that.decodedBuffer.duration
                 }
+                that.duration = (that.env.attack + that.env.decay + that.env.hold + that.env.release) * (1/(that.rate)) * 1000
+
                 if ( callback ) { callback(that); }
                 that.playable++;
                 if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
@@ -232,7 +246,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
             };
         }
         if ( that.panning.type === 'stereo' && !context.createStereoPanner ) {
-            console.log("Your browser does not support stereo panning. Falling back to 3D panning.")
+            logMessage("Your browser does not support stereo panning. Falling back to 3D panning.")
             that.panning = {
                 location     : [0,0,0],
                 type         : '3d',
@@ -258,12 +272,11 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         that.mediaStreamSource = null;
         that.gain              = null;
         return getUserMedia({audio: true, video: false}).then(function(stream) {
-            // console.log('got stream')
             that.mediaStreamSource = context.createMediaStreamSource(stream);
             Wad.micConsent = true
             setUpMic(that, arg);
             return that;
-        }).catch(function(error) { console.log('Error setting up microphone input: ', error); }); // This is the error callback.
+        }).catch(function(error) { logMessage('Error setting up microphone input: ', error); }); // This is the error callback.
     };
 ////////////////////////////////////////////////////////////////////
 
@@ -273,7 +286,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         that.gain.gain.value = valueOrDefault(arg.volume,that.volume);
         that.nodes.push(that.mediaStreamSource);
         that.nodes.push(that.gain);
-        // console.log('that ', arg)
+  
 
         if ( that.filter || arg.filter ) { createFilters(that, arg); }
 
@@ -313,6 +326,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
         this.constructExternalFx(arg, context);
         constructPanning(this, arg);
         constructDelay(this, arg);
+        this.duration = (this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(this.rate)) * 1000
 ////////////////////////////////
 
 
@@ -392,7 +406,6 @@ as specified by the volume envelope and filter envelope **/
 /** When all the nodes are set up for this Wad, this function plugs them into each other,
 with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
     var plugEmIn = function(that, arg){
-        // console.log('nodes? ', that.nodes)
         var destination = ( arg && arg.destination ) || that.destination;
         for ( var i = 1; i < that.nodes.length; i++ ) {
             if ( that.nodes[i-1].interface === 'custom' ) {
@@ -637,13 +650,10 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
                 tunaConfig[key] = arg.tuna[key]
             }
         }
-        // console.log('tunaconfig: ', tunaConfig)
         for ( var key in tunaConfig) {
-            // console.log(key)
             var tunaEffect = new Wad.tuna[key](tunaConfig[key])
             that.nodes.push(tunaEffect)
         }
-        // console.log(that.nodes)
     }
 ///
 
@@ -692,7 +702,7 @@ then finally play the sound by calling playEnv() **/
                 }
             }
             else { 
-                console.log('You have not given your browser permission to use your microphone.')
+                logMessage('You have not given your browser permission to use your microphone.')
                 getConsent(this, arg).then(function (that) {
                     that.play(arg);
                 });
@@ -822,7 +832,7 @@ then finally play the sound by calling playEnv() **/
         else {
 
             //Inform that there is no delay on the current wad
-            console.log("Sorry, but the wad does not contain a soundSource!");
+            logMessage("Sorry, but the wad does not contain a soundSource!");
         }
 
         return this;
@@ -836,7 +846,6 @@ then finally play the sound by calling playEnv() **/
             this.pitch = Wad.pitches[pitch]
         }
         else {
-            console.log('else')
             if ( this.soundSource ) {
                 this.soundSource.frequency.value = pitch;
             }
@@ -896,7 +905,7 @@ then finally play the sound by calling playEnv() **/
         else {
 
             //Inform that there is no reverb on the current wad
-            console.log("Sorry, but the wad does not contain Reverb!");
+            logMessage("Sorry, but the wad does not contain Reverb!");
         }
 
         return this;
@@ -945,7 +954,7 @@ then finally play the sound by calling playEnv() **/
         else {
 
             //Inform that there is no delay on the current wad
-            console.log("Sorry, but the wad does not contain delay!");
+            logMessage("Sorry, but the wad does not contain delay!", 2);
         }
 
         return this;
@@ -959,7 +968,8 @@ then finally play the sound by calling playEnv() **/
     Wad.prototype.stop = function(label){
         if ( !( this.source === 'mic' ) ) {
             if ( !(this.gain && this.gain.length) ){
-                console.log("You tried to stop a Wad that never played. ", this)
+                logMessage("You tried to stop a Wad that never played. ", 2)
+                logMessage(this, 2)
                 return // if the wad has never been played, there's no need to stop it
             }
             else if ( label ) {
@@ -980,7 +990,7 @@ then finally play the sound by calling playEnv() **/
         else if (Wad.micConsent ) {
             this.mediaStreamSource.disconnect(0);
         }
-        else { console.log('You have not given your browser permission to use your microphone.')}
+        else { logMessage('You have not given your browser permission to use your microphone.')}
         if ( this.tremolo ) {
             this.tremolo.wad.stop()
         }
@@ -1138,7 +1148,7 @@ Copyright (c) 2014 Chris Wilson
             this.output.gain.value = volume;
         }
         else {
-            console.log('This PolyWad is not set up yet.');
+            logMessage('This PolyWad is not set up yet.');
         }
         return this;
     }
@@ -1153,7 +1163,6 @@ Copyright (c) 2014 Chris Wilson
                 wad.pitch = Wad.pitches[pitch]
             }
             else {
-                console.log('else')
                 if ( wad.soundSource ) {
                     wad.soundSource.frequency.value = pitch;
                 }
@@ -1180,7 +1189,7 @@ Copyright (c) 2014 Chris Wilson
             }
         }
         else {
-            console.log('This PolyWad is not set up yet.');
+            logMessage('This PolyWad is not set up yet.');
         }
         return this;
     };
@@ -1203,7 +1212,7 @@ Copyright (c) 2014 Chris Wilson
             }
         }
         else {
-            console.log('This PolyWad is not set up yet.');
+            logMessage('This PolyWad is not set up yet.');
         }
         return this;
     };
@@ -1534,40 +1543,40 @@ grab it from the defaultImpulse URL **/
 
     }
     Wad.midiInstrument = {
-        play : function() { console.log('playing midi')  },
-        stop : function() { console.log('stopping midi') }
+        play : function() { logMessage('playing midi')  },
+        stop : function() { logMessage('stopping midi') }
     };
     Wad.midiInputs  = [];
 
     var midiMap = function(event){
-        console.log(event.receivedTime, event.data);
+        logMessage(event.receivedTime, event.data, 2);
         if ( event.data[0] === 144 ) { // 144 means the midi message has note data
-            // console.log('note')
             if ( event.data[2] === 0 ) { // noteOn velocity of 0 means this is actually a noteOff message
-                console.log('|| stopping note: ', Wad.pitchesArray[event.data[1]-12]);
+                logMessage("Playing note: ", 2)
+                logMessage(Wad.pitchesArray[event.data[1]-12], 2);
                 Wad.midiInstrument.stop(Wad.pitchesArray[event.data[1]-12]);
             }
             else if ( event.data[2] > 0 ) {
-                console.log('> playing note: ', Wad.pitchesArray[event.data[1]-12]);
+                logMessage("Stopping note: ", 2)
+                logMessage(Wad.pitchesArray[event.data[1]-12], 2);
                 Wad.midiInstrument.play({pitch : Wad.pitchesArray[event.data[1]-12], label : Wad.pitchesArray[event.data[1]-12], callback : function(that){
                 }})
             }
         }
         else if ( event.data[0] === 176 ) { // 176 means the midi message has controller data
-            console.log('controller');
+            logMessage('controller');
             if ( event.data[1] == 46 ) {
                 if ( event.data[2] == 127 ) { Wad.midiInstrument.pedalMod = true; }
                 else if ( event.data[2] == 0 ) { Wad.midiInstrument.pedalMod = false; }
             }
         }
         else if ( event.data[0] === 224 ) { // 224 means the midi message has pitch bend data
-            console.log('pitch bend');
+            logMessage('pitch bend');
         }
     };
 
 
     var onSuccessCallback = function(midiAccess){
-        // console.log('inputs: ', m.inputs)
 
         Wad.midiInputs = []
         var val = midiAccess.inputs.values();
@@ -1575,7 +1584,8 @@ grab it from the defaultImpulse URL **/
             Wad.midiInputs.push(o.value)
         }
         // Wad.midiInputs = [m.inputs.values().next().value];   // inputs = array of MIDIPorts
-        console.log('MIDI inputs: ', Wad.midiInputs)
+        logMessage('MIDI inputs: ')
+        logMessage(Wad.midiInputs)
         // var outputs = m.outputs(); // outputs = array of MIDIPorts
         for ( var i = 0; i < Wad.midiInputs.length; i++ ) {
             Wad.midiInputs[i].onmidimessage = midiMap; // onmidimessage( event ), event.data & event.receivedTime are populated
@@ -1585,7 +1595,7 @@ grab it from the defaultImpulse URL **/
         // o.send( [ 0x80, 0x45, 0x7f ], window.performance.now() + 1000 );  // full velocity A4 note off in one second.
     };
     var onErrorCallback = function(err){
-        console.log("Failed to get MIDI access", err);
+        logMessage("Failed to get MIDI access", err);
     };
 
     if ( navigator && navigator.requestMIDIAccess ) {
@@ -1593,7 +1603,7 @@ grab it from the defaultImpulse URL **/
             navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
         }
         catch(err) {
-            console.log("Failed to get MIDI access", err);
+            logMessage("Failed to get MIDI access", err);
         }
     }
 
@@ -1605,7 +1615,11 @@ grab it from the defaultImpulse URL **/
         ghost : { source : 'square', volume : .3, env : { attack : .01, decay : .002, sustain : .5, hold : 2.5, release : .3 }, filter : { type : 'lowpass', frequency : 600, q : 7, env : { attack : .7, frequency : 1600 } }, vibrato : { attack : 8, speed : 8, magnitude : 100 } },
         piano : { source : 'square', volume : 1.4, env : { attack : .01, decay : .005, sustain : .2, hold : .015, release : .3 }, filter : { type : 'lowpass', frequency : 1200, q : 8.5, env : { attack : .2, frequency : 600 } } }
     };
+
+    Wad.logs = logStuff
+
     return Wad;
+
 
 })()
 

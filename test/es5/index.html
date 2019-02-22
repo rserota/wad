@@ -13,10 +13,11 @@
     <button id="sprite-b">SPRITE B</button>
     <button id="sprite-ab">SPRITE AB</button>
     <script>
+        Wad.logs.verbosity = 0
         var ignition = new Wad({source:'./ignition.mp3'})
         var helloMan = new Wad({
             source: './hello-man.wav',
-            sprite: {
+            site: {
                 hello: [0, .4],
                 man  : [.4,1]
             }

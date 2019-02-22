@@ -1,5 +1,6 @@
 import Wad from '../../../build/wad.min.js';
 
+Wad.logs.verbosity = 0
 var ignition = new Wad({source:'./ignition.mp3'})
 document.getElementById('ignition').addEventListener('click', async function(){
     await ignition.play()

@@ -2504,19 +2504,20 @@ var Wad = (function(){
 /** Set up the default ADSR envelope. **/
     var constructEnv = function(that, arg){
         that.env = { //default envelope, if one is not specified on play
-            attack  : arg.env ? valueOrDefault(arg.env.attack,  1) : 0,    // time in seconds from onset to peak volume
+            attack  : arg.env ? valueOrDefault(arg.env.attack,  0) : 0,    // time in seconds from onset to peak volume
             decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
             sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
             hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14159) : 3.14159, // time in seconds to maintain sustain volume
             release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
         };
         that.defaultEnv = {
-            attack  : arg.env ? valueOrDefault(arg.env.attack,  1) : 0,    // time in seconds from onset to peak volume
+            attack  : arg.env ? valueOrDefault(arg.env.attack,  0) : 0,    // time in seconds from onset to peak volume
             decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
             sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
             hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14159) : 3.14159, // time in seconds to maintain sustain volume
             release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
         };
+        that.userSetHold = !!(arg.env && arg.env.hold)
     }
 /////////////////////////////////////////
 
@@ -2793,7 +2794,8 @@ as specified by the volume envelope and filter envelope **/
     };
 
     var playEnv = function(wad, arg){
-        if ( wad.env.hold === -1 ){
+        var loop = arg.loop || arg.loop
+        if ( wad.env.hold === -1 || (loop && !wad.userSetHold && !(arg.env && arg.env.hold) ) ){
             var hold = 999
         }
         else { var hold = wad.env.hold }
@@ -2885,6 +2887,7 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
                 release : that.defaultEnv.release
             };
         }
+
     };
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -3150,6 +3153,7 @@ then finally play the sound by calling playEnv() **/
             if (arg.exactTime === undefined) {
                 arg.exactTime = context.currentTime + arg.wait;
             }
+            this.lastPlayedTime = arg.exactTime
 
             this.nodes.push(this.soundSource);
 
@@ -3369,7 +3373,20 @@ then finally play the sound by calling playEnv() **/
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
-
+    Wad.prototype.pause = function(label){
+        this.pauseTime = context.currentTime
+        this.stop(label)
+    }
+    Wad.prototype.unpause = function(arg){
+        arg = arg || {}
+        if ( this.pauseTime && this.lastPlayedTime ) {
+            arg.offset = this.pauseTime - this.lastPlayedTime
+        }
+        else { 
+            logMessage("You tried to unpause a wad that was not played and paused, so it just played normally instead.", 2)
+        }
+        this.play(arg)
+    }
 
 /** If multiple instances of a sound are playing simultaneously, stop() only can stop the most recent one **/
     Wad.prototype.stop = function(label){

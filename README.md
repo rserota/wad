@@ -70,7 +70,7 @@ bell.play()
 bell.stop()
 ```
 
-Behind the scenes, Wad sends an XMLHttpRequest to the source URL, so you will need a server running to respond to the request. You can't simply test it with local files, like you can with an HTML &lt;audio> tag.
+Behind the scenes, Wad sends an XMLHttpRequest to the source URL, so you will need a server running to respond to the request. You can't simply test it with local files, like you can with an HTML &lt;audio> tag. If you need direct access to the actual audio buffer, you can access it at `bell.decodedBuffer`.
 
 You can also create oscillators using the same syntax, by specifying 'sine', 'square', 'sawtooth', or 'triangle' as the source.
 
@@ -105,7 +105,7 @@ var saw = new Wad({
         attack  : 0.0,  // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
         decay   : 0.0,  // Time in seconds from peak volume to sustain volume.
         sustain : 1.0,  // Sustain volume level. This is a percent of the peak volume, so sensible values are between 0 and 1.
-        hold    : 3.14, // Time in seconds to maintain the sustain volume level. If this is not set to a lower value, oscillators must be manually stopped by calling their stop() method.
+        hold    : 3.14, // Time in seconds to maintain the sustain volume level. If set to -1, the sound will be sustained indefinitely until you manually call stop().
         release : 0     // Time in seconds from the end of the hold period to zero volume, or from calling stop() to zero volume.
     },
     filter  : {
@@ -261,6 +261,19 @@ saw.play({pitch : 'A4', label : 'A4'}) // The label can be any string, but using
 saw.play({pitch : 'G4', label : 'G4'})
 saw.stop('A4') // The first note will stop, but the second note will continue playing.
 ```
+
+<h4 id="pause-unpause">Pausing and unpausing audio</h4>
+
+Audio clips (not oscillators) can be paused and unpaused during playback.
+
+```javascript
+fullSong.play()
+fullSong.pause()
+// wait...
+fullSong.unpause()
+```
+
+The `pause` method accepts the same arguments as `stop`. The `unpause` method accepts the same arguments as `play`.
 
 <h4 id='play-setters'>Changing Settings During Playback</h4>
 

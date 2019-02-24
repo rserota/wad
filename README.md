@@ -24,6 +24,7 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
                     <li><a href='#changing-settings-during-playback'>Changing Settings During Playback</a></li>
                 </ul>
             </li>
+            <li><a href='#global-methods'>Global Methods</a></li>
             <li><a href='#microphone-input'>Microphone Input</a></li>
             <li>
                 <a href='#polywads'>PolyWads</a>
@@ -290,6 +291,20 @@ By default, this change will occur smoothly over 10 milliseconds, to help preven
 saw.play()
 saw.setPanning(1, .015) // pan to the right over 15 milliseconds
 
+```
+<h3 id='global-methods'>Global Methods</h3>
+
+Wad.js automatically keeps track of all wads you've created, and provides a couple of methods you can use to control them all at once. 
+
+```javascript
+var saw  = new Wad({source: 'sawtooth'})
+var sine = new Wad({source: 'sine'})
+
+saw.play()
+sine.play()
+
+Wad.setVolume(.5) // loops through all existing wads, calling setVolume(.5) on each of them.
+Wat.stopAll() // loops through all existing wads, calling stop() on each of them.
 ```
 
 

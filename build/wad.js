@@ -3513,8 +3513,9 @@ then finally play the sound by calling playEnv() **/
         this.nodes             = [this.input];
         this.destination       = arg.destination || context.destination; // the last node the sound is routed to
         this.volume            = arg.volume || 1;
-        this.output            = context.createGain();
-        this.output.gain.value = this.volume;
+        this.gain              = context.createGain();
+        this.gain.gain.value   = this.volume;
+        this.output            = context.createAnalyser();
         this.tuna              = arg.tuna || null;
 
         this.globalReverb = arg.globalReverb || false; // deprecated
@@ -3533,6 +3534,7 @@ then finally play the sound by calling playEnv() **/
         constructDelay(this, arg);
         setUpDelayOnPlay(this, arg);
         setUpTunaOnPlay(this, arg);
+        this.nodes.push(this.gain);
         this.nodes.push(this.output);
         plugEmIn(this, arg);
         this.isSetUp = true;
@@ -3572,7 +3574,7 @@ Copyright (c) 2014 Chris Wilson
 
     Wad.Poly.prototype.setVolume = function(volume){
         if ( this.isSetUp ) {
-            this.output.gain.value = volume;
+            this.gain.gain.value = volume;
         }
         else {
             logMessage('This PolyWad is not set up yet.');
@@ -3607,7 +3609,7 @@ Copyright (c) 2014 Chris Wilson
             }
             else {
                 if ( arg && arg.volume ) {
-                    this.output.gain.value = arg.volume; // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
+                    this.gain.gain.value = arg.volume; // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
                     arg.volume = undefined; // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad.
                 }
                 for ( var i = 0; i < this.wads.length; i++ ) {

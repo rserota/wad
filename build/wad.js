@@ -2643,7 +2643,14 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
 
             else {
                 that.panning.type = '3d'
-                that.panning.panningModel = arg.panningModel || 'equalpower';
+                that.panning.panningModel   = arg.panningModel || 'equalpower';
+                that.panning.distanceModel  = arg.distanceModel 
+                that.panning.maxDistance    = arg.maxDistance 
+                that.panning.rolloffFactor  = arg.rolloffFactor
+                that.panning.refDistance    = arg.refDistance
+                that.panning.coneInnerAngle = arg.coneInnerAngle
+                that.panning.coneOuterAngle = arg.coneOuterAngle
+                that.panning.coneOuterGain  = arg.coneOuterGain
             }
         }
 
@@ -2966,6 +2973,14 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
             that.panning.node.setPosition(panning[0], panning[1], panning[2]);
             that.panning.node.panningModel = arg.panningModel || that.panningModel || 'equalpower';
             that.panning.type = '3d';
+
+            that.panning.node.distanceModel  = arg.distanceModel  || that.distanceModel  || that.panning.node.distanceModel
+            that.panning.node.maxDistance    = arg.maxDistance    || that.maxDistance    || that.panning.node.maxDistance
+            that.panning.node.rolloffFactor  = arg.rolloffFactor  || that.rolloffFactor  || that.panning.node.rolloffFactor
+            that.panning.node.refDistance    = arg.refDistance    || that.refDistance    || that.panning.node.refDistance
+            that.panning.node.coneInnerAngle = arg.coneInnerAngle || that.coneInnerAngle || that.panning.node.coneInnerAngle
+            that.panning.node.coneOuterAngle = arg.coneOuterAngle || that.coneOuterAngle || that.panning.node.coneOuterAngle
+            that.panning.node.coneOuterGain  = arg.coneOuterGain  || that.coneOuterGain  || that.panning.node.coneOuterGain
         }
 
         that.nodes.push(that.panning.node);

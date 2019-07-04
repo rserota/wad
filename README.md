@@ -160,9 +160,10 @@ When using 3d-panning, there are two different panning models that can be used. 
 
 ```javascript
 var saw = new Wad({
-    source       : 'sawtooth',
-    panning      : [0, 1, 10],
-    panningModel : 'HRTF'
+    source        : 'sawtooth',
+    panning       : [0, 1, 10],
+    panningModel  : 'HRTF',
+    rolloffFactor : 1 // other properties of the panner node can be specified in the constructor, or on play()
 })
 ```
 

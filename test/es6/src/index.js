@@ -173,3 +173,38 @@ document.getElementById('tuna-chorus').addEventListener('click', function(){
 document.getElementById('tuna-phaser').addEventListener('click', function(){
     tunaPhaser.play()
 })
+
+//SoundIterator
+
+var iterator = new Wad.SoundIterator({files: [
+    new Wad({source: 'sawtooth', volume: 0.5, env:{hold:1}}),
+    new Wad({source: 'square', volume: 0.5, env:{hold:1}}),
+    new Wad({source: 'sine', volume: 0.5, env:{hold:1}}),
+]})
+
+document.getElementById('play-next-nonrandom-sound').addEventListener('click', function(){
+    iterator.random = false
+    iterator.play()
+})
+
+document.getElementById('play-next-random-sound').addEventListener('click', function(){
+    iterator.random = true
+    iterator.randomPlaysBeforeRepeat = 0
+    iterator.play()
+})
+
+document.getElementById('play-next-sound-with-1-randomPlaysBeforeRepeat').addEventListener('click', function(){
+    iterator.random = true
+    iterator.randomPlaysBeforeRepeat = 1
+    iterator.play()
+})
+
+var newSound = new Wad({source:'triangle', volume: 0.5, env:{hold:1}})
+
+document.getElementById('add-sound').addEventListener('click', function(){
+    iterator.add(newSound)
+})
+
+document.getElementById('remove-sound').addEventListener('click', function(){
+    iterator.remove(newSound)
+})

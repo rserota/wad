@@ -332,6 +332,27 @@ voice.play()
 
 If <code>voice.play()</code> is called with no arguments, it uses the arguments from the constructor. However, if it is called with any arguments, all arguments from the constructor are discarded (except for source), and the arguments passed to <code>voice.play()</code> are used instead. 
 
+
+<h3>SoundIterator</h3>
+
+The SoundIterator object is used for playing sounds in a random order or repeatedly through a loop. It is good for footstep sounds, for example.
+
+```javascript
+var  iterator = new Wad.SoundIterator({
+    files: [new Wad({source:'square'}), new Wad({source:'triangle'})], // Takes Wad objects, or files that would be passed to source. If it is passed a file that is not a Wad object, then it will create a generic Wad object with the passed file as the source.
+    random: false, // either play a random order (true), or play in the order of the list (false)
+    randomPlaysBeforeRepeat: 0, // This value says the amount of plays that need to happen before a sound can be repeated. This only works if the length of the iterator is 3 or more, and this value is max 1 less than the length of the sound list.
+})
+```
+
+The methods are:
+
+```javascript
+iterator.play(args) // Plays the next sound in the list, or next random sound following the random rules. The passed args are the normal args that can be passed to Wad.play(). The function returns a Promise.
+iterator.add(sound) // Pass in either a Wad object or an object that would be passed as a source in a new Wad. It returns the SoundIterator object to be chained.
+iterator.remove(sound) // pass in the Wad instance you want to have removed from the iterator. Only Wad objects that were added as Wad objects can be removed.
+```
+
 <h3>PolyWads</h3>
 
 In many cases, it is useful to group multiple Wads together. This can be accomplished with a PolyWad, a multi-purpose object that can store other Wads and PolyWads. There are two main cases where you might want to group several Wads together. One case is when you want to make a complex instrument that uses multiple oscillators.  Other audio synthesis programs often have instruments that combine multiple oscillators, with names like 'TripleOscillator' or '3xOSC'.

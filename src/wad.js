@@ -1,4 +1,5 @@
 import Tuna from 'tunajs';
+import SoundIterator from './sound_iterator'
 
 
 var Wad = (function(){
@@ -1147,6 +1148,10 @@ then finally play the sound by calling playEnv() **/
         plugEmIn(this, arg);
         this.isSetUp = true;
         if ( arg.callback ) { arg.callback(this); }
+    }
+
+    Wad.SoundIterator = function(args){
+        return new SoundIterator(args, Wad)
     }
 
 /**

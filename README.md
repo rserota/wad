@@ -98,7 +98,7 @@ var saw = new Wad({
     loop    : false, // If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators. 
     rate    : 1.0, // How fast to play an audio clip, relative to its normal speed. 2.0 is double speed, 0.5 is half speed, etc.
     offset  : 0,     // Where in the audio clip playback begins, measured in seconds from the start of the audio clip.
-    pitch   : 'A4',  // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
+    pitch   : 'A4',  // Set a default pitch on the constructor if you don't want to set the pitch on <code>play()</code>.
     detune  : 0,     // Set a default detune on the constructor if you don't want to set detune on <code>play()</code>. Detune is measured in cents. 100 cents is equal to 1 semitone.
     panning : -.5,   // Horizontal placement of the sound source. Possible values are from 1 to -1.
 

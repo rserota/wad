@@ -416,9 +416,9 @@ PolyWads can be created with an audio meter, which reports the volume level of t
     var triangle = new Wad({source:'triangle', env:{hold:1, release:.2}})
     var polywad = new Wad.Poly({
         audioMeter: {
-            clipLevel: .98,
-            averaging: .95,
-            clipLag: 750,
+            clipLevel: .98, // the level (0 to 1) that you would consider "clipping".
+            averaging: .95, // how "smoothed" you would like the meter to be over time. Should be between 0 and less than 1.
+            clipLag: 750, // how long you would like the "clipping" indicator to show after clipping has occured, in milliseconds.
         },
     })
     polywad.add(sawtooth).add(triangle)
@@ -427,6 +427,7 @@ PolyWads can be created with an audio meter, which reports the volume level of t
         console.log("Volume: ", Math.round(polywad.audioMeter.volume * 1000))
         console.log("Clipping: ", polywad.audioMeter.checkClipping())
     }, 50)
+    polywad.play()
 ```
 
 

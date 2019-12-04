@@ -65,7 +65,13 @@ document.getElementById('set-pitch').addEventListener('click', function(){
 
 var sawtooth = new Wad({source:'sawtooth', env:{hold:1, release:.2}})
 var triangle = new Wad({source:'triangle', env:{hold:1, release:.2}})
-var polywad = new Wad.Poly()
+var polywad = new Wad.Poly({
+    audioMeter: {
+        clipLevel: .98,
+        averaging: .95,
+        clipLag: 750,
+    },
+})
 polywad.add(sawtooth).add(triangle)
 
 document.getElementById('polywad').addEventListener('click', function(){
@@ -81,6 +87,13 @@ document.getElementById('stop').addEventListener('click', function(){
 document.getElementById('polywad-stop').addEventListener('click', function(){
     polywad.stop()
 })
+var volumeDisplay = document.getElementById('polywad-volume')
+var clippingDisplay = document.getElementById('polywad-clipping')
+setInterval(function(){
+    volumeDisplay.innerText = Math.round(polywad.audioMeter.volume * 1000)
+    clippingDisplay.innerText = polywad.audioMeter.checkClipping()
+
+}, 50)
 
 var voice;
 var tuner;

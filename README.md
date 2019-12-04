@@ -30,6 +30,7 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
                 <a href='#polywads'>PolyWads</a>
                 <ul>
                     <li><a href='#compression'>Compression</a></li>
+                    <li><a href='#audio-meter'>Pitch Detection</a></li>
                     <li><a href='#pitch-detection'>Pitch Detection</a></li>
                 </ul>
             </li>
@@ -382,6 +383,29 @@ var compressor = new Wad.Poly({
         threshold : -24  // The decibel value above which the compression will start taking effect. This parameter ranges from -100 to 0.
     }
 })
+```
+
+<h4>Audio Meter</h4>
+
+PolyWads can be created with an audio meter, which reports the volume level of the PolyWad's output, and can tell you if it's clipping.
+
+```javascript
+
+    var sawtooth = new Wad({source:'sawtooth', env:{hold:1, release:.2}})
+    var triangle = new Wad({source:'triangle', env:{hold:1, release:.2}})
+    var polywad = new Wad.Poly({
+        audioMeter: {
+            clipLevel: .98,
+            averaging: .95,
+            clipLag: 750,
+        },
+    })
+    polywad.add(sawtooth).add(triangle)
+
+    setInterval(function(){
+        console.log("Volume: ", Math.round(polywad.audioMeter.volume * 1000))
+        console.log("Clipping: ", polywad.audioMeter.checkClipping())
+    }, 50)
 ```
 
 

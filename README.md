@@ -99,7 +99,7 @@ var saw = new Wad({
     loop    : false, // If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators. 
     rate    : 1.0, // How fast to play an audio clip, relative to its normal speed. 2.0 is double speed, 0.5 is half speed, etc.
     offset  : 0,     // Where in the audio clip playback begins, measured in seconds from the start of the audio clip.
-    pitch   : 'A4',  // Set a default pitch on the constuctor if you don't want to set the pitch on <code>play()</code>.
+    pitch   : 'A4',  // Set a default pitch on the constructor if you don't want to set the pitch on <code>play()</code>.
     detune  : 0,     // Set a default detune on the constructor if you don't want to set detune on <code>play()</code>. Detune is measured in cents. 100 cents is equal to 1 semitone.
     panning : -.5,   // Horizontal placement of the sound source. Possible values are from 1 to -1.
 
@@ -332,6 +332,27 @@ voice.play()
 ```
 
 If <code>voice.play()</code> is called with no arguments, it uses the arguments from the constructor. However, if it is called with any arguments, all arguments from the constructor are discarded (except for source), and the arguments passed to <code>voice.play()</code> are used instead. 
+
+
+<h3>SoundIterator</h3>
+
+The SoundIterator object is used for playing sounds in a random order or repeatedly through a loop. It is good for footstep sounds, for example.
+
+```javascript
+var  iterator = new Wad.SoundIterator({
+    files: [new Wad({source:'square'}), new Wad({source:'triangle'})], // Takes Wad objects, or files that would be passed to source. If it is passed a file that is not a Wad object, then it will create a generic Wad object with the passed file as the source.
+    random: false, // either play a random order (true), or play in the order of the list (false)
+    randomPlaysBeforeRepeat: 0, // This value says the amount of plays that need to happen before a sound can be repeated. This only works if the length of the iterator is 3 or more, and this value is max 1 less than the length of the sound list.
+})
+```
+
+The methods are:
+
+```javascript
+iterator.play(args) // Plays the next sound in the list, or next random sound following the random rules. The passed args are the normal args that can be passed to Wad.play(). The function returns a Promise.
+iterator.add(sound) // Pass in either a Wad object or an object that would be passed as a source in a new Wad. It returns the SoundIterator object to be chained.
+iterator.remove(sound) // pass in the Wad instance you want to have removed from the iterator. Only Wad objects that were added as Wad objects can be removed.
+```
 
 <h3>PolyWads</h3>
 

@@ -30,7 +30,7 @@ Wad is a Javascript library for manipulating audio using the new HTML5 Web Audio
                 <a href='#polywads'>PolyWads</a>
                 <ul>
                     <li><a href='#compression'>Compression</a></li>
-                    <li><a href='#audio-meter'>Pitch Detection</a></li>
+                    <li><a href='#audio-meter'>Audio Meter</a></li>
                     <li><a href='#pitch-detection'>Pitch Detection</a></li>
                 </ul>
             </li>

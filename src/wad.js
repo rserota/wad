@@ -761,11 +761,12 @@ then finally play the sound by calling playEnv() **/
             if ( arg.wait === undefined ) {
                 arg.wait = 0;
             }
-
+            console.log('exact time? ', arg.exactTime)
             if (arg.exactTime === undefined) {
                 arg.exactTime = context.currentTime + arg.wait;
             }
-            this.lastPlayedTime = arg.exactTime
+            console.log('exact time2? ', arg.exactTime)
+            this.lastPlayedTime = arg.exactTime - arg.offset
 
             this.nodes.push(this.soundSource);
 
@@ -986,10 +987,12 @@ then finally play the sound by calling playEnv() **/
 
 //////////////////////////////////////////////////////////////////////////////////////////
     Wad.prototype.pause = function(label){
+        console.log('pause time? ', context.currentTime)
         this.pauseTime = context.currentTime
         this.stop(label)
     }
     Wad.prototype.unpause = function(arg){
+        console.log('unpause: ', this.pauseTime, this.lastPlayedTime)
         arg = arg || {}
         if ( this.pauseTime && this.lastPlayedTime ) {
             arg.offset = this.pauseTime - this.lastPlayedTime
@@ -997,6 +1000,7 @@ then finally play the sound by calling playEnv() **/
         else { 
             logMessage("You tried to unpause a wad that was not played and paused, so it just played normally instead.", 2)
         }
+        console.log('play arg? ', arg)
         this.play(arg)
     }
 
@@ -1141,20 +1145,20 @@ then finally play the sound by calling playEnv() **/
         // but works around a current Chrome bug.
         processor.connect(audioContext.destination);
     
-        processor.checkClipping =
-            function(){
-                if (!this.clipping)
-                    return false;
-                if ((this.lastClip + this.clipLag) < window.performance.now())
-                    this.clipping = false;
-                return this.clipping;
-            };
+        processor.checkClipping = function(){
+            if (!this.clipping){
+                return false;
+            }
+            if ((this.lastClip + this.clipLag) < window.performance.now()){
+                this.clipping = false;
+            }
+            return this.clipping;
+        };
     
-        processor.shutdown =
-            function(){
-                this.disconnect();
-                this.onaudioprocess = null;
-            };
+        processor.shutdown = function(){
+            this.disconnect();
+            this.onaudioprocess = null;
+        };
     
         return processor;
     }

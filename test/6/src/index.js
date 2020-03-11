@@ -47,7 +47,12 @@ var fullSong = new Wad({source:'./the-chase.mp3'})
 document.getElementById('full-song').addEventListener('click', function(){
     fullSong.play()
 })
-
+document.getElementById('pause-full-song').addEventListener('click', function(){
+    fullSong.pause()
+})
+document.getElementById('unpause-full-song').addEventListener('click', function(){
+    fullSong.unpause()
+})
 var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .3}})
 document.getElementById('sine').addEventListener('click', async function(){
     await sine.play()

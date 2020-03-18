@@ -60,19 +60,21 @@
     <hr>
 
 
-    <button id="full-song">PLAY FULL SONG</button>
-    <button id="pause-full-song">PAUSE FULL SONG</button>
-    <button id="unpause-full-song">UNPAUSE FULL SONG</button>
+    <button id="full-song">PLAY LONG CLIP</button>
+    <button id="pause-full-song">PAUSE LONG CLIP</button>
+    <button id="unpause-full-song">UNPAUSE LONG CLIP</button>
     <script>
-        var fullSong = new Wad({source:'./the-chase.mp3'})
+        var longClip = new Wad({source:'./do-re-mi.wav'})
         document.getElementById('full-song').addEventListener('click', function(){
-            fullSong.play()
+            longClip.play().then(function(thatWad){
+                console.log('Clip finished.')
+            })
         })
         document.getElementById('pause-full-song').addEventListener('click', function(){
-            fullSong.pause()
+            longClip.pause()
         })
         document.getElementById('unpause-full-song').addEventListener('click', function(){
-            fullSong.unpause()
+            longClip.unpause()
         })
     </script>
     <hr>

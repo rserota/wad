@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/wad.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -3368,6 +3368,8 @@ then finally play the sound by calling playEnv() **/
             if ( arg.volume ) { this.volume = arg.volume; }
             else { this.volume = this.defaultVolume; }
             arg.offset = arg.offset || this.offset || 0;
+
+
             if ( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) {
                 setUpOscillator(this, arg);
             }
@@ -3444,13 +3446,22 @@ then finally play the sound by calling playEnv() **/
             //sets up tremolo LFO
             if ( this.tremolo ) { setUpTremoloOnPlay(this, arg); }
         }
+
         if ( arg.callback ) { arg.callback(this); }
         var thatWad = this
-        return new Promise(function(resolve, reject){
-            setTimeout(function(){
-                resolve(thatWad)
-            }, (arg.wait + thatWad.env.attack + thatWad.env.decay + thatWad.env.hold + thatWad.env.release) * (1/(arg.rate||thatWad.rate||1)) * 1000 )
-        })
+
+
+        this.soundSource.onended = function(event){
+            // console.log('ended!', event) // this fires twice for some reason?
+            thatWad.playPromiseResolve(thatWad)
+        }
+
+        if ( !arg.unpause ) {
+            this.playPromise = new Promise(function(resolve, reject){
+                thatWad.playPromiseResolve = resolve
+            })
+            return this.playPromise
+        }
 
     };
 
@@ -3618,10 +3629,13 @@ then finally play the sound by calling playEnv() **/
     Wad.prototype.pause = function(label){
         this.pauseTime = context.currentTime
         this.stop(label)
+        this.soundSource.onended = null
+
     }
     Wad.prototype.unpause = function(arg){
         arg = arg || {}
-        if ( this.pauseTime && this.lastPlayedTime ) {
+        arg.unpause = true
+        if ( this.pauseTime && (this.lastPlayedTime != null) ) {
             arg.offset = this.pauseTime - this.lastPlayedTime
         }
         else { 
@@ -4378,6 +4392,19 @@ if(typeof module !== 'undefined' && module.exports) {
 
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node_modules/webpack/buildin/harmony-module.js */ "./node_modules/webpack/buildin/harmony-module.js")(module)))
+
+/***/ }),
+
+/***/ 0:
+/*!********************************!*\
+  !*** multi ./src/wad.js tests ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! ./src/wad.js */"./src/wad.js");
+!(function webpackMissingModule() { var e = new Error("Cannot find module \"tests\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
+
 
 /***/ })
 

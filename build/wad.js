@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/wad.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -4392,19 +4392,6 @@ if(typeof module !== 'undefined' && module.exports) {
 
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node_modules/webpack/buildin/harmony-module.js */ "./node_modules/webpack/buildin/harmony-module.js")(module)))
-
-/***/ }),
-
-/***/ 0:
-/*!********************************!*\
-  !*** multi ./src/wad.js tests ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ./src/wad.js */"./src/wad.js");
-!(function webpackMissingModule() { var e = new Error("Cannot find module \"tests\""); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-
 
 /***/ })
 

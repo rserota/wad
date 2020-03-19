@@ -43,16 +43,19 @@ document.getElementById('sprite-ab').addEventListener('click', async function(){
     await helloMan.play({env:{attack: .1, release:.02}})
 })
 
-var fullSong = new Wad({source:'./the-chase.mp3'})
+var longClip = new Wad({source:'./do-re-mi.wav'})
 document.getElementById('full-song').addEventListener('click', function(){
-    fullSong.play()
+    longClip.play().then(function(thatWad){
+        console.log('Clip finished.')
+    })
 })
 document.getElementById('pause-full-song').addEventListener('click', function(){
-    fullSong.pause()
+    longClip.pause()
 })
 document.getElementById('unpause-full-song').addEventListener('click', function(){
-    fullSong.unpause()
+    longClip.unpause()
 })
+
 var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .3}})
 document.getElementById('sine').addEventListener('click', async function(){
     await sine.play()

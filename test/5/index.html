@@ -25,16 +25,21 @@
         })
         document.getElementById('ignition').addEventListener('click', async function(){
             // await ignition.play()
-            await ignition.play().then(function(){console.log('ignition')})
-            await ignition.play().then(function(){console.log('ignition')})
+            await ignition.play()
+            console.log('ignition')
+            await ignition.play()
+            console.log('ignition')
+            await ignition.play()
+            console.log('ignition')
+
         })
         document.getElementById('ignition-faster').addEventListener('click', async function(){
-            await ignition.play({
-                rate: 2.0,
-            })
-            await ignition.play({
-                rate: 2.0,
-            }).then(function(){console.log('fast ignition')})
+            await ignition.play({ rate: 2.0, })
+            console.log('fast ignition')
+            await ignition.play({ rate: 2.0, })
+            console.log('fast ignition')
+            await ignition.play({ rate: 2.0, })
+            console.log('fast ignition')
         })
         document.getElementById('ignition-slower').addEventListener('click', async function(){
             await ignition.play({
@@ -42,7 +47,8 @@
             })
             await ignition.play({
                 rate: 0.5,
-            }).then(function(){console.log('slow ignition')})
+            })
+            console.log('slow ignition')
         })
         document.getElementById('sprite-a').addEventListener('click', async function(){
             await helloMan.hello.play({env:{release:.02}})

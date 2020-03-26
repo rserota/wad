@@ -154,10 +154,10 @@ Don't let the Wad play until all necessary files have been downloaded. **/
             context.decodeAudioData(request.response, function (decodedBuffer){
                 that.decodedBuffer = decodedBuffer;
                 if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
-                    that.defaultEnv.hold = that.decodedBuffer.duration
-                    that.env.hold = that.decodedBuffer.duration
+                    that.defaultEnv.hold = that.decodedBuffer.duration * ( 1 / that.rate )
+                    that.env.hold = that.decodedBuffer.duration * ( 1 / that.rate )
                 }
-                that.duration = (that.env.attack + that.env.decay + that.env.hold + that.env.release) * (1/(that.rate)) * 1000
+                that.duration = that.env.hold * 1000
 
                 if ( callback ) { callback(that); }
                 that.playable++;
@@ -752,9 +752,6 @@ then finally play the sound by calling playEnv() **/
                 
             }
 
-            if ( this.soundSource.playbackRate ) {
-                this.soundSource.playbackRate.value = arg.rate || this.rate;
-            }
 
             if ( this.soundSource.detune ) {
                 this.soundSource.detune.value = arg.detune || this.detune;
@@ -776,6 +773,10 @@ then finally play the sound by calling playEnv() **/
             setUpEnvOnPlay(this, arg);
     ////////////////////////////////////////////////////////////////////////////////////////
 
+    if ( this.soundSource.playbackRate ) {
+        this.soundSource.playbackRate.value = arg.rate || this.rate;
+        this.env.hold = this.env.hold * (1/this.soundSource.playbackRate.value)
+    }
 
     /**  sets up the filter and filter envelope based on the play() argument if present,
     or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
@@ -864,7 +865,7 @@ then finally play the sound by calling playEnv() **/
         }
         else {
 
-            //Inform that there is no delay on the current wad
+            //Inform that there is no sound source on the current wad
             logMessage("Sorry, but the wad does not contain a soundSource!");
         }
 

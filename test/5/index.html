@@ -45,6 +45,7 @@
             await ignition.play({
                 rate: 0.5,
             })
+            console.log('slow ignition')
             await ignition.play({
                 rate: 0.5,
             })
@@ -70,6 +71,7 @@
     <button id="full-song">PLAY LONG CLIP</button>
     <button id="pause-full-song">PAUSE LONG CLIP</button>
     <button id="unpause-full-song">UNPAUSE LONG CLIP</button>
+    <button id="stop-full-song">STOP LONG CLIP</button>
     <script>
         var longClip = new Wad({source:'./do-re-mi.wav'})
         document.getElementById('full-song').addEventListener('click', function(){
@@ -82,6 +84,9 @@
         })
         document.getElementById('unpause-full-song').addEventListener('click', function(){
             longClip.unpause()
+        })
+        document.getElementById('stop-full-song').addEventListener('click', function(){
+            longClip.stop()
         })
     </script>
     <hr>
@@ -190,7 +195,7 @@
             voice.play()
         })
         document.getElementById('mic-stop').addEventListener('click', function(){
-            console.log("Play mic")
+            console.log("Stop mic")
             voice.stop()
         })
         document.getElementById('detect-pitch').addEventListener('click', function(){

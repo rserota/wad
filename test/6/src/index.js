@@ -3,26 +3,33 @@ import Wad from '../../../build/wad.min.js';
 Wad.logs.verbosity = 0
 var ignition = new Wad({source:'./ignition.mp3'})
 document.getElementById('ignition').addEventListener('click', async function(){
+    // await ignition.play()
     await ignition.play()
-    await ignition.play().then(function(){console.log('ignition')})
+    console.log('ignition')
+    await ignition.play()
+    console.log('ignition')
+    await ignition.play()
+    console.log('ignition')
+
 })
 document.getElementById('ignition-faster').addEventListener('click', async function(){
-    await ignition.play({
-        rate: 2.0,
-    })
-    await ignition.play({
-        rate: 2.0,
-    }).then(function(){console.log('fast ignition')})
+    await ignition.play({ rate: 2.0, })
+    console.log('fast ignition')
+    await ignition.play({ rate: 2.0, })
+    console.log('fast ignition')
+    await ignition.play({ rate: 2.0, })
+    console.log('fast ignition')
 })
 document.getElementById('ignition-slower').addEventListener('click', async function(){
     await ignition.play({
         rate: 0.5,
     })
+    console.log('slow ignition')
     await ignition.play({
         rate: 0.5,
-    }).then(function(){console.log('slow ignition')})
+    })
+    console.log('slow ignition')
 })
-
 var helloMan = new Wad({
     source: './hello-man.wav',
     sprite: {
@@ -54,6 +61,9 @@ document.getElementById('pause-full-song').addEventListener('click', function(){
 })
 document.getElementById('unpause-full-song').addEventListener('click', function(){
     longClip.unpause()
+})
+document.getElementById('stop-full-song').addEventListener('click', function(){
+    longClip.stop()
 })
 
 var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .3}})

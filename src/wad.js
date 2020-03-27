@@ -410,7 +410,9 @@ as specified by the volume envelope and filter envelope **/
         wad.gain[0].gain.linearRampToValueAtTime(0.0001, arg.exactTime + wad.env.attack + wad.env.decay + hold + wad.env.release + 0.00004);
         // offset is only used by BufferSourceNodes. OscillatorNodes should safely ignore the offset.
         wad.soundSource.start(arg.exactTime, arg.offset);
-        wad.soundSource.stop(arg.exactTime + wad.env.attack + wad.env.decay + hold + wad.env.release);
+        if ( !wad.soundSource.playbackRate ) { // audio clips naturally stop themselves at the end of the buffer's duration
+            wad.soundSource.stop(arg.exactTime + wad.env.attack + wad.env.decay + hold + wad.env.release);
+        }
     };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -731,7 +733,7 @@ then finally play the sound by calling playEnv() **/
             }
         }
 
-        else {
+        else { // setup oscillators or audio clips
             this.nodes = [];
             if ( !arg.wait ) { arg.wait = 0; }
             if ( arg.volume ) { this.volume = arg.volume; }
@@ -773,10 +775,10 @@ then finally play the sound by calling playEnv() **/
             setUpEnvOnPlay(this, arg);
     ////////////////////////////////////////////////////////////////////////////////////////
 
-    if ( this.soundSource.playbackRate ) {
-        this.soundSource.playbackRate.value = arg.rate || this.rate;
-        this.env.hold = this.env.hold * (1/this.soundSource.playbackRate.value)
-    }
+            if ( this.soundSource.playbackRate ) {
+                this.soundSource.playbackRate.value = arg.rate || this.rate;
+                this.env.hold = this.env.hold * (1/this.soundSource.playbackRate.value)
+            }
 
     /**  sets up the filter and filter envelope based on the play() argument if present,
     or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
@@ -815,23 +817,22 @@ then finally play the sound by calling playEnv() **/
 
             //sets up tremolo LFO
             if ( this.tremolo ) { setUpTremoloOnPlay(this, arg); }
+
+            var thatWad = this
+
+            this.soundSource.onended = function(event){
+                thatWad.playPromiseResolve(thatWad)
+            }
+    
+            if ( !arg.unpause ) {
+                this.playPromise = new Promise(function(resolve, reject){
+                    thatWad.playPromiseResolve = resolve
+                })
+                return this.playPromise
+            }
         }
 
         if ( arg.callback ) { arg.callback(this); }
-        var thatWad = this
-
-
-        this.soundSource.onended = function(event){
-            // console.log('ended!', event) // this fires twice for some reason?
-            thatWad.playPromiseResolve(thatWad)
-        }
-
-        if ( !arg.unpause ) {
-            this.playPromise = new Promise(function(resolve, reject){
-                thatWad.playPromiseResolve = resolve
-            })
-            return this.playPromise
-        }
 
     };
 
@@ -998,8 +999,8 @@ then finally play the sound by calling playEnv() **/
 //////////////////////////////////////////////////////////////////////////////////////////
     Wad.prototype.pause = function(label){
         this.pauseTime = context.currentTime
-        this.stop(label)
         this.soundSource.onended = null
+        this.stop(label)
 
     }
     Wad.prototype.unpause = function(arg){
@@ -1035,6 +1036,7 @@ then finally play the sound by calling playEnv() **/
                 this.gain[0].gain.cancelScheduledValues(context.currentTime);
                 this.gain[0].gain.setValueAtTime(this.gain[0].gain.value, context.currentTime);
                 this.gain[0].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release);
+                this.soundSource.stop(context.currentTime)
             }
         }
         else if (Wad.micConsent ) {

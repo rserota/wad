@@ -13,7 +13,7 @@
     <button id="sprite-b">SPRITE B</button>
     <button id="sprite-ab">SPRITE AB</button>
     <script>
-        Wad.logs.verbosity = 2
+        Wad.logs.verbosity = 1
         var ignition = new Wad({source:'./ignition.mp3'})
         var helloMan = new Wad({
             source: './hello-man.wav',
@@ -97,7 +97,7 @@
     <button id="pan">PAN SINE</button>
     <button id="stop">STOP SINE</button>
     <script>
-        var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .3}})
+        var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .6}})
         
         document.getElementById('sine').addEventListener('click', async function(){
             await sine.play()

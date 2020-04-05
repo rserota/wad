@@ -66,7 +66,7 @@ document.getElementById('stop-full-song').addEventListener('click', function(){
     longClip.stop()
 })
 
-var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .3}})
+var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .6}})
 document.getElementById('sine').addEventListener('click', async function(){
     await sine.play()
     await sine.play()

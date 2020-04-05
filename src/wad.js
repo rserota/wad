@@ -29,12 +29,14 @@ var Wad = (function(){
         context = new audioContext();
     }
     var unlock = function(){
+        logMessage('unlock', 2)
         if ( context.state === 'suspended' ) {
+            logMessage('suspended', 2)
             context.resume()
         }
         else if ( context.state === 'running' ) {
-            logMessage("The audio context is running.")
-            logMessage(context)
+            logMessage("The audio context is running.", 2)
+            logMessage(context, 2)
             window.removeEventListener('mousemove', unlock)
             window.removeEventListener('touchstart', unlock)
             window.removeEventListener('touchend', unlock)
@@ -411,7 +413,7 @@ as specified by the volume envelope and filter envelope **/
         // offset is only used by BufferSourceNodes. OscillatorNodes should safely ignore the offset.
         wad.soundSource.start(arg.exactTime, arg.offset);
         if ( !wad.soundSource.playbackRate ) { // audio clips naturally stop themselves at the end of the buffer's duration
-            wad.soundSource.stop(arg.exactTime + wad.env.attack + wad.env.decay + hold + wad.env.release);
+            wad.soundSource.stop(arg.exactTime + wad.env.attack + wad.env.decay + hold + wad.env.release + 0.00005);
         }
     };
 
@@ -559,14 +561,19 @@ with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
         var panning = arg && arg.panning; // can be zero provided as argument
         if (typeof panning === 'undefined') { panning = that.panning.location; }
 
-        if (typeof panning  === 'number') {
+        if (typeof panning  === 'number' && context.createStereoPanner ) {
             that.panning.node = context.createStereoPanner();
             that.panning.node.pan.value = panning;
             that.panning.type = 'stereo';
         }
         else {
             that.panning.node = context.createPanner();
-            that.panning.node.setPosition(panning[0], panning[1], panning[2]);
+            if ( typeof panning === 'number' ) {
+                that.panning.node.setPosition(panning, 0, 0);
+            }
+            else { // assume 3d panning, specified in a 3-element array. 
+                that.panning.node.setPosition(panning[0], panning[1], panning[2]);
+            }
             that.panning.node.panningModel = arg.panningModel || that.panningModel || 'equalpower';
             that.panning.type = '3d';
 
@@ -898,6 +905,10 @@ then finally play the sound by calling playEnv() **/
     /** Change the panning of a Wad at any time, including during playback **/
     Wad.prototype.setPanning = function(panning, timeConstant){
         timeConstant = timeConstant || .01
+        if ( typeof panning === 'number' && !context.createStereoPanner ) {
+            panning = [panning, 0, 0]
+        }
+
         this.panning.location = panning;
         if ( isArray(panning) && this.panning.type === '3d' && this.panning.node ) {
             this.panning.node.setPosition(panning[0], panning[1], panning[2]);
@@ -1036,7 +1047,24 @@ then finally play the sound by calling playEnv() **/
                 this.gain[0].gain.cancelScheduledValues(context.currentTime);
                 this.gain[0].gain.setValueAtTime(this.gain[0].gain.value, context.currentTime);
                 this.gain[0].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release);
-                this.soundSource.stop(context.currentTime)
+                try {
+                    this.soundSource.stop(context.currentTime + this.env.release)
+                }
+                catch(e){
+                    /*
+                        Safari for iOS (and maybe other browsers)
+                        can't seem to handle calling stop() on a soundSource that already had stop() scheduled.
+                        The spec says it should be fine, and cancel previous calls to stop, 
+                        but Safari is throwing an error -- InvalidStateError: The object is in an invalid state.
+                        I'm not really sure why this is happening, but at least we can manually run the ended event handler.
+                    */
+                    logMessage(e,2)
+                    var that = this
+                    setTimeout(function(){
+                        that.soundSource.dispatchEvent(new Event('ended'))
+                        that.soundSource.onended = null
+                    }, this.env.release * 1000)
+                }
             }
         }
         else if (Wad.micConsent ) {
@@ -1110,7 +1138,7 @@ then finally play the sound by calling playEnv() **/
             }
         }
         if (best_correlation > 0.01) {
-            // console.log("f = " + sampleRate/best_offset + "Hz (rms: " + rms + " confidence: " + best_correlation + ")")
+            // logMessage("f = " + sampleRate/best_offset + "Hz (rms: " + rms + " confidence: " + best_correlation + ")")
             return sampleRate/best_offset;
         }
         return -1;
@@ -1140,7 +1168,6 @@ then finally play the sound by calling playEnv() **/
         // to the previous sample - take the max here because we
         // want "fast attack, slow release."
         this.volume = Math.max(rms, this.volume*this.averaging);
-        // console.log('volume? ', this.volume)
     }
 
     function createAudioMeter(audioContext,clipLevel,averaging,clipLag) {

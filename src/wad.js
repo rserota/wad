@@ -798,6 +798,7 @@ then finally play the sound by calling playEnv() **/
 
             this.gain.unshift(context.createGain()); // sets up the gain node
             this.gain[0].label = arg.label;
+	    this.gain[0].soundSource = this.soundSource
             this.nodes.push(this.gain[0]);
 
             if ( this.gain.length > 15 ) {
@@ -847,10 +848,20 @@ then finally play the sound by calling playEnv() **/
 
 
     /** Change the volume of a Wad at any time, including during playback **/
-    Wad.prototype.setVolume = function(volume){
-        this.defaultVolume = volume;
-        if ( this.gain.length > 0 ) { this.gain[0].gain.value = volume; }
-        return this;
+    Wad.prototype.setVolume = function(volume, label){
+	if ( label ) {
+	    if ( this.gain.length > 0 ) {
+		for ( let i = 0; i < this.gain.length; i++ ) {
+		    this.gain[i].gain.value = volume
+		}
+	    }
+	}
+	else {
+
+	    this.defaultVolume = volume;
+	    if ( this.gain.length > 0 ) { this.gain[0].gain.value = volume; }
+	    return this;
+	}
     };
 
     /**

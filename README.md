@@ -292,8 +292,17 @@ By default, this change will occur smoothly over 10 milliseconds, to help preven
 ```javascript
 saw.play()
 saw.setPanning(1, .015) // pan to the right over 15 milliseconds
-
 ```
+
+If you're playing multiple simultaneous notes from the same Wad, you can control them individually by passing in a label as the third argument.
+
+```javascript
+saw.play({panning: -1, label: 'left'})
+saw.play({panning:  1, label: 'right'})
+saw.setDetune(-50, null, 'left')
+```
+
+
 <h3 id='global-methods'>Global Methods</h3>
 
 Wad.js automatically keeps track of all wads you've created, and provides a couple of methods you can use to control them all at once. 

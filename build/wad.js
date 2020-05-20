@@ -3429,6 +3429,7 @@ then finally play the sound by calling playEnv() **/
 
             this.gain.unshift(context.createGain()); // sets up the gain node
             this.gain[0].label = arg.label;
+	    this.gain[0].soundSource = this.soundSource
             this.nodes.push(this.gain[0]);
 
             if ( this.gain.length > 15 ) {
@@ -3478,10 +3479,23 @@ then finally play the sound by calling playEnv() **/
 
 
     /** Change the volume of a Wad at any time, including during playback **/
-    Wad.prototype.setVolume = function(volume){
-        this.defaultVolume = volume;
-        if ( this.gain.length > 0 ) { this.gain[0].gain.value = volume; }
-        return this;
+    Wad.prototype.setVolume = function(volume, timeConstant, label){
+	timeConstant = timeConstant || .01
+	if ( label ) {
+	    if ( this.gain.length > 0 ) {
+		for ( let i = 0; i < this.gain.length; i++ ) {
+		    if ( this.gain[i].label === label ) {
+			this.gain[i].gain.setValueAtTime(volume, context.currentTime)
+		    }
+		}
+	    }
+	}
+	else {
+
+	    this.defaultVolume = volume;
+	    if ( this.gain.length > 0 ) { this.gain[0].gain.setValueAtTime(volume, context.currentTime) }
+	}
+	return this;
     };
 
     /**
@@ -3511,30 +3525,56 @@ then finally play the sound by calling playEnv() **/
         return this;
     };
 
-    Wad.prototype.setPitch = function(pitch){
-        if ( pitch in Wad.pitches ) {
-            if ( this.soundSource ) {
-                this.soundSource.frequency.value = Wad.pitches[pitch];
-            }
-            this.pitch = Wad.pitches[pitch]
-        }
-        else {
-            if ( this.soundSource ) {
-                this.soundSource.frequency.value = pitch;
-            }
-            this.pitch = pitch
-        }
+    Wad.prototype.setPitch = function(pitch, timeConstant, label){
+        timeConstant = timeConstant || .01
+	if ( label ) {
+	    for ( let i = 0; i < this.gain.length; i++ ) {
+		if ( this.gain[i].label === label ) {
+		    if ( pitch in Wad.pitches ) {
+			this.gain[i].soundSource.frequency.setTargetAtTime(Wad.pitches[pitch], context.currentTime, timeConstant)
+		    }
+		    else {
+			this.soundSource.frequency.settargetAtTime(pitch, context.currentTime, timeConstant)
+		    }
+
+		}
+	    }
+	    
+	}
+	else {
+	    if ( pitch in Wad.pitches ) {
+		if ( this.soundSource ) {
+		    this.soundSource.frequency.value = Wad.pitches[pitch];
+		}
+		this.pitch = Wad.pitches[pitch]
+	    }
+	    else {
+		if ( this.soundSource ) {
+		    this.soundSource.frequency.value = pitch;
+		}
+		this.pitch = pitch
+	    }
+	}
         return this;
     };
 
-    Wad.prototype.setDetune = function(detune, timeConstant){
+    Wad.prototype.setDetune = function(detune, timeConstant, label){
         timeConstant = timeConstant || .01
-        this.soundSource.detune.setTargetAtTime(detune, context.currentTime, timeConstant)
-        return this;
+	if ( label ) {
+	    for ( let i = 0; i < this.gain.length; i++ ) {
+		if ( this.gain[i].label === label ) {
+		    this.gain[i].soundSource.detune.setTargetAtTime(detune, context.currentTime, timeConstant)
+		}
+	    }
+	}
+	else {
+	    this.soundSource.detune.setTargetAtTime(detune, context.currentTime, timeConstant)
+	}
+	return this;
     };
 
     /** Change the panning of a Wad at any time, including during playback **/
-    Wad.prototype.setPanning = function(panning, timeConstant){
+    Wad.prototype.setPanning = function(panning, timeConstant, label){
         timeConstant = timeConstant || .01
         if ( typeof panning === 'number' && !context.createStereoPanner ) {
             panning = [panning, 0, 0]
@@ -3671,6 +3711,8 @@ then finally play the sound by calling playEnv() **/
                         this.gain[i].gain.cancelScheduledValues(context.currentTime);
                         this.gain[i].gain.setValueAtTime(this.gain[i].gain.value, context.currentTime);
                         this.gain[i].gain.linearRampToValueAtTime(.0001, context.currentTime + this.env.release);
+
+
                     }
                 }
             }

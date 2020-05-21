@@ -92,7 +92,14 @@
     <hr>
 
     <button id="sine">PLAY SINE</button>
+    <button id="sine-left">PLAY SINE LEFT</button>
+    <button id="sine-right">PLAY SINE RIGHT</button>
     <button id="detune">DETUNE SINE</button>
+    <button id="detune-left">DETUNE SINE LEFT</button>
+    <button id="detune-right">DETUNE SINE RIGHT</button>
+    <button id="dampen">DAMPEN SINE</button>
+    <button id="dampen-left">DAMPEN SINE LEFT</button>
+    <button id="dampen-right">DAMPEN SINE RIGHT</button>
     <button id="set-pitch">SET SINE PITCH</button>
     <button id="pan">PAN SINE</button>
     <button id="stop">STOP SINE</button>
@@ -103,9 +110,36 @@
             await sine.play()
             await sine.play()
         })
+        document.getElementById('sine-left').addEventListener('click', async function(){
+	    await sine.play({panning: -1, label: 'left'})
+	    await sine.play({panning: -1, label: 'left'})
+        })
+        document.getElementById('sine-right').addEventListener('click', async function(){
+	    await sine.play({panning: 1, label: 'right'})
+	    await sine.play({panning: 1, label: 'right'})
+        })
+
         document.getElementById('detune').addEventListener('click', function(){
             sine.setDetune(100)
         })
+        document.getElementById('detune-left').addEventListener('click', function(){
+            sine.setDetune(100, null, 'left')
+        })
+        document.getElementById('detune-right').addEventListener('click', function(){
+            sine.setDetune(100, null, 'right')
+        })
+
+
+        document.getElementById('dampen').addEventListener('click', function(){
+            sine.setVolume(.1)
+        })
+        document.getElementById('dampen-left').addEventListener('click', function(){
+            sine.setVolume(.1, null, 'left')
+        })
+        document.getElementById('dampen-right').addEventListener('click', function(){
+            sine.setVolume(.1, null, 'right')
+        })
+
         document.getElementById('pan').addEventListener('click', function(){
             sine.setPanning(1)
         })

@@ -168,6 +168,25 @@ var saw = new Wad({
 })
 ```
 
+<h3>Audio Listener</h3>
+
+Wad.js wraps the [AudioListener](<https://developer.mozilla.org/en-US/docs/Web/API/AudioListener>) to provide uniformity across browsers. The AudioListener is only useful when using 3D panning. You can use both the standard listener.positionX.value or the setPosition function to move the listener. The default position and orientation is: positionX=0, positionY=0, positionZ=0, forwardX=0, forwardY=0, forwardZ=-1, upX=0, upY=1, upZ=0.
+
+-	Wad.listener.setPosition(x,y,z) -> setPosition moves the listener to the specified coordinates. Take note that the web audio API has X move left and right, y move up and down, and z move forward and back. So if one is moving around a flat environment, then x and z will want to be used, and not X and Y.
+-	Wad.listener. setOrientation(forwardX, forwardY, forwardZ, upX, upY, upZ) -> This takes two [direction vectors.](<https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:vectors/x9e81a4f98389efdf:component-form/a/vector-magnitude-and-direction-review>) Neither vector's coordinates have units. The first vector is the direction the user's nose is facing. The second vector is the direction of the top of the listener's head.
+-	Wad.listener.getPosition() -> returns a 3 element list of the user's positionX.value, positionY.value, and positionZ.value.
+-	Wad.listener.getOrientation() -> returns a six element array of: forwardX.value, forwardY.value, forwardZ.value, upX.value, upY.value, and upZ.value.
+-	To set or get a value directly, do: `listener.positionX.value`.
+
+```javascript
+Wad.listener.setPosition(1,0,0)
+console.log(Wad.listener.positionX.value)
+Wad.listener.forwardZ.value += 1
+console.log(Wad.listener.getPosition()[0])
+```
+
+
+
 <h3>Filters</h3>
 
 The filter constructor argument can be passed an object or an array of objects. If an array is passed, the filters are applied in that order. Whichever form is passed to the constructor should also be passed to the play argument.

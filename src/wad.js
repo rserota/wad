@@ -1,5 +1,7 @@
 import Tuna from 'tunajs';
 import SoundIterator from './sound_iterator'
+import AudioListener from './audio_listener'
+
 
 
 var Wad = (function(){
@@ -385,6 +387,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
     Wad.allWads = allWads
     Wad.micConsent = false
     Wad.audioContext = context
+    Wad.listener = new AudioListener(context)
     if ( typeof Tuna != undefined ) {
         Wad.tuna = new Tuna(Wad.audioContext)
     }

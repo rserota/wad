@@ -46,17 +46,32 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -206,7 +221,7 @@ return /******/ (function(modules) { // webpackBootstrap
         STRING = "string",
         INT = "int";
 
-    if (typeof module !== "undefined" && module.exports) {
+    if ( true && module.exports) {
         module.exports = Tuna;
     } else if (true) {
         window.define("Tuna", definition);
@@ -411,8 +426,8 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.convolver.input);
         this.convolver.output.connect(this.makeupNode);
         this.makeupNode.connect(this.output);
-
-        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain.value);
+        //don't use makeupGain setter at init to avoid smoothing
+        this.makeupNode.gain.value = initValue(properties.makeupGain, this.defaults.makeupGain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Cabinet.prototype = Object.create(Super, {
@@ -604,7 +619,13 @@ return /******/ (function(modules) { // webpackBootstrap
         this.makeupNode.connect(this.output);
 
         this.automakeup = initValue(properties.automakeup, this.defaults.automakeup.value);
-        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain.value);
+
+        //don't use makeupGain setter at initialization to avoid smoothing
+        if (this.automakeup) {
+            this.makeupNode.gain.value = dbToWAVolume(this.computeMakeup());
+        } else {
+            this.makeupNode.gain.value = dbToWAVolume(initValue(properties.makeupGain, this.defaults.makeupGain.value));
+        }
         this.threshold = initValue(properties.threshold, this.defaults.threshold.value);
         this.release = initValue(properties.release, this.defaults.release.value);
         this.attack = initValue(properties.attack, this.defaults.attack.value);
@@ -770,14 +791,15 @@ return /******/ (function(modules) { // webpackBootstrap
         this.wet.connect(this.output);
         this.dry.connect(this.output);
 
-        this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
-        this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
-        this.highCut = properties.highCut || this.defaults.highCut.value;
-        this.buffer = properties.impulse || "../impulses/ir_rev_short.wav";
-        this.lowCut = properties.lowCut || this.defaults.lowCut.value;
-        this.level = initValue(properties.level, this.defaults.level.value);
+        //don't use setters at init to avoid smoothing
+        this.dry.gain.value = initValue(properties.dryLevel, this.defaults.dryLevel.value);
+        this.wet.gain.value = initValue(properties.wetLevel, this.defaults.wetLevel.value);
+        this.filterHigh.frequency.value = properties.highCut || this.defaults.highCut.value;
+        this.filterLow.frequency.value = properties.lowCut || this.defaults.lowCut.value;
+        this.output.gain.value = initValue(properties.level, this.defaults.level.value);
         this.filterHigh.type = "lowpass";
         this.filterLow.type = "highpass";
+        this.buffer = properties.impulse || "../impulses/ir_rev_short.wav";
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Convolver.prototype = Object.create(Super, {
@@ -922,10 +944,11 @@ return /******/ (function(modules) { // webpackBootstrap
         this.dry.connect(this.output);
 
         this.delayTime = properties.delayTime || this.defaults.delayTime.value;
-        this.feedback = initValue(properties.feedback, this.defaults.feedback.value);
-        this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
-        this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
-        this.cutoff = properties.cutoff || this.defaults.cutoff.value;
+        //don't use setters at init to avoid smoothing
+        this.feedbackNode.gain.value = initValue(properties.feedback, this.defaults.feedback.value);
+        this.wet.gain.value = initValue(properties.wetLevel, this.defaults.wetLevel.value);
+        this.dry.gain.value = initValue(properties.dryLevel, this.defaults.dryLevel.value);
+        this.filter.frequency.value = properties.cutoff || this.defaults.cutoff.value;
         this.filter.type = "lowpass";
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
@@ -1037,10 +1060,11 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.filter);
         this.filter.connect(this.output);
 
-        this.frequency = properties.frequency || this.defaults.frequency.value;
+        //don't use setters for freq and gain at init to avoid smoothing
+        this.filter.frequency.value = properties.frequency || this.defaults.frequency.value;
         this.Q = properties.resonance || this.defaults.Q.value;
         this.filterType = initValue(properties.filterType, this.defaults.filterType.value);
-        this.gain = initValue(properties.gain, this.defaults.gain.value);
+        this.filter.gain.value = initValue(properties.gain, this.defaults.gain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Filter.prototype = Object.create(Super, {
@@ -1134,7 +1158,8 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.gainNode);
         this.gainNode.connect(this.output);
 
-        this.gain = initValue(properties.gain, this.defaults.gain.value);
+        //don't use setter at init to avoid smoothing
+        this.gainNode.gain.value = initValue(properties.gain, this.defaults.gain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Gain.prototype = Object.create(Super, {
@@ -2394,6 +2419,82 @@ module.exports = function(originalModule) {
 
 /***/ }),
 
+/***/ "./src/audio_listener.js":
+/*!*******************************!*\
+  !*** ./src/audio_listener.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return AudioListener; });
+/*This module wraps the audio listener to create a uniform interface between browsers, mainly Safari and other browsers:
+https://developer.mozilla.org/en-US/docs/Web/API/AudioListener
+*/
+
+class AudioParam{
+	// this is a wrapper for Safari if the browser does not support listener.positionX or the other properties
+	constructor(value, setFunc){
+		this._setFunc = setFunc
+		this.AudioParamautomationRate = "a-rate"
+		this.defaultValue = value
+		this.maxValue = 3.4028234663852886e+38
+		this.minValue = -3.4028234663852886e+38
+		this._value = this.defaultValue
+	}
+
+	get value(){
+		return this._value
+	}
+
+	set value(v){
+		this._setFunc(v)
+		this._value = v
+	}
+}
+
+class AudioListener{
+	constructor(context){
+		this._listener = context.listener
+		window.listener = this._listener
+		this.positionX = this._listener.positionX || new AudioParam(0, v=>this._listener.setPosition(v, this.positionY.value, this.positionZ.value))
+		this.positionY = this._listener.positionY || new AudioParam(0, v=>this._listener.setPosition(this.positionX.value, v, this.positionZ.value))
+		this.positionZ = this._listener.positionZ || new AudioParam(0, v=>this._listener.setPosition(this.positionX.value, this.positionY.value, v))
+		this.forwardX = this._listener.forwardX || new AudioParam(0, v=>this._listener.setOrientation(v, this.forwardY.value, this.forwardZ.value, this.upX.value, this.upY.value, this.upZ.value))
+		this.forwardY = this._listener.ForwardY || new AudioParam(0, v=>this._listener.setOrientation(this.forwardX.value, v, this.forwardZ.value, this.upX.value, this.upY.value, this.upZ.value))
+		this.forwardZ = this._listener.forwardZ || new AudioParam(-1, v=>this._listener.setOrientation(this.forwardX.value, this.forwardY.value, v, this.upX.value, this.upY.value, this.upZ.value))
+		this.upX = this._listener.upZ || new AudioParam(0, v=>this._listener.setOrientation(this.forwardX.value, this.forwardY.value, this.forwardZ.value, v, this.upY.value, this.upZ.value))
+		this.upY = this._listener.upY || new AudioParam(1, v=>this._listener.setOrientation(this.forwardX.value, this.forwardY.value, this.forwardZ.value, this.upX.value, v, this.upZ.value))
+		this.upZ = this._listener.upZ || new AudioParam(0, v=>this._listener.setOrientation(this.forwardX.value, this.forwardY.value, this.forwardZ.value, this.upX.value, this.upY.value, v))
+	}
+
+	setPosition(x, y, z){
+		this.positionX.value = x
+		this.positionY.value = y
+		this.positionZ.value = z
+	}
+
+	getPosition(){
+		return [this.positionX.value, this.positionY.value, this.positionZ.value]
+	}
+
+	setOrientation(forwardX, forwardY, forwardZ, upX, upY, upZ){
+		this.forwardX.value = forwardX
+		this.forwardY.value = forwardY
+		this.forwardZ.value = forwardZ
+		this.upX.value = upX
+		this.upY.value = upY
+		this.upZ.value = upZ
+	}
+
+	getOrientation(){
+		return [this.forwardX.value, this.forwardY.value, this.forwardZ.value, this.upX.value, this.upY.value, this.upZ.value]
+	}
+}
+
+/***/ }),
+
 /***/ "./src/sound_iterator.js":
 /*!*******************************!*\
   !*** ./src/sound_iterator.js ***!
@@ -2629,6 +2730,9 @@ __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var tunajs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tunajs */ "./node_modules/tunajs/tuna.js");
 /* harmony import */ var tunajs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tunajs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _sound_iterator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./sound_iterator */ "./src/sound_iterator.js");
+/* harmony import */ var _audio_listener__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./audio_listener */ "./src/audio_listener.js");
+
+
 
 
 
@@ -3016,6 +3120,7 @@ Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
     Wad.allWads = allWads
     Wad.micConsent = false
     Wad.audioContext = context
+    Wad.listener = new _audio_listener__WEBPACK_IMPORTED_MODULE_2__["default"](context)
     if ( typeof tunajs__WEBPACK_IMPORTED_MODULE_0___default.a != undefined ) {
         Wad.tuna = new tunajs__WEBPACK_IMPORTED_MODULE_0___default.a(Wad.audioContext)
     }
@@ -4456,7 +4561,7 @@ grab it from the defaultImpulse URL **/
 
 })()
 
-if(typeof module !== 'undefined' && module.exports) {
+if( true && module.exports) {
     module.exports = Wad;
 }
 

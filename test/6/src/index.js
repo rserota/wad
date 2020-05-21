@@ -239,3 +239,46 @@ document.getElementById('add-sound').addEventListener('click', function(){
 document.getElementById('remove-sound').addEventListener('click', function(){
     iterator.remove(newSound)
 })
+
+// AudioListener
+
+var listenerReferenceSound = new Wad({
+    source: './ignition.mp3',
+    panning: [0,0,0]
+})
+var listener = Wad.listener
+
+document.getElementById('listener-move-left').addEventListener('click', function(){
+    listener.setPosition(listener.positionX.value-1, listener.positionY.value, listener.positionZ.value)
+    listenerReferenceSound.play()
+})
+
+document.getElementById('listener-move-right').addEventListener('click', function(){
+    listener.positionX.value += 1
+    listenerReferenceSound.play()
+})
+
+document.getElementById('listener-position').addEventListener('click', function(){
+    alert("The listener is at: " + JSON.stringify(listener.getPosition()))
+})
+
+document.getElementById('listener-face-left').addEventListener('click', function(){
+    listener.setOrientation(-1, 0, 0, listener.upX.value, listener.upY.value, listener.upZ.value)
+    listenerReferenceSound.play()
+})
+
+document.getElementById('listener-face-forward').addEventListener('click', function(){
+    listener.setOrientation(0, 0, -1, listener.upX.value, listener.upY.value, listener.upZ.value)
+    listenerReferenceSound.play()
+})
+
+document.getElementById('listener-face-right').addEventListener('click', function(){
+    listener.forwardX.value = 1
+    listener.forwardY.value = 0
+    listener.forwardZ.value = 0
+    listenerReferenceSound.play()
+})
+
+document.getElementById('listener-orientation').addEventListener('click', function(){
+    alert("The listener is at: " + JSON.stringify(listener.getOrientation()))
+})

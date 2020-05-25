@@ -46,32 +46,17 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -221,7 +206,7 @@ return /******/ (function(modules) { // webpackBootstrap
         STRING = "string",
         INT = "int";
 
-    if ( true && module.exports) {
+    if (typeof module !== "undefined" && module.exports) {
         module.exports = Tuna;
     } else if (true) {
         window.define("Tuna", definition);
@@ -426,8 +411,8 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.convolver.input);
         this.convolver.output.connect(this.makeupNode);
         this.makeupNode.connect(this.output);
-        //don't use makeupGain setter at init to avoid smoothing
-        this.makeupNode.gain.value = initValue(properties.makeupGain, this.defaults.makeupGain.value);
+
+        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Cabinet.prototype = Object.create(Super, {
@@ -619,13 +604,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.makeupNode.connect(this.output);
 
         this.automakeup = initValue(properties.automakeup, this.defaults.automakeup.value);
-
-        //don't use makeupGain setter at initialization to avoid smoothing
-        if (this.automakeup) {
-            this.makeupNode.gain.value = dbToWAVolume(this.computeMakeup());
-        } else {
-            this.makeupNode.gain.value = dbToWAVolume(initValue(properties.makeupGain, this.defaults.makeupGain.value));
-        }
+        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain.value);
         this.threshold = initValue(properties.threshold, this.defaults.threshold.value);
         this.release = initValue(properties.release, this.defaults.release.value);
         this.attack = initValue(properties.attack, this.defaults.attack.value);
@@ -791,15 +770,14 @@ return /******/ (function(modules) { // webpackBootstrap
         this.wet.connect(this.output);
         this.dry.connect(this.output);
 
-        //don't use setters at init to avoid smoothing
-        this.dry.gain.value = initValue(properties.dryLevel, this.defaults.dryLevel.value);
-        this.wet.gain.value = initValue(properties.wetLevel, this.defaults.wetLevel.value);
-        this.filterHigh.frequency.value = properties.highCut || this.defaults.highCut.value;
-        this.filterLow.frequency.value = properties.lowCut || this.defaults.lowCut.value;
-        this.output.gain.value = initValue(properties.level, this.defaults.level.value);
+        this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
+        this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
+        this.highCut = properties.highCut || this.defaults.highCut.value;
+        this.buffer = properties.impulse || "../impulses/ir_rev_short.wav";
+        this.lowCut = properties.lowCut || this.defaults.lowCut.value;
+        this.level = initValue(properties.level, this.defaults.level.value);
         this.filterHigh.type = "lowpass";
         this.filterLow.type = "highpass";
-        this.buffer = properties.impulse || "../impulses/ir_rev_short.wav";
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Convolver.prototype = Object.create(Super, {
@@ -944,11 +922,10 @@ return /******/ (function(modules) { // webpackBootstrap
         this.dry.connect(this.output);
 
         this.delayTime = properties.delayTime || this.defaults.delayTime.value;
-        //don't use setters at init to avoid smoothing
-        this.feedbackNode.gain.value = initValue(properties.feedback, this.defaults.feedback.value);
-        this.wet.gain.value = initValue(properties.wetLevel, this.defaults.wetLevel.value);
-        this.dry.gain.value = initValue(properties.dryLevel, this.defaults.dryLevel.value);
-        this.filter.frequency.value = properties.cutoff || this.defaults.cutoff.value;
+        this.feedback = initValue(properties.feedback, this.defaults.feedback.value);
+        this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
+        this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
+        this.cutoff = properties.cutoff || this.defaults.cutoff.value;
         this.filter.type = "lowpass";
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
@@ -1060,11 +1037,10 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.filter);
         this.filter.connect(this.output);
 
-        //don't use setters for freq and gain at init to avoid smoothing
-        this.filter.frequency.value = properties.frequency || this.defaults.frequency.value;
+        this.frequency = properties.frequency || this.defaults.frequency.value;
         this.Q = properties.resonance || this.defaults.Q.value;
         this.filterType = initValue(properties.filterType, this.defaults.filterType.value);
-        this.filter.gain.value = initValue(properties.gain, this.defaults.gain.value);
+        this.gain = initValue(properties.gain, this.defaults.gain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Filter.prototype = Object.create(Super, {
@@ -1158,8 +1134,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.gainNode);
         this.gainNode.connect(this.output);
 
-        //don't use setter at init to avoid smoothing
-        this.gainNode.gain.value = initValue(properties.gain, this.defaults.gain.value);
+        this.gain = initValue(properties.gain, this.defaults.gain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Gain.prototype = Object.create(Super, {
@@ -4561,7 +4536,7 @@ grab it from the defaultImpulse URL **/
 
 })()
 
-if( true && module.exports) {
+if(typeof module !== 'undefined' && module.exports) {
     module.exports = Wad;
 }
 

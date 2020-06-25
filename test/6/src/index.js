@@ -1,284 +1,316 @@
 import Wad from '../../../build/wad.min.js';
 
-Wad.logs.verbosity = 0
-var ignition = new Wad({source:'./ignition.mp3'})
+Wad.logs.verbosity = 0;
+var ignition = new Wad({source:'./ignition.mp3'});
 document.getElementById('ignition').addEventListener('click', async function(){
-    // await ignition.play()
-    await ignition.play()
-    console.log('ignition')
-    await ignition.play()
-    console.log('ignition')
-    await ignition.play()
-    console.log('ignition')
+	// await ignition.play()
+	await ignition.play();
+	console.log('ignition');
+	await ignition.play();
+	console.log('ignition');
+	await ignition.play();
+	console.log('ignition');
 
-})
+});
 document.getElementById('ignition-faster').addEventListener('click', async function(){
-    await ignition.play({ rate: 2.0, })
-    console.log('fast ignition')
-    await ignition.play({ rate: 2.0, })
-    console.log('fast ignition')
-    await ignition.play({ rate: 2.0, })
-    console.log('fast ignition')
-})
+	await ignition.play({ rate: 2.0, });
+	console.log('fast ignition');
+	await ignition.play({ rate: 2.0, });
+	console.log('fast ignition');
+	await ignition.play({ rate: 2.0, });
+	console.log('fast ignition');
+});
 document.getElementById('ignition-slower').addEventListener('click', async function(){
-    await ignition.play({
-        rate: 0.5,
-    })
-    console.log('slow ignition')
-    await ignition.play({
-        rate: 0.5,
-    })
-    console.log('slow ignition')
-})
+	await ignition.play({
+		rate: 0.5,
+	});
+	console.log('slow ignition');
+	await ignition.play({
+		rate: 0.5,
+	});
+	console.log('slow ignition');
+});
 var helloMan = new Wad({
-    source: './hello-man.wav',
-    sprite: {
-        hello: [0, .4],
-        man  : [.4,1]
-    }
-})
+	source: './hello-man.wav',
+	sprite: {
+		hello: [0, .4],
+		man  : [.4,1]
+	}
+});
 document.getElementById('sprite-a').addEventListener('click', async function(){
-    await helloMan.hello.play({env:{release:.02}})
-    await helloMan.hello.play({rate: 1.1, volume:1.2, env:{release:.02}})
-})
+	await helloMan.hello.play({env:{release:.02}});
+	await helloMan.hello.play({rate: 1.1, volume:1.2, env:{release:.02}});
+});
 document.getElementById('sprite-b').addEventListener('click', async function(){
-    await helloMan.man.play({env:{attack: .1, release:.02}})
-    await helloMan.man.play({env:{attack: .1, release:.02}})
-})
+	await helloMan.man.play({env:{attack: .1, release:.02}});
+	await helloMan.man.play({env:{attack: .1, release:.02}});
+});
 document.getElementById('sprite-ab').addEventListener('click', async function(){
-    await helloMan.play({env:{attack: .1, release:.02}})
-    await helloMan.play({env:{attack: .1, release:.02}})
-})
+	await helloMan.play({env:{attack: .1, release:.02}});
+	await helloMan.play({env:{attack: .1, release:.02}});
+});
 
-var longClip = new Wad({source:'./do-re-mi.wav'})
+var longClip = new Wad({source:'./do-re-mi.wav'});
 document.getElementById('full-song').addEventListener('click', function(){
-    longClip.play().then(function(thatWad){
-        console.log('Clip finished.')
-    })
-})
+	longClip.play().then(function(thatWad){
+		console.log('Clip finished.');
+	});
+});
 document.getElementById('pause-full-song').addEventListener('click', function(){
-    longClip.pause()
-})
+	longClip.pause();
+});
 document.getElementById('unpause-full-song').addEventListener('click', function(){
-    longClip.unpause()
-})
+	longClip.unpause();
+});
 document.getElementById('stop-full-song').addEventListener('click', function(){
-    longClip.stop()
-})
+	longClip.stop();
+});
 
 var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .6}})
+
 document.getElementById('sine').addEventListener('click', async function(){
-    await sine.play()
-    await sine.play()
+	await sine.play()
+	await sine.play()
 })
+document.getElementById('sine-left').addEventListener('click', async function(){
+	await sine.play({panning: -1, label: 'left'})
+	await sine.play({panning: -1, label: 'left'})
+})
+document.getElementById('sine-right').addEventListener('click', async function(){
+	await sine.play({panning: 1, label: 'right'})
+	await sine.play({panning: 1, label: 'right'})
+})
+
 document.getElementById('detune').addEventListener('click', function(){
-    sine.setDetune(100)
+	sine.setDetune(100)
 })
+document.getElementById('detune-left').addEventListener('click', function(){
+	sine.setDetune(100, null, 'left')
+})
+document.getElementById('detune-right').addEventListener('click', function(){
+	sine.setDetune(100, null, 'right')
+})
+
+
+document.getElementById('dampen').addEventListener('click', function(){
+	sine.setVolume(.1)
+})
+document.getElementById('dampen-left').addEventListener('click', function(){
+	sine.setVolume(.1, null, 'left')
+})
+document.getElementById('dampen-right').addEventListener('click', function(){
+	sine.setVolume(.1, null, 'right')
+})
+
 document.getElementById('pan').addEventListener('click', function(){
-    sine.setPanning(1)
+	sine.setPanning(1)
 })
 document.getElementById('set-pitch').addEventListener('click', function(){
-    sine.setPitch('B3')
+	sine.setPitch('B3')
+})
+document.getElementById('stop').addEventListener('click', function(){
+	sine.stop()
 })
 
-var sawtooth = new Wad({source:'sawtooth', env:{hold:1, release:.2}})
-var triangle = new Wad({source:'triangle', env:{hold:1, release:.2}})
+
+var sawtooth = new Wad({source:'sawtooth', env:{hold:1, release:.2}});
+var triangle = new Wad({source:'triangle', env:{hold:1, release:.2}});
 var polywad = new Wad.Poly({
-    audioMeter: {
-        clipLevel: .98,
-        averaging: .95,
-        clipLag: 750,
-    },
-})
-polywad.add(sawtooth).add(triangle)
+	audioMeter: {
+		clipLevel: .98,
+		averaging: .95,
+		clipLag: 750,
+	},
+});
+polywad.add(sawtooth).add(triangle);
 
 document.getElementById('polywad').addEventListener('click', function(){
-    polywad.play()
-})
+	polywad.play();
+});
 document.getElementById('polywad-set-pitch').addEventListener('click', function(){
-    polywad.setPitch('B3')
-})
+	polywad.setPitch('B3');
+});
 
 document.getElementById('stop').addEventListener('click', function(){
-    sine.stop()
-})
+	sine.stop();
+});
 document.getElementById('polywad-stop').addEventListener('click', function(){
-    polywad.stop()
-})
-var volumeDisplay = document.getElementById('polywad-volume')
-var clippingDisplay = document.getElementById('polywad-clipping')
+	polywad.stop();
+});
+var volumeDisplay = document.getElementById('polywad-volume');
+var clippingDisplay = document.getElementById('polywad-clipping');
 setInterval(function(){
-    volumeDisplay.innerText = Math.round(polywad.audioMeter.volume * 1000)
-    clippingDisplay.innerText = polywad.audioMeter.checkClipping()
+	volumeDisplay.innerText = Math.round(polywad.audioMeter.volume * 1000);
+	clippingDisplay.innerText = polywad.audioMeter.checkClipping();
 
-}, 50)
+}, 50);
 
 var voice;
 var tuner;
 var rafId;
 var logPitch = function(){
-    console.log(tuner.pitch, tuner.noteName)
-    rafId = requestAnimationFrame(logPitch)
+	console.log(tuner.pitch, tuner.noteName);
+	rafId = requestAnimationFrame(logPitch);
 };
 document.getElementById('mic-consent').addEventListener('click', function(){
-    voice = new Wad({
-        source  : 'mic',
-        // reverb  : {
-        //     wet : .4
-        // },
-        // filter  : {
-        //     type      : 'highpass',
-        //     frequency : 700
-        // },
-        // panning : -.2
-    })
+	voice = new Wad({
+		source  : 'mic',
+		// reverb  : {
+		//     wet : .4
+		// },
+		// filter  : {
+		//     type      : 'highpass',
+		//     frequency : 700
+		// },
+		// panning : -.2
+	});
 
-    tuner = new Wad.Poly();
-    // tuner.setVolume(0) // mute the tuner to avoid feedback
-    tuner.add(voice);
+	tuner = new Wad.Poly();
+	// tuner.setVolume(0) // mute the tuner to avoid feedback
+	tuner.add(voice);
 
 
-})
+});
 
 document.getElementById('mic-play').addEventListener('click', function(){
-    console.log("Play mic")
-    voice.play()
-})
+	console.log('Play mic');
+	voice.play();
+});
 document.getElementById('mic-stop').addEventListener('click', function(){
-    console.log("Play mic")
-    voice.stop()
-})
+	console.log('Play mic');
+	voice.stop();
+});
 document.getElementById('detect-pitch').addEventListener('click', function(){
-    tuner.updatePitch()
-    logPitch()
-})
+	tuner.updatePitch();
+	logPitch();
+});
 document.getElementById('stop-detect-pitch').addEventListener('click', function(){
-    tuner.stopUpdatingPitch()
-    cancelAnimationFrame(rafId)
-})
+	tuner.stopUpdatingPitch();
+	cancelAnimationFrame(rafId);
+});
 
 
 var tunaConfig = {
-    source: 'sawtooth',
-    env: {
-        attack: .1,
-        hold: 2,
-        release: .4
-    },
-    filter: {
-        type: 'lowpass',
-        frequency: 700
-    }
-}
-var withoutTuna = new Wad(tunaConfig)
+	source: 'sawtooth',
+	env: {
+		attack: .1,
+		hold: 2,
+		release: .4
+	},
+	filter: {
+		type: 'lowpass',
+		frequency: 700
+	}
+};
+var withoutTuna = new Wad(tunaConfig);
 
 tunaConfig.tuna = {
-    Chorus : {
-        intensity: 0.3,  //0 to 1
-        rate: 4,         //0.001 to 8
-        stereoPhase: 0, //0 to 180
-        bypass: 0
-    }
-} 
+	Chorus : {
+		intensity: 0.3,  //0 to 1
+		rate: 4,         //0.001 to 8
+		stereoPhase: 0, //0 to 180
+		bypass: 0
+	}
+}; 
 
-var withTuna = new Wad(tunaConfig)
+var withTuna = new Wad(tunaConfig);
 
 tunaConfig.tuna = {
-    Phaser: {
-        rate: 1.2,                     //0.01 to 8 is a decent range, but higher values are possible
-        depth: 0.3,                    //0 to 1
-        feedback: 0.2,                 //0 to 1+
-        stereoPhase: 30,               //0 to 180
-        baseModulationFrequency: 700,  //500 to 1500
-        bypass: 0
-    }
-}
-var tunaPhaser = new Wad(tunaConfig)
+	Phaser: {
+		rate: 1.2,                     //0.01 to 8 is a decent range, but higher values are possible
+		depth: 0.3,                    //0 to 1
+		feedback: 0.2,                 //0 to 1+
+		stereoPhase: 30,               //0 to 180
+		baseModulationFrequency: 700,  //500 to 1500
+		bypass: 0
+	}
+};
+var tunaPhaser = new Wad(tunaConfig);
 
 document.getElementById('no-tuna').addEventListener('click', function(){
-    withoutTuna.play()
-})
+	withoutTuna.play();
+});
 document.getElementById('tuna-chorus').addEventListener('click', function(){
-    withTuna.play()
-})
+	withTuna.play();
+});
 document.getElementById('tuna-phaser').addEventListener('click', function(){
-    tunaPhaser.play()
-})
+	tunaPhaser.play();
+});
 
 //SoundIterator
 
 var iterator = new Wad.SoundIterator({files: [
-    new Wad({source: 'sawtooth', volume: 0.5, env:{hold:1}}),
-    new Wad({source: 'square', volume: 0.5, env:{hold:1}}),
-    new Wad({source: 'sine', volume: 0.5, env:{hold:1}}),
-]})
+	new Wad({source: 'sawtooth', volume: 0.5, env:{hold:1}}),
+	new Wad({source: 'square', volume: 0.5, env:{hold:1}}),
+	new Wad({source: 'sine', volume: 0.5, env:{hold:1}}),
+]});
 
 document.getElementById('play-next-nonrandom-sound').addEventListener('click', function(){
-    iterator.random = false
-    iterator.play()
-})
+	iterator.random = false;
+	iterator.play();
+});
 
 document.getElementById('play-next-random-sound').addEventListener('click', function(){
-    iterator.random = true
-    iterator.randomPlaysBeforeRepeat = 0
-    iterator.play()
-})
+	iterator.random = true;
+	iterator.randomPlaysBeforeRepeat = 0;
+	iterator.play();
+});
 
 document.getElementById('play-next-sound-with-1-randomPlaysBeforeRepeat').addEventListener('click', function(){
-    iterator.random = true
-    iterator.randomPlaysBeforeRepeat = 1
-    iterator.play()
-})
+	iterator.random = true;
+	iterator.randomPlaysBeforeRepeat = 1;
+	iterator.play();
+});
 
-var newSound = new Wad({source:'triangle', volume: 0.5, env:{hold:1}})
+var newSound = new Wad({source:'triangle', volume: 0.5, env:{hold:1}});
 
 document.getElementById('add-sound').addEventListener('click', function(){
-    iterator.add(newSound)
-})
+	iterator.add(newSound);
+});
 
 document.getElementById('remove-sound').addEventListener('click', function(){
-    iterator.remove(newSound)
-})
+	iterator.remove(newSound);
+});
 
 // AudioListener
 
 var listenerReferenceSound = new Wad({
-    source: './ignition.mp3',
-    panning: [0,0,0]
-})
-var listener = Wad.listener
+	source: './ignition.mp3',
+	panning: [0,0,0]
+});
+var listener = Wad.listener;
 
 document.getElementById('listener-move-left').addEventListener('click', function(){
-    listener.setPosition(listener.positionX.value-1, listener.positionY.value, listener.positionZ.value)
-    listenerReferenceSound.play()
-})
+	listener.setPosition(listener.positionX.value-1, listener.positionY.value, listener.positionZ.value);
+	listenerReferenceSound.play();
+});
 
 document.getElementById('listener-move-right').addEventListener('click', function(){
-    listener.positionX.value += 1
-    listenerReferenceSound.play()
-})
+	listener.positionX.value += 1;
+	listenerReferenceSound.play();
+});
 
 document.getElementById('listener-position').addEventListener('click', function(){
-    alert("The listener is at: " + JSON.stringify(listener.getPosition()))
-})
+	alert('The listener is at: ' + JSON.stringify(listener.getPosition()));
+});
 
 document.getElementById('listener-face-left').addEventListener('click', function(){
-    listener.setOrientation(-1, 0, 0, listener.upX.value, listener.upY.value, listener.upZ.value)
-    listenerReferenceSound.play()
-})
+	listener.setOrientation(-1, 0, 0, listener.upX.value, listener.upY.value, listener.upZ.value);
+	listenerReferenceSound.play();
+});
 
 document.getElementById('listener-face-forward').addEventListener('click', function(){
-    listener.setOrientation(0, 0, -1, listener.upX.value, listener.upY.value, listener.upZ.value)
-    listenerReferenceSound.play()
-})
+	listener.setOrientation(0, 0, -1, listener.upX.value, listener.upY.value, listener.upZ.value);
+	listenerReferenceSound.play();
+});
 
 document.getElementById('listener-face-right').addEventListener('click', function(){
-    listener.forwardX.value = 1
-    listener.forwardY.value = 0
-    listener.forwardZ.value = 0
-    listenerReferenceSound.play()
-})
+	listener.forwardX.value = 1;
+	listener.forwardY.value = 0;
+	listener.forwardZ.value = 0;
+	listenerReferenceSound.play();
+});
 
 document.getElementById('listener-orientation').addEventListener('click', function(){
-    alert("The listener is at: " + JSON.stringify(listener.getOrientation()))
-})
+	alert('The listener is at: ' + JSON.stringify(listener.getOrientation()));
+});

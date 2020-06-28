@@ -1,1 +1,0 @@
-../../build/wad.js

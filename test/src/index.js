@@ -1,6 +1,6 @@
-import Wad from '../../../build/wad.min.js';
+import Wad from '../../build/wad.min.js';
 
-Wad.logs.verbosity = 0;
+Wad.logs.verbosity = 1;
 var ignition = new Wad({source:'./ignition.mp3'});
 document.getElementById('ignition').addEventListener('click', async function(){
 	// await ignition.play()
@@ -66,63 +66,78 @@ document.getElementById('stop-full-song').addEventListener('click', function(){
 	longClip.stop();
 });
 
-var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .6}})
+var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .6}});
 
 document.getElementById('sine').addEventListener('click', async function(){
-	await sine.play()
-	await sine.play()
-})
+	await sine.play();
+	await sine.play();
+});
 document.getElementById('sine-left').addEventListener('click', async function(){
-	await sine.play({panning: -1, label: 'left'})
-	await sine.play({panning: -1, label: 'left'})
-})
+	await sine.play({panning: -1, label: 'left'});
+	await sine.play({panning: -1, label: 'left'});
+});
 document.getElementById('sine-right').addEventListener('click', async function(){
-	await sine.play({panning: 1, label: 'right'})
-	await sine.play({panning: 1, label: 'right'})
-})
+	await sine.play({panning: 1, label: 'right'});
+	await sine.play({panning: 1, label: 'right'});
+});
 
 document.getElementById('detune').addEventListener('click', function(){
-	sine.setDetune(100)
-})
+	sine.setDetune(100);
+});
 document.getElementById('detune-left').addEventListener('click', function(){
-	sine.setDetune(100, null, 'left')
-})
+	sine.setDetune(100, null, 'left');
+});
 document.getElementById('detune-right').addEventListener('click', function(){
-	sine.setDetune(100, null, 'right')
-})
+	sine.setDetune(100, null, 'right');
+});
 
 
 document.getElementById('dampen').addEventListener('click', function(){
-	sine.setVolume(.1)
-})
+	sine.setVolume(.1);
+});
 document.getElementById('dampen-left').addEventListener('click', function(){
-	sine.setVolume(.1, null, 'left')
-})
+	sine.setVolume(.1, null, 'left');
+});
 document.getElementById('dampen-right').addEventListener('click', function(){
-	sine.setVolume(.1, null, 'right')
-})
+	sine.setVolume(.1, null, 'right');
+});
 
 document.getElementById('pan').addEventListener('click', function(){
-	sine.setPanning(1)
-})
+	sine.setPanning(1);
+});
 document.getElementById('set-pitch').addEventListener('click', function(){
-	sine.setPitch('B3')
-})
+	sine.setPitch('B3');
+});
 document.getElementById('stop').addEventListener('click', function(){
-	sine.stop()
-})
+	sine.stop();
+});
 
 
 var sawtooth = new Wad({source:'sawtooth', env:{hold:1, release:.2}});
 var triangle = new Wad({source:'triangle', env:{hold:1, release:.2}});
-var polywad = new Wad.Poly({
+
+var volumeDisplay = document.getElementById('polywad-volume');
+var clippingDisplay = document.getElementById('polywad-clipping');
+let displayAudioMeter = function(thatWad){
+	polywad.add(sawtooth).add(triangle);
+	setInterval(function(){
+		volumeDisplay.innerText = Math.round(thatWad.audioMeter.volume * 1000);
+		clippingDisplay.innerText = thatWad.audioMeter.checkClipping();
+	}, 50);
+}
+window.polywad = new Wad.Poly({
+	reverb  : {
+		wet     : 1,                                            
+		impulse : '/widehall.wav' 
+	},
 	audioMeter: {
 		clipLevel: .98,
 		averaging: .95,
 		clipLag: 750,
 	},
+	callback: displayAudioMeter
 });
-polywad.add(sawtooth).add(triangle);
+
 
 document.getElementById('polywad').addEventListener('click', function(){
 	polywad.play();
@@ -137,13 +152,6 @@ document.getElementById('stop').addEventListener('click', function(){
 document.getElementById('polywad-stop').addEventListener('click', function(){
 	polywad.stop();
 });
-var volumeDisplay = document.getElementById('polywad-volume');
-var clippingDisplay = document.getElementById('polywad-clipping');
-setInterval(function(){
-	volumeDisplay.innerText = Math.round(polywad.audioMeter.volume * 1000);
-	clippingDisplay.innerText = polywad.audioMeter.checkClipping();
-
-}, 50);
 
 var voice;
 var tuner;

@@ -1,11 +1,11 @@
 import SoundIterator from './sound_iterator';
 import Polywad from './polywad';
 import presets from './presets';
+import { logStuff } from './common';
 import {
-	logStuff,
 	pitches,
 	pitchesArray,
-} from './common';
+} from './pitches';
 import {
 	midiMap,
 	assignMidiMap,
@@ -19,8 +19,6 @@ let Wad = WebAudioDAW;
 Wad.Poly = Polywad;
 Wad.SoundIterator = function(args){ return new SoundIterator(args, Wad); };
 
-/** If a Wad is created with reverb without specifying a URL for the impulse response,
-grab it from the defaultImpulse URL **/
 Wad.pitches = pitches;
 Wad.pitchesArray = pitchesArray;
 

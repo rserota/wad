@@ -1,4 +1,6 @@
 import Tuna from 'tunajs';
+import Polywad from './polywad';
+
 
 let audioContext = window.AudioContext || window.webkitAudioContext;
 

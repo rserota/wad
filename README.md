@@ -1,8 +1,7 @@
 <h1>WadJS</h1>
 A Javascript library for manipulating audio. It's like jQuery for your ears. 
 
-![Wad Logo](/logo.png?raw=true)
-
+<img src="/logo.png" >
 
 
 <h2>Table of Contents</h2>

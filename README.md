@@ -1,8 +1,6 @@
-![Wad Logo](/logo.png?raw=true)
 <h1>WadJS</h1>
-
-
-WadJS is a Javascript library for manipulating audio using the HTML5 Web Audio API.  It greatly simplifies the process of creating, playing, and manipulating audio, either for real-time playback, or at scheduled intervals.  WadJS provides a simpler interface to use many features one would find in a desktop DAW (digital audio workstation), but doesn't require the user to worry about setting up complex audio graphs.
+A Javascript library for manipulating audio. It's like jQuery for your ears. 
+![Wad Logo](/logo.png?raw=true)
 
 
 

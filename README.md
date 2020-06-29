@@ -1,3 +1,4 @@
+![Wad Logo](/logo.png?raw=true)
 <h1>WadJS</h1>
 
 

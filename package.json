@@ -7,7 +7,8 @@
     "build": "npm run build-compressed && npm run build-uncompressed && npm run build-tests",
     "build-uncompressed": "webpack --config webpack.config.js",
     "build-compressed": "webpack --config webpack.config.min.js",
-    "build-tests": "webpack --config webpack.config.test.js"
+    "build-tests": "webpack --config webpack.config.test.js",
+	"lint": "./node_modules/eslint/bin/eslint.js"
   },
   "repository": {
     "type": "git",

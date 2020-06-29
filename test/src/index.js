@@ -124,8 +124,8 @@ let displayAudioMeter = function(thatWad){
 		volumeDisplay.innerText = Math.round(thatWad.audioMeter.volume * 1000);
 		clippingDisplay.innerText = thatWad.audioMeter.checkClipping();
 	}, 50);
-}
-window.polywad = new Wad.Poly({
+};
+let polywad = new Wad.Poly({
 	reverb  : {
 		wet     : 1,                                            
 		impulse : '/widehall.wav' 

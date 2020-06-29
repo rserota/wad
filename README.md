@@ -2,7 +2,7 @@
 A Javascript library for manipulating audio. It's like jQuery for your ears. 
 
 
-<img src="/logo.png" >
+<img src="/logo.png" style="margin-top:15px;">
 
 
 <h2>Table of Contents</h2>

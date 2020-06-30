@@ -4,92 +4,66 @@
 ![Wad Logo](/logo.png?raw=true)
 
 
-<h2>Table of Contents</h2>
+## Table of Contents
 
-<ul>
-    <li><a href='#installation'>Installation</a></li>
-    <li>
-        <a href='#usage'>Usage</a>
-        <ul>
-            <li><a href='#constructor-arguments'>Constructor Arguments</a></li>
-            <li><a href='#panning'>Panning</a></li>
-            <li><a href='#filters'>Filters</a></li>
-            <li><a href='#configuring-reverb'>Configuring Reverb</a></li>
-            <li><a href='#tuna-effects'>Tuna Effects</a></li>
-            <li>
-                <a href='#play'>Play()</a>
-                <ul>
-                    <li><a href='#play-labels'>Play Labels</a></li>
-                    <li><a href='#changing-settings-during-playback'>Changing Settings During Playback</a></li>
-                </ul>
-            </li>
-            <li><a href='#global-methods'>Global Methods</a></li>
-            <li><a href='#microphone-input'>Microphone Input</a></li>
-            <li>
-                <a href='#polywads'>PolyWads</a>
-                <ul>
-                    <li><a href='#compression'>Compression</a></li>
-                    <li><a href='#audio-meter'>Audio Meter</a></li>
-                    <li><a href='#pitch-detection'>Pitch Detection</a></li>
-                </ul>
-            </li>
-            <li><a href='#audio-sprites'>Audio Sprites</a></li>
-            <li><a href='#logging'>Logging</a></li>
-            <li><a href='#external-fx'>External FX</a></li>
-            <li><a href='#presets'>Presets</a></li>
-            <li><a href='#midi-input'>MIDI Input</a></li>
-            <li><a href='#access-to-the-audio-context'>Access to the Audio Context</a></li>
-            <li><a href='#access-to-the-audio-context'>A-Frame Integration</a></li>
-        </ul>
-    <li><a href='#how-to-contribute'>How To Contribute</a></li>
-</ul>
+1. Installation
+1. Usage
 
-
-<h2>Installation</h2>
+## Installation
 
 To use Wad.js in your project, simply include the script in your HTML file.
-
-<pre><code>&lt;script src="path/to/build/wad.min.js"&gt;&lt;/script&gt;</pre></code>
+```html
+	<script src="https://unpkg.com/web-audio-daw"></script>
+```
 
 Wad.js is also available as an npm module.
 
-<pre><code>npm install web-audio-daw</code></pre>
+```sh
+	npm install web-audio-daw
+```
 
 ```javascript
 import Wad from 'web-audio-daw';
 ```
 
 
-<h2>Usage</h2>
+## Usage
 
 
-The simplest use case is loading and playing a single audio file.
-
-```javascript
-var bell = new Wad({source : 'https://www.myserver.com/audio/bell.wav'})
-bell.play()
-bell.stop()
-```
-
-Behind the scenes, Wad sends an XMLHttpRequest to the source URL, so you will need a server running to respond to the request. You can't simply test it with local files, like you can with an HTML &lt;audio> tag. If you need direct access to the actual audio buffer, you can access it at `bell.decodedBuffer`.
-
-You can also create oscillators using the same syntax, by specifying 'sine', 'square', 'sawtooth', or 'triangle' as the source.
+To do anything with WadJS, you'll first need to create a wad, which can represent anything that makes sound, such as an mp3 file, an oscillator, or even live microphone input.
+The simplest use case is loading and playing a single audio file. 
 
 ```javascript
-var saw = new Wad({source : 'sawtooth'})
+let bell = new Wad({source : 'https://www.myserver.com/audio/bell.mp3'});
+bell.play();
+bell.stop();
 ```
+If you need direct access to the actual audio buffer, you can access it at `bell.decodedBuffer`.
 
-The peak volume can be set during the creation of a wad, or any time afterwards. The default value is 1.
+You can also create oscillators using the same syntax, by specifying 'sine', 'square', 'sawtooth', 'triangle', or 'noise' as the source.
 
 ```javascript
-var saw = new Wad({source : 'sawtooth', volume : .9})
-saw.setVolume(0.5)
+let saw = new Wad({source : 'sawtooth'});
+saw.play();
 ```
 
+The `Wad` constructor and the `play()` method both accept many optional arguments. Skim through the API documentation to learn more. 
 
-<h3>Constructor Arguments</h3>
+## API Documentation
 
-The Wad constructor supports many optional arguments to modify your sound, from simple settings such as peak volume, to more powerful things like ADSR envelopes and filters.  If not set explicitly, the ADSR envelope will have the values shown below. Filters, LFOs, and reverb are not used unless they are set explicitly. Filter type can be specified as either 'lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', or 'allpass'.
+### new Wad(args)
+
+| Property    | Type   | Description                                                     |
+| -------     | ----   | -----------                                                     |
+| args        | object | One big object with all of the arguments for creating this wad  |
+| args.source | string | To make a wad that plays an audio clip, set this to the url for the audio file. \n |
+|             |        | To make a wad that plays an oscillator, set this to 'sine', 'square', 'sawtooth', 'triangle', or noise. \n |
+
+### Wad.prototype.play()
+
+###
+
+### 
 
 ```javascript
 var saw = new Wad({

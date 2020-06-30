@@ -7,7 +7,18 @@
 ## Table of Contents
 
 1. Installation
-1. Usage
+1. Overview
+1. Panning
+1. Filters
+1. Microphone Input
+1. Configuring Reverb
+1. Audio Sprites
+1. Logging
+1. Sound Iterator
+1. Tuna Effects
+1. Audio Listener
+1. Play Labels
+
 
 ## Installation
 
@@ -27,7 +38,7 @@ import Wad from 'web-audio-daw';
 ```
 
 
-## Usage
+## Overview
 
 
 To do anything with WadJS, you'll first need to create a wad, which can represent anything that makes sound, such as an mp3 file, an oscillator, or even live microphone input.
@@ -38,7 +49,6 @@ let bell = new Wad({source : 'https://www.myserver.com/audio/bell.mp3'});
 bell.play();
 bell.stop();
 ```
-If you need direct access to the actual audio buffer, you can access it at `bell.decodedBuffer`.
 
 You can also create oscillators using the same syntax, by specifying 'sine', 'square', 'sawtooth', 'triangle', or 'noise' as the source.
 
@@ -49,83 +59,8 @@ saw.play();
 
 The `Wad` constructor and the `play()` method both accept many optional arguments. Skim through the API documentation to learn more. 
 
-## API Documentation
 
-### new Wad(args)
-
-| Property    | Type   | Description                                                     |
-| -------     | ----   | -----------                                                     |
-| args        | object | One big object with all of the arguments for creating this wad  |
-| args.source | string | To make a wad that plays an audio clip, set this to the url for the audio file. \n |
-|             |        | To make a wad that plays an oscillator, set this to 'sine', 'square', 'sawtooth', 'triangle', or noise. \n |
-
-### Wad.prototype.play()
-
-###
-
-### 
-
-```javascript
-var saw = new Wad({
-    source  : 'sawtooth',
-    volume  : 1.0,   // Peak volume can range from 0 to an arbitrarily high number, but you probably shouldn't set it higher than 1.
-    loop    : false, // If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators. 
-    rate    : 1.0, // How fast to play an audio clip, relative to its normal speed. 2.0 is double speed, 0.5 is half speed, etc.
-    offset  : 0,     // Where in the audio clip playback begins, measured in seconds from the start of the audio clip.
-    pitch   : 'A4',  // Set a default pitch on the constructor if you don't want to set the pitch on <code>play()</code>.
-    detune  : 0,     // Set a default detune on the constructor if you don't want to set detune on <code>play()</code>. Detune is measured in cents. 100 cents is equal to 1 semitone.
-    panning : -.5,   // Horizontal placement of the sound source. Possible values are from 1 to -1.
-
-    env     : {      // This is the ADSR envelope.
-        attack  : 0.0,  // Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3.
-        decay   : 0.0,  // Time in seconds from peak volume to sustain volume.
-        sustain : 1.0,  // Sustain volume level. This is a percent of the peak volume, so sensible values are between 0 and 1.
-        hold    : 3.14, // Time in seconds to maintain the sustain volume level. If set to -1, the sound will be sustained indefinitely until you manually call stop().
-        release : 0     // Time in seconds from the end of the hold period to zero volume, or from calling stop() to zero volume.
-    },
-    filter  : {
-        type      : 'lowpass', // What type of filter is applied.
-        frequency : 600,       // The frequency, in hertz, to which the filter is applied.
-        q         : 1,         // Q-factor.  No one knows what this does. The default value is 1. Sensible values are from 0 to 10.
-        env       : {          // Filter envelope.
-            frequency : 800, // If this is set, filter frequency will slide from filter.frequency to filter.env.frequency when a note is triggered.
-            attack    : 0.5  // Time in seconds for the filter frequency to slide from filter.frequency to filter.env.frequency
-        }
-    },
-    reverb  : {
-        wet     : 1,                                            // Volume of the reverberations.
-        impulse : 'https://www.myServer.com/path/to/impulse.wav' // A URL for an impulse response file, if you do not want to use the default impulse response.
-    },
-    delay   : {
-        delayTime : .5,  // Time in seconds between each delayed playback.
-        wet       : .25, // Relative volume change between the original sound and the first delayed playback.
-        feedback  : .25, // Relative volume change between each delayed playback and the next. 
-    },
-    vibrato : { // A vibrating pitch effect.  Only works for oscillators.
-        shape     : 'sine', // shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'.
-        magnitude : 3,      // how much the pitch changes. Sensible values are from 1 to 10.
-        speed     : 4,      // How quickly the pitch changes, in cycles per second.  Sensible values are from 0.1 to 10.
-        attack    : 0       // Time in seconds for the vibrato effect to reach peak magnitude.
-    },
-    tremolo : { // A vibrating volume effect.
-        shape     : 'sine', // shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'.
-        magnitude : 3,      // how much the volume changes. Sensible values are from 1 to 10.
-        speed     : 4,      // How quickly the volume changes, in cycles per second.  Sensible values are from 0.1 to 10.
-        attack    : 0       // Time in seconds for the tremolo effect to reach peak magnitude.
-    },
-    tuna   : {
-        Chorus : {
-            intensity: 0.3,  //0 to 1
-            rate: 4,         //0.001 to 8
-            stereoPhase: 0, //0 to 180
-            bypass: 0
-        }
-    }
-})
-```
-
-
-<h3>Panning</h3>
+## Panning
 Wad.js supports two types of panning: stereo-panning, and 3d-panning. Stereo-panning works the same way panning works in most audio software. With stereo panning, you can specify the left/right balance of the sound using a number between 1 and -1. A value of 1 means the sound is panned hard-right, and a value of -1 means the sound is panned hard-left. 
 
 With 3d-panning, you don't directly set the left/right stereo balance. Rather, the panning setting describes the distance of the sound source from the audio listener. Any time you would pass in a panning parameter (either to the constructor, the <code>play()</code> method, or the <code>setPanning()</code> method), you can pass it in as a three element array to specify the X, Y, and Z location of the sound. You can set the panning to arbitrarily high or low values, but it will make the sound very quiet, since it's very far away.
@@ -141,26 +76,7 @@ var saw = new Wad({
 })
 ```
 
-<h3>Audio Listener</h3>
-
-Wad.js wraps the [AudioListener](<https://developer.mozilla.org/en-US/docs/Web/API/AudioListener>) to provide uniformity across browsers. The AudioListener is only useful when using 3D panning. You can use both the standard listener.positionX.value or the setPosition function to move the listener. The default position and orientation is: positionX=0, positionY=0, positionZ=0, forwardX=0, forwardY=0, forwardZ=-1, upX=0, upY=1, upZ=0.
-
--	Wad.listener.setPosition(x,y,z) -> setPosition moves the listener to the specified coordinates. Take note that the web audio API has X move left and right, y move up and down, and z move forward and back. So if one is moving around a flat environment, then x and z will want to be used, and not X and Y.
--	Wad.listener. setOrientation(forwardX, forwardY, forwardZ, upX, upY, upZ) -> This takes two [direction vectors.](<https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:vectors/x9e81a4f98389efdf:component-form/a/vector-magnitude-and-direction-review>) Neither vector's coordinates have units. The first vector is the direction the user's nose is facing. The second vector is the direction of the top of the listener's head.
--	Wad.listener.getPosition() -> returns a 3 element list of the user's positionX.value, positionY.value, and positionZ.value.
--	Wad.listener.getOrientation() -> returns a six element array of: forwardX.value, forwardY.value, forwardZ.value, upX.value, upY.value, and upZ.value.
--	To set or get a value directly, do: `listener.positionX.value`.
-
-```javascript
-Wad.listener.setPosition(1,0,0)
-console.log(Wad.listener.positionX.value)
-Wad.listener.forwardZ.value += 1
-console.log(Wad.listener.getPosition()[0])
-```
-
-
-
-<h3>Filters</h3>
+## Filters
 
 The filter constructor argument can be passed an object or an array of objects. If an array is passed, the filters are applied in that order. Whichever form is passed to the constructor should also be passed to the play argument.
 
@@ -171,16 +87,97 @@ filter: [
 ]
 ```
 
-<h3 id='configuring-reverb'>Configuring Reverb</h3>
+## Microphone Input
 
-In order to use reverb, you will need a server to send an impulse response via XmlHttpRequest. An impulse response is a small audio file, like a wav or mp3, that describes the acoustic characteristics of a physical space.  By default, Wad.js serves a sample impulse response that you can use freely.  However, it is recommended that you use your own impulse response. To use your own impulse response, pass a URL to an impulse response file as an argument to the constructor, as shown above. You can also modify the attribute Wad.defaultImpulse to change the default impulse response. You can make your own impulse response, but it might be easier to just <a href="http://www.voxengo.com/impulses/">find one online</a>.
+You can also use microphone input as the source for a Wad. You can apply reverb or filters to the microphone input, but you cannot apply an envelope or filter envelope. If a Wad uses the microphone as the source, it will constantly stream the mic input through all applied effects (filters, reverb, etc) and out through your speakers or headphones as soon as you call the <code>play()</code> method on that Wad. Call the <code>stop()</code> method on a microphone Wad to disconnect your microphone from that Wad. You may experience problems with microphone feedback if you aren't using headphones.
 
-<h3 id='tuna-effects'>Tuna Effects</h3>
+```javascript
+var voice = new Wad({
+    source  : 'mic',
+    reverb  : {
+        wet : .4
+    },
+    filter  : {
+        type      : 'highpass',
+        frequency : 500
+    },
+    panning : -.2
+})
+
+// You must give your browser permission to use your microphone before calling play().
+voice.play()
+```
+
+If `voice.play()` is called with no arguments, it uses the arguments from the constructor. However, if it is called with any arguments, all arguments from the constructor are discarded (except for source), and the arguments passed to <code>voice.play()</code> are used instead. 
+
+## Configuring Reverb
+
+In order to use reverb, you will need a server to send an impulse response. An impulse response is a small audio file, like a wav or mp3, that describes the acoustic characteristics of a physical space.   You can make your own impulse response, but it might be easier to just <a href="http://www.voxengo.com/impulses/">find one online</a>. There's also an impulse response included in the test folder that you can use. 
+
+## Audio Sprites
+
+If your project contains many short audio clips, you may be able to achieve better performance by loading them as a single, longer audio clip, and play sections from that longer clip as needed. 
+
+```javascript 
+var helloWorld = new Wad({
+    source: 'https://www.myserver.com/audio/hello-world.wav',
+
+    // add a key for each sprite 
+    sprite: {
+        hello : [0, .4], // the start and end time, in seconds
+        world : [.4,1]
+    }
+});
+
+// for each key on the sprite object in the constructor above, the wad that is created will have a key of the same name, with a play() method. 
+helloWorld.hello.play();
+helloWorld.world.play();
+
+// you can still play the entire clip normally, if you want. 
+helloWorld.play(); 
+
+// if you hear clicks or pops from starting and stopping playback in the middle of the clip, you can try adding some attack and release to the envelope. 
+helloWorld.hello.play({env:{attack: .1, release:.02}})
+
+```
+
+## Logging
+
+Wad.js can log various warnings and notices to the console, but these are disabled by default. To view these messages in the console, you can increase Wad's verbosity.
+
+```javascript
+Wad.logs.verbosity = 0 // Wad.js will print nothing to your console. This is the default setting. 
+Wad.logs.verbosity = 1 // View some notices and warnings, e.g. audio context started, midi devices connected, etc. These logs should not print more than once.
+Wad.logs.verbosity = 2 // View all notices and warnings, including those from play() and stop(). These logs might print many times. 
+
+```
+
+## SoundIterator
+
+The SoundIterator object is used for playing sounds in a random order or repeatedly through a loop. It is good for footstep sounds, for example.
+
+```javascript
+var  iterator = new Wad.SoundIterator({
+    files: [new Wad({source:'square'}), new Wad({source:'triangle'})], // Takes Wad objects, or files that would be passed to source. If it is passed a file that is not a Wad object, then it will create a generic Wad object with the passed file as the source.
+    random: false, // either play a random order (true), or play in the order of the list (false)
+    randomPlaysBeforeRepeat: 0, // This value says the amount of plays that need to happen before a sound can be repeated. This only works if the length of the iterator is 3 or more, and this value is max 1 less than the length of the sound list.
+})
+```
+
+The methods are:
+
+```javascript
+iterator.play(args) // Plays the next sound in the list, or next random sound following the random rules. The passed args are the normal args that can be passed to Wad.play(). The function returns a Promise.
+iterator.add(sound) // Pass in either a Wad object or an object that would be passed as a source in a new Wad. It returns the SoundIterator object to be chained.
+iterator.remove(sound) // pass in the Wad instance you want to have removed from the iterator. Only Wad objects that were added as Wad objects can be removed.
+```
+
+## Tuna Effects
 
 Tuna, everyone's favorite Web Audio effects library, is included in Wad.js. This makes it super easy to add effects from Tuna to any Wad or PolyWad.
 
 ```javascript
-var letItBeTuna = new Wad({
+let itBeTuna = new Wad({
     source : 'sine',
     tuna   : {
         Overdrive : {
@@ -201,6 +198,92 @@ var letItBeTuna = new Wad({
 ```
 
 For more information about the various Tuna effects and the arguments they take, <a href="https://github.com/Theodeus/tuna/wiki#the-nodes">check out the Tuna wiki</a>.
+
+
+## Audio Listener
+
+Wad.js wraps the [AudioListener](<https://developer.mozilla.org/en-US/docs/Web/API/AudioListener>) to provide uniformity across browsers. The AudioListener is only useful when using 3D panning. You can use both the standard listener.positionX.value or the setPosition function to move the listener. The default position and orientation is: positionX=0, positionY=0, positionZ=0, forwardX=0, forwardY=0, forwardZ=-1, upX=0, upY=1, upZ=0.
+
+- Wad.listener.setPosition(x,y,z) -> setPosition moves the listener to the specified coordinates. Take note that the web audio API has X move left and right, y move up and down, and z move forward and back. So if one is moving around a flat environment, then x and z will want to be used, and not X and Y.
+- Wad.listener. setOrientation(forwardX, forwardY, forwardZ, upX, upY, upZ) -> This takes two [direction vectors.](<https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:vectors/x9e81a4f98389efdf:component-form/a/vector-magnitude-and-direction-review>) Neither vector's coordinates have units. The first vector is the direction the user's nose is facing. The second vector is the direction of the top of the listener's head.
+- Wad.listener.getPosition() -> returns a 3 element list of the user's positionX.value, positionY.value, and positionZ.value.
+- Wad.listener.getOrientation() -> returns a six element array of: forwardX.value, forwardY.value, forwardZ.value, upX.value, upY.value, and upZ.value.
+- To set or get a value directly, do: `listener.positionX.value`.
+
+```javascript
+Wad.listener.setPosition(1,0,0)
+console.log(Wad.listener.positionX.value)
+Wad.listener.forwardZ.value += 1
+console.log(Wad.listener.getPosition()[0])
+```
+
+
+## Play Labels
+
+When you call `stop()` on a Wad, it will only stop the most recently triggered note. If you want to retain control over multiple notes that played from the same Wad, you can label those notes when `play()` is called. When `stop()` is called, you can pass in a label argument to stop all currently sustained notes with that label. 
+
+```javascript
+saw.play({pitch : 'A4', label : 'A4'}) // The label can be any string, but using the same name as the note is often sensible.
+saw.play({pitch : 'G4', label : 'G4'})
+saw.stop('A4') // The first note will stop, but the second note will continue playing.
+```
+
+## API Documentation
+
+### new Wad(args)
+
+| Property                  | Type              | Default           | Description |
+| ------------------------- | ----------------- | ----------------  | ----------- |
+| args                      | object            | none (required)   | One big object with all of the arguments for creating this wad. |
+| args.source               | string            | none (required)   | To make a wad that plays an audio clip, set this to the url for the audio file. To make a wad that plays an oscillator, set this to 'sine', 'square', 'sawtooth', 'triangle', or 'noise'. To create a wad that processes your microphone input, set this to 'mic'. |
+| args.volume               | number            | 1                 | Peak volume can range from 0 to an arbitrarily large number, but you probably shouldn't set it higher than 1. |
+| args.loop                 | boolean           | false             | If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators. |
+| args.rate                 | number            | 0                 | Where in the audio clip playback begins, measured in seconds from the start of the audio clip. |
+| args.pitch                | string or number  | 'A4'              | Set a default pitch on the constructor if you don't want to set the pitch on `play()`. Pass in a string to play a specific pitch (12-TET, A440), or pass in a number to play that frequency, in hertz. |
+| args.detune               | number            | 0                 | Set a default detune on the constructor if you don't want to set detune on `play()`. Detune is measured in cents. 100 cents is equal to 1 semitone. |
+| args.panning              | number or array   | 0                 | Placement of the sound source. Pass in a number to use stereo panning, or pass in a 3-element array to use 3D panning. Note that some browsers do not support stereo panning. |
+| args.panningModel         | string            | 'equalpower'      | See 'panning' section. |
+| args.rolloffFactor        | number            | 1                 | |
+| args.env                  | object            | see below         | This is the ADSR envelope - attack, decay, (hold), sustain, release. |
+| args.env.attack           | number            | 0                 | Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3. |
+| args.env.decay            | number            | 0                 | Time in seconds from peak volume to sustain volume. |
+| args.env.sustain          | number            | 1                 | Sustain volume level. This is a percent of the peak volume, so sensible values are between 0 and 1. |
+| args.env.hold             | number            | 3.14              | Time in seconds to maintain the sustain volume level. If set to -1, the sound will be sustained indefinitely until you manually call stop(). |
+| args.env.release          | number            | 0                 | Time in seconds from the end of the hold period to zero volume, or from calling stop() to zero volume. |
+| args.filter               | object or array   | none              | Add filters to this wad. |
+| args.filter.type          | string            | 'lowpass'         | What type of filter is applied. Choose one of 'lowpass', 'highpass', 'bandpass', 'lowshelf', 'highshelf', 'peaking', 'notch', or 'allpass'. |
+| args.filter.frequency     | number            | 600               | The frequency, in hertz, to which the filter is applied. |
+| args.filter.q             | number            | 1                 | Q-factor.  No one knows what this does. The default value is 1. Sensible values are from 0 to 10. |
+| args.filter.env           | object            | none              | The filter envelope. |
+| args.filter.env.frequency | number            | 800               | If this is set, filter frequency will slide from filter.frequency to filter.env.frequency when a note is triggered. |
+| args.filter.env.attack    | number            | 0.5               | Time in seconds for the filter frequency to slide from filter.frequency to filter.env.frequency. |
+| args.reverb               | object            | none              | Add reverb to this wad. |
+| args.reverb.wet           | number            | 1                 | The volume of the reverberations. |
+| args.reverb.impulse       | string            | none              | A URL for an impulse response file. |
+| args.delay                | object            | none              | Add delay to this wad. |
+| args.delay.delayTime      | number            | 0.5               | Time in seconds between each delayed playback. |
+| args.delay.wet            | number            | 0.25              | Relative volume change between the original sound and the first delayed playback. |
+| args.delay.feedback       | number            | 0.25              | Relative volume change between each delayed playback and the next. |
+| args.vibrato              | object            | none              | A vibrating pitch effect.  Only works for oscillators. |
+| args.vibrato.shape        | string            | 'sine'            | Shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'. |
+| args.vibrato.magnitude    | number            | 3                 | How much the pitch changes. Sensible values are from 1 to 10. |
+| args.vibrato.speed        | number            | 4                 | How quickly the pitch changes, in cycles per second.  Sensible values are from 0.1 to 10. |
+| args.vibrato.attack       | number            | 0                 | Time in seconds for the vibrato effect to reach peak magnitude. |
+| args.tremolo              | object            | none              | A vibrating volume effect. |
+| args.tremolo.shape        | string            | 'sine'            | Shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'. |
+| args.tremolo.magnitude    | number            | 3                 | How much the pitch changes. Sensible values are from 1 to 10. |
+| args.tremolo.speed        | number            | 4                 | How quickly the pitch changes, in cycles per second.  Sensible values are from 0.1 to 10. |
+| args.tremolo.attack       | number            | 0                 | Time in seconds for the vibrato effect to reach peak magnitude. |
+| args.tuna                 | object            | none              | Add effects from Tuna.js to this wad. Check out the Tuna.js documentation for more information. |
+
+
+
+
+
+### Wad.prototype.play()
+
+
+
 
 <h3 id='play-arguments'>Play()</h3>
 
@@ -224,12 +307,6 @@ saw.play({
 ```
 
 
-If you like, you can also select a pitch by frequency.
-
-
-```javascript
-saw.play({pitch : 440})
-```
 
 The `play()` method returns a promise which resolves the wad itself, once the wad has finished playing. This makes it easy to play sounds sequentially in an async function.
 
@@ -247,15 +324,6 @@ tickTock();
 ```
 The time it takes for the promise to resolve, in milliseconds, can be read on the wad at `tick.duration`. The `duration` property is calculated based on the wad's volume envelope (`env`), the duration of the audio file, and the `rate` parameter. Note that there are other ways to manipulate the duration of the sound (for example, `offset`) that can cause the `duration` parameter to be misleading. 
 
-<h4 id='play-labels'>Play Labels</h4>
-
-When you call <code>stop()</code> on a Wad, it will only stop the most recently triggered note. If you want to retain control over multiple notes that played from the same Wad, you can label those notes when <code>play()</code> is called. When <code>stop()</code> is called, you can pass in a label argument to stop all currently sustained notes with that label. 
-
-```javascript
-saw.play({pitch : 'A4', label : 'A4'}) // The label can be any string, but using the same name as the note is often sensible.
-saw.play({pitch : 'G4', label : 'G4'})
-saw.stop('A4') // The first note will stop, but the second note will continue playing.
-```
 
 <h4 id="pause-unpause">Pausing and unpausing audio</h4>
 
@@ -270,90 +338,8 @@ fullSong.unpause()
 
 The `pause` method accepts the same arguments as `stop`. The `unpause` method accepts the same arguments as `play`.
 
-<h4 id='play-setters'>Changing Settings During Playback</h4>
-
-If you want to change an attribute of a Wad during playback, you can use the relevant setter method for that attribute. Currently, the following attributes can be changed during playback: volume, pitch, detune, panning, reverb, and rate. 
-
-```javascript
-saw.play()
-saw.setDetune(-50)
-```
-
-By default, this change will occur smoothly over 10 milliseconds, to help prevent ugly clicks and pops. Optionally, you may pass in a second parameter to specify the duration of this transition, in seconds. 
-
-```javascript
-saw.play()
-saw.setPanning(1, .015) // pan to the right over 15 milliseconds
-```
-
-If you're playing multiple simultaneous notes from the same Wad, you can control them individually by passing in a label as the third argument.
-
-```javascript
-saw.play({panning: -1, label: 'left'})
-saw.play({panning:  1, label: 'right'})
-saw.setDetune(-50, null, 'left')
-```
 
 
-<h3 id='global-methods'>Global Methods</h3>
-
-Wad.js automatically keeps track of all wads you've created, and provides a couple of methods you can use to control them all at once. 
-
-```javascript
-var saw  = new Wad({source: 'sawtooth'})
-var sine = new Wad({source: 'sine'})
-
-saw.play()
-sine.play()
-
-Wad.setVolume(.5) // loops through all existing wads, calling setVolume(.5) on each of them.
-Wat.stopAll() // loops through all existing wads, calling stop() on each of them.
-```
-
-
-<h3 id='mic'>Microphone Input</h3>
-
-You can also use microphone input as the source for a Wad. You can apply reverb or filters to the microphone input, but you cannot apply an envelope or filter envelope. If a Wad uses the microphone as the source, it will constantly stream the mic input through all applied effects (filters, reverb, etc) and out through your speakers or headphones as soon as you call the <code>play()</code> method on that Wad. Call the <code>stop()</code> method on a microphone Wad to disconnect your microphone from that Wad. You may experience problems with microphone feedback if you aren't using headphones.
-
-```javascript
-var voice = new Wad({
-    source  : 'mic',
-    reverb  : {
-        wet : .4
-    },
-    filter  : {
-        type      : 'highpass',
-        frequency : 500
-    },
-    panning : -.2
-})
-
-// You must give your browser permission to use your microphone before calling play().
-voice.play()
-```
-
-If <code>voice.play()</code> is called with no arguments, it uses the arguments from the constructor. However, if it is called with any arguments, all arguments from the constructor are discarded (except for source), and the arguments passed to <code>voice.play()</code> are used instead. 
-
-
-<h3>SoundIterator</h3>
-
-The SoundIterator object is used for playing sounds in a random order or repeatedly through a loop. It is good for footstep sounds, for example.
-
-```javascript
-var  iterator = new Wad.SoundIterator({
-    files: [new Wad({source:'square'}), new Wad({source:'triangle'})], // Takes Wad objects, or files that would be passed to source. If it is passed a file that is not a Wad object, then it will create a generic Wad object with the passed file as the source.
-    random: false, // either play a random order (true), or play in the order of the list (false)
-    randomPlaysBeforeRepeat: 0, // This value says the amount of plays that need to happen before a sound can be repeated. This only works if the length of the iterator is 3 or more, and this value is max 1 less than the length of the sound list.
-})
-```
-
-The methods are:
-
-```javascript
-iterator.play(args) // Plays the next sound in the list, or next random sound following the random rules. The passed args are the normal args that can be passed to Wad.play(). The function returns a Promise.
-iterator.add(sound) // Pass in either a Wad object or an object that would be passed as a source in a new Wad. It returns the SoundIterator object to be chained.
-iterator.remove(sound) // pass in the Wad instance you want to have removed from the iterator. Only Wad objects that were added as Wad objects can be removed.
-```
 
 <h3>PolyWads</h3>
 
@@ -456,43 +442,7 @@ logPitch();
 tuner.stopUpdatingPitch(); // Stop calculating the pitch if you don't need to know it anymore.
 ```
 
-<h3 id='audio-sprites'>Audio Sprites</h3>
 
-If your project contains many short audio clips, you may be able to achieve better performance by loading them as a single, longer audio clip, and play sections from that longer clip as needed. 
-
-```javascript 
-var helloWorld = new Wad({
-    source: 'https://www.myserver.com/audio/hello-world.wav',
-
-    // add a key for each sprite 
-    sprite: {
-        hello : [0, .4], // the start and end time, in seconds
-        world : [.4,1]
-    }
-});
-
-// for each key on the sprite object in the constructor above, the wad that is created will have a key of the same name, with a play() method. 
-helloWorld.hello.play();
-helloWorld.world.play();
-
-// you can still play the entire clip normally, if you want. 
-helloWorld.play(); 
-
-// if you hear clicks or pops from starting and stopping playback in the middle of the clip, you can try adding some attack and release to the envelope. 
-helloWorld.hello.play({env:{attack: .1, release:.02}})
-
-```
-
-<h3 id='logging'>Logging</h3>
-
-Wad.js can log various warnings and notices to the console, but these are disabled by default. To view these messages in the console, you can increase Wad's verbosity.
-
-```javascript
-Wad.logs.verbosity = 0 // Wad.js will print nothing to your console. This is the default setting. 
-Wad.logs.verbosity = 1 // View some notices and warnings, e.g. audio context started, midi devices connected, etc. These logs should not print more than once.
-Wad.logs.verbosity = 2 // View all notices and warnings, including those from play() and stop(). These logs might print many times. 
-
-```
 
 <h3 id='exfx'>External FX</h3>
 

@@ -260,7 +260,7 @@ or defaults to the constructor argument if the filter and filter envelope are no
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
-/** Change the volume of a Wad at any time, including during playback **/
+/** Change the volume of a wad at any time, including during playback **/
 Wad.prototype.setVolume = function(volume, timeConstant, label){
 	timeConstant = timeConstant || .01;
 	if ( label ) {

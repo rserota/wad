@@ -6,28 +6,29 @@
 
 ## Table of Contents
 
-1. Installation
-1. Overview
-1. Panning
-1. Filters
-1. Microphone Input
-1. Configuring Reverb
-1. Audio Sprites
-1. Logging
-1. Sound Iterator
-1. Tuna Effects
-1. Audio Listener
-1. Play Labels
-1. External Fx
-1. Presets
-1. Polywads
-1. Compression
-1. Audio Meter
-1. Pitch Detection
-1. MIDI Input
-1. Access to the Audio Context
-1. Cross-browser Compatibility
-1. How to Contribute
+1. [Installation](#installation)
+1. [Overview](#overview)
+1. [Panning](#panning)
+1. [Filters](#filters)
+1. [Microphone Input](#microphone-input)
+1. [Configuring Reverb](#configuring-reverb)
+1. [Audio Sprites](#audio-sprites)
+1. [Logging](#logging)
+1. [Sound Iterator](#sound-iterator)
+1. [Tuna Effects](#tuna-effects)
+1. [Audio Listener](#audio-listener)
+1. [Play Labels](#play-labels)
+1. [External Fx](#external-fx)
+1. [Presets](#presets)
+1. [Polywads](#polywads)
+1. [Compression](#compression)
+1. [Audio Meter](#audio-meter)
+1. [Pitch Detection](#pitch-detection)
+1. [MIDI Input](#midi-input)
+1. [Access to the Audio Context](#access-to-the-audio-context)
+1. [Cross-browser Compatibility](#cross-browser-compatibility)
+1. [How to Contribute](#how-to-contribute)
+1. [Acknowledgements](#acknowledgements)
 
 
 ## Installation
@@ -413,7 +414,9 @@ WadJS works best in Chrome, decently in Safari for iOS, and it works poorly in F
 
 ## How To Contribute
 
+## Acknowledgements
 
+The synthesizer icon at the top of this readme was created by Anatolii Badii from Noun Project
 
 
 ## API Documentation
@@ -600,3 +603,93 @@ Change the delay settings of a wad.
 | Property | Type    | Default | Description                                                                   |
 | -------- | ------  | ------- | ----------------------------------------------------------------------------  |
 | label    | string  | none    | Stop all currently playing, or all currently playing wads with a given label. |
+
+### new Wad.Poly(args)
+
+| Property | Type    | Default | Description                                                                   |
+| -------- | ------  | ------- | ----------------------------------------------------------------------------  |
+| args        | object  | none    | One big object with all the arguments for creating this polywad.              |
+| args.volume | number  | 1    | The default volume for this polywad.                             |
+| args.panning | number or array  | 0  | The default panning for this polywad. See above.                             |
+| args.filter | object  | none    | Filter(s) applied to this polywad. See above. 
+| args.delay | object  | none    | Delay applied to this polywad. See above. 
+| args.reverb | object  | none    | Reverb applied to this polywad. See above. 
+| args.tuna   | object  | none    | Tuna effects applied to this polywad. See above, and/or read the Tuna docs. |                             |
+| args.audioMeter   | object  | none    | Add a volume meter to this polywad that tells you if it's clipping. |                             |
+| args.audioMeter.clipLevel   | number  | 0.98    | the level (0 to 1) that you would consider "clipping". |
+| args.audioMeter.averaging   | number  | 0.95    | how "smoothed" you would like the meter to be over time. Should be between 0 and less than 1. |
+| args.audioMeter.clipLag   | number  | 750 | how long you would like the "clipping" indicator to show after clipping has occured, in milliseconds. |
+| args.compressor   | object  | none    | Add a compressor to this polywad. |                             |
+| args.compressor.attack | number  | .003    | The amount of time, in seconds, to reduce the gain by 10dB. This parameter ranges from 0 to 1. |                             |
+| args.compressor.knee | number  | 30    | A decibel value representing the range above the threshold where the curve smoothly transitions to the "ratio" portion. This parameter ranges from 0 to 40. |                             |
+| args.compressor.ratio | number  | 12 | The amount of dB change in input for a 1 dB change in output. This parameter ranges from 1 to 20. |                             |
+| args.compressor.release | number  | 0.25 | The amount of time (in seconds) to increase the gain by 10dB. This parameter ranges from 0 to 1. |                             |
+| args.compressor.threshold | number  | -24 | The decibel value above which the compression will start taking effect. This parameter ranges from -100 to 0. |                             |
+
+### Wad.Poly.prototype.add(wad)
+
+| Property | Type                    | Default | Description                              |                            
+| -------- | ----------------------- | ------- | ---------------------------------------- |
+| wad      | object (wad or polywad) | none    | The wad you want to add to this polywad. |   
+
+### Wad.Poly.prototype.remove(wad)
+
+| Property | Type                    | Default | Description                              |                            
+| -------- | ----------------------- | ------- | ---------------------------------------- |
+| wad      | object (wad or polywad) | none    | The wad you want to remove from this polywad. |   
+
+ 
+### Wad.Poly.prototype.play(args)
+
+This method calls `play()` on all the wads inside this polywad. It accepts the same arguments as `Wad.prototype.play()`. 
+
+### Wad.Poly.prototype.stop(label)
+
+This method calls `stop()` on all the wads inside this polywad. It accepts the same arguments as `Wad.prototype.stop()`. 
+
+
+### Wad.Poly.prototype.setVolume(volume)
+
+Change the volume for this polywad (separate from the volume from of the individual wads it contains).
+
+| Property | Type   | Default | Description                              |                            
+| -------- | ------ | ------- | ---------------------------------------- |
+| volume   | number | none    | The new volume setting for this polywad. |   
+
+
+### Wad.Poly.prototype.setPitch(volume)
+
+This method sets the default pitch for each wad inside this polywad. 
+
+| Property | Type   | Default | Description                              |                            
+| -------- | ------ | ------- | ---------------------------------------- |
+| volume   | number | none    | The new volume setting for this polywad. |   
+
+
+### Wad.Poly.prototype.updatePitch()
+
+This method is used for pitch detection. After calling it, the polywad will calculate the frequency of its output, and write that information to `this.pitch` and `this.noteName`.
+
+
+### Wad.Poly.prototype.updatePitch()
+
+This method stops the polywad from continuing to detect the pitch in real time. 
+
+### Wad.assignMidiMap(midiMap, deviceIndex, success, failure)
+
+This method is used to set up a MIDI event handler. 
+
+| Property | Type   | Default | Description                              |                            
+| -------- | ------ | ------- | ---------------------------------------- |
+| midiMap   | function | none (required) | An event handler that describes what happens when your browser receives MIDI data. |
+| deviceIndex | number | 0 | If you have more than one connected MIDI device, this argument lets you specify which one you want to handle events for. |
+| success | function | none | A callback function that runs after successfully setting up the MIDI map. |
+| failure | function | none | A callback function that runs after failing to set up the MIDI map. |
+
+
+
+
+
+
+
+

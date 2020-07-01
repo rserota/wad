@@ -172,8 +172,6 @@ Polywad.prototype.setUp = function(arg){ // Anything that needs to happen before
 		this.output.connect(this.audioMeter);
 	}
 
-	this.globalReverb = arg.globalReverb || false; // deprecated
-
 	constructFilter(this, arg);
 	if ( this.filter ) { createFilters(this, arg); }
 

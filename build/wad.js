@@ -3177,10 +3177,8 @@ __webpack_require__.r(__webpack_exports__);
 let Wad = _wad_js__WEBPACK_IMPORTED_MODULE_6__["default"];
 Wad.Poly = _polywad__WEBPACK_IMPORTED_MODULE_1__["default"];
 Wad.SoundIterator = function(args){ return new _sound_iterator__WEBPACK_IMPORTED_MODULE_0__["default"](args, Wad); };
-
 Wad.pitches = _pitches__WEBPACK_IMPORTED_MODULE_4__["pitches"];
 Wad.pitchesArray = _pitches__WEBPACK_IMPORTED_MODULE_4__["pitchesArray"];
-
 Wad.midiMap = _midi__WEBPACK_IMPORTED_MODULE_5__["midiMap"];
 Wad.assignMidiMap = _midi__WEBPACK_IMPORTED_MODULE_5__["assignMidiMap"];
 Wad.midiInstrument = _midi__WEBPACK_IMPORTED_MODULE_5__["midiInstrument"];
@@ -3743,8 +3741,6 @@ Polywad.prototype.setUp = function(arg){ // Anything that needs to happen before
 		this.audioMeter = createAudioMeter(_common__WEBPACK_IMPORTED_MODULE_0__["context"], arg.audioMeter.clipLevel, arg.audioMeter.averaging, arg.audioMeter.clipLag);
 		this.output.connect(this.audioMeter);
 	}
-
-	this.globalReverb = arg.globalReverb || false; // deprecated
 
 	Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructFilter"])(this, arg);
 	if ( this.filter ) { Object(_common__WEBPACK_IMPORTED_MODULE_0__["createFilters"])(this, arg); }
@@ -4388,7 +4384,7 @@ or defaults to the constructor argument if the filter and filter envelope are no
 //////////////////////////////////////////////////////////////////////////////////////////
 
 
-/** Change the volume of a Wad at any time, including during playback **/
+/** Change the volume of a wad at any time, including during playback **/
 Wad.prototype.setVolume = function(volume, timeConstant, label){
 	timeConstant = timeConstant || .01;
 	if ( label ) {

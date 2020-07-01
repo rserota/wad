@@ -1,39 +1,40 @@
 {
-  "name": "web-audio-daw",
-  "version": "4.9.1",
-  "description": "Web Audio DAW. It's like jQuery for your ears.",
-  "main": "build/wad.js",
-  "scripts": {
-    "build": "npm run build-compressed && npm run build-uncompressed && npm run build-tests",
-    "build-uncompressed": "webpack --config webpack.config.js",
-    "build-compressed": "webpack --config webpack.config.min.js",
-    "build-tests": "webpack --config webpack.config.test.js",
-	"lint": "./node_modules/eslint/bin/eslint.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/rserota/wad.git"
-  },
-  "keywords": [
-    "Web",
-    "Audio",
-    "API",
-    "MIDI",
-    "DAW",
-    "HTML5",
-    "Wad"
-  ],
-  "author": "Raphael Serota",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/rserota/wad/issues"
-  },
-  "devDependencies": {
-    "eslint": "^7.3.1",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.1"
-  },
-  "dependencies": {
-    "tunajs": "^1.0.8"
-  }
+	"name": "web-audio-daw",
+	"version": "4.9.1",
+	"description": "Web Audio DAW. It's like jQuery for your ears.",
+	"main": "build/wad.js",
+	"scripts": {
+		"build": "npm run build-compressed && npm run build-uncompressed && npm run build-tests",
+		"build-uncompressed": "webpack --config webpack.config.js",
+		"build-compressed": "webpack --config webpack.config.min.js",
+		"build-tests": "webpack --config webpack.config.test.js",
+		"watch": "./node_modules/watch/cli.js 'npm run build' ./src",
+		"lint": "./node_modules/eslint/bin/eslint.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/rserota/wad.git"
+	},
+	"keywords": [
+		"Web",
+		"Audio",
+		"API",
+		"MIDI",
+		"DAW",
+		"HTML5",
+		"Wad"
+	],
+	"author": "Raphael Serota",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/rserota/wad/issues"
+	},
+	"devDependencies": {
+		"eslint": "^7.3.1",
+		"webpack": "^4.20.2",
+		"webpack-cli": "^3.1.1"
+	},
+	"dependencies": {
+		"tunajs": "^1.0.8"
+	}
 }

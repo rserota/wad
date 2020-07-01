@@ -18,10 +18,8 @@ import WebAudioDAW from './wad.js';
 let Wad = WebAudioDAW;
 Wad.Poly = Polywad;
 Wad.SoundIterator = function(args){ return new SoundIterator(args, Wad); };
-
 Wad.pitches = pitches;
 Wad.pitchesArray = pitchesArray;
-
 Wad.midiMap = midiMap;
 Wad.assignMidiMap = assignMidiMap;
 Wad.midiInstrument = midiInstrument;

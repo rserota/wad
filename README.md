@@ -7,7 +7,7 @@
 ## Table of Contents
 
 1. [Installation](#installation)
-1. [Overview](#overview)
+1. [Introduction](#introduction)
 1. [Panning](#panning)
 1. [Filters](#filters)
 1. [Microphone Input](#microphone-input)
@@ -29,6 +29,7 @@
 1. [Cross-browser Compatibility](#cross-browser-compatibility)
 1. [How to Contribute](#how-to-contribute)
 1. [Acknowledgements](#acknowledgements)
+1. [API Documentation](#api-documentation)
 
 
 ## Installation
@@ -49,7 +50,7 @@ import Wad from 'web-audio-daw';
 ```
 
 
-## Overview
+## Introduction
 
 
 To do anything with WadJS, you'll first need to create a wad, which can represent anything that makes sound, such as an mp3 file, an oscillator, or even live microphone input.
@@ -163,9 +164,9 @@ Wad.logs.verbosity = 2 // View all notices and warnings, including those from pl
 
 ```
 
-## SoundIterator
+## Sound Iterator
 
-The SoundIterator object is used for playing sounds in a random order or repeatedly through a loop. It is good for footstep sounds, for example.
+The `SoundIterator` object is used for playing sounds in a random order or repeatedly through a loop. It is good for footstep sounds, for example.
 
 ```javascript
 var  iterator = new Wad.SoundIterator({
@@ -414,6 +415,8 @@ WadJS works best in Chrome, decently in Safari for iOS, and it works poorly in F
 
 ## How To Contribute
 
+
+
 ## Acknowledgements
 
 The synthesizer icon at the top of this readme was created by Anatolii Badii from Noun Project
@@ -433,7 +436,7 @@ The synthesizer icon at the top of this readme was created by Anatolii Badii fro
 | args.pitch                | string or number  | 'A4'              | Set a default pitch on the constructor if you don't want to set the pitch on `play()`. Pass in a string to play a specific pitch (12-TET, A440), or pass in a number to play that frequency, in hertz. |
 | args.detune               | number            | 0                 | Set a default detune on the constructor if you don't want to set detune on `play()`. Detune is measured in cents. 100 cents is equal to 1 semitone. |
 | args.panning              | number or array   | 0                 | Placement of the sound source. Pass in a number to use stereo panning, or pass in a 3-element array to use 3D panning. Note that some browsers do not support stereo panning. |
-| args.panningModel         | string            | 'equalpower'      | See 'panning' section. |
+| args.panningModel         | string            | 'equalpower'      | See [panning](#panning) section. |
 | args.rolloffFactor        | number            | 1                 | |
 | args.env                  | object            | see below         | This is the ADSR envelope - attack, decay, (hold), sustain, release. |
 | args.env.attack           | number            | 0                 | Time in seconds from onset to peak volume.  Common values for oscillators may range from 0.05 to 0.3. |

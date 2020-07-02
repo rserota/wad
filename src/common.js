@@ -1,5 +1,6 @@
 import Tuna from 'tunajs';
 import Polywad from './polywad';
+import { pitches } from './pitches';
 
 
 let audioContext = window.AudioContext || window.webkitAudioContext;
@@ -89,7 +90,7 @@ let noiseBuffer = (function(){
 	}
 	return noiseBuffer;
 })();
-/////////////////////////////////////////////////////////////////////////
+
 
 /** a lil hack. just be glad it isn't on Object.prototype. **/
 let isArray = function(object){
@@ -282,6 +283,8 @@ let constructDelay = function(that, arg){
 	}
 	else { that.delay = null; }
 };
+
+let permissionsGranted = { micConsent: false };
 /** Special initialization and configuration for microphone Wads **/
 let getConsent = function(that, arg) {
 	that.nodes             = [];
@@ -289,7 +292,7 @@ let getConsent = function(that, arg) {
 	that.gain              = null;
 	return getUserMedia({audio: true, video: false}).then(function(stream) {
 		that.mediaStreamSource = context.createMediaStreamSource(stream);
-		Wad.micConsent = true;
+		permissionsGranted.micConsent = true;
 		setUpMic(that, arg);
 		return that;
 	}).catch(function(error) { logMessage('Error setting up microphone input: ', error); }); // This is the error callback.
@@ -514,11 +517,10 @@ let setUpPanningOnPlay = function(that, arg){
 	that.nodes.push(that.panning.node);
 
 };
-///////////////////////////////////////////////////////////
 
 
 /** Initialize and configure a vibrato LFO Wad for playback **/
-let setUpVibratoOnPlay = function(that, arg){
+let setUpVibratoOnPlay = function(that, arg, Wad){
 	that.vibrato.wad = new Wad({
 		source : that.vibrato.shape,
 		pitch  : that.vibrato.speed,
@@ -530,11 +532,10 @@ let setUpVibratoOnPlay = function(that, arg){
 	});
 	that.vibrato.wad.play();
 };
-///////////////////////////////////////////////////////////////
 
 
 /** Initialize and configure a tremolo LFO Wad for playback **/
-let setUpTremoloOnPlay = function(that, arg){
+let setUpTremoloOnPlay = function(that, arg, Wad){
 	that.tremolo.wad = new Wad({
 		source : that.tremolo.shape,
 		pitch  : that.tremolo.speed,
@@ -632,6 +633,7 @@ export {
 	constructDelay,
 	constructCompressor,
 	getConsent,
+	permissionsGranted,
 	setUpMic,
 	setUpPanningOnPlay,
 	setUpVibratoOnPlay,

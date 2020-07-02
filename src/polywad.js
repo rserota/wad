@@ -302,7 +302,7 @@ Polywad.prototype.remove = function(wad){
 			if ( this.wads[i] === wad ) {
 				this.wads[i].destination = context.destination;
 				this.wads.splice(i,1);
-				if ( wad instanceof Wad.Poly ) {
+				if ( wad instanceof Polywad ) {
 					wad.output.disconnect(0);
 					wad.output.connect(context.destination);
 				}

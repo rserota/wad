@@ -2489,7 +2489,7 @@ class AudioListener{
 /*!***********************!*\
   !*** ./src/common.js ***!
   \***********************/
-/*! exports provided: logStuff, logMessage, context, noiseBuffer, isArray, valueOrDefault, constructEnv, constructFilter, requestAudioFile, constructVibrato, constructTremolo, constructReverb, constructPanning, constructDelay, constructCompressor, getConsent, setUpMic, setUpPanningOnPlay, setUpVibratoOnPlay, setUpTremoloOnPlay, setUpDelayOnPlay, setUpTunaOnPlay, plugEmIn, setUpEnvOnPlay, setUpFilterOnPlay, setUpReverbOnPlay, filterEnv, playEnv, setUpOscillator, createFilters */
+/*! exports provided: logStuff, logMessage, context, noiseBuffer, isArray, valueOrDefault, constructEnv, constructFilter, requestAudioFile, constructVibrato, constructTremolo, constructReverb, constructPanning, constructDelay, constructCompressor, getConsent, permissionsGranted, setUpMic, setUpPanningOnPlay, setUpVibratoOnPlay, setUpTremoloOnPlay, setUpDelayOnPlay, setUpTunaOnPlay, plugEmIn, setUpEnvOnPlay, setUpFilterOnPlay, setUpReverbOnPlay, filterEnv, playEnv, setUpOscillator, createFilters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2510,6 +2510,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructDelay", function() { return constructDelay; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructCompressor", function() { return constructCompressor; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getConsent", function() { return getConsent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "permissionsGranted", function() { return permissionsGranted; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUpMic", function() { return setUpMic; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUpPanningOnPlay", function() { return setUpPanningOnPlay; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUpVibratoOnPlay", function() { return setUpVibratoOnPlay; });
@@ -2527,6 +2528,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tunajs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tunajs */ "./node_modules/tunajs/tuna.js");
 /* harmony import */ var tunajs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tunajs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _polywad__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./polywad */ "./src/polywad.js");
+/* harmony import */ var _pitches__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pitches */ "./src/pitches.js");
+
 
 
 
@@ -2811,6 +2814,8 @@ let constructDelay = function(that, arg){
 	}
 	else { that.delay = null; }
 };
+
+let permissionsGranted = { micConsent: false };
 /** Special initialization and configuration for microphone Wads **/
 let getConsent = function(that, arg) {
 	that.nodes             = [];
@@ -2818,7 +2823,7 @@ let getConsent = function(that, arg) {
 	that.gain              = null;
 	return getUserMedia({audio: true, video: false}).then(function(stream) {
 		that.mediaStreamSource = context.createMediaStreamSource(stream);
-		Wad.micConsent = true;
+		permissionsGranted.micConsent = true;
 		setUpMic(that, arg);
 		return that;
 	}).catch(function(error) { logMessage('Error setting up microphone input: ', error); }); // This is the error callback.
@@ -2918,8 +2923,8 @@ let setUpOscillator = function(that, arg){
 	that.soundSource = context.createOscillator();
 	that.soundSource.type = that.source;
 	if ( arg.pitch ) {
-		if ( arg.pitch in pitches ) {
-			that.soundSource.frequency.value = pitches[arg.pitch];
+		if ( arg.pitch in _pitches__WEBPACK_IMPORTED_MODULE_2__["pitches"] ) {
+			that.soundSource.frequency.value = _pitches__WEBPACK_IMPORTED_MODULE_2__["pitches"][arg.pitch];
 		}
 		else {
 			that.soundSource.frequency.value = arg.pitch;
@@ -3043,11 +3048,10 @@ let setUpPanningOnPlay = function(that, arg){
 	that.nodes.push(that.panning.node);
 
 };
-///////////////////////////////////////////////////////////
 
 
 /** Initialize and configure a vibrato LFO Wad for playback **/
-let setUpVibratoOnPlay = function(that, arg){
+let setUpVibratoOnPlay = function(that, arg, Wad){
 	that.vibrato.wad = new Wad({
 		source : that.vibrato.shape,
 		pitch  : that.vibrato.speed,
@@ -3059,11 +3063,10 @@ let setUpVibratoOnPlay = function(that, arg){
 	});
 	that.vibrato.wad.play();
 };
-///////////////////////////////////////////////////////////////
 
 
 /** Initialize and configure a tremolo LFO Wad for playback **/
-let setUpTremoloOnPlay = function(that, arg){
+let setUpTremoloOnPlay = function(that, arg, Wad){
 	that.tremolo.wad = new Wad({
 		source : that.tremolo.shape,
 		pitch  : that.tremolo.speed,
@@ -3161,10 +3164,10 @@ __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var _sound_iterator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sound_iterator */ "./src/sound_iterator.js");
 /* harmony import */ var _polywad__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./polywad */ "./src/polywad.js");
 /* harmony import */ var _presets__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./presets */ "./src/presets.js");
-/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./common */ "./src/common.js");
-/* harmony import */ var _pitches__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pitches */ "./src/pitches.js");
-/* harmony import */ var _midi__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./midi */ "./src/midi.js");
-/* harmony import */ var _wad_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./wad.js */ "./src/wad.js");
+/* harmony import */ var _pitches__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pitches */ "./src/pitches.js");
+/* harmony import */ var _midi__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./midi */ "./src/midi.js");
+/* harmony import */ var _wad_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./wad.js */ "./src/wad.js");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./common */ "./src/common.js");
 
 
 
@@ -3174,17 +3177,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-let Wad = _wad_js__WEBPACK_IMPORTED_MODULE_6__["default"];
+let Wad = _wad_js__WEBPACK_IMPORTED_MODULE_5__["default"];
 Wad.Poly = _polywad__WEBPACK_IMPORTED_MODULE_1__["default"];
 Wad.SoundIterator = function(args){ return new _sound_iterator__WEBPACK_IMPORTED_MODULE_0__["default"](args, Wad); };
-Wad.pitches = _pitches__WEBPACK_IMPORTED_MODULE_4__["pitches"];
-Wad.pitchesArray = _pitches__WEBPACK_IMPORTED_MODULE_4__["pitchesArray"];
-Wad.midiMap = _midi__WEBPACK_IMPORTED_MODULE_5__["midiMap"];
-Wad.assignMidiMap = _midi__WEBPACK_IMPORTED_MODULE_5__["assignMidiMap"];
-Wad.midiInstrument = _midi__WEBPACK_IMPORTED_MODULE_5__["midiInstrument"];
-Wad.midiInputs = _midi__WEBPACK_IMPORTED_MODULE_5__["midiInputs"];
+Wad.pitches = _pitches__WEBPACK_IMPORTED_MODULE_3__["pitches"];
+Wad.pitchesArray = _pitches__WEBPACK_IMPORTED_MODULE_3__["pitchesArray"];
+Wad.midiMap = _midi__WEBPACK_IMPORTED_MODULE_4__["midiMap"];
+Wad.assignMidiMap = _midi__WEBPACK_IMPORTED_MODULE_4__["assignMidiMap"];
+Wad.midiInstrument = _midi__WEBPACK_IMPORTED_MODULE_4__["midiInstrument"];
+Wad.midiInputs = _midi__WEBPACK_IMPORTED_MODULE_4__["midiInputs"];
 Wad.presets = _presets__WEBPACK_IMPORTED_MODULE_2__["default"];
-Wad.logs = _common__WEBPACK_IMPORTED_MODULE_3__["logStuff"];
+Wad.logs = _common__WEBPACK_IMPORTED_MODULE_6__["logStuff"];
 
 
 if( true && module.exports) { module.exports = Wad; }
@@ -3872,7 +3875,7 @@ Polywad.prototype.remove = function(wad){
 			if ( this.wads[i] === wad ) {
 				this.wads[i].destination = _common__WEBPACK_IMPORTED_MODULE_0__["context"].destination;
 				this.wads.splice(i,1);
-				if ( wad instanceof Wad.Poly ) {
+				if ( wad instanceof Polywad ) {
 					wad.output.disconnect(0);
 					wad.output.connect(_common__WEBPACK_IMPORTED_MODULE_0__["context"].destination);
 				}
@@ -4221,7 +4224,6 @@ let Wad = function(arg){
 	Wad.allWads.push(this);
 };
 Wad.allWads = [];
-Wad.micConsent = false;
 Wad.audioContext = _common__WEBPACK_IMPORTED_MODULE_2__["context"];
 Wad.listener = new _audio_listener__WEBPACK_IMPORTED_MODULE_1__["default"](_common__WEBPACK_IMPORTED_MODULE_2__["context"]);
 if ( typeof tunajs__WEBPACK_IMPORTED_MODULE_0___default.a != undefined ) {
@@ -4253,7 +4255,7 @@ Wad.prototype.play = function(arg){
 	}
 
 	else if ( this.source === 'mic' ) {
-		if ( Wad.micConsent ) {
+		if ( _common__WEBPACK_IMPORTED_MODULE_2__["permissionsGranted"].micConsent ) {
 			if ( arg.arg === null ) {
 				Object(_common__WEBPACK_IMPORTED_MODULE_2__["plugEmIn"])(this, arg);
 			}
@@ -4271,8 +4273,8 @@ Wad.prototype.play = function(arg){
 		}
 		else { 
 			Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You have not given your browser permission to use your microphone.');
-			Object(_common__WEBPACK_IMPORTED_MODULE_2__["getConsent"])(this, arg).then(function (that) {
-				that.play(arg);
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["getConsent"])(this, arg).then(() =>{
+				this.play(arg);
 			});
 		}
 	}
@@ -4358,10 +4360,10 @@ or defaults to the constructor argument if the filter and filter envelope are no
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["playEnv"])(this, arg);
 
 		//sets up vibrato LFO
-		if ( this.vibrato ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpVibratoOnPlay"])(this, arg); }
+		if ( this.vibrato ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpVibratoOnPlay"])(this, arg, Wad); }
 
 		//sets up tremolo LFO
-		if ( this.tremolo ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpTremoloOnPlay"])(this, arg); }
+		if ( this.tremolo ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpTremoloOnPlay"])(this, arg, Wad); }
 
 		var thatWad = this;
 
@@ -4642,7 +4644,7 @@ Wad.prototype.stop = function(label){
 			}
 		}
 	}
-	else if (Wad.micConsent ) {
+	else if (_common__WEBPACK_IMPORTED_MODULE_2__["permissionsGranted"].micConsent ) {
 		this.mediaStreamSource.disconnect(0);
 	}
 	else { Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You have not given your browser permission to use your microphone.');}

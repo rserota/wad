@@ -1,4 +1,5 @@
-import Wad from '../../build/wad.min.js';
+import Wad from '../../build/wad.js';
+window.Wad = Wad;
 
 Wad.logs.verbosity = 1;
 var ignition = new Wad({source:'./ignition.mp3'});
@@ -185,7 +186,7 @@ document.getElementById('mic-play').addEventListener('click', function(){
 	voice.play();
 });
 document.getElementById('mic-stop').addEventListener('click', function(){
-	console.log('Play mic');
+	console.log('Stop mic');
 	voice.stop();
 });
 document.getElementById('detect-pitch').addEventListener('click', function(){

@@ -86,14 +86,4682 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./build/wad.min.js":
-/*!**************************!*\
-  !*** ./build/wad.min.js ***!
-  \**************************/
+/***/ "./build/wad.js":
+/*!**********************!*\
+  !*** ./build/wad.js ***!
+  \**********************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-!function(e,t){ true?module.exports=t():undefined}(window,(function(){return function(e){var t={};function i(a){if(t[a])return t[a].exports;var n=t[a]={i:a,l:!1,exports:{}};return e[a].call(n.exports,n,n.exports,i),n.l=!0,n.exports}return i.m=e,i.c=t,i.d=function(e,t,a){i.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:a})},i.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},i.t=function(e,t){if(1&t&&(e=i(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var a=Object.create(null);if(i.r(a),Object.defineProperty(a,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var n in e)i.d(a,n,function(t){return e[t]}.bind(null,n));return a},i.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return i.d(t,"a",t),t},i.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},i.p="",i(i.s=8)}([function(e,t,i){"use strict";i.d(t,"o",(function(){return u})),i.d(t,"n",(function(){return l})),i.d(t,"i",(function(){return o})),i.d(t,"p",(function(){return p})),i.d(t,"m",(function(){return f})),i.d(t,"D",(function(){return v})),i.d(t,"c",(function(){return m})),i.d(t,"d",(function(){return y})),i.d(t,"s",(function(){return b})),i.d(t,"h",(function(){return g})),i.d(t,"g",(function(){return w})),i.d(t,"f",(function(){return k})),i.d(t,"e",(function(){return T})),i.d(t,"b",(function(){return _})),i.d(t,"a",(function(){return R})),i.d(t,"l",(function(){return x})),i.d(t,"w",(function(){return O})),i.d(t,"y",(function(){return D})),i.d(t,"C",(function(){return j})),i.d(t,"A",(function(){return N})),i.d(t,"t",(function(){return P})),i.d(t,"B",(function(){return E})),i.d(t,"r",(function(){return q})),i.d(t,"u",(function(){return L})),i.d(t,"v",(function(){return S})),i.d(t,"z",(function(){return C})),i.d(t,"k",(function(){return G})),i.d(t,"q",(function(){return M})),i.d(t,"x",(function(){return A})),i.d(t,"j",(function(){return F}));var a=i(2),n=i.n(a),s=i(4);let o,r=window.AudioContext||window.webkitAudioContext,u={verbosity:0,suppressedLogs:0},l=function(e,t){t=t||1,u.verbosity>=t?console.log(e):u.suppressedLogs++},c=document.querySelector("a-scene");c&&c.audioListener&&c.audioListener.context?(o=c.audioListener.context,l("An A-Frame scene has been detected.")):o=new r;let h=function(){l("unlock",2),"suspended"===o.state?(l("suspended",2),o.resume()):"running"===o.state&&(l("The audio context is running.",2),l(o,2),window.removeEventListener("mousemove",h),window.removeEventListener("touchstart",h),window.removeEventListener("touchend",h))};window.addEventListener("mousemove",h),window.addEventListener("touchstart",h),window.addEventListener("touchend",h);let d=function(e){if(e.navigator.mediaDevices&&e.navigator.mediaDevices.getUserMedia)return e.navigator.mediaDevices.getUserMedia.bind(e.navigator.mediaDevices);let t=e.navigator.getUserMedia||e.navigator.webkitGetUserMedia||e.navigator.mozGetUserMedia;return t?function(i){return new Promise((function(a,n){t.call(e.navigator,i,a,n)}))}:function(){throw"getUserMedia is unsupported"}}(window);l(d?"Your browser supports getUserMedia.":"Your browser does not support getUserMedia.");let p=function(){Math.seed=6,Math.seededRandom=function(e,t){return e=e||1,t=t||0,Math.seed=(9301*Math.seed+49297)%233280,t+Math.seed/233280*(e-t)};for(var e=2*o.sampleRate,t=o.createBuffer(1,e,o.sampleRate),i=t.getChannelData(0),a=0;a<e;a++)i[a]=2*Math.seededRandom()-1;return t}(),f=function(e){return"[object Array]"===Object.prototype.toString.call(e)},v=function(e,t){return null==e?t:e},m=function(e,t){e.env={attack:t.env?v(t.env.attack,0):0,decay:t.env?v(t.env.decay,0):0,sustain:t.env?v(t.env.sustain,1):1,hold:t.env?v(t.env.hold,3.14159):3.14159,release:t.env?v(t.env.release,0):0},e.defaultEnv={attack:t.env?v(t.env.attack,0):0,decay:t.env?v(t.env.decay,0):0,sustain:t.env?v(t.env.sustain,1):1,hold:t.env?v(t.env.hold,3.14159):3.14159,release:t.env?v(t.env.release,0):0},e.userSetHold=!(!t.env||!t.env.hold)},y=function(e,t){t.filter?f(t.filter)?e.filter=t.filter.map((function(e){return{type:e.type||"lowpass",frequency:e.frequency||600,q:e.q||1,env:e.env||null}})):e.filter=[{type:t.filter.type||"lowpass",frequency:t.filter.frequency||600,q:t.filter.q||1,env:t.filter.env||null}]:t.filter=null},b=function(e,t){var i=new XMLHttpRequest;i.open("GET",e.source,!0),i.responseType="arraybuffer",e.playable--,i.onload=function(){o.decodeAudioData(i.response,(function(i){e.decodedBuffer=i,3.14159===e.env.hold&&(e.defaultEnv.hold=e.decodedBuffer.duration*(1/e.rate),e.env.hold=e.decodedBuffer.duration*(1/e.rate)),e.duration=1e3*e.env.hold,t&&t(e),e.playable++,e.playOnLoad&&e.play(e.playOnLoadArg)}))},i.send()},g=function(e,t){t.vibrato?e.vibrato={shape:v(t.vibrato.shape,"sine"),speed:v(t.vibrato.speed,1),magnitude:v(t.vibrato.magnitude,5),attack:v(t.vibrato.attack,0)}:e.vibrato=null},w=function(e,t){t.tremolo?e.tremolo={shape:v(t.tremolo.shape,"sine"),speed:v(t.tremolo.speed,1),magnitude:v(t.tremolo.magnitude,5),attack:v(t.tremolo.attack,1)}:e.tremolo=null},k=function(e,t){if(t.reverb){e.reverb={wet:v(t.reverb.wet,1)};var i=t.reverb.impulse||"https://frivolous.biz/audio/widehall.wav",a=new XMLHttpRequest;a.open("GET",i,!0),a.responseType="arraybuffer",e.playable--,a.onload=function(){o.decodeAudioData(a.response,(function(i){e.reverb.buffer=i,e.playable++,e.playOnLoad&&e.play(e.playOnLoadArg),e instanceof s.a&&e.setUp(t),"mic"===e.source&&e.reverb&&e.reverb.buffer&&e.reverb.node&&!e.reverb.node.buffer&&(e.reverb.node.convolver.buffer=e.reverb.buffer)}))},a.send()}else e.reverb=null},T=function(e,t){"panning"in t?(e.panning={location:t.panning},"number"==typeof t.panning?e.panning.type="stereo":(e.panning.type="3d",e.panning.panningModel=t.panningModel||"equalpower",e.panning.distanceModel=t.distanceModel,e.panning.maxDistance=t.maxDistance,e.panning.rolloffFactor=t.rolloffFactor,e.panning.refDistance=t.refDistance,e.panning.coneInnerAngle=t.coneInnerAngle,e.panning.coneOuterAngle=t.coneOuterAngle,e.panning.coneOuterGain=t.coneOuterGain)):e.panning={location:0,type:"stereo"},"stereo"!==e.panning.type||o.createStereoPanner||(l("Your browser does not support stereo panning. Falling back to 3D panning."),e.panning={location:[0,0,0],type:"3d",panningModel:"equalpower"})},_=function(e,t){t.delay?e.delay={delayTime:v(t.delay.delayTime,.5),maxDelayTime:v(t.delay.maxDelayTime,2),feedback:v(t.delay.feedback,.25),wet:v(t.delay.wet,.25)}:e.delay=null},x=function(e,t){return e.nodes=[],e.mediaStreamSource=null,e.gain=null,d({audio:!0,video:!1}).then((function(i){return e.mediaStreamSource=o.createMediaStreamSource(i),Wad.micConsent=!0,O(e,t),e})).catch((function(e){l("Error setting up microphone input: ",e)}))},O=function(e,t){e.nodes=[],e.gain=o.createGain(),e.gain.gain.value=v(t.volume,e.volume),e.nodes.push(e.mediaStreamSource),e.nodes.push(e.gain),(e.filter||t.filter)&&F(e,t),(e.reverb||t.reverb)&&C(e,t),T(e,t),D(e,t),(e.delay||t.delay)&&P(e,t),E(e,t),e.setUpExternalFxOnPlay(t,o)},G=function(e,t){e.filter.forEach((function(e,i){e.node.frequency.linearRampToValueAtTime(e.frequency,t.exactTime),e.node.frequency.linearRampToValueAtTime(e.env.frequency,t.exactTime+e.env.attack)}))},M=function(e,t){let i,a=t.loop||t.loop;i=-1!==e.env.hold&&(!a||e.userSetHold||t.env&&t.env.hold)?e.env.hold:999,e.gain[0].gain.linearRampToValueAtTime(1e-4,t.exactTime),e.gain[0].gain.linearRampToValueAtTime(e.volume,t.exactTime+e.env.attack+1e-5),e.gain[0].gain.linearRampToValueAtTime(e.volume*e.env.sustain,t.exactTime+e.env.attack+e.env.decay+2e-5),e.gain[0].gain.linearRampToValueAtTime(e.volume*e.env.sustain,t.exactTime+e.env.attack+e.env.decay+i+3e-5),e.gain[0].gain.linearRampToValueAtTime(1e-4,t.exactTime+e.env.attack+e.env.decay+i+e.env.release+4e-5),e.soundSource.start(t.exactTime,t.offset),e.soundSource.playbackRate||e.soundSource.stop(t.exactTime+e.env.attack+e.env.decay+i+e.env.release+5e-5)},q=function(e,t){let i,a=t&&t.destination||e.destination;for(let t=1;t<e.nodes.length;t++){let i,a;i="custom"===e.nodes[t-1].interface?e.nodes[t-1].output:e.nodes[t-1],a="custom"===e.nodes[t].interface?e.nodes[t].input:e.nodes[t],i.connect(a)}i="custom"===e.nodes[e.nodes.length-1].interface?e.nodes[e.nodes.length-1].output:e.nodes[e.nodes.length-1],i.connect(a)},A=function(e,t){t=t||{},e.soundSource=o.createOscillator(),e.soundSource.type=e.source,t.pitch?t.pitch in pitches?e.soundSource.frequency.value=pitches[t.pitch]:e.soundSource.frequency.value=t.pitch:e.soundSource.frequency.value=e.pitch},L=function(e,t){t&&t.env?(e.env.attack=v(t.env.attack,e.defaultEnv.attack),e.env.decay=v(t.env.decay,e.defaultEnv.decay),e.env.sustain=v(t.env.sustain,e.defaultEnv.sustain),e.env.hold=v(t.env.hold,e.defaultEnv.hold),e.env.release=v(t.env.release,e.defaultEnv.release)):e.env={attack:e.defaultEnv.attack,decay:e.defaultEnv.decay,sustain:e.defaultEnv.sustain,hold:e.defaultEnv.hold,release:e.defaultEnv.release}},F=function(e,t){t.filter&&!f(t.filter)&&(t.filter=[t.filter]),e.filter.forEach((function(i,a){i.node=o.createBiquadFilter(),i.node.type=i.type,i.node.frequency.value=t.filter&&t.filter[a]&&t.filter[a].frequency||i.frequency,i.node.Q.value=t.filter&&t.filter[a]&&t.filter[a].q||i.q,(t.filter&&t.filter[a].env||e.filter[a].env)&&"mic"!==e.source&&(i.env={attack:t.filter&&t.filter[a].env&&t.filter[a].env.attack||e.filter[a].env.attack,frequency:t.filter&&t.filter[a].env&&t.filter[a].env.frequency||e.filter[a].env.frequency}),e.nodes.push(i.node)}))},S=function(e,t){t&&t.filter&&e.filter?(f(t.filter)||(t.filter=[t.filter]),F(e,t)):e.filter&&F(e,e)},C=function(e,t){var i={interface:"custom",input:o.createGain(),convolver:o.createConvolver(),wet:o.createGain(),output:o.createGain()};i.convolver.buffer=e.reverb.buffer,i.wet.gain.value=e.reverb.wet,i.input.connect(i.convolver),i.input.connect(i.output),i.convolver.connect(i.wet),i.wet.connect(i.output),e.reverb.node=i,e.nodes.push(e.reverb.node)},D=function(e,t){var i=t&&t.panning;void 0===i&&(i=e.panning.location),"number"==typeof i&&o.createStereoPanner?(e.panning.node=o.createStereoPanner(),e.panning.node.pan.value=i,e.panning.type="stereo"):(e.panning.node=o.createPanner(),"number"==typeof i?e.panning.node.setPosition(i,0,0):e.panning.node.setPosition(i[0],i[1],i[2]),e.panning.node.panningModel=t.panningModel||e.panningModel||"equalpower",e.panning.type="3d",e.panning.node.distanceModel=t.distanceModel||e.distanceModel||e.panning.node.distanceModel,e.panning.node.maxDistance=t.maxDistance||e.maxDistance||e.panning.node.maxDistance,e.panning.node.rolloffFactor=t.rolloffFactor||e.rolloffFactor||e.panning.node.rolloffFactor,e.panning.node.refDistance=t.refDistance||e.refDistance||e.panning.node.refDistance,e.panning.node.coneInnerAngle=t.coneInnerAngle||e.coneInnerAngle||e.panning.node.coneInnerAngle,e.panning.node.coneOuterAngle=t.coneOuterAngle||e.coneOuterAngle||e.panning.node.coneOuterAngle,e.panning.node.coneOuterGain=t.coneOuterGain||e.coneOuterGain||e.panning.node.coneOuterGain),e.nodes.push(e.panning.node)},j=function(e,t){e.vibrato.wad=new Wad({source:e.vibrato.shape,pitch:e.vibrato.speed,volume:e.vibrato.magnitude,env:{attack:e.vibrato.attack},destination:e.soundSource.frequency}),e.vibrato.wad.play()},N=function(e,t){e.tremolo.wad=new Wad({source:e.tremolo.shape,pitch:e.tremolo.speed,volume:e.tremolo.magnitude,env:{attack:e.tremolo.attack,hold:10},destination:e.gain[0].gain}),e.tremolo.wad.play()},P=function(e,t){if(e.delay){t.delay||(t.delay={});var i={interface:"custom",input:o.createGain(),output:o.createGain(),delayNode:o.createDelay(e.delay.maxDelayTime),feedbackNode:o.createGain(),wetNode:o.createGain()};i.delayNode.delayTime.value=v(t.delay.delayTime,e.delay.delayTime),i.feedbackNode.gain.value=v(t.delay.feedback,e.delay.feedback),i.wetNode.gain.value=v(t.delay.wet,e.delay.wet),i.input.connect(i.delayNode),i.input.connect(i.output),i.delayNode.connect(i.feedbackNode),i.delayNode.connect(i.wetNode),i.feedbackNode.connect(i.delayNode),i.wetNode.connect(i.output),e.delay.delayNode=i,e.nodes.push(i)}},R=function(e,t){e.compressor=o.createDynamicsCompressor(),e.compressor.attack.value=v(t.compressor.attack,e.compressor.attack.value),e.compressor.knee.value=v(t.compressor.knee,e.compressor.knee.value),e.compressor.ratio.value=v(t.compressor.ratio,e.compressor.ratio.value),e.compressor.release.value=v(t.compressor.release,e.compressor.release.value),e.compressor.threshold.value=v(t.compressor.threshold,e.compressor.threshold.value),e.nodes.push(e.compressor)},B=new n.a(o),E=function(e,t){if(!e.tuna&&!t.tuna)return;let i={};if(e.tuna)for(let t in e.tuna)i[t]=e.tuna[t];if(t.tuna)for(let e in t.tuna)i[e]=t.tuna[e];for(let t in i){let a=new B[t](i[t]);e.nodes.push(a)}}},function(e,t,i){"use strict";i.d(t,"a",(function(){return a})),i.d(t,"b",(function(){return n}));let a={A0:27.5,"A#0":29.1352,Bb0:29.1352,B0:30.8677,"B#0":32.7032,Cb1:30.8677,C1:32.7032,"C#1":34.6478,Db1:34.6478,D1:36.7081,"D#1":38.8909,Eb1:38.8909,E1:41.2034,Fb1:41.2034,"E#1":43.6535,F1:43.6535,"F#1":46.2493,Gb1:46.2493,G1:48.9994,"G#1":51.9131,Ab1:51.9131,A1:55,"A#1":58.2705,Bb1:58.2705,B1:61.7354,Cb2:61.7354,"B#1":65.4064,C2:65.4064,"C#2":69.2957,Db2:69.2957,D2:73.4162,"D#2":77.7817,Eb2:77.7817,E2:82.4069,Fb2:82.4069,"E#2":87.3071,F2:87.3071,"F#2":92.4986,Gb2:92.4986,G2:97.9989,"G#2":103.826,Ab2:103.826,A2:110,"A#2":116.541,Bb2:116.541,B2:123.471,Cb3:123.471,"B#2":130.813,C3:130.813,"C#3":138.591,Db3:138.591,D3:146.832,"D#3":155.563,Eb3:155.563,E3:164.814,Fb3:164.814,"E#3":174.614,F3:174.614,"F#3":184.997,Gb3:184.997,G3:195.998,"G#3":207.652,Ab3:207.652,A3:220,"A#3":233.082,Bb3:233.082,B3:246.942,Cb4:246.942,"B#3":261.626,C4:261.626,"C#4":277.183,Db4:277.183,D4:293.665,"D#4":311.127,Eb4:311.127,E4:329.628,Fb4:329.628,"E#4":349.228,F4:349.228,"F#4":369.994,Gb4:369.994,G4:391.995,"G#4":415.305,Ab4:415.305,A4:440,"A#4":466.164,Bb4:466.164,B4:493.883,Cb5:493.883,"B#4":523.251,C5:523.251,"C#5":554.365,Db5:554.365,D5:587.33,"D#5":622.254,Eb5:622.254,E5:659.255,Fb5:659.255,"E#5":698.456,F5:698.456,"F#5":739.989,Gb5:739.989,G5:783.991,"G#5":830.609,Ab5:830.609,A5:880,"A#5":932.328,Bb5:932.328,B5:987.767,Cb6:987.767,"B#5":1046.5,C6:1046.5,"C#6":1108.73,Db6:1108.73,D6:1174.66,"D#6":1244.51,Eb6:1244.51,Fb6:1318.51,E6:1318.51,"E#6":1396.91,F6:1396.91,"F#6":1479.98,Gb6:1479.98,G6:1567.98,"G#6":1661.22,Ab6:1661.22,A6:1760,"A#6":1864.66,Bb6:1864.66,B6:1975.53,Cb7:1975.53,"B#6":2093,C7:2093,"C#7":2217.46,Db7:2217.46,D7:2349.32,"D#7":2489.02,Eb7:2489.02,E7:2637.02,Fb7:2637.02,"E#7":2793.83,F7:2793.83,"F#7":2959.96,Gb7:2959.96,G7:3135.96,"G#7":3322.44,Ab7:3322.44,A7:3520,"A#7":3729.31,Bb7:3729.31,B7:3951.07,Cb8:3951.07,"B#7":4186.01,C8:4186.01},n=["C0","C#0","D0","D#0","E0","F0","F#0","G0","G#0","A0","A#0","B0","C1","C#1","D1","D#1","E1","F1","F#1","G1","G#1","A1","A#1","B1","C2","C#2","D2","D#2","E2","F2","F#2","G2","G#2","A2","A#2","B2","C3","C#3","D3","D#3","E3","F3","F#3","G3","G#3","A3","A#3","B3","C4","C#4","D4","D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5","C#5","D5","D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5","C6","C#6","D6","D#6","E6","F6","F#6","G6","G#6","A6","A#6","B6","C7","C#7","D7","D#7","E7","F7","F#7","G7","G#7","A7","A#7","B7","C8"]},function(e,t,i){!function(){var t,i,a=function(e,t){e.value=t},n=Object.create(null,{activate:{writable:!0,value:function(e){e?(this.input.disconnect(),this.input.connect(this.activateNode),this.activateCallback&&this.activateCallback(e)):(this.input.disconnect(),this.input.connect(this.output))}},bypass:{get:function(){return this._bypass},set:function(e){this._lastBypassValue!==e&&(this._bypass=e,this.activate(!e),this._lastBypassValue=e)}},connect:{value:function(e){this.output.connect(e)}},disconnect:{value:function(e){this.output.disconnect(e)}},connectInOrder:{value:function(e){for(var t=e.length-1;t--;){if(!e[t].connect)return console.error("AudioNode.connectInOrder: TypeError: Not an AudioNode.",e[t]);e[t+1].input?e[t].connect(e[t+1].input):e[t].connect(e[t+1])}}},getDefaults:{value:function(){var e={};for(var t in this.defaults)e[t]=this.defaults[t].value;return e}},automate:{value:function(e,i,a,n){var s,o=n?~~(n/1e3):t.currentTime,r=a?~~(a/1e3):0,u=this.defaults[e],l=this[e];l?u.automatable?(a?(s="linearRampToValueAtTime",l.cancelScheduledValues(o),l.setValueAtTime(l.value,o)):s="setValueAtTime",l[s](i,r+o)):l=i:console.error("Invalid Property for "+this.name)}}}),s="float",o="boolean",r="int";function u(e){if(!(this instanceof u))return new u(e);var a="undefined"==typeof window?{}:window;if(a.AudioContext||(a.AudioContext=a.webkitAudioContext),e||(console.log("tuna.js: Missing audio context! Creating a new context for you."),e=a.AudioContext&&new a.AudioContext),!e)throw new Error("Tuna cannot initialize because this environment does not support web audio.");!function(e){if(!0===e.__connectified__)return;var t=e.createGain(),i=Object.getPrototypeOf(Object.getPrototypeOf(t)),a=i.connect;i.connect=function(){var e=arguments[0];return arguments[0]=n.isPrototypeOf?n.isPrototypeOf(e)?e.input:e:e.input||e,a.apply(this,arguments),e},e.__connectified__=!0}(e),t=e,i=this}function l(e){return Math.max(0,Math.round(100*Math.pow(2,e/6))/100)}function c(e,t){var i,a,n,s=0,o=0,r=0;return i=e.toExponential().match(/^.\.?(.*)e(.+)$/),s=parseInt(i[2],10)-(i[1]+"").length,i=t.toExponential().match(/^.\.?(.*)e(.+)$/),(n=parseInt(i[2],10)-(i[1]+"").length)>s&&(s=n),a=e%t,s<-100||s>20?(o=Math.round(Math.log(a)/Math.log(10)),(a/(r=Math.pow(10,o))).toFixed(o-s)*r):parseFloat(a.toFixed(-s))}function h(e){return 0===e?1:Math.abs(e)/e}function d(e){return(Math.exp(e)-Math.exp(-e))/(Math.exp(e)+Math.exp(-e))}function p(e,t){return void 0===e?t:e}e.exports?e.exports=u:window.define("Tuna",(function(){return u})),u.prototype.Bitcrusher=function(e){e||(e=this.getDefaults()),this.bufferSize=e.bufferSize||this.defaults.bufferSize.value,this.input=t.createGain(),this.activateNode=t.createGain(),this.processor=t.createScriptProcessor(this.bufferSize,1,1),this.output=t.createGain(),this.activateNode.connect(this.processor),this.processor.connect(this.output);var i,a,n,s,o,r=0,u=0;this.processor.onaudioprocess=function(e){for(i=e.inputBuffer.getChannelData(0),a=e.outputBuffer.getChannelData(0),n=Math.pow(.5,this.bits),o=i.length,s=0;s<o;s++)(r+=this.normfreq)>=1&&(r-=1,u=n*Math.floor(i[s]/n+.5)),a[s]=u},this.bits=e.bits||this.defaults.bits.value,this.normfreq=p(e.normfreq,this.defaults.normfreq.value),this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.Bitcrusher.prototype=Object.create(n,{name:{value:"Bitcrusher"},defaults:{writable:!0,value:{bits:{value:4,min:1,max:16,automatable:!1,type:r},bufferSize:{value:4096,min:256,max:16384,automatable:!1,type:r},bypass:{value:!1,automatable:!1,type:o},normfreq:{value:.1,min:1e-4,max:1,automatable:!1,type:s}}},bits:{enumerable:!0,get:function(){return this.processor.bits},set:function(e){this.processor.bits=e}},normfreq:{enumerable:!0,get:function(){return this.processor.normfreq},set:function(e){this.processor.normfreq=e}}}),u.prototype.Cabinet=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.activateNode=t.createGain(),this.convolver=this.newConvolver(e.impulsePath||"../impulses/impulse_guitar.wav"),this.makeupNode=t.createGain(),this.output=t.createGain(),this.activateNode.connect(this.convolver.input),this.convolver.output.connect(this.makeupNode),this.makeupNode.connect(this.output),this.makeupGain=p(e.makeupGain,this.defaults.makeupGain.value),this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.Cabinet.prototype=Object.create(n,{name:{value:"Cabinet"},defaults:{writable:!0,value:{makeupGain:{value:1,min:0,max:20,automatable:!0,type:s},bypass:{value:!1,automatable:!1,type:o}}},makeupGain:{enumerable:!0,get:function(){return this.makeupNode.gain},set:function(e){this.makeupNode.gain.setTargetAtTime(e,t.currentTime,.01)}},newConvolver:{value:function(e){return new i.Convolver({impulse:e,dryLevel:0,wetLevel:1})}}}),u.prototype.Chorus=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.attenuator=this.activateNode=t.createGain(),this.splitter=t.createChannelSplitter(2),this.delayL=t.createDelay(),this.delayR=t.createDelay(),this.feedbackGainNodeLR=t.createGain(),this.feedbackGainNodeRL=t.createGain(),this.merger=t.createChannelMerger(2),this.output=t.createGain(),this.lfoL=new i.LFO({target:this.delayL.delayTime,callback:a}),this.lfoR=new i.LFO({target:this.delayR.delayTime,callback:a}),this.input.connect(this.attenuator),this.attenuator.connect(this.output),this.attenuator.connect(this.splitter),this.splitter.connect(this.delayL,0),this.splitter.connect(this.delayR,1),this.delayL.connect(this.feedbackGainNodeLR),this.delayR.connect(this.feedbackGainNodeRL),this.feedbackGainNodeLR.connect(this.delayR),this.feedbackGainNodeRL.connect(this.delayL),this.delayL.connect(this.merger,0,0),this.delayR.connect(this.merger,0,1),this.merger.connect(this.output),this.feedback=p(e.feedback,this.defaults.feedback.value),this.rate=p(e.rate,this.defaults.rate.value),this.delay=p(e.delay,this.defaults.delay.value),this.depth=p(e.depth,this.defaults.depth.value),this.lfoR.phase=Math.PI/2,this.attenuator.gain.value=.6934,this.lfoL.activate(!0),this.lfoR.activate(!0),this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.Chorus.prototype=Object.create(n,{name:{value:"Chorus"},defaults:{writable:!0,value:{feedback:{value:.4,min:0,max:.95,automatable:!1,type:s},delay:{value:.0045,min:0,max:1,automatable:!1,type:s},depth:{value:.7,min:0,max:1,automatable:!1,type:s},rate:{value:1.5,min:0,max:8,automatable:!1,type:s},bypass:{value:!1,automatable:!1,type:o}}},delay:{enumerable:!0,get:function(){return this._delay},set:function(e){this._delay=2*Math.pow(10,e)*2e-4,this.lfoL.offset=this._delay,this.lfoR.offset=this._delay,this._depth=this._depth}},depth:{enumerable:!0,get:function(){return this._depth},set:function(e){this._depth=e,this.lfoL.oscillation=this._depth*this._delay,this.lfoR.oscillation=this._depth*this._delay}},feedback:{enumerable:!0,get:function(){return this._feedback},set:function(e){this._feedback=e,this.feedbackGainNodeLR.gain.setTargetAtTime(this._feedback,t.currentTime,.01),this.feedbackGainNodeRL.gain.setTargetAtTime(this._feedback,t.currentTime,.01)}},rate:{enumerable:!0,get:function(){return this._rate},set:function(e){this._rate=e,this.lfoL.frequency=this._rate,this.lfoR.frequency=this._rate}}}),u.prototype.Compressor=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.compNode=this.activateNode=t.createDynamicsCompressor(),this.makeupNode=t.createGain(),this.output=t.createGain(),this.compNode.connect(this.makeupNode),this.makeupNode.connect(this.output),this.automakeup=p(e.automakeup,this.defaults.automakeup.value),this.makeupGain=p(e.makeupGain,this.defaults.makeupGain.value),this.threshold=p(e.threshold,this.defaults.threshold.value),this.release=p(e.release,this.defaults.release.value),this.attack=p(e.attack,this.defaults.attack.value),this.ratio=e.ratio||this.defaults.ratio.value,this.knee=p(e.knee,this.defaults.knee.value),this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.Compressor.prototype=Object.create(n,{name:{value:"Compressor"},defaults:{writable:!0,value:{threshold:{value:-20,min:-60,max:0,automatable:!0,type:s},release:{value:250,min:10,max:2e3,automatable:!0,type:s},makeupGain:{value:1,min:1,max:100,automatable:!0,type:s},attack:{value:1,min:0,max:1e3,automatable:!0,type:s},ratio:{value:4,min:1,max:50,automatable:!0,type:s},knee:{value:5,min:0,max:40,automatable:!0,type:s},automakeup:{value:!1,automatable:!1,type:o},bypass:{value:!1,automatable:!1,type:o}}},computeMakeup:{value:function(){var e=this.compNode;return-(e.threshold.value-e.threshold.value/e.ratio.value)/4}},automakeup:{enumerable:!0,get:function(){return this._automakeup},set:function(e){this._automakeup=e,this._automakeup&&(this.makeupGain=this.computeMakeup())}},threshold:{enumerable:!0,get:function(){return this.compNode.threshold},set:function(e){this.compNode.threshold.value=e,this._automakeup&&(this.makeupGain=this.computeMakeup())}},ratio:{enumerable:!0,get:function(){return this.compNode.ratio},set:function(e){this.compNode.ratio.value=e,this._automakeup&&(this.makeupGain=this.computeMakeup())}},knee:{enumerable:!0,get:function(){return this.compNode.knee},set:function(e){this.compNode.knee.value=e,this._automakeup&&(this.makeupGain=this.computeMakeup())}},attack:{enumerable:!0,get:function(){return this.compNode.attack},set:function(e){this.compNode.attack.value=e/1e3}},release:{enumerable:!0,get:function(){return this.compNode.release},set:function(e){this.compNode.release.value=e/1e3}},makeupGain:{enumerable:!0,get:function(){return this.makeupNode.gain},set:function(e){this.makeupNode.gain.setTargetAtTime(l(e),t.currentTime,.01)}}}),u.prototype.Convolver=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.activateNode=t.createGain(),this.convolver=t.createConvolver(),this.dry=t.createGain(),this.filterLow=t.createBiquadFilter(),this.filterHigh=t.createBiquadFilter(),this.wet=t.createGain(),this.output=t.createGain(),this.activateNode.connect(this.filterLow),this.activateNode.connect(this.dry),this.filterLow.connect(this.filterHigh),this.filterHigh.connect(this.convolver),this.convolver.connect(this.wet),this.wet.connect(this.output),this.dry.connect(this.output),this.dryLevel=p(e.dryLevel,this.defaults.dryLevel.value),this.wetLevel=p(e.wetLevel,this.defaults.wetLevel.value),this.highCut=e.highCut||this.defaults.highCut.value,this.buffer=e.impulse||"../impulses/ir_rev_short.wav",this.lowCut=e.lowCut||this.defaults.lowCut.value,this.level=p(e.level,this.defaults.level.value),this.filterHigh.type="lowpass",this.filterLow.type="highpass",this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.Convolver.prototype=Object.create(n,{name:{value:"Convolver"},defaults:{writable:!0,value:{highCut:{value:22050,min:20,max:22050,automatable:!0,type:s},lowCut:{value:20,min:20,max:22050,automatable:!0,type:s},dryLevel:{value:1,min:0,max:1,automatable:!0,type:s},wetLevel:{value:1,min:0,max:1,automatable:!0,type:s},level:{value:1,min:0,max:1,automatable:!0,type:s},bypass:{value:!1,automatable:!1,type:o}}},lowCut:{get:function(){return this.filterLow.frequency},set:function(e){this.filterLow.frequency.setTargetAtTime(e,t.currentTime,.01)}},highCut:{get:function(){return this.filterHigh.frequency},set:function(e){this.filterHigh.frequency.setTargetAtTime(e,t.currentTime,.01)}},level:{get:function(){return this.output.gain},set:function(e){this.output.gain.setTargetAtTime(e,t.currentTime,.01)}},dryLevel:{get:function(){return this.dry.gain},set:function(e){this.dry.gain.setTargetAtTime(e,t.currentTime,.01)}},wetLevel:{get:function(){return this.wet.gain},set:function(e){this.wet.gain.setTargetAtTime(e,t.currentTime,.01)}},buffer:{enumerable:!1,get:function(){return this.convolver.buffer},set:function(e){var i=this.convolver,a=new XMLHttpRequest;e?(a.open("GET",e,!0),a.responseType="arraybuffer",a.onreadystatechange=function(){4===a.readyState&&(a.status<300&&a.status>199||302===a.status)&&t.decodeAudioData(a.response,(function(e){i.buffer=e}),(function(e){e&&console.log("Tuna.Convolver.setBuffer: Error decoding data"+e)}))},a.send(null)):console.log("Tuna.Convolver.setBuffer: Missing impulse path!")}}}),u.prototype.Delay=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.activateNode=t.createGain(),this.dry=t.createGain(),this.wet=t.createGain(),this.filter=t.createBiquadFilter(),this.delay=t.createDelay(10),this.feedbackNode=t.createGain(),this.output=t.createGain(),this.activateNode.connect(this.delay),this.activateNode.connect(this.dry),this.delay.connect(this.filter),this.filter.connect(this.feedbackNode),this.feedbackNode.connect(this.delay),this.feedbackNode.connect(this.wet),this.wet.connect(this.output),this.dry.connect(this.output),this.delayTime=e.delayTime||this.defaults.delayTime.value,this.feedback=p(e.feedback,this.defaults.feedback.value),this.wetLevel=p(e.wetLevel,this.defaults.wetLevel.value),this.dryLevel=p(e.dryLevel,this.defaults.dryLevel.value),this.cutoff=e.cutoff||this.defaults.cutoff.value,this.filter.type="lowpass",this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.Delay.prototype=Object.create(n,{name:{value:"Delay"},defaults:{writable:!0,value:{delayTime:{value:100,min:20,max:1e3,automatable:!1,type:s},feedback:{value:.45,min:0,max:.9,automatable:!0,type:s},cutoff:{value:2e4,min:20,max:2e4,automatable:!0,type:s},wetLevel:{value:.5,min:0,max:1,automatable:!0,type:s},dryLevel:{value:1,min:0,max:1,automatable:!0,type:s},bypass:{value:!1,automatable:!1,type:o}}},delayTime:{enumerable:!0,get:function(){return this.delay.delayTime},set:function(e){this.delay.delayTime.value=e/1e3}},wetLevel:{enumerable:!0,get:function(){return this.wet.gain},set:function(e){this.wet.gain.setTargetAtTime(e,t.currentTime,.01)}},dryLevel:{enumerable:!0,get:function(){return this.dry.gain},set:function(e){this.dry.gain.setTargetAtTime(e,t.currentTime,.01)}},feedback:{enumerable:!0,get:function(){return this.feedbackNode.gain},set:function(e){this.feedbackNode.gain.setTargetAtTime(e,t.currentTime,.01)}},cutoff:{enumerable:!0,get:function(){return this.filter.frequency},set:function(e){this.filter.frequency.setTargetAtTime(e,t.currentTime,.01)}}}),u.prototype.Filter=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.activateNode=t.createGain(),this.filter=t.createBiquadFilter(),this.output=t.createGain(),this.activateNode.connect(this.filter),this.filter.connect(this.output),this.frequency=e.frequency||this.defaults.frequency.value,this.Q=e.resonance||this.defaults.Q.value,this.filterType=p(e.filterType,this.defaults.filterType.value),this.gain=p(e.gain,this.defaults.gain.value),this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.Filter.prototype=Object.create(n,{name:{value:"Filter"},defaults:{writable:!0,value:{frequency:{value:800,min:20,max:22050,automatable:!0,type:s},Q:{value:1,min:.001,max:100,automatable:!0,type:s},gain:{value:0,min:-40,max:40,automatable:!0,type:s},bypass:{value:!1,automatable:!1,type:o},filterType:{value:"lowpass",automatable:!1,type:"string"}}},filterType:{enumerable:!0,get:function(){return this.filter.type},set:function(e){this.filter.type=e}},Q:{enumerable:!0,get:function(){return this.filter.Q},set:function(e){this.filter.Q.value=e}},gain:{enumerable:!0,get:function(){return this.filter.gain},set:function(e){this.filter.gain.setTargetAtTime(e,t.currentTime,.01)}},frequency:{enumerable:!0,get:function(){return this.filter.frequency},set:function(e){this.filter.frequency.setTargetAtTime(e,t.currentTime,.01)}}}),u.prototype.Gain=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.activateNode=t.createGain(),this.gainNode=t.createGain(),this.output=t.createGain(),this.activateNode.connect(this.gainNode),this.gainNode.connect(this.output),this.gain=p(e.gain,this.defaults.gain.value),this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.Gain.prototype=Object.create(n,{name:{value:"Gain"},defaults:{writable:!0,value:{bypass:{value:!1,automatable:!1,type:o},gain:{value:1,automatable:!0,type:s}}},gain:{enumerable:!0,get:function(){return this.gainNode.gain},set:function(e){this.gainNode.gain.setTargetAtTime(e,t.currentTime,.01)}}}),u.prototype.MoogFilter=function(e){var i,a,n,s,o,r,u,l,c,h,d,f,v,m,y;e||(e=this.getDefaults()),this.bufferSize=e.bufferSize||this.defaults.bufferSize.value,this.input=t.createGain(),this.activateNode=t.createGain(),this.processor=t.createScriptProcessor(this.bufferSize,1,1),this.output=t.createGain(),this.activateNode.connect(this.processor),this.processor.connect(this.output),i=a=n=s=o=r=u=l=0,this.processor.onaudioprocess=function(e){for(c=e.inputBuffer.getChannelData(0),h=e.outputBuffer.getChannelData(0),d=1.16*this.cutoff,y=d*d*.35013*(d*d),f=this.resonance*(1-.15*d*d),m=c.length,v=0;v<m;v++)c[v]-=l*f,c[v]*=y,o=c[v]+.3*i+(1-d)*o,i=c[v],r=o+.3*a+(1-d)*r,a=o,u=r+.3*n+(1-d)*u,n=r,l=u+.3*s+(1-d)*l,s=u,h[v]=l},this.cutoff=p(e.cutoff,this.defaults.cutoff.value),this.resonance=p(e.resonance,this.defaults.resonance.value),this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.MoogFilter.prototype=Object.create(n,{name:{value:"MoogFilter"},defaults:{writable:!0,value:{bufferSize:{value:4096,min:256,max:16384,automatable:!1,type:r},bypass:{value:!1,automatable:!1,type:o},cutoff:{value:.065,min:1e-4,max:1,automatable:!1,type:s},resonance:{value:3.5,min:0,max:4,automatable:!1,type:s}}},cutoff:{enumerable:!0,get:function(){return this.processor.cutoff},set:function(e){this.processor.cutoff=e}},resonance:{enumerable:!0,get:function(){return this.processor.resonance},set:function(e){this.processor.resonance=e}}}),u.prototype.Overdrive=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.activateNode=t.createGain(),this.inputDrive=t.createGain(),this.waveshaper=t.createWaveShaper(),this.outputDrive=t.createGain(),this.output=t.createGain(),this.activateNode.connect(this.inputDrive),this.inputDrive.connect(this.waveshaper),this.waveshaper.connect(this.outputDrive),this.outputDrive.connect(this.output),this.ws_table=new Float32Array(this.k_nSamples),this.drive=p(e.drive,this.defaults.drive.value),this.outputGain=p(e.outputGain,this.defaults.outputGain.value),this.curveAmount=p(e.curveAmount,this.defaults.curveAmount.value),this.algorithmIndex=p(e.algorithmIndex,this.defaults.algorithmIndex.value),this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.Overdrive.prototype=Object.create(n,{name:{value:"Overdrive"},defaults:{writable:!0,value:{drive:{value:1,min:0,max:1,automatable:!0,type:s,scaled:!0},outputGain:{value:0,min:-46,max:0,automatable:!0,type:s,scaled:!0},curveAmount:{value:.725,min:0,max:1,automatable:!1,type:s},algorithmIndex:{value:0,min:0,max:5,automatable:!1,type:r},bypass:{value:!1,automatable:!1,type:o}}},k_nSamples:{value:8192},drive:{get:function(){return this.inputDrive.gain},set:function(e){this._drive=e}},curveAmount:{get:function(){return this._curveAmount},set:function(e){this._curveAmount=e,void 0===this._algorithmIndex&&(this._algorithmIndex=0),this.waveshaperAlgorithms[this._algorithmIndex](this._curveAmount,this.k_nSamples,this.ws_table),this.waveshaper.curve=this.ws_table}},outputGain:{get:function(){return this.outputDrive.gain},set:function(e){this._outputGain=l(e),this.outputDrive.gain.setValueAtTime(this._outputGain,t.currentTime,.01)}},algorithmIndex:{get:function(){return this._algorithmIndex},set:function(e){this._algorithmIndex=e,this.curveAmount=this._curveAmount}},waveshaperAlgorithms:{value:[function(e,t,i){var a,n,s=2*(e=Math.min(e,.9999))/(1-e);for(a=0;a<t;a++)n=2*a/t-1,i[a]=(1+s)*n/(1+s*Math.abs(n))},function(e,t,i){var a,n,s;for(a=0;a<t;a++)n=2*a/t-1,s=(.5*Math.pow(n+1.4,2)-1)*s>=0?5.8:1.2,i[a]=d(s)},function(e,t,i){var a,n,s,o=1-e;for(a=0;a<t;a++)s=(n=2*a/t-1)<0?-Math.pow(Math.abs(n),o+.04):Math.pow(n,o),i[a]=d(2*s)},function(e,t,i){var a,n,s,o,r=1-e>.99?.99:1-e;for(a=0;a<t;a++)n=2*a/t-1,(o=Math.abs(n))<r?s=o:o>r?s=r+(o-r)/(1+Math.pow((o-r)/(1-r),2)):o>1&&(s=o),i[a]=h(n)*s*(1/((r+1)/2))},function(e,t,i){var a,n;for(a=0;a<t;a++)n=2*a/t-1,i[a]=n<-.08905?-3/4*(1-Math.pow(1-(Math.abs(n)-.032857),12)+1/3*(Math.abs(n)-.032847))+.01:n>=-.08905&&n<.320018?n*n*-6.153+3.9375*n:.630035},function(e,t,i){var a,n,s=2+Math.round(14*e),o=Math.round(Math.pow(2,s-1));for(a=0;a<t;a++)n=2*a/t-1,i[a]=Math.round(n*o)/o}]}}),u.prototype.Panner=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.activateNode=t.createGain(),this.panner=t.createStereoPanner(),this.output=t.createGain(),this.activateNode.connect(this.panner),this.panner.connect(this.output),this.pan=p(e.pan,this.defaults.pan.value),this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.Panner.prototype=Object.create(n,{name:{value:"Panner"},defaults:{writable:!0,value:{bypass:{value:!1,automatable:!1,type:o},pan:{value:0,min:-1,max:1,automatable:!0,type:s}}},pan:{enumerable:!0,get:function(){return this.panner.pan},set:function(e){this.panner.pan.value=e}}}),u.prototype.Phaser=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.splitter=this.activateNode=t.createChannelSplitter(2),this.filtersL=[],this.filtersR=[],this.feedbackGainNodeL=t.createGain(),this.feedbackGainNodeR=t.createGain(),this.merger=t.createChannelMerger(2),this.filteredSignal=t.createGain(),this.output=t.createGain(),this.lfoL=new i.LFO({target:this.filtersL,callback:this.callback}),this.lfoR=new i.LFO({target:this.filtersR,callback:this.callback});for(var a=this.stage;a--;)this.filtersL[a]=t.createBiquadFilter(),this.filtersR[a]=t.createBiquadFilter(),this.filtersL[a].type="allpass",this.filtersR[a].type="allpass";this.input.connect(this.splitter),this.input.connect(this.output),this.splitter.connect(this.filtersL[0],0,0),this.splitter.connect(this.filtersR[0],1,0),this.connectInOrder(this.filtersL),this.connectInOrder(this.filtersR),this.filtersL[this.stage-1].connect(this.feedbackGainNodeL),this.filtersL[this.stage-1].connect(this.merger,0,0),this.filtersR[this.stage-1].connect(this.feedbackGainNodeR),this.filtersR[this.stage-1].connect(this.merger,0,1),this.feedbackGainNodeL.connect(this.filtersL[0]),this.feedbackGainNodeR.connect(this.filtersR[0]),this.merger.connect(this.output),this.rate=p(e.rate,this.defaults.rate.value),this.baseModulationFrequency=e.baseModulationFrequency||this.defaults.baseModulationFrequency.value,this.depth=p(e.depth,this.defaults.depth.value),this.feedback=p(e.feedback,this.defaults.feedback.value),this.stereoPhase=p(e.stereoPhase,this.defaults.stereoPhase.value),this.lfoL.activate(!0),this.lfoR.activate(!0),this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.Phaser.prototype=Object.create(n,{name:{value:"Phaser"},stage:{value:4},defaults:{writable:!0,value:{rate:{value:.1,min:0,max:8,automatable:!1,type:s},depth:{value:.6,min:0,max:1,automatable:!1,type:s},feedback:{value:.7,min:0,max:1,automatable:!1,type:s},stereoPhase:{value:40,min:0,max:180,automatable:!1,type:s},baseModulationFrequency:{value:700,min:500,max:1500,automatable:!1,type:s},bypass:{value:!1,automatable:!1,type:o}}},callback:{value:function(e,t){for(var i=0;i<4;i++)e[i].frequency.value=t}},depth:{get:function(){return this._depth},set:function(e){this._depth=e,this.lfoL.oscillation=this._baseModulationFrequency*this._depth,this.lfoR.oscillation=this._baseModulationFrequency*this._depth}},rate:{get:function(){return this._rate},set:function(e){this._rate=e,this.lfoL.frequency=this._rate,this.lfoR.frequency=this._rate}},baseModulationFrequency:{enumerable:!0,get:function(){return this._baseModulationFrequency},set:function(e){this._baseModulationFrequency=e,this.lfoL.offset=this._baseModulationFrequency,this.lfoR.offset=this._baseModulationFrequency,this.depth=this._depth}},feedback:{get:function(){return this._feedback},set:function(e){this._feedback=e,this.feedbackGainNodeL.gain.setTargetAtTime(this._feedback,t.currentTime,.01),this.feedbackGainNodeR.gain.setTargetAtTime(this._feedback,t.currentTime,.01)}},stereoPhase:{get:function(){return this._stereoPhase},set:function(e){this._stereoPhase=e;var t=this.lfoL._phase+this._stereoPhase*Math.PI/180;t=c(t,2*Math.PI),this.lfoR._phase=t}}}),u.prototype.PingPongDelay=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.wet=t.createGain(),this.stereoToMonoMix=t.createGain(),this.feedbackLevel=t.createGain(),this.output=t.createGain(),this.delayLeft=t.createDelay(10),this.delayRight=t.createDelay(10),this.activateNode=t.createGain(),this.splitter=t.createChannelSplitter(2),this.merger=t.createChannelMerger(2),this.activateNode.connect(this.splitter),this.splitter.connect(this.stereoToMonoMix,0,0),this.splitter.connect(this.stereoToMonoMix,1,0),this.stereoToMonoMix.gain.value=.5,this.stereoToMonoMix.connect(this.wet),this.wet.connect(this.delayLeft),this.feedbackLevel.connect(this.wet),this.delayLeft.connect(this.delayRight),this.delayRight.connect(this.feedbackLevel),this.delayLeft.connect(this.merger,0,0),this.delayRight.connect(this.merger,0,1),this.merger.connect(this.output),this.activateNode.connect(this.output),this.delayTimeLeft=void 0!==e.delayTimeLeft?e.delayTimeLeft:this.defaults.delayTimeLeft.value,this.delayTimeRight=void 0!==e.delayTimeRight?e.delayTimeRight:this.defaults.delayTimeRight.value,this.feedbackLevel.gain.value=void 0!==e.feedback?e.feedback:this.defaults.feedback.value,this.wet.gain.value=void 0!==e.wetLevel?e.wetLevel:this.defaults.wetLevel.value,this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.PingPongDelay.prototype=Object.create(n,{name:{value:"PingPongDelay"},delayTimeLeft:{enumerable:!0,get:function(){return this._delayTimeLeft},set:function(e){this._delayTimeLeft=e,this.delayLeft.delayTime.value=e/1e3}},delayTimeRight:{enumerable:!0,get:function(){return this._delayTimeRight},set:function(e){this._delayTimeRight=e,this.delayRight.delayTime.value=e/1e3}},wetLevel:{enumerable:!0,get:function(){return this.wet.gain},set:function(e){this.wet.gain.setTargetAtTime(e,t.currentTime,.01)}},feedback:{enumerable:!0,get:function(){return this.feedbackLevel.gain},set:function(e){this.feedbackLevel.gain.setTargetAtTime(e,t.currentTime,.01)}},defaults:{writable:!0,value:{delayTimeLeft:{value:200,min:1,max:1e4,automatable:!1,type:r},delayTimeRight:{value:400,min:1,max:1e4,automatable:!1,type:r},feedback:{value:.3,min:0,max:1,automatable:!0,type:s},wetLevel:{value:.5,min:0,max:1,automatable:!0,type:s},bypass:{value:!1,automatable:!1,type:o}}}}),u.prototype.Tremolo=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.splitter=this.activateNode=t.createChannelSplitter(2),this.amplitudeL=t.createGain(),this.amplitudeR=t.createGain(),this.merger=t.createChannelMerger(2),this.output=t.createGain(),this.lfoL=new i.LFO({target:this.amplitudeL.gain,callback:a}),this.lfoR=new i.LFO({target:this.amplitudeR.gain,callback:a}),this.input.connect(this.splitter),this.splitter.connect(this.amplitudeL,0),this.splitter.connect(this.amplitudeR,1),this.amplitudeL.connect(this.merger,0,0),this.amplitudeR.connect(this.merger,0,1),this.merger.connect(this.output),this.rate=e.rate||this.defaults.rate.value,this.intensity=p(e.intensity,this.defaults.intensity.value),this.stereoPhase=p(e.stereoPhase,this.defaults.stereoPhase.value),this.lfoL.offset=1-this.intensity/2,this.lfoR.offset=1-this.intensity/2,this.lfoL.phase=this.stereoPhase*Math.PI/180,this.lfoL.activate(!0),this.lfoR.activate(!0),this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.Tremolo.prototype=Object.create(n,{name:{value:"Tremolo"},defaults:{writable:!0,value:{intensity:{value:.3,min:0,max:1,automatable:!1,type:s},stereoPhase:{value:0,min:0,max:180,automatable:!1,type:s},rate:{value:5,min:.1,max:11,automatable:!1,type:s},bypass:{value:!1,automatable:!1,type:o}}},intensity:{enumerable:!0,get:function(){return this._intensity},set:function(e){this._intensity=e,this.lfoL.offset=1-this._intensity/2,this.lfoR.offset=1-this._intensity/2,this.lfoL.oscillation=this._intensity,this.lfoR.oscillation=this._intensity}},rate:{enumerable:!0,get:function(){return this._rate},set:function(e){this._rate=e,this.lfoL.frequency=this._rate,this.lfoR.frequency=this._rate}},stereoPhase:{enumerable:!0,get:function(){return this._stereoPhase},set:function(e){this._stereoPhase=e;var t=this.lfoL._phase+this._stereoPhase*Math.PI/180;t=c(t,2*Math.PI),this.lfoR.phase=t}}}),u.prototype.WahWah=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.activateNode=t.createGain(),this.envelopeFollower=new i.EnvelopeFollower({target:this,callback:function(e,t){e.sweep=t}}),this.filterBp=t.createBiquadFilter(),this.filterPeaking=t.createBiquadFilter(),this.output=t.createGain(),this.activateNode.connect(this.filterBp),this.filterBp.connect(this.filterPeaking),this.filterPeaking.connect(this.output),this.init(),this.automode=p(e.automode,this.defaults.automode.value),this.resonance=e.resonance||this.defaults.resonance.value,this.sensitivity=p(e.sensitivity,this.defaults.sensitivity.value),this.baseFrequency=p(e.baseFrequency,this.defaults.baseFrequency.value),this.excursionOctaves=e.excursionOctaves||this.defaults.excursionOctaves.value,this.sweep=p(e.sweep,this.defaults.sweep.value),this.activateNode.gain.value=2,this.envelopeFollower.activate(!0),this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.WahWah.prototype=Object.create(n,{name:{value:"WahWah"},defaults:{writable:!0,value:{automode:{value:!0,automatable:!1,type:o},baseFrequency:{value:.5,min:0,max:1,automatable:!1,type:s},excursionOctaves:{value:2,min:1,max:6,automatable:!1,type:s},sweep:{value:.2,min:0,max:1,automatable:!1,type:s},resonance:{value:10,min:1,max:100,automatable:!1,type:s},sensitivity:{value:.5,min:-1,max:1,automatable:!1,type:s},bypass:{value:!1,automatable:!1,type:o}}},automode:{get:function(){return this._automode},set:function(e){this._automode=e,e?(this.activateNode.connect(this.envelopeFollower.input),this.envelopeFollower.activate(!0)):(this.envelopeFollower.activate(!1),this.activateNode.disconnect(),this.activateNode.connect(this.filterBp))}},filterFreqTimeout:{value:0},setFilterFreq:{value:function(){try{this.filterBp.frequency.value=Math.min(22050,this._baseFrequency+this._excursionFrequency*this._sweep),this.filterPeaking.frequency.value=Math.min(22050,this._baseFrequency+this._excursionFrequency*this._sweep)}catch(e){clearTimeout(this.filterFreqTimeout),this.filterFreqTimeout=setTimeout(function(){this.setFilterFreq()}.bind(this),0)}}},sweep:{enumerable:!0,get:function(){return this._sweep},set:function(e){this._sweep=Math.pow(e>1?1:e<0?0:e,this._sensitivity),this.setFilterFreq()}},baseFrequency:{enumerable:!0,get:function(){return this._baseFrequency},set:function(e){this._baseFrequency=50*Math.pow(10,2*e),this._excursionFrequency=Math.min(t.sampleRate/2,this.baseFrequency*Math.pow(2,this._excursionOctaves)),this.setFilterFreq()}},excursionOctaves:{enumerable:!0,get:function(){return this._excursionOctaves},set:function(e){this._excursionOctaves=e,this._excursionFrequency=Math.min(t.sampleRate/2,this.baseFrequency*Math.pow(2,this._excursionOctaves)),this.setFilterFreq()}},sensitivity:{enumerable:!0,get:function(){return this._sensitivity},set:function(e){this._sensitivity=Math.pow(10,e)}},resonance:{enumerable:!0,get:function(){return this._resonance},set:function(e){this._resonance=e,this.filterPeaking.Q=this._resonance}},init:{value:function(){this.output.gain.value=1,this.filterPeaking.type="peaking",this.filterBp.type="bandpass",this.filterPeaking.frequency.value=100,this.filterPeaking.gain.value=20,this.filterPeaking.Q.value=5,this.filterBp.frequency.value=100,this.filterBp.Q.value=1}}}),u.prototype.EnvelopeFollower=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.jsNode=this.output=t.createScriptProcessor(this.buffersize,1,1),this.input.connect(this.output),this.attackTime=p(e.attackTime,this.defaults.attackTime.value),this.releaseTime=p(e.releaseTime,this.defaults.releaseTime.value),this._envelope=0,this.target=e.target||{},this.callback=e.callback||function(){},this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.EnvelopeFollower.prototype=Object.create(n,{name:{value:"EnvelopeFollower"},defaults:{value:{attackTime:{value:.003,min:0,max:.5,automatable:!1,type:s},releaseTime:{value:.5,min:0,max:.5,automatable:!1,type:s},bypass:{value:!1,automatable:!1,type:o}}},buffersize:{value:256},envelope:{value:0},sampleRate:{value:44100},attackTime:{enumerable:!0,get:function(){return this._attackTime},set:function(e){this._attackTime=e,this._attackC=Math.exp(-1/this._attackTime*this.sampleRate/this.buffersize)}},releaseTime:{enumerable:!0,get:function(){return this._releaseTime},set:function(e){this._releaseTime=e,this._releaseC=Math.exp(-1/this._releaseTime*this.sampleRate/this.buffersize)}},callback:{get:function(){return this._callback},set:function(e){"function"==typeof e?this._callback=e:console.error("tuna.js: "+this.name+": Callback must be a function!")}},target:{get:function(){return this._target},set:function(e){this._target=e}},activate:{value:function(e){this.activated=e,e?(this.jsNode.connect(t.destination),this.jsNode.onaudioprocess=this.returnCompute(this)):(this.jsNode.disconnect(),this.jsNode.onaudioprocess=null),this.activateCallback&&this.activateCallback(e)}},returnCompute:{value:function(e){return function(t){e.compute(t)}}},compute:{value:function(e){var t,i,a,n,s=e.inputBuffer.getChannelData(0).length,o=e.inputBuffer.numberOfChannels;if(i=a=n=0,o>1)for(n=0;n<s;++n)for(;i<o;++i)a+=(t=e.inputBuffer.getChannelData(i)[n])*t/o;else for(n=0;n<s;++n)a+=(t=e.inputBuffer.getChannelData(0)[n])*t;a=Math.sqrt(a),this._envelope<a?(this._envelope*=this._attackC,this._envelope+=(1-this._attackC)*a):(this._envelope*=this._releaseC,this._envelope+=(1-this._releaseC)*a),this._callback(this._target,this._envelope)}}}),u.prototype.LFO=function(e){e||(e=this.getDefaults()),this.input=t.createGain(),this.output=t.createScriptProcessor(256,1,1),this.activateNode=t.destination,this.frequency=p(e.frequency,this.defaults.frequency.value),this.offset=p(e.offset,this.defaults.offset.value),this.oscillation=p(e.oscillation,this.defaults.oscillation.value),this.phase=p(e.phase,this.defaults.phase.value),this.target=e.target||{},this.output.onaudioprocess=this.callback(e.callback||function(){}),this.bypass=e.bypass||this.defaults.bypass.value},u.prototype.LFO.prototype=Object.create(n,{name:{value:"LFO"},bufferSize:{value:256},sampleRate:{value:44100},defaults:{value:{frequency:{value:1,min:0,max:20,automatable:!1,type:s},offset:{value:.85,min:0,max:22049,automatable:!1,type:s},oscillation:{value:.3,min:-22050,max:22050,automatable:!1,type:s},phase:{value:0,min:0,max:2*Math.PI,automatable:!1,type:s},bypass:{value:!1,automatable:!1,type:o}}},frequency:{get:function(){return this._frequency},set:function(e){this._frequency=e,this._phaseInc=2*Math.PI*this._frequency*this.bufferSize/this.sampleRate}},offset:{get:function(){return this._offset},set:function(e){this._offset=e}},oscillation:{get:function(){return this._oscillation},set:function(e){this._oscillation=e}},phase:{get:function(){return this._phase},set:function(e){this._phase=e}},target:{get:function(){return this._target},set:function(e){this._target=e}},activate:{value:function(e){e?(this.output.connect(t.destination),this.activateCallback&&this.activateCallback(e)):this.output.disconnect()}},callback:{value:function(e){var t=this;return function(){t._phase+=t._phaseInc,t._phase>2*Math.PI&&(t._phase=0),e(t._target,t._offset+t._oscillation*Math.sin(t._phase))}}}}),u.toString=u.prototype.toString=function(){return"Please visit https://github.com/Theodeus/tuna/wiki for instructions on how to use Tuna.js"}}()},function(e,t,i){"use strict";i.d(t,"d",(function(){return u})),i.d(t,"a",(function(){return s})),i.d(t,"c",(function(){return o})),i.d(t,"b",(function(){return r}));var a=i(0),n=i(1);let s=function(e,t,i,a){t=t||0,navigator.requestMIDIAccess().then((function(){r[t]?(r[t].onmidimessage=e,"function"==typeof i&&i()):"function"==typeof a&&a()}))},o={play:function(){Object(a.n)("playing midi")},stop:function(){Object(a.n)("stopping midi")}},r=[],u=function(e){Object(a.n)(e.receivedTime,e.data,2),144===e.data[0]?0===e.data[2]?(Object(a.n)("Playing note: ",2),Object(a.n)(n.b[e.data[1]-12],2),o.stop(n.b[e.data[1]-12])):e.data[2]>0&&(Object(a.n)("Stopping note: ",2),Object(a.n)(n.b[e.data[1]-12],2),o.play({pitch:n.b[e.data[1]-12],label:n.b[e.data[1]-12]})):176===e.data[0]?(Object(a.n)("controller"),46==e.data[1]&&(127==e.data[2]?o.pedalMod=!0:0==e.data[2]&&(o.pedalMod=!1))):224===e.data[0]&&Object(a.n)("pitch bend")},l=function(e){r=[];for(var t=e.inputs.values(),i=t.next();!i.done;i=t.next())r.push(i.value);Object(a.n)("MIDI inputs: "),Object(a.n)(r);for(var n=0;n<r.length;n++)r[n].onmidimessage=u},c=function(e){Object(a.n)("Failed to get MIDI access",e)};if(navigator&&navigator.requestMIDIAccess)try{navigator.requestMIDIAccess().then(l,c)}catch(e){Object(a.n)("Failed to get MIDI access",e)}},function(e,t,i){"use strict";var a=i(0),n=i(1),s=new Uint8Array(2048);function o(e){for(var t,i=e.inputBuffer.getChannelData(0),a=i.length,n=0,s=0;s<a;s++)t=i[s],Math.abs(t)>=this.clipLevel&&(this.clipping=!0,this.lastClip=window.performance.now()),n+=t*t;var o=Math.sqrt(n/a);this.volume=Math.max(o,this.volume*this.averaging)}const r=function(e){e||(e={}),this.isSetUp=!1,this.playable=1,e.reverb?Object(a.f)(this,e):this.setUp(e)};r.prototype.setUp=function(e){var t,i,n,s,r;this.wads=[],this.input=a.i.createAnalyser(),this.input.fftSize=2048,this.nodes=[this.input],this.destination=e.destination||a.i.destination,this.volume=e.volume||1,this.gain=a.i.createGain(),this.gain.gain.value=this.volume,this.output=a.i.createAnalyser(),this.tuna=e.tuna||null,this.audioMeter=null,e.audioMeter&&(this.audioMeter=(t=a.i,i=e.audioMeter.clipLevel,n=e.audioMeter.averaging,s=e.audioMeter.clipLag,(r=t.createScriptProcessor(512)).onaudioprocess=o,r.clipping=!1,r.lastClip=0,r.volume=0,r.clipLevel=i||.98,r.averaging=n||.95,r.clipLag=s||750,r.connect(t.destination),r.checkClipping=function(){return!!this.clipping&&(this.lastClip+this.clipLag<window.performance.now()&&(this.clipping=!1),this.clipping)},r.shutdown=function(){this.disconnect(),this.onaudioprocess=null},r),this.output.connect(this.audioMeter)),Object(a.d)(this,e),this.filter&&Object(a.j)(this,e),this.reverb&&Object(a.z)(this,e),this.constructExternalFx(e,a.i),Object(a.e)(this,e),Object(a.y)(this,e),e.compressor&&Object(a.a)(this,e),Object(a.b)(this,e),Object(a.t)(this,e),Object(a.B)(this,e),this.nodes.push(this.gain),this.nodes.push(this.output),Object(a.r)(this,e),this.isSetUp=!0,e.callback&&e.callback(this)},r.prototype.updatePitch=function(e){this.input.getByteTimeDomainData(s);var t,i,o=function(e,t){var i=-1,a=0,n=0,s=!1;if(e.length<1996)return-1;for(let t=0;t<1e3;t++){var o=(e[t]-128)/128;n+=o*o}if((n=Math.sqrt(n/1e3))<.01)return-1;for(var r=1,u=4;u<=1e3;u++){var l=0;for(let t=0;t<1e3;t++)l+=Math.abs((e[t]-128)/128-(e[t+u]-128)/128);if((l=1-l/1e3)>.9&&l>r)s=!0;else if(s)return t/i;r=l,l>a&&(a=l,i=u)}return a>.01?t/i:-1}(s,a.i.sampleRate);if(-1!==o&&11025!==o&&12e3!==o){var r=o;this.pitch=Math.floor(r);var u=(t=r,i=Math.log(t/440)/Math.log(2)*12,Math.round(i)+69);this.noteName=n.b[u-12]}var l=this;l.rafID=window.requestAnimationFrame((function(){l.updatePitch()}))},r.prototype.stopUpdatingPitch=function(){cancelAnimationFrame(this.rafID)},r.prototype.setVolume=function(e){return this.isSetUp?this.gain.gain.value=e:Object(a.n)("This PolyWad is not set up yet."),this},r.prototype.setPitch=function(e){this.wads.forEach((function(t){return e in n.a?(t.soundSource&&(t.soundSource.frequency.value=n.a[e]),t.pitch=n.a[e]):(t.soundSource&&(t.soundSource.frequency.value=e),t.pitch=e),this}))},r.prototype.play=function(e){if(this.isSetUp)if(this.playable<1)this.playOnLoad=!0,this.playOnLoadArg=e;else{e&&e.volume&&(this.gain.gain.value=e.volume,e.volume=void 0);for(var t=0;t<this.wads.length;t++)this.wads[t].play(e)}else Object(a.n)("This PolyWad is not set up yet.");return this},r.prototype.stop=function(e){if(this.isSetUp)for(var t=0;t<this.wads.length;t++)this.wads[t].stop(e)},r.prototype.add=function(e){return this.isSetUp?(e.destination=this.input,this.wads.push(e),e instanceof r&&(e.output.disconnect(0),e.output.connect(this.input))):Object(a.n)("This PolyWad is not set up yet."),this},r.prototype.remove=function(e){if(this.isSetUp)for(var t=0;t<this.wads.length;t++)this.wads[t]===e&&(this.wads[t].destination=a.i.destination,this.wads.splice(t,1),e instanceof Wad.Poly&&(e.output.disconnect(0),e.output.connect(a.i.destination)));return this},r.prototype.constructExternalFx=function(e,t){},t.a=r},function(e,t,i){"use strict";function a(e,t){if(i=e,!(null!=(a=t)&&"undefined"!=typeof Symbol&&a[Symbol.hasInstance]?a[Symbol.hasInstance](i):i instanceof a))throw new TypeError("Cannot call a class as a function");var i,a}function n(e,t){for(var i=0;i<t.length;i++){var a=t[i];a.enumerable=a.enumerable||!1,a.configurable=!0,"value"in a&&(a.writable=!0),Object.defineProperty(e,a.key,a)}}var s,o,r,u=function(){function e(t,i){a(this,e),this.Wad=i,t=Object.assign({},e.defaultArgs,t),this.files=t.files,this.sounds=this.files.map((function(e){return e.play?e:new i({source:e})})),this.randomSounds=this.sounds.slice(),this.random=t.random,this.randomPlaysBeforeRepeat=this.sounds.length>3&&t.randomPlaysBeforeRepeat<this.sounds.length-1?t.randomPlaysBeforeRepeat:0,this.index=0,this.waitingSounds=[]}var t,i,s;return t=e,(i=[{key:"play",value:function(){var e=this,t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};if(!this.sounds.length)return 0;if(this.random){var i=Math.floor(Math.random()*this.randomSounds.length),a=this.randomSounds[i];return this.index=this.sounds.indexOf(a),this.waitingSounds=this.waitingSounds.filter((function(t){return t.plays-=1,!(t.plays<1)||(e.randomSounds.push(t.sound),null)})),this.randomPlaysBeforeRepeat&&(this.randomSounds.splice(i,1),this.waitingSounds.push({plays:this.randomPlaysBeforeRepeat,sound:a})),a.play(t)}var n=this.sounds[this.index]?this.sounds[this.index].play(t):void 0;return this.index+=1,this.index>=this.sounds.length&&(this.index=0),n}},{key:"add",value:function(e){return e.play||(e=new this.Wad({source:e})),this.sounds.push(e),this.randomSounds.push(e),this}},{key:"remove",value:function(e){var t=this.sounds.indexOf(e);if(-1===t)throw new Error("That sound does not exist: ".concat(e));this.sounds.splice(t,1);var i=this.randomSounds.indexOf(e);return-1===i?this.waitingSounds=this.waitingSounds.filter((function(t){return t.sound!==e})):this.randomSounds.splice(i,1),this}}])&&n(t.prototype,i),s&&n(t,s),e}();r={files:[],random:!1,randomPlaysBeforeRepeat:0},(o="defaultArgs")in(s=u)?Object.defineProperty(s,o,{value:r,enumerable:!0,configurable:!0,writable:!0}):s[o]=r,t.a=u},function(e,t,i){"use strict";t.a={hiHatClosed:{source:"noise",env:{attack:.001,decay:.008,sustain:.2,hold:.03,release:.01},filter:{type:"highpass",frequency:400,q:1}},snare:{source:"noise",env:{attack:.001,decay:.01,sustain:.2,hold:.03,release:.02},filter:{type:"bandpass",frequency:300,q:.18}},hiHatOpen:{source:"noise",env:{attack:.001,decay:.008,sustain:.2,hold:.43,release:.01},filter:{type:"highpass",frequency:100,q:.2}},ghost:{source:"square",volume:.3,env:{attack:.01,decay:.002,sustain:.5,hold:2.5,release:.3},filter:{type:"lowpass",frequency:600,q:7,env:{attack:.7,frequency:1600}},vibrato:{attack:8,speed:8,magnitude:100}},piano:{source:"square",volume:1.4,env:{attack:.01,decay:.005,sustain:.2,hold:.015,release:.3},filter:{type:"lowpass",frequency:1200,q:8.5,env:{attack:.2,frequency:600}}}}},function(e,t,i){"use strict";var a=i(2),n=i.n(a);class s{constructor(e,t){this._setFunc=t,this.AudioParamautomationRate="a-rate",this.defaultValue=e,this.maxValue=34028234663852886e22,this.minValue=-34028234663852886e22,this._value=this.defaultValue}get value(){return this._value}set value(e){this._setFunc(e),this._value=e}}var o=i(0);let r=function(e){if(this.source=e.source,this.destination=e.destination||o.i.destination,this.volume=Object(o.D)(e.volume,1),this.defaultVolume=this.volume,this.playable=1,this.pitch=r.pitches[e.pitch]||e.pitch||440,this.gain=[],this.detune=e.detune||0,this.offset=e.offset||0,this.loop=e.loop||!1,this.tuna=e.tuna||null,this.rate=e.rate||1,this.sprite=e.sprite||null,Object(o.c)(this,e),Object(o.d)(this,e),Object(o.h)(this,e),Object(o.g)(this,e),Object(o.f)(this,e),this.constructExternalFx(e,o.i),Object(o.e)(this,e),Object(o.b)(this,e),this.duration=(this.env.attack+this.env.decay+this.env.hold+this.env.release)*(1/this.rate)*1e3,"noise"===this.source)this.decodedBuffer=o.p;else if("mic"===this.source)Object(o.l)(this,e);else if(this.source in{sine:0,sawtooth:0,square:0,triangle:0})e.callback&&e.callback(this);else if(Object(o.s)(this,e.callback),this.sprite){var t=this;for(var i in this.sprite)this[i]={sprite:this.sprite[i],play:function(e){return(e=e||{}).env=e.env||{},e.env.hold=this.sprite[1]-this.sprite[0],e.offset=this.sprite[0],t.play(e)}}}r.allWads.push(this)};r.allWads=[],r.micConsent=!1,r.audioContext=o.i,r.listener=new class{constructor(e){this._listener=e.listener,window.listener=this._listener,this.positionX=this._listener.positionX||new s(0,e=>this._listener.setPosition(e,this.positionY.value,this.positionZ.value)),this.positionY=this._listener.positionY||new s(0,e=>this._listener.setPosition(this.positionX.value,e,this.positionZ.value)),this.positionZ=this._listener.positionZ||new s(0,e=>this._listener.setPosition(this.positionX.value,this.positionY.value,e)),this.forwardX=this._listener.forwardX||new s(0,e=>this._listener.setOrientation(e,this.forwardY.value,this.forwardZ.value,this.upX.value,this.upY.value,this.upZ.value)),this.forwardY=this._listener.ForwardY||new s(0,e=>this._listener.setOrientation(this.forwardX.value,e,this.forwardZ.value,this.upX.value,this.upY.value,this.upZ.value)),this.forwardZ=this._listener.forwardZ||new s(-1,e=>this._listener.setOrientation(this.forwardX.value,this.forwardY.value,e,this.upX.value,this.upY.value,this.upZ.value)),this.upX=this._listener.upZ||new s(0,e=>this._listener.setOrientation(this.forwardX.value,this.forwardY.value,this.forwardZ.value,e,this.upY.value,this.upZ.value)),this.upY=this._listener.upY||new s(1,e=>this._listener.setOrientation(this.forwardX.value,this.forwardY.value,this.forwardZ.value,this.upX.value,e,this.upZ.value)),this.upZ=this._listener.upZ||new s(0,e=>this._listener.setOrientation(this.forwardX.value,this.forwardY.value,this.forwardZ.value,this.upX.value,this.upY.value,e))}setPosition(e,t,i){this.positionX.value=e,this.positionY.value=t,this.positionZ.value=i}getPosition(){return[this.positionX.value,this.positionY.value,this.positionZ.value]}setOrientation(e,t,i,a,n,s){this.forwardX.value=e,this.forwardY.value=t,this.forwardZ.value=i,this.upX.value=a,this.upY.value=n,this.upZ.value=s}getOrientation(){return[this.forwardX.value,this.forwardY.value,this.forwardZ.value,this.upX.value,this.upY.value,this.upZ.value]}}(o.i),null!=typeof n.a&&(r.tuna=new n.a(r.audioContext)),r.prototype.constructExternalFx=function(e,t){},r.prototype.setUpExternalFxOnPlay=function(e,t){},r.prototype.play=function(e){if(e=e||{arg:null},this.playable<1)this.playOnLoad=!0,this.playOnLoadArg=e;else if("mic"===this.source)r.micConsent?(null===e.arg||(Object(o.d)(this,e),Object(o.h)(this,e),Object(o.g)(this,e),Object(o.f)(this,e),this.constructExternalFx(e,o.i),Object(o.e)(this,e),Object(o.b)(this,e),Object(o.w)(this,e)),Object(o.r)(this,e)):(Object(o.n)("You have not given your browser permission to use your microphone."),Object(o.l)(this,e).then((function(t){t.play(e)})));else{this.nodes=[],e.wait||(e.wait=0),e.volume?this.volume=e.volume:this.volume=this.defaultVolume,e.offset=e.offset||this.offset||0,this.source in{sine:0,sawtooth:0,square:0,triangle:0}?Object(o.x)(this,e):(this.soundSource=o.i.createBufferSource(),this.soundSource.buffer=this.decodedBuffer,("noise"===this.source||this.loop||e.loop)&&(this.soundSource.loop=!0)),this.soundSource.detune&&(this.soundSource.detune.value=e.detune||this.detune),void 0===e.wait&&(e.wait=0),void 0===e.exactTime&&(e.exactTime=o.i.currentTime+e.wait),this.lastPlayedTime=e.exactTime-e.offset,this.nodes.push(this.soundSource),Object(o.u)(this,e),this.soundSource.playbackRate&&(this.soundSource.playbackRate.value=e.rate||this.rate,this.env.hold=this.env.hold*(1/this.soundSource.playbackRate.value)),Object(o.v)(this,e),Object(o.B)(this,e),this.setUpExternalFxOnPlay(e,o.i),this.gain.unshift(o.i.createGain()),this.gain[0].label=e.label,this.gain[0].soundSource=this.soundSource,this.nodes.push(this.gain[0]),this.gain.length>15&&(this.gain.length=15),this.reverb&&Object(o.z)(this,e),Object(o.y)(this,e),Object(o.t)(this,e),Object(o.r)(this,e),this.filter&&this.filter[0].env&&Object(o.k)(this,e),Object(o.q)(this,e),this.vibrato&&Object(o.C)(this,e),this.tremolo&&Object(o.A)(this,e);var t=this;if(this.soundSource.onended=function(e){t.playPromiseResolve(t)},!e.unpause)return this.playPromise=new Promise((function(e,i){t.playPromiseResolve=e})),this.playPromise}e.callback&&e.callback(this)},r.prototype.setVolume=function(e,t,i){if(t=t||.01,i){if(this.gain.length>0)for(let t=0;t<this.gain.length;t++)this.gain[t].label===i&&this.gain[t].gain.setValueAtTime(e,o.i.currentTime)}else this.defaultVolume=e,this.gain.length>0&&this.gain[0].gain.setValueAtTime(e,o.i.currentTime);return this},r.prototype.setRate=function(e){var t;return t=e&&e>0?e:0,this.soundSource?this.soundSource.playbackRate.value=t:Object(o.n)("Sorry, but the wad does not contain a soundSource!"),this},r.prototype.setPitch=function(e,t,i){if(t=t||.01,i)for(let a=0;a<this.gain.length;a++)this.gain[a].label===i&&(e in r.pitches?this.gain[a].soundSource.frequency.setTargetAtTime(r.pitches[e],o.i.currentTime,t):this.soundSource.frequency.settargetAtTime(e,o.i.currentTime,t));else e in r.pitches?(this.soundSource&&(this.soundSource.frequency.value=r.pitches[e]),this.pitch=r.pitches[e]):(this.soundSource&&(this.soundSource.frequency.value=e),this.pitch=e);return this},r.prototype.setDetune=function(e,t,i){if(t=t||.01,i)for(let a=0;a<this.gain.length;a++)this.gain[a].label===i&&this.gain[a].soundSource.detune.setTargetAtTime(e,o.i.currentTime,t);else this.soundSource.detune.setTargetAtTime(e,o.i.currentTime,t);return this},r.prototype.setPanning=function(e,t,i){return t=t||.01,"number"!=typeof e||o.i.createStereoPanner||(e=[e,0,0]),this.panning.location=e,Object(o.m)(e)&&"3d"===this.panning.type&&this.panning.node?this.panning.node.setPosition(e[0],e[1],e[2]):"number"==typeof e&&"stereo"===this.panning.type&&this.panning.node&&this.panning.node.pan.setTargetAtTime(e,o.i.currentTime,t),Object(o.m)(e)?this.panning.type="3d":"number"==typeof e&&(this.panning.type="stereo"),this},r.prototype.setReverb=function(e){var t;return t=e&&e>0&&e<1?e:e>=1?1:0,this.reverb?(this.reverb.wet=t,this.reverb.node&&(this.reverb.node.wet.gain.value=t)):Object(o.n)("Sorry, but the wad does not contain Reverb!"),this},r.prototype.setDelay=function(e,t,i){var a,n,s;return a=e&&e>0?e:0,n=t&&t>0&&t<1?t:t>=1?1:0,s=i&&i>0&&i<1?i:i>=1?1:0,this.delay?(this.delay.delayTime=a,this.delay.wet=n,this.delay.feedback=s,this.delay.delayNode&&(this.delay.delayNode.delayNode.delayTime.value=a,this.delay.delayNode.wetNode.gain.value=n,this.delay.delayNode.feedbackNode.gain.value=s)):Object(o.n)("Sorry, but the wad does not contain delay!",2),this},r.prototype.pause=function(e){this.pauseTime=o.i.currentTime,this.soundSource.onended=null,this.stop(e)},r.prototype.unpause=function(e){(e=e||{}).unpause=!0,this.pauseTime&&null!=this.lastPlayedTime?e.offset=this.pauseTime-this.lastPlayedTime:Object(o.n)("You tried to unpause a wad that was not played and paused, so it just played normally instead.",2),this.play(e)},r.prototype.stop=function(e){if("mic"!==this.source){if(!this.gain||!this.gain.length)return Object(o.n)("You tried to stop a Wad that never played. ",2),void Object(o.n)(this,2);if(e)for(var t=0;t<this.gain.length;t++)this.gain[t].label===e&&(this.gain[t].gain.cancelScheduledValues(o.i.currentTime),this.gain[t].gain.setValueAtTime(this.gain[t].gain.value,o.i.currentTime),this.gain[t].gain.linearRampToValueAtTime(1e-4,o.i.currentTime+this.env.release));else if(!e){this.gain[0].gain.cancelScheduledValues(o.i.currentTime),this.gain[0].gain.setValueAtTime(this.gain[0].gain.value,o.i.currentTime),this.gain[0].gain.linearRampToValueAtTime(1e-4,o.i.currentTime+this.env.release);try{this.soundSource.stop(o.i.currentTime+this.env.release)}catch(e){Object(o.n)(e,2);var i=this;setTimeout((function(){i.soundSource.dispatchEvent(new Event("ended")),i.soundSource.onended=null}),1e3*this.env.release)}}}else r.micConsent?this.mediaStreamSource.disconnect(0):Object(o.n)("You have not given your browser permission to use your microphone.");this.tremolo&&this.tremolo.wad.stop()},r.stopAll=function(e){for(var t=0;t<r.allWads.length;t++)r.allWads[t].stop(e)},r.setVolume=function(e){for(var t=0;t<r.allWads.length;t++)r.allWads[t].setVolume(e)};t.a=r},function(e,t,i){"use strict";i.r(t),function(e){var a=i(5),n=i(4),s=i(6),o=i(0),r=i(1),u=i(3);let l=i(7).a;l.Poly=n.a,l.SoundIterator=function(e){return new a.a(e,l)},l.pitches=r.a,l.pitchesArray=r.b,l.midiMap=u.d,l.assignMidiMap=u.a,l.midiInstrument=u.c,l.midiInputs=u.b,l.presets=s.a,l.logs=o.o,e.exports&&(e.exports=l),t.default=l}.call(this,i(9)(e))},function(e,t){e.exports=function(e){if(!e.webpackPolyfill){var t=Object.create(e);t.children||(t.children=[]),Object.defineProperty(t,"loaded",{enumerable:!0,get:function(){return t.l}}),Object.defineProperty(t,"id",{enumerable:!0,get:function(){return t.i}}),Object.defineProperty(t,"exports",{enumerable:!0}),t.webpackPolyfill=1}return t}}]).default}));
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(true)
+		module.exports = factory();
+	else {}
+})(window, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/main.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./node_modules/tunajs/tuna.js":
+/*!*************************************!*\
+  !*** ./node_modules/tunajs/tuna.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+    Copyright (c) 2012 DinahMoe AB & Oskar Eriksson
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
+    files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
+    modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+    is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+    DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+    OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+/*global module*/
+(function() {
+
+    var userContext,
+        userInstance,
+        pipe = function(param, val) {
+            param.value = val;
+        },
+        Super = Object.create(null, {
+            activate: {
+                writable: true,
+                value: function(doActivate) {
+                    if (doActivate) {
+                        this.input.disconnect();
+                        this.input.connect(this.activateNode);
+                        if (this.activateCallback) {
+                            this.activateCallback(doActivate);
+                        }
+                    } else {
+                        this.input.disconnect();
+                        this.input.connect(this.output);
+                    }
+                }
+            },
+            bypass: {
+                get: function() {
+                    return this._bypass;
+                },
+                set: function(value) {
+                    if (this._lastBypassValue === value) {
+                        return;
+                    }
+                    this._bypass = value;
+                    this.activate(!value);
+                    this._lastBypassValue = value;
+                }
+            },
+            connect: {
+                value: function(target) {
+                    this.output.connect(target);
+                }
+            },
+            disconnect: {
+                value: function(target) {
+                    this.output.disconnect(target);
+                }
+            },
+            connectInOrder: {
+                value: function(nodeArray) {
+                    var i = nodeArray.length - 1;
+                    while (i--) {
+                        if (!nodeArray[i].connect) {
+                            return console.error("AudioNode.connectInOrder: TypeError: Not an AudioNode.", nodeArray[i]);
+                        }
+                        if (nodeArray[i + 1].input) {
+                            nodeArray[i].connect(nodeArray[i + 1].input);
+                        } else {
+                            nodeArray[i].connect(nodeArray[i + 1]);
+                        }
+                    }
+                }
+            },
+            getDefaults: {
+                value: function() {
+                    var result = {};
+                    for (var key in this.defaults) {
+                        result[key] = this.defaults[key].value;
+                    }
+                    return result;
+                }
+            },
+            automate: {
+                value: function(property, value, duration, startTime) {
+                    var start = startTime ? ~~(startTime / 1000) : userContext.currentTime,
+                        dur = duration ? ~~(duration / 1000) : 0,
+                        _is = this.defaults[property],
+                        param = this[property],
+                        method;
+
+                    if (param) {
+                        if (_is.automatable) {
+                            if (!duration) {
+                                method = "setValueAtTime";
+                            } else {
+                                method = "linearRampToValueAtTime";
+                                param.cancelScheduledValues(start);
+                                param.setValueAtTime(param.value, start);
+                            }
+                            param[method](value, dur + start);
+                        } else {
+                            param = value;
+                        }
+                    } else {
+                        console.error("Invalid Property for " + this.name);
+                    }
+                }
+            }
+        }),
+        FLOAT = "float",
+        BOOLEAN = "boolean",
+        STRING = "string",
+        INT = "int";
+
+    if (  true && module.exports) {
+        module.exports = Tuna;
+    } else if (true) {
+        window.define("Tuna", definition);
+    } else {}
+
+    function definition() {
+        return Tuna;
+    }
+
+    function Tuna(context) {
+        if (!(this instanceof Tuna)) {
+            return new Tuna(context);
+        }
+
+        var _window = typeof window === "undefined" ? {} : window;
+
+        if (!_window.AudioContext) {
+            _window.AudioContext = _window.webkitAudioContext;
+        }
+        if (!context) {
+            console.log("tuna.js: Missing audio context! Creating a new context for you.");
+            context = _window.AudioContext && (new _window.AudioContext());
+        }
+        if (!context) {
+            throw new Error("Tuna cannot initialize because this environment does not support web audio.");
+        }
+        connectify(context);
+        userContext = context;
+        userInstance = this;
+    }
+
+    function connectify(context) {
+        if (context.__connectified__ === true) return;
+
+        var gain = context.createGain(),
+            proto = Object.getPrototypeOf(Object.getPrototypeOf(gain)),
+            oconnect = proto.connect;
+
+        proto.connect = shimConnect;
+        context.__connectified__ = true; // Prevent overriding connect more than once
+
+        function shimConnect() {
+            var node = arguments[0];
+            arguments[0] = Super.isPrototypeOf ? (Super.isPrototypeOf(node) ? node.input : node) : (node.input || node);
+            oconnect.apply(this, arguments);
+            return node;
+        }
+    }
+
+    function dbToWAVolume(db) {
+        return Math.max(0, Math.round(100 * Math.pow(2, db / 6)) / 100);
+    }
+
+    function fmod(x, y) {
+        // http://kevin.vanzonneveld.net
+        // *     example 1: fmod(5.7, 1.3);
+        // *     returns 1: 0.5
+        var tmp, tmp2, p = 0,
+            pY = 0,
+            l = 0.0,
+            l2 = 0.0;
+
+        tmp = x.toExponential().match(/^.\.?(.*)e(.+)$/);
+        p = parseInt(tmp[2], 10) - (tmp[1] + "").length;
+        tmp = y.toExponential().match(/^.\.?(.*)e(.+)$/);
+        pY = parseInt(tmp[2], 10) - (tmp[1] + "").length;
+
+        if (pY > p) {
+            p = pY;
+        }
+
+        tmp2 = (x % y);
+
+        if (p < -100 || p > 20) {
+            // toFixed will give an out of bound error so we fix it like this:
+            l = Math.round(Math.log(tmp2) / Math.log(10));
+            l2 = Math.pow(10, l);
+
+            return (tmp2 / l2).toFixed(l - p) * l2;
+        } else {
+            return parseFloat(tmp2.toFixed(-p));
+        }
+    }
+
+    function sign(x) {
+        if (x === 0) {
+            return 1;
+        } else {
+            return Math.abs(x) / x;
+        }
+    }
+
+    function tanh(n) {
+        return (Math.exp(n) - Math.exp(-n)) / (Math.exp(n) + Math.exp(-n));
+    }
+
+    function initValue(userVal, defaultVal) {
+        return userVal === undefined ? defaultVal : userVal;
+    }
+
+    Tuna.prototype.Bitcrusher = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.bufferSize = properties.bufferSize || this.defaults.bufferSize.value;
+
+        this.input = userContext.createGain();
+        this.activateNode = userContext.createGain();
+        this.processor = userContext.createScriptProcessor(this.bufferSize, 1, 1);
+        this.output = userContext.createGain();
+
+        this.activateNode.connect(this.processor);
+        this.processor.connect(this.output);
+
+        var phaser = 0,
+            last = 0,
+            input, output, step, i, length;
+        this.processor.onaudioprocess = function(e) {
+            input = e.inputBuffer.getChannelData(0),
+            output = e.outputBuffer.getChannelData(0),
+            step = Math.pow(1 / 2, this.bits);
+            length = input.length;
+            for (i = 0; i < length; i++) {
+                phaser += this.normfreq;
+                if (phaser >= 1.0) {
+                    phaser -= 1.0;
+                    last = step * Math.floor(input[i] / step + 0.5);
+                }
+                output[i] = last;
+            }
+        };
+
+        this.bits = properties.bits || this.defaults.bits.value;
+        this.normfreq = initValue(properties.normfreq, this.defaults.normfreq.value);
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.Bitcrusher.prototype = Object.create(Super, {
+        name: {
+            value: "Bitcrusher"
+        },
+        defaults: {
+            writable: true,
+            value: {
+                bits: {
+                    value: 4,
+                    min: 1,
+                    max: 16,
+                    automatable: false,
+                    type: INT
+                },
+                bufferSize: {
+                    value: 4096,
+                    min: 256,
+                    max: 16384,
+                    automatable: false,
+                    type: INT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                },
+                normfreq: {
+                    value: 0.1,
+                    min: 0.0001,
+                    max: 1.0,
+                    automatable: false,
+                    type: FLOAT
+                }
+            }
+        },
+        bits: {
+            enumerable: true,
+            get: function() {
+                return this.processor.bits;
+            },
+            set: function(value) {
+                this.processor.bits = value;
+            }
+        },
+        normfreq: {
+            enumerable: true,
+            get: function() {
+                return this.processor.normfreq;
+            },
+            set: function(value) {
+                this.processor.normfreq = value;
+            }
+        }
+    });
+
+    Tuna.prototype.Cabinet = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.input = userContext.createGain();
+        this.activateNode = userContext.createGain();
+        this.convolver = this.newConvolver(properties.impulsePath || "../impulses/impulse_guitar.wav");
+        this.makeupNode = userContext.createGain();
+        this.output = userContext.createGain();
+
+        this.activateNode.connect(this.convolver.input);
+        this.convolver.output.connect(this.makeupNode);
+        this.makeupNode.connect(this.output);
+
+        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain.value);
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.Cabinet.prototype = Object.create(Super, {
+        name: {
+            value: "Cabinet"
+        },
+        defaults: {
+            writable: true,
+            value: {
+                makeupGain: {
+                    value: 1,
+                    min: 0,
+                    max: 20,
+                    automatable: true,
+                    type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                }
+            }
+        },
+        makeupGain: {
+            enumerable: true,
+            get: function() {
+                return this.makeupNode.gain;
+            },
+            set: function(value) {
+                this.makeupNode.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        },
+        newConvolver: {
+            value: function(impulsePath) {
+                return new userInstance.Convolver({
+                    impulse: impulsePath,
+                    dryLevel: 0,
+                    wetLevel: 1
+                });
+            }
+        }
+    });
+
+    Tuna.prototype.Chorus = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.input = userContext.createGain();
+        this.attenuator = this.activateNode = userContext.createGain();
+        this.splitter = userContext.createChannelSplitter(2);
+        this.delayL = userContext.createDelay();
+        this.delayR = userContext.createDelay();
+        this.feedbackGainNodeLR = userContext.createGain();
+        this.feedbackGainNodeRL = userContext.createGain();
+        this.merger = userContext.createChannelMerger(2);
+        this.output = userContext.createGain();
+
+        this.lfoL = new userInstance.LFO({
+            target: this.delayL.delayTime,
+            callback: pipe
+        });
+        this.lfoR = new userInstance.LFO({
+            target: this.delayR.delayTime,
+            callback: pipe
+        });
+
+        this.input.connect(this.attenuator);
+        this.attenuator.connect(this.output);
+        this.attenuator.connect(this.splitter);
+        this.splitter.connect(this.delayL, 0);
+        this.splitter.connect(this.delayR, 1);
+        this.delayL.connect(this.feedbackGainNodeLR);
+        this.delayR.connect(this.feedbackGainNodeRL);
+        this.feedbackGainNodeLR.connect(this.delayR);
+        this.feedbackGainNodeRL.connect(this.delayL);
+        this.delayL.connect(this.merger, 0, 0);
+        this.delayR.connect(this.merger, 0, 1);
+        this.merger.connect(this.output);
+
+        this.feedback = initValue(properties.feedback, this.defaults.feedback.value);
+        this.rate = initValue(properties.rate, this.defaults.rate.value);
+        this.delay = initValue(properties.delay, this.defaults.delay.value);
+        this.depth = initValue(properties.depth, this.defaults.depth.value);
+        this.lfoR.phase = Math.PI / 2;
+        this.attenuator.gain.value = 0.6934; // 1 / (10 ^ (((20 * log10(3)) / 3) / 20))
+        this.lfoL.activate(true);
+        this.lfoR.activate(true);
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.Chorus.prototype = Object.create(Super, {
+        name: {
+            value: "Chorus"
+        },
+        defaults: {
+            writable: true,
+            value: {
+                feedback: {
+                    value: 0.4,
+                    min: 0,
+                    max: 0.95,
+                    automatable: false,
+                    type: FLOAT
+                },
+                delay: {
+                    value: 0.0045,
+                    min: 0,
+                    max: 1,
+                    automatable: false,
+                    type: FLOAT
+                },
+                depth: {
+                    value: 0.7,
+                    min: 0,
+                    max: 1,
+                    automatable: false,
+                    type: FLOAT
+                },
+                rate: {
+                    value: 1.5,
+                    min: 0,
+                    max: 8,
+                    automatable: false,
+                    type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                }
+            }
+        },
+        delay: {
+            enumerable: true,
+            get: function() {
+                return this._delay;
+            },
+            set: function(value) {
+                this._delay = 0.0002 * (Math.pow(10, value) * 2);
+                this.lfoL.offset = this._delay;
+                this.lfoR.offset = this._delay;
+                this._depth = this._depth;
+            }
+        },
+        depth: {
+            enumerable: true,
+            get: function() {
+                return this._depth;
+            },
+            set: function(value) {
+                this._depth = value;
+                this.lfoL.oscillation = this._depth * this._delay;
+                this.lfoR.oscillation = this._depth * this._delay;
+            }
+        },
+        feedback: {
+            enumerable: true,
+            get: function() {
+                return this._feedback;
+            },
+            set: function(value) {
+                this._feedback = value;
+                this.feedbackGainNodeLR.gain.setTargetAtTime(this._feedback, userContext.currentTime, 0.01);
+                this.feedbackGainNodeRL.gain.setTargetAtTime(this._feedback, userContext.currentTime, 0.01);
+            }
+        },
+        rate: {
+            enumerable: true,
+            get: function() {
+                return this._rate;
+            },
+            set: function(value) {
+                this._rate = value;
+                this.lfoL.frequency = this._rate;
+                this.lfoR.frequency = this._rate;
+            }
+        }
+    });
+
+    Tuna.prototype.Compressor = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.input = userContext.createGain();
+        this.compNode = this.activateNode = userContext.createDynamicsCompressor();
+        this.makeupNode = userContext.createGain();
+        this.output = userContext.createGain();
+
+        this.compNode.connect(this.makeupNode);
+        this.makeupNode.connect(this.output);
+
+        this.automakeup = initValue(properties.automakeup, this.defaults.automakeup.value);
+        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain.value);
+        this.threshold = initValue(properties.threshold, this.defaults.threshold.value);
+        this.release = initValue(properties.release, this.defaults.release.value);
+        this.attack = initValue(properties.attack, this.defaults.attack.value);
+        this.ratio = properties.ratio || this.defaults.ratio.value;
+        this.knee = initValue(properties.knee, this.defaults.knee.value);
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.Compressor.prototype = Object.create(Super, {
+        name: {
+            value: "Compressor"
+        },
+        defaults: {
+            writable: true,
+            value: {
+                threshold: {
+                    value: -20,
+                    min: -60,
+                    max: 0,
+                    automatable: true,
+                    type: FLOAT
+                },
+                release: {
+                    value: 250,
+                    min: 10,
+                    max: 2000,
+                    automatable: true,
+                    type: FLOAT
+                },
+                makeupGain: {
+                    value: 1,
+                    min: 1,
+                    max: 100,
+                    automatable: true,
+                    type: FLOAT
+                },
+                attack: {
+                    value: 1,
+                    min: 0,
+                    max: 1000,
+                    automatable: true,
+                    type: FLOAT
+                },
+                ratio: {
+                    value: 4,
+                    min: 1,
+                    max: 50,
+                    automatable: true,
+                    type: FLOAT
+                },
+                knee: {
+                    value: 5,
+                    min: 0,
+                    max: 40,
+                    automatable: true,
+                    type: FLOAT
+                },
+                automakeup: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                }
+            }
+        },
+        computeMakeup: {
+            value: function() {
+                var magicCoefficient = 4, // raise me if the output is too hot
+                    c = this.compNode;
+                return -(c.threshold.value - c.threshold.value / c.ratio.value) / magicCoefficient;
+            }
+        },
+        automakeup: {
+            enumerable: true,
+            get: function() {
+                return this._automakeup;
+            },
+            set: function(value) {
+                this._automakeup = value;
+                if (this._automakeup) this.makeupGain = this.computeMakeup();
+            }
+        },
+        threshold: {
+            enumerable: true,
+            get: function() {
+                return this.compNode.threshold;
+            },
+            set: function(value) {
+                this.compNode.threshold.value = value;
+                if (this._automakeup) this.makeupGain = this.computeMakeup();
+            }
+        },
+        ratio: {
+            enumerable: true,
+            get: function() {
+                return this.compNode.ratio;
+            },
+            set: function(value) {
+                this.compNode.ratio.value = value;
+                if (this._automakeup) this.makeupGain = this.computeMakeup();
+            }
+        },
+        knee: {
+            enumerable: true,
+            get: function() {
+                return this.compNode.knee;
+            },
+            set: function(value) {
+                this.compNode.knee.value = value;
+                if (this._automakeup) this.makeupGain = this.computeMakeup();
+            }
+        },
+        attack: {
+            enumerable: true,
+            get: function() {
+                return this.compNode.attack;
+            },
+            set: function(value) {
+                this.compNode.attack.value = value / 1000;
+            }
+        },
+        release: {
+            enumerable: true,
+            get: function() {
+                return this.compNode.release;
+            },
+            set: function(value) {
+                this.compNode.release.value = value / 1000;
+            }
+        },
+        makeupGain: {
+            enumerable: true,
+            get: function() {
+                return this.makeupNode.gain;
+            },
+            set: function(value) {
+                this.makeupNode.gain.setTargetAtTime(dbToWAVolume(value), userContext.currentTime, 0.01);
+            }
+        }
+    });
+
+    Tuna.prototype.Convolver = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.input = userContext.createGain();
+        this.activateNode = userContext.createGain();
+        this.convolver = userContext.createConvolver();
+        this.dry = userContext.createGain();
+        this.filterLow = userContext.createBiquadFilter();
+        this.filterHigh = userContext.createBiquadFilter();
+        this.wet = userContext.createGain();
+        this.output = userContext.createGain();
+
+        this.activateNode.connect(this.filterLow);
+        this.activateNode.connect(this.dry);
+        this.filterLow.connect(this.filterHigh);
+        this.filterHigh.connect(this.convolver);
+        this.convolver.connect(this.wet);
+        this.wet.connect(this.output);
+        this.dry.connect(this.output);
+
+        this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
+        this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
+        this.highCut = properties.highCut || this.defaults.highCut.value;
+        this.buffer = properties.impulse || "../impulses/ir_rev_short.wav";
+        this.lowCut = properties.lowCut || this.defaults.lowCut.value;
+        this.level = initValue(properties.level, this.defaults.level.value);
+        this.filterHigh.type = "lowpass";
+        this.filterLow.type = "highpass";
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.Convolver.prototype = Object.create(Super, {
+        name: {
+            value: "Convolver"
+        },
+        defaults: {
+            writable: true,
+            value: {
+                highCut: {
+                    value: 22050,
+                    min: 20,
+                    max: 22050,
+                    automatable: true,
+                    type: FLOAT
+                },
+                lowCut: {
+                    value: 20,
+                    min: 20,
+                    max: 22050,
+                    automatable: true,
+                    type: FLOAT
+                },
+                dryLevel: {
+                    value: 1,
+                    min: 0,
+                    max: 1,
+                    automatable: true,
+                    type: FLOAT
+                },
+                wetLevel: {
+                    value: 1,
+                    min: 0,
+                    max: 1,
+                    automatable: true,
+                    type: FLOAT
+                },
+                level: {
+                    value: 1,
+                    min: 0,
+                    max: 1,
+                    automatable: true,
+                    type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                }
+            }
+        },
+        lowCut: {
+            get: function() {
+                return this.filterLow.frequency;
+            },
+            set: function(value) {
+                this.filterLow.frequency.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        },
+        highCut: {
+            get: function() {
+                return this.filterHigh.frequency;
+            },
+            set: function(value) {
+                this.filterHigh.frequency.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        },
+        level: {
+            get: function() {
+                return this.output.gain;
+            },
+            set: function(value) {
+                this.output.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        },
+        dryLevel: {
+            get: function() {
+                return this.dry.gain;
+            },
+            set: function(value) {
+                this.dry.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        },
+        wetLevel: {
+            get: function() {
+                return this.wet.gain;
+            },
+            set: function(value) {
+                this.wet.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        },
+        buffer: {
+            enumerable: false,
+            get: function() {
+                return this.convolver.buffer;
+            },
+            set: function(impulse) {
+                var convolver = this.convolver,
+                    xhr = new XMLHttpRequest();
+                if (!impulse) {
+                    console.log("Tuna.Convolver.setBuffer: Missing impulse path!");
+                    return;
+                }
+                xhr.open("GET", impulse, true);
+                xhr.responseType = "arraybuffer";
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status < 300 && xhr.status > 199 || xhr.status === 302) {
+                            userContext.decodeAudioData(xhr.response, function(buffer) {
+                                convolver.buffer = buffer;
+                            }, function(e) {
+                                if (e) console.log("Tuna.Convolver.setBuffer: Error decoding data" + e);
+                            });
+                        }
+                    }
+                };
+                xhr.send(null);
+            }
+        }
+    });
+
+    Tuna.prototype.Delay = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.input = userContext.createGain();
+        this.activateNode = userContext.createGain();
+        this.dry = userContext.createGain();
+        this.wet = userContext.createGain();
+        this.filter = userContext.createBiquadFilter();
+        this.delay = userContext.createDelay(10);
+        this.feedbackNode = userContext.createGain();
+        this.output = userContext.createGain();
+
+        this.activateNode.connect(this.delay);
+        this.activateNode.connect(this.dry);
+        this.delay.connect(this.filter);
+        this.filter.connect(this.feedbackNode);
+        this.feedbackNode.connect(this.delay);
+        this.feedbackNode.connect(this.wet);
+        this.wet.connect(this.output);
+        this.dry.connect(this.output);
+
+        this.delayTime = properties.delayTime || this.defaults.delayTime.value;
+        this.feedback = initValue(properties.feedback, this.defaults.feedback.value);
+        this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
+        this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
+        this.cutoff = properties.cutoff || this.defaults.cutoff.value;
+        this.filter.type = "lowpass";
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.Delay.prototype = Object.create(Super, {
+        name: {
+            value: "Delay"
+        },
+        defaults: {
+            writable: true,
+            value: {
+                delayTime: {
+                    value: 100,
+                    min: 20,
+                    max: 1000,
+                    automatable: false,
+                    type: FLOAT
+                },
+                feedback: {
+                    value: 0.45,
+                    min: 0,
+                    max: 0.9,
+                    automatable: true,
+                    type: FLOAT
+                },
+                cutoff: {
+                    value: 20000,
+                    min: 20,
+                    max: 20000,
+                    automatable: true,
+                    type: FLOAT
+                },
+                wetLevel: {
+                    value: 0.5,
+                    min: 0,
+                    max: 1,
+                    automatable: true,
+                    type: FLOAT
+                },
+                dryLevel: {
+                    value: 1,
+                    min: 0,
+                    max: 1,
+                    automatable: true,
+                    type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                }
+            }
+        },
+        delayTime: {
+            enumerable: true,
+            get: function() {
+                return this.delay.delayTime;
+            },
+            set: function(value) {
+                this.delay.delayTime.value = value / 1000;
+            }
+        },
+        wetLevel: {
+            enumerable: true,
+            get: function() {
+                return this.wet.gain;
+            },
+            set: function(value) {
+                this.wet.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        },
+        dryLevel: {
+            enumerable: true,
+            get: function() {
+                return this.dry.gain;
+            },
+            set: function(value) {
+                this.dry.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        },
+        feedback: {
+            enumerable: true,
+            get: function() {
+                return this.feedbackNode.gain;
+            },
+            set: function(value) {
+                this.feedbackNode.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        },
+        cutoff: {
+            enumerable: true,
+            get: function() {
+                return this.filter.frequency;
+            },
+            set: function(value) {
+                this.filter.frequency.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        }
+    });
+
+    Tuna.prototype.Filter = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.input = userContext.createGain();
+        this.activateNode = userContext.createGain();
+        this.filter = userContext.createBiquadFilter();
+        this.output = userContext.createGain();
+
+        this.activateNode.connect(this.filter);
+        this.filter.connect(this.output);
+
+        this.frequency = properties.frequency || this.defaults.frequency.value;
+        this.Q = properties.resonance || this.defaults.Q.value;
+        this.filterType = initValue(properties.filterType, this.defaults.filterType.value);
+        this.gain = initValue(properties.gain, this.defaults.gain.value);
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.Filter.prototype = Object.create(Super, {
+        name: {
+            value: "Filter"
+        },
+        defaults: {
+            writable: true,
+            value: {
+                frequency: {
+                    value: 800,
+                    min: 20,
+                    max: 22050,
+                    automatable: true,
+                    type: FLOAT
+                },
+                Q: {
+                    value: 1,
+                    min: 0.001,
+                    max: 100,
+                    automatable: true,
+                    type: FLOAT
+                },
+                gain: {
+                    value: 0,
+                    min: -40,
+                    max: 40,
+                    automatable: true,
+                    type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                },
+                filterType: {
+                    value: "lowpass",
+                    automatable: false,
+                    type: STRING
+                }
+            }
+        },
+        filterType: {
+            enumerable: true,
+            get: function() {
+                return this.filter.type;
+            },
+            set: function(value) {
+                this.filter.type = value;
+            }
+        },
+        Q: {
+            enumerable: true,
+            get: function() {
+                return this.filter.Q;
+            },
+            set: function(value) {
+                this.filter.Q.value = value;
+            }
+        },
+        gain: {
+            enumerable: true,
+            get: function() {
+                return this.filter.gain;
+            },
+            set: function(value) {
+                this.filter.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        },
+        frequency: {
+            enumerable: true,
+            get: function() {
+                return this.filter.frequency;
+            },
+            set: function(value) {
+                this.filter.frequency.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        }
+    });
+
+    Tuna.prototype.Gain = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+
+        this.input = userContext.createGain();
+        this.activateNode = userContext.createGain();
+        this.gainNode = userContext.createGain();
+        this.output = userContext.createGain();
+
+        this.activateNode.connect(this.gainNode);
+        this.gainNode.connect(this.output);
+
+        this.gain = initValue(properties.gain, this.defaults.gain.value);
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.Gain.prototype = Object.create(Super, {
+        name: {
+            value: "Gain"
+        },
+        defaults: {
+            writable: true,
+            value: {
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                },
+                gain: {
+                    value: 1.0,
+                    automatable: true,
+                    type: FLOAT
+                }
+            }
+        },
+        gain: {
+            enumerable: true,
+            get: function() {
+                return this.gainNode.gain;
+            },
+            set: function(value) {
+                this.gainNode.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        }
+    });
+
+    Tuna.prototype.MoogFilter = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.bufferSize = properties.bufferSize || this.defaults.bufferSize.value;
+
+        this.input = userContext.createGain();
+        this.activateNode = userContext.createGain();
+        this.processor = userContext.createScriptProcessor(this.bufferSize, 1, 1);
+        this.output = userContext.createGain();
+
+        this.activateNode.connect(this.processor);
+        this.processor.connect(this.output);
+
+        var in1, in2, in3, in4, out1, out2, out3, out4;
+        in1 = in2 = in3 = in4 = out1 = out2 = out3 = out4 = 0.0;
+        var input, output, f, fb, i, length, inputFactor;
+        this.processor.onaudioprocess = function(e) {
+            input = e.inputBuffer.getChannelData(0);
+            output = e.outputBuffer.getChannelData(0);
+            f = this.cutoff * 1.16;
+            inputFactor = 0.35013 * (f * f) * (f * f);
+            fb = this.resonance * (1.0 - 0.15 * f * f);
+            length = input.length;
+            for (i = 0; i < length; i++) {
+                input[i] -= out4 * fb;
+                input[i] *= inputFactor;
+                out1 = input[i] + 0.3 * in1 + (1 - f) * out1; // Pole 1
+                in1 = input[i];
+                out2 = out1 + 0.3 * in2 + (1 - f) * out2; // Pole 2
+                in2 = out1;
+                out3 = out2 + 0.3 * in3 + (1 - f) * out3; // Pole 3
+                in3 = out2;
+                out4 = out3 + 0.3 * in4 + (1 - f) * out4; // Pole 4
+                in4 = out3;
+                output[i] = out4;
+            }
+        };
+
+        this.cutoff = initValue(properties.cutoff, this.defaults.cutoff.value);
+        this.resonance = initValue(properties.resonance, this.defaults.resonance.value);
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.MoogFilter.prototype = Object.create(Super, {
+        name: {
+            value: "MoogFilter"
+        },
+        defaults: {
+            writable: true,
+            value: {
+                bufferSize: {
+                    value: 4096,
+                    min: 256,
+                    max: 16384,
+                    automatable: false,
+                    type: INT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                },
+                cutoff: {
+                    value: 0.065,
+                    min: 0.0001,
+                    max: 1.0,
+                    automatable: false,
+                    type: FLOAT
+                },
+                resonance: {
+                    value: 3.5,
+                    min: 0.0,
+                    max: 4.0,
+                    automatable: false,
+                    type: FLOAT
+                }
+            }
+        },
+        cutoff: {
+            enumerable: true,
+            get: function() {
+                return this.processor.cutoff;
+            },
+            set: function(value) {
+                this.processor.cutoff = value;
+            }
+        },
+        resonance: {
+            enumerable: true,
+            get: function() {
+                return this.processor.resonance;
+            },
+            set: function(value) {
+                this.processor.resonance = value;
+            }
+        }
+    });
+
+    Tuna.prototype.Overdrive = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.input = userContext.createGain();
+        this.activateNode = userContext.createGain();
+        this.inputDrive = userContext.createGain();
+        this.waveshaper = userContext.createWaveShaper();
+        this.outputDrive = userContext.createGain();
+        this.output = userContext.createGain();
+
+        this.activateNode.connect(this.inputDrive);
+        this.inputDrive.connect(this.waveshaper);
+        this.waveshaper.connect(this.outputDrive);
+        this.outputDrive.connect(this.output);
+
+        this.ws_table = new Float32Array(this.k_nSamples);
+        this.drive = initValue(properties.drive, this.defaults.drive.value);
+        this.outputGain = initValue(properties.outputGain, this.defaults.outputGain.value);
+        this.curveAmount = initValue(properties.curveAmount, this.defaults.curveAmount.value);
+        this.algorithmIndex = initValue(properties.algorithmIndex, this.defaults.algorithmIndex.value);
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.Overdrive.prototype = Object.create(Super, {
+        name: {
+            value: "Overdrive"
+        },
+        defaults: {
+            writable: true,
+            value: {
+                drive: {
+                    value: 1,
+                    min: 0,
+                    max: 1,
+                    automatable: true,
+                    type: FLOAT,
+                    scaled: true
+                },
+                outputGain: {
+                    value: 0,
+                    min: -46,
+                    max: 0,
+                    automatable: true,
+                    type: FLOAT,
+                    scaled: true
+                },
+                curveAmount: {
+                    value: 0.725,
+                    min: 0,
+                    max: 1,
+                    automatable: false,
+                    type: FLOAT
+                },
+                algorithmIndex: {
+                    value: 0,
+                    min: 0,
+                    max: 5,
+                    automatable: false,
+                    type: INT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                }
+            }
+        },
+        k_nSamples: {
+            value: 8192
+        },
+        drive: {
+            get: function() {
+                return this.inputDrive.gain;
+            },
+            set: function(value) {
+                this._drive = value;
+            }
+        },
+        curveAmount: {
+            get: function() {
+                return this._curveAmount;
+            },
+            set: function(value) {
+                this._curveAmount = value;
+                if (this._algorithmIndex === undefined) {
+                    this._algorithmIndex = 0;
+                }
+                this.waveshaperAlgorithms[this._algorithmIndex](this._curveAmount, this.k_nSamples, this.ws_table);
+                this.waveshaper.curve = this.ws_table;
+            }
+        },
+        outputGain: {
+            get: function() {
+                return this.outputDrive.gain;
+            },
+            set: function(value) {
+                this._outputGain = dbToWAVolume(value);
+                this.outputDrive.gain.setValueAtTime(this._outputGain, userContext.currentTime, 0.01);
+            }
+        },
+        algorithmIndex: {
+            get: function() {
+                return this._algorithmIndex;
+            },
+            set: function(value) {
+                this._algorithmIndex = value;
+                this.curveAmount = this._curveAmount;
+            }
+        },
+        waveshaperAlgorithms: {
+            value: [
+                function(amount, n_samples, ws_table) {
+                    amount = Math.min(amount, 0.9999);
+                    var k = 2 * amount / (1 - amount),
+                        i, x;
+                    for (i = 0; i < n_samples; i++) {
+                        x = i * 2 / n_samples - 1;
+                        ws_table[i] = (1 + k) * x / (1 + k * Math.abs(x));
+                    }
+                },
+                function(amount, n_samples, ws_table) {
+                    var i, x, y;
+                    for (i = 0; i < n_samples; i++) {
+                        x = i * 2 / n_samples - 1;
+                        y = ((0.5 * Math.pow((x + 1.4), 2)) - 1) * y >= 0 ? 5.8 : 1.2;
+                        ws_table[i] = tanh(y);
+                    }
+                },
+                function(amount, n_samples, ws_table) {
+                    var i, x, y, a = 1 - amount;
+                    for (i = 0; i < n_samples; i++) {
+                        x = i * 2 / n_samples - 1;
+                        y = x < 0 ? -Math.pow(Math.abs(x), a + 0.04) : Math.pow(x, a);
+                        ws_table[i] = tanh(y * 2);
+                    }
+                },
+                function(amount, n_samples, ws_table) {
+                    var i, x, y, abx, a = 1 - amount > 0.99 ? 0.99 : 1 - amount;
+                    for (i = 0; i < n_samples; i++) {
+                        x = i * 2 / n_samples - 1;
+                        abx = Math.abs(x);
+                        if (abx < a) y = abx;
+                        else if (abx > a) y = a + (abx - a) / (1 + Math.pow((abx - a) / (1 - a), 2));
+                        else if (abx > 1) y = abx;
+                        ws_table[i] = sign(x) * y * (1 / ((a + 1) / 2));
+                    }
+                },
+                function(amount, n_samples, ws_table) { // fixed curve, amount doesn't do anything, the distortion is just from the drive
+                    var i, x;
+                    for (i = 0; i < n_samples; i++) {
+                        x = i * 2 / n_samples - 1;
+                        if (x < -0.08905) {
+                            ws_table[i] = (-3 / 4) * (1 - (Math.pow((1 - (Math.abs(x) - 0.032857)), 12)) + (1 / 3) * (Math.abs(x) - 0.032847)) + 0.01;
+                        } else if (x >= -0.08905 && x < 0.320018) {
+                            ws_table[i] = (-6.153 * (x * x)) + 3.9375 * x;
+                        } else {
+                            ws_table[i] = 0.630035;
+                        }
+                    }
+                },
+                function(amount, n_samples, ws_table) {
+                    var a = 2 + Math.round(amount * 14),
+                        // we go from 2 to 16 bits, keep in mind for the UI
+                        bits = Math.round(Math.pow(2, a - 1)),
+                        // real number of quantization steps divided by 2
+                        i, x;
+                    for (i = 0; i < n_samples; i++) {
+                        x = i * 2 / n_samples - 1;
+                        ws_table[i] = Math.round(x * bits) / bits;
+                    }
+                }
+            ]
+        }
+    });
+
+    Tuna.prototype.Panner = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+
+        this.input = userContext.createGain();
+        this.activateNode = userContext.createGain();
+        this.panner = userContext.createStereoPanner();
+        this.output = userContext.createGain();
+
+        this.activateNode.connect(this.panner);
+        this.panner.connect(this.output);
+
+        this.pan = initValue(properties.pan, this.defaults.pan.value);
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.Panner.prototype = Object.create(Super, {
+        name: {
+            value: "Panner"
+        },
+        defaults: {
+            writable: true,
+            value: {
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                },
+                pan: {
+                    value: 0.0,
+                    min: -1.0,
+                    max: 1.0,
+                    automatable: true,
+                    type: FLOAT
+                }
+            }
+        },
+        pan: {
+            enumerable: true,
+            get: function() {
+                return this.panner.pan;
+            },
+            set: function(value) {
+                this.panner.pan.value = value;
+            }
+        }
+    });
+
+    Tuna.prototype.Phaser = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.input = userContext.createGain();
+        this.splitter = this.activateNode = userContext.createChannelSplitter(2);
+        this.filtersL = [];
+        this.filtersR = [];
+        this.feedbackGainNodeL = userContext.createGain();
+        this.feedbackGainNodeR = userContext.createGain();
+        this.merger = userContext.createChannelMerger(2);
+        this.filteredSignal = userContext.createGain();
+        this.output = userContext.createGain();
+        this.lfoL = new userInstance.LFO({
+            target: this.filtersL,
+            callback: this.callback
+        });
+        this.lfoR = new userInstance.LFO({
+            target: this.filtersR,
+            callback: this.callback
+        });
+
+        var i = this.stage;
+        while (i--) {
+            this.filtersL[i] = userContext.createBiquadFilter();
+            this.filtersR[i] = userContext.createBiquadFilter();
+            this.filtersL[i].type = "allpass";
+            this.filtersR[i].type = "allpass";
+        }
+        this.input.connect(this.splitter);
+        this.input.connect(this.output);
+        this.splitter.connect(this.filtersL[0], 0, 0);
+        this.splitter.connect(this.filtersR[0], 1, 0);
+        this.connectInOrder(this.filtersL);
+        this.connectInOrder(this.filtersR);
+        this.filtersL[this.stage - 1].connect(this.feedbackGainNodeL);
+        this.filtersL[this.stage - 1].connect(this.merger, 0, 0);
+        this.filtersR[this.stage - 1].connect(this.feedbackGainNodeR);
+        this.filtersR[this.stage - 1].connect(this.merger, 0, 1);
+        this.feedbackGainNodeL.connect(this.filtersL[0]);
+        this.feedbackGainNodeR.connect(this.filtersR[0]);
+        this.merger.connect(this.output);
+
+        this.rate = initValue(properties.rate, this.defaults.rate.value);
+        this.baseModulationFrequency = properties.baseModulationFrequency || this.defaults.baseModulationFrequency.value;
+        this.depth = initValue(properties.depth, this.defaults.depth.value);
+        this.feedback = initValue(properties.feedback, this.defaults.feedback.value);
+        this.stereoPhase = initValue(properties.stereoPhase, this.defaults.stereoPhase.value);
+
+        this.lfoL.activate(true);
+        this.lfoR.activate(true);
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.Phaser.prototype = Object.create(Super, {
+        name: {
+            value: "Phaser"
+        },
+        stage: {
+            value: 4
+        },
+        defaults: {
+            writable: true,
+            value: {
+                rate: {
+                    value: 0.1,
+                    min: 0,
+                    max: 8,
+                    automatable: false,
+                    type: FLOAT
+                },
+                depth: {
+                    value: 0.6,
+                    min: 0,
+                    max: 1,
+                    automatable: false,
+                    type: FLOAT
+                },
+                feedback: {
+                    value: 0.7,
+                    min: 0,
+                    max: 1,
+                    automatable: false,
+                    type: FLOAT
+                },
+                stereoPhase: {
+                    value: 40,
+                    min: 0,
+                    max: 180,
+                    automatable: false,
+                    type: FLOAT
+                },
+                baseModulationFrequency: {
+                    value: 700,
+                    min: 500,
+                    max: 1500,
+                    automatable: false,
+                    type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                }
+            }
+        },
+        callback: {
+            value: function(filters, value) {
+                for (var stage = 0; stage < 4; stage++) {
+                    filters[stage].frequency.value = value;
+                }
+            }
+        },
+        depth: {
+            get: function() {
+                return this._depth;
+            },
+            set: function(value) {
+                this._depth = value;
+                this.lfoL.oscillation = this._baseModulationFrequency * this._depth;
+                this.lfoR.oscillation = this._baseModulationFrequency * this._depth;
+            }
+        },
+        rate: {
+            get: function() {
+                return this._rate;
+            },
+            set: function(value) {
+                this._rate = value;
+                this.lfoL.frequency = this._rate;
+                this.lfoR.frequency = this._rate;
+            }
+        },
+        baseModulationFrequency: {
+            enumerable: true,
+            get: function() {
+                return this._baseModulationFrequency;
+            },
+            set: function(value) {
+                this._baseModulationFrequency = value;
+                this.lfoL.offset = this._baseModulationFrequency;
+                this.lfoR.offset = this._baseModulationFrequency;
+                this.depth = this._depth;
+            }
+        },
+        feedback: {
+            get: function() {
+                return this._feedback;
+            },
+            set: function(value) {
+                this._feedback = value;
+                this.feedbackGainNodeL.gain.setTargetAtTime(this._feedback, userContext.currentTime, 0.01);
+                this.feedbackGainNodeR.gain.setTargetAtTime(this._feedback, userContext.currentTime, 0.01);
+            }
+        },
+        stereoPhase: {
+            get: function() {
+                return this._stereoPhase;
+            },
+            set: function(value) {
+                this._stereoPhase = value;
+                var newPhase = this.lfoL._phase + this._stereoPhase * Math.PI / 180;
+                newPhase = fmod(newPhase, 2 * Math.PI);
+                this.lfoR._phase = newPhase;
+            }
+        }
+    });
+
+    Tuna.prototype.PingPongDelay = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.input = userContext.createGain();
+        this.wet = userContext.createGain();
+        this.stereoToMonoMix = userContext.createGain();
+        this.feedbackLevel = userContext.createGain();
+        this.output = userContext.createGain();
+        this.delayLeft = userContext.createDelay(10);
+        this.delayRight = userContext.createDelay(10);
+
+        this.activateNode = userContext.createGain();
+        this.splitter = userContext.createChannelSplitter(2);
+        this.merger = userContext.createChannelMerger(2);
+
+        this.activateNode.connect(this.splitter);
+        this.splitter.connect(this.stereoToMonoMix, 0, 0);
+        this.splitter.connect(this.stereoToMonoMix, 1, 0);
+        this.stereoToMonoMix.gain.value = .5;
+        this.stereoToMonoMix.connect(this.wet);
+        this.wet.connect(this.delayLeft);
+        this.feedbackLevel.connect(this.wet);
+        this.delayLeft.connect(this.delayRight);
+        this.delayRight.connect(this.feedbackLevel);
+        this.delayLeft.connect(this.merger, 0, 0);
+        this.delayRight.connect(this.merger, 0, 1);
+        this.merger.connect(this.output);
+        this.activateNode.connect(this.output);
+
+        this.delayTimeLeft = properties.delayTimeLeft !== undefined ? properties.delayTimeLeft : this.defaults.delayTimeLeft.value;
+        this.delayTimeRight = properties.delayTimeRight !== undefined ? properties.delayTimeRight : this.defaults.delayTimeRight.value;
+        this.feedbackLevel.gain.value = properties.feedback !== undefined ? properties.feedback : this.defaults.feedback.value;
+        this.wet.gain.value = properties.wetLevel !== undefined ? properties.wetLevel : this.defaults.wetLevel.value;
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.PingPongDelay.prototype = Object.create(Super, {
+        name: {
+            value: "PingPongDelay"
+        },
+        delayTimeLeft: {
+            enumerable: true,
+            get: function() {
+                return this._delayTimeLeft;
+            },
+            set: function(value) {
+                this._delayTimeLeft = value;
+                this.delayLeft.delayTime.value = value / 1000;
+            }
+        },
+        delayTimeRight: {
+            enumerable: true,
+            get: function() {
+                return this._delayTimeRight;
+            },
+            set: function(value) {
+                this._delayTimeRight = value;
+                this.delayRight.delayTime.value = value / 1000;
+            }
+        },
+        wetLevel: {
+            enumerable: true,
+            get: function () {
+                return this.wet.gain;
+            },
+            set: function (value) {
+                this.wet.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        }, 
+        feedback: {
+            enumerable: true,
+            get: function () {
+                return this.feedbackLevel.gain;
+            },
+            set: function (value) {
+                this.feedbackLevel.gain.setTargetAtTime(value, userContext.currentTime, 0.01);
+            }
+        },
+        defaults: {
+            writable: true,
+            value: {
+                delayTimeLeft: {
+                    value: 200,
+                    min: 1,
+                    max: 10000,
+                    automatable: false,
+                    type: INT
+                },
+                delayTimeRight: {
+                    value: 400,
+                    min: 1,
+                    max: 10000,
+                    automatable: false,
+                    type: INT
+                },
+                feedback: {
+                    value: 0.3,
+                    min: 0,
+                    max: 1,
+                    automatable: true,
+                    type: FLOAT
+                },
+                wetLevel: {
+                    value: 0.5,
+                    min: 0,
+                    max: 1,
+                    automatable: true,
+                    type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                }
+            }
+        }
+    });
+
+    Tuna.prototype.Tremolo = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.input = userContext.createGain();
+        this.splitter = this.activateNode = userContext.createChannelSplitter(2);
+        this.amplitudeL = userContext.createGain();
+        this.amplitudeR = userContext.createGain();
+        this.merger = userContext.createChannelMerger(2);
+        this.output = userContext.createGain();
+        this.lfoL = new userInstance.LFO({
+            target: this.amplitudeL.gain,
+            callback: pipe
+        });
+        this.lfoR = new userInstance.LFO({
+            target: this.amplitudeR.gain,
+            callback: pipe
+        });
+
+        this.input.connect(this.splitter);
+        this.splitter.connect(this.amplitudeL, 0);
+        this.splitter.connect(this.amplitudeR, 1);
+        this.amplitudeL.connect(this.merger, 0, 0);
+        this.amplitudeR.connect(this.merger, 0, 1);
+        this.merger.connect(this.output);
+
+        this.rate = properties.rate || this.defaults.rate.value;
+        this.intensity = initValue(properties.intensity, this.defaults.intensity.value);
+        this.stereoPhase = initValue(properties.stereoPhase, this.defaults.stereoPhase.value);
+
+        this.lfoL.offset = 1 - (this.intensity / 2);
+        this.lfoR.offset = 1 - (this.intensity / 2);
+        this.lfoL.phase = this.stereoPhase * Math.PI / 180;
+
+        this.lfoL.activate(true);
+        this.lfoR.activate(true);
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.Tremolo.prototype = Object.create(Super, {
+        name: {
+            value: "Tremolo"
+        },
+        defaults: {
+            writable: true,
+            value: {
+                intensity: {
+                    value: 0.3,
+                    min: 0,
+                    max: 1,
+                    automatable: false,
+                    type: FLOAT
+                },
+                stereoPhase: {
+                    value: 0,
+                    min: 0,
+                    max: 180,
+                    automatable: false,
+                    type: FLOAT
+                },
+                rate: {
+                    value: 5,
+                    min: 0.1,
+                    max: 11,
+                    automatable: false,
+                    type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                }
+            }
+        },
+        intensity: {
+            enumerable: true,
+            get: function() {
+                return this._intensity;
+            },
+            set: function(value) {
+                this._intensity = value;
+                this.lfoL.offset = 1 - this._intensity / 2;
+                this.lfoR.offset = 1 - this._intensity / 2;
+                this.lfoL.oscillation = this._intensity;
+                this.lfoR.oscillation = this._intensity;
+            }
+        },
+        rate: {
+            enumerable: true,
+            get: function() {
+                return this._rate;
+            },
+            set: function(value) {
+                this._rate = value;
+                this.lfoL.frequency = this._rate;
+                this.lfoR.frequency = this._rate;
+            }
+        },
+        stereoPhase: {
+            enumerable: true,
+            get: function() {
+                return this._stereoPhase;
+            },
+            set: function(value) {
+                this._stereoPhase = value;
+                var newPhase = this.lfoL._phase + this._stereoPhase * Math.PI / 180;
+                newPhase = fmod(newPhase, 2 * Math.PI);
+                this.lfoR.phase = newPhase;
+            }
+        }
+    });
+
+    Tuna.prototype.WahWah = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.input = userContext.createGain();
+        this.activateNode = userContext.createGain();
+        this.envelopeFollower = new userInstance.EnvelopeFollower({
+            target: this,
+            callback: function(context, value) {
+                context.sweep = value;
+            }
+        });
+        this.filterBp = userContext.createBiquadFilter();
+        this.filterPeaking = userContext.createBiquadFilter();
+        this.output = userContext.createGain();
+
+        //Connect AudioNodes
+        this.activateNode.connect(this.filterBp);
+        this.filterBp.connect(this.filterPeaking);
+        this.filterPeaking.connect(this.output);
+
+        //Set Properties
+        this.init();
+        this.automode = initValue(properties.automode, this.defaults.automode.value);
+        this.resonance = properties.resonance || this.defaults.resonance.value;
+        this.sensitivity = initValue(properties.sensitivity, this.defaults.sensitivity.value);
+        this.baseFrequency = initValue(properties.baseFrequency, this.defaults.baseFrequency.value);
+        this.excursionOctaves = properties.excursionOctaves || this.defaults.excursionOctaves.value;
+        this.sweep = initValue(properties.sweep, this.defaults.sweep.value);
+
+        this.activateNode.gain.value = 2;
+        this.envelopeFollower.activate(true);
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.WahWah.prototype = Object.create(Super, {
+        name: {
+            value: "WahWah"
+        },
+        defaults: {
+            writable: true,
+            value: {
+                automode: {
+                    value: true,
+                    automatable: false,
+                    type: BOOLEAN
+                },
+                baseFrequency: {
+                    value: 0.5,
+                    min: 0,
+                    max: 1,
+                    automatable: false,
+                    type: FLOAT
+                },
+                excursionOctaves: {
+                    value: 2,
+                    min: 1,
+                    max: 6,
+                    automatable: false,
+                    type: FLOAT
+                },
+                sweep: {
+                    value: 0.2,
+                    min: 0,
+                    max: 1,
+                    automatable: false,
+                    type: FLOAT
+                },
+                resonance: {
+                    value: 10,
+                    min: 1,
+                    max: 100,
+                    automatable: false,
+                    type: FLOAT
+                },
+                sensitivity: {
+                    value: 0.5,
+                    min: -1,
+                    max: 1,
+                    automatable: false,
+                    type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                }
+            }
+        },
+        automode: {
+            get: function() {
+                return this._automode;
+            },
+            set: function(value) {
+                this._automode = value;
+                if (value) {
+                    this.activateNode.connect(this.envelopeFollower.input);
+                    this.envelopeFollower.activate(true);
+                } else {
+                    this.envelopeFollower.activate(false);
+                    this.activateNode.disconnect();
+                    this.activateNode.connect(this.filterBp);
+                }
+            }
+        },
+        filterFreqTimeout: {
+            value: 0
+        },
+        setFilterFreq: {
+            value: function() {
+                try {
+                    this.filterBp.frequency.value = Math.min(22050, this._baseFrequency + this._excursionFrequency * this._sweep);
+                    this.filterPeaking.frequency.value = Math.min(22050, this._baseFrequency + this._excursionFrequency * this._sweep);
+                } catch (e) {
+                    clearTimeout(this.filterFreqTimeout);
+                    //put on the next cycle to let all init properties be set
+                    this.filterFreqTimeout = setTimeout(function() {
+                        this.setFilterFreq();
+                    }.bind(this), 0);
+                }
+            }
+        },
+        sweep: {
+            enumerable: true,
+            get: function() {
+                return this._sweep;
+            },
+            set: function(value) {
+                this._sweep = Math.pow(value > 1 ? 1 : value < 0 ? 0 : value, this._sensitivity);
+                this.setFilterFreq();
+            }
+        },
+        baseFrequency: {
+            enumerable: true,
+            get: function() {
+                return this._baseFrequency;
+            },
+            set: function(value) {
+                this._baseFrequency = 50 * Math.pow(10, value * 2);
+                this._excursionFrequency = Math.min(userContext.sampleRate / 2, this.baseFrequency * Math.pow(2, this._excursionOctaves));
+                this.setFilterFreq();
+            }
+        },
+        excursionOctaves: {
+            enumerable: true,
+            get: function() {
+                return this._excursionOctaves;
+            },
+            set: function(value) {
+                this._excursionOctaves = value;
+                this._excursionFrequency = Math.min(userContext.sampleRate / 2, this.baseFrequency * Math.pow(2, this._excursionOctaves));
+                this.setFilterFreq();
+            }
+        },
+        sensitivity: {
+            enumerable: true,
+            get: function() {
+                return this._sensitivity;
+            },
+            set: function(value) {
+                this._sensitivity = Math.pow(10, value);
+            }
+        },
+        resonance: {
+            enumerable: true,
+            get: function() {
+                return this._resonance;
+            },
+            set: function(value) {
+                this._resonance = value;
+                this.filterPeaking.Q = this._resonance;
+            }
+        },
+        init: {
+            value: function() {
+                this.output.gain.value = 1;
+                this.filterPeaking.type = "peaking";
+                this.filterBp.type = "bandpass";
+                this.filterPeaking.frequency.value = 100;
+                this.filterPeaking.gain.value = 20;
+                this.filterPeaking.Q.value = 5;
+                this.filterBp.frequency.value = 100;
+                this.filterBp.Q.value = 1;
+            }
+        }
+    });
+
+    Tuna.prototype.EnvelopeFollower = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+        this.input = userContext.createGain();
+        this.jsNode = this.output = userContext.createScriptProcessor(this.buffersize, 1, 1);
+
+        this.input.connect(this.output);
+
+        this.attackTime = initValue(properties.attackTime, this.defaults.attackTime.value);
+        this.releaseTime = initValue(properties.releaseTime, this.defaults.releaseTime.value);
+        this._envelope = 0;
+        this.target = properties.target || {};
+        this.callback = properties.callback || function() {};
+
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.EnvelopeFollower.prototype = Object.create(Super, {
+        name: {
+            value: "EnvelopeFollower"
+        },
+        defaults: {
+            value: {
+                attackTime: {
+                    value: 0.003,
+                    min: 0,
+                    max: 0.5,
+                    automatable: false,
+                    type: FLOAT
+                },
+                releaseTime: {
+                    value: 0.5,
+                    min: 0,
+                    max: 0.5,
+                    automatable: false,
+                    type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                }
+            }
+        },
+        buffersize: {
+            value: 256
+        },
+        envelope: {
+            value: 0
+        },
+        sampleRate: {
+            value: 44100
+        },
+        attackTime: {
+            enumerable: true,
+            get: function() {
+                return this._attackTime;
+            },
+            set: function(value) {
+                this._attackTime = value;
+                this._attackC = Math.exp(-1 / this._attackTime * this.sampleRate / this.buffersize);
+            }
+        },
+        releaseTime: {
+            enumerable: true,
+            get: function() {
+                return this._releaseTime;
+            },
+            set: function(value) {
+                this._releaseTime = value;
+                this._releaseC = Math.exp(-1 / this._releaseTime * this.sampleRate / this.buffersize);
+            }
+        },
+        callback: {
+            get: function() {
+                return this._callback;
+            },
+            set: function(value) {
+                if (typeof value === "function") {
+                    this._callback = value;
+                } else {
+                    console.error("tuna.js: " + this.name + ": Callback must be a function!");
+                }
+            }
+        },
+        target: {
+            get: function() {
+                return this._target;
+            },
+            set: function(value) {
+                this._target = value;
+            }
+        },
+        activate: {
+            value: function(doActivate) {
+                this.activated = doActivate;
+                if (doActivate) {
+                    this.jsNode.connect(userContext.destination);
+                    this.jsNode.onaudioprocess = this.returnCompute(this);
+                } else {
+                    this.jsNode.disconnect();
+                    this.jsNode.onaudioprocess = null;
+                }
+                if (this.activateCallback) {
+                    this.activateCallback(doActivate);
+                }
+            }
+        },
+        returnCompute: {
+            value: function(instance) {
+                return function(event) {
+                    instance.compute(event);
+                };
+            }
+        },
+        compute: {
+            value: function(event) {
+                var count = event.inputBuffer.getChannelData(0).length,
+                    channels = event.inputBuffer.numberOfChannels,
+                    current, chan, rms, i;
+                chan = rms = i = 0;
+                if (channels > 1) { //need to mixdown
+                    for (i = 0; i < count; ++i) {
+                        for (; chan < channels; ++chan) {
+                            current = event.inputBuffer.getChannelData(chan)[i];
+                            rms += (current * current) / channels;
+                        }
+                    }
+                } else {
+                    for (i = 0; i < count; ++i) {
+                        current = event.inputBuffer.getChannelData(0)[i];
+                        rms += (current * current);
+                    }
+                }
+                rms = Math.sqrt(rms);
+
+                if (this._envelope < rms) {
+                    this._envelope *= this._attackC;
+                    this._envelope += (1 - this._attackC) * rms;
+                } else {
+                    this._envelope *= this._releaseC;
+                    this._envelope += (1 - this._releaseC) * rms;
+                }
+                this._callback(this._target, this._envelope);
+            }
+        }
+    });
+
+    Tuna.prototype.LFO = function(properties) {
+        if (!properties) {
+            properties = this.getDefaults();
+        }
+
+        //Instantiate AudioNode
+        this.input = userContext.createGain();
+        this.output = userContext.createScriptProcessor(256, 1, 1);
+        this.activateNode = userContext.destination;
+
+        //Set Properties
+        this.frequency = initValue(properties.frequency, this.defaults.frequency.value);
+        this.offset = initValue(properties.offset, this.defaults.offset.value);
+        this.oscillation = initValue(properties.oscillation, this.defaults.oscillation.value);
+        this.phase = initValue(properties.phase, this.defaults.phase.value);
+        this.target = properties.target || {};
+        this.output.onaudioprocess = this.callback(properties.callback || function() {});
+        this.bypass = properties.bypass || this.defaults.bypass.value;
+    };
+    Tuna.prototype.LFO.prototype = Object.create(Super, {
+        name: {
+            value: "LFO"
+        },
+        bufferSize: {
+            value: 256
+        },
+        sampleRate: {
+            value: 44100
+        },
+        defaults: {
+            value: {
+                frequency: {
+                    value: 1,
+                    min: 0,
+                    max: 20,
+                    automatable: false,
+                    type: FLOAT
+                },
+                offset: {
+                    value: 0.85,
+                    min: 0,
+                    max: 22049,
+                    automatable: false,
+                    type: FLOAT
+                },
+                oscillation: {
+                    value: 0.3,
+                    min: -22050,
+                    max: 22050,
+                    automatable: false,
+                    type: FLOAT
+                },
+                phase: {
+                    value: 0,
+                    min: 0,
+                    max: 2 * Math.PI,
+                    automatable: false,
+                    type: FLOAT
+                },
+                bypass: {
+                    value: false,
+                    automatable: false,
+                    type: BOOLEAN
+                }
+            }
+        },
+        frequency: {
+            get: function() {
+                return this._frequency;
+            },
+            set: function(value) {
+                this._frequency = value;
+                this._phaseInc = 2 * Math.PI * this._frequency * this.bufferSize / this.sampleRate;
+            }
+        },
+        offset: {
+            get: function() {
+                return this._offset;
+            },
+            set: function(value) {
+                this._offset = value;
+            }
+        },
+        oscillation: {
+            get: function() {
+                return this._oscillation;
+            },
+            set: function(value) {
+                this._oscillation = value;
+            }
+        },
+        phase: {
+            get: function() {
+                return this._phase;
+            },
+            set: function(value) {
+                this._phase = value;
+            }
+        },
+        target: {
+            get: function() {
+                return this._target;
+            },
+            set: function(value) {
+                this._target = value;
+            }
+        },
+        activate: {
+            value: function(doActivate) {
+                if (doActivate) {
+                    this.output.connect(userContext.destination);
+                    if (this.activateCallback) {
+                        this.activateCallback(doActivate);
+                    }
+                } else {
+                    this.output.disconnect();
+                }
+            }
+        },
+        callback: {
+            value: function(callback) {
+                var that = this;
+                return function() {
+                    that._phase += that._phaseInc;
+                    if (that._phase > 2 * Math.PI) {
+                        that._phase = 0;
+                    }
+                    callback(that._target, that._offset + that._oscillation * Math.sin(that._phase));
+                };
+            }
+        }
+    });
+
+    Tuna.toString = Tuna.prototype.toString = function() {
+        return "Please visit https://github.com/Theodeus/tuna/wiki for instructions on how to use Tuna.js";
+    };
+})();
+
+
+/***/ }),
+
+/***/ "./node_modules/webpack/buildin/harmony-module.js":
+/*!*******************************************!*\
+  !*** (webpack)/buildin/harmony-module.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = function(originalModule) {
+	if (!originalModule.webpackPolyfill) {
+		var module = Object.create(originalModule);
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		Object.defineProperty(module, "exports", {
+			enumerable: true
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+
+/***/ "./src/audio_listener.js":
+/*!*******************************!*\
+  !*** ./src/audio_listener.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return AudioListener; });
+/*This module wraps the audio listener to create a uniform interface between browsers, mainly Safari and other browsers:
+https://developer.mozilla.org/en-US/docs/Web/API/AudioListener
+*/
+
+class AudioParam{
+	// this is a wrapper for Safari if the browser does not support listener.positionX or the other properties
+	constructor(value, setFunc){
+		this._setFunc = setFunc;
+		this.AudioParamautomationRate = 'a-rate';
+		this.defaultValue = value;
+		this.maxValue = 3.4028234663852886e+38;
+		this.minValue = -3.4028234663852886e+38;
+		this._value = this.defaultValue;
+	}
+
+	get value(){
+		return this._value;
+	}
+
+	set value(v){
+		this._setFunc(v);
+		this._value = v;
+	}
+}
+
+class AudioListener{
+	constructor(context){
+		this._listener = context.listener;
+		window.listener = this._listener;
+		this.positionX = this._listener.positionX || new AudioParam(0, v=>this._listener.setPosition(v, this.positionY.value, this.positionZ.value));
+		this.positionY = this._listener.positionY || new AudioParam(0, v=>this._listener.setPosition(this.positionX.value, v, this.positionZ.value));
+		this.positionZ = this._listener.positionZ || new AudioParam(0, v=>this._listener.setPosition(this.positionX.value, this.positionY.value, v));
+		this.forwardX = this._listener.forwardX || new AudioParam(0, v=>this._listener.setOrientation(v, this.forwardY.value, this.forwardZ.value, this.upX.value, this.upY.value, this.upZ.value));
+		this.forwardY = this._listener.ForwardY || new AudioParam(0, v=>this._listener.setOrientation(this.forwardX.value, v, this.forwardZ.value, this.upX.value, this.upY.value, this.upZ.value));
+		this.forwardZ = this._listener.forwardZ || new AudioParam(-1, v=>this._listener.setOrientation(this.forwardX.value, this.forwardY.value, v, this.upX.value, this.upY.value, this.upZ.value));
+		this.upX = this._listener.upZ || new AudioParam(0, v=>this._listener.setOrientation(this.forwardX.value, this.forwardY.value, this.forwardZ.value, v, this.upY.value, this.upZ.value));
+		this.upY = this._listener.upY || new AudioParam(1, v=>this._listener.setOrientation(this.forwardX.value, this.forwardY.value, this.forwardZ.value, this.upX.value, v, this.upZ.value));
+		this.upZ = this._listener.upZ || new AudioParam(0, v=>this._listener.setOrientation(this.forwardX.value, this.forwardY.value, this.forwardZ.value, this.upX.value, this.upY.value, v));
+	}
+
+	setPosition(x, y, z){
+		this.positionX.value = x;
+		this.positionY.value = y;
+		this.positionZ.value = z;
+	}
+
+	getPosition(){
+		return [this.positionX.value, this.positionY.value, this.positionZ.value];
+	}
+
+	setOrientation(forwardX, forwardY, forwardZ, upX, upY, upZ){
+		this.forwardX.value = forwardX;
+		this.forwardY.value = forwardY;
+		this.forwardZ.value = forwardZ;
+		this.upX.value = upX;
+		this.upY.value = upY;
+		this.upZ.value = upZ;
+	}
+
+	getOrientation(){
+		return [this.forwardX.value, this.forwardY.value, this.forwardZ.value, this.upX.value, this.upY.value, this.upZ.value];
+	}
+}
+
+/***/ }),
+
+/***/ "./src/common.js":
+/*!***********************!*\
+  !*** ./src/common.js ***!
+  \***********************/
+/*! exports provided: logStuff, logMessage, context, noiseBuffer, isArray, valueOrDefault, constructEnv, constructFilter, requestAudioFile, constructVibrato, constructTremolo, constructReverb, constructPanning, constructDelay, constructCompressor, getConsent, permissionsGranted, setUpMic, setUpPanningOnPlay, setUpVibratoOnPlay, setUpTremoloOnPlay, setUpDelayOnPlay, setUpTunaOnPlay, plugEmIn, setUpEnvOnPlay, setUpFilterOnPlay, setUpReverbOnPlay, filterEnv, playEnv, setUpOscillator, createFilters */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logStuff", function() { return logStuff; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logMessage", function() { return logMessage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "context", function() { return context; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "noiseBuffer", function() { return noiseBuffer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isArray", function() { return isArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "valueOrDefault", function() { return valueOrDefault; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructEnv", function() { return constructEnv; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructFilter", function() { return constructFilter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "requestAudioFile", function() { return requestAudioFile; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructVibrato", function() { return constructVibrato; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructTremolo", function() { return constructTremolo; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructReverb", function() { return constructReverb; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructPanning", function() { return constructPanning; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructDelay", function() { return constructDelay; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructCompressor", function() { return constructCompressor; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getConsent", function() { return getConsent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "permissionsGranted", function() { return permissionsGranted; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUpMic", function() { return setUpMic; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUpPanningOnPlay", function() { return setUpPanningOnPlay; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUpVibratoOnPlay", function() { return setUpVibratoOnPlay; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUpTremoloOnPlay", function() { return setUpTremoloOnPlay; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUpDelayOnPlay", function() { return setUpDelayOnPlay; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUpTunaOnPlay", function() { return setUpTunaOnPlay; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "plugEmIn", function() { return plugEmIn; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUpEnvOnPlay", function() { return setUpEnvOnPlay; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUpFilterOnPlay", function() { return setUpFilterOnPlay; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUpReverbOnPlay", function() { return setUpReverbOnPlay; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "filterEnv", function() { return filterEnv; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "playEnv", function() { return playEnv; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUpOscillator", function() { return setUpOscillator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createFilters", function() { return createFilters; });
+/* harmony import */ var tunajs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tunajs */ "./node_modules/tunajs/tuna.js");
+/* harmony import */ var tunajs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tunajs__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _polywad__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./polywad */ "./src/polywad.js");
+/* harmony import */ var _pitches__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./pitches */ "./src/pitches.js");
+
+
+
+
+
+let audioContext = window.AudioContext || window.webkitAudioContext;
+
+let logStuff = {
+	verbosity: 0,
+	suppressedLogs: 0
+};
+
+let logMessage = function(message, logLevel){
+	logLevel = logLevel || 1;
+	if ( logStuff.verbosity >= logLevel ) {
+		console.log(message);
+	} 
+	else { logStuff.suppressedLogs++; }
+};
+    
+let aScene = document.querySelector('a-scene');
+let context;
+if ( aScene && aScene.audioListener && aScene.audioListener.context){
+	context = aScene.audioListener.context;
+	logMessage('An A-Frame scene has been detected.');
+}
+else {
+	context = new audioContext();
+}
+
+let unlock = function(){
+	logMessage('unlock', 2);
+	if ( context.state === 'suspended' ) {
+		logMessage('suspended', 2);
+		context.resume();
+	}
+	else if ( context.state === 'running' ) {
+		logMessage('The audio context is running.', 2);
+		logMessage(context, 2);
+		window.removeEventListener('mousemove', unlock);
+		window.removeEventListener('touchstart', unlock);
+		window.removeEventListener('touchend', unlock);
+	}
+};
+window.addEventListener('mousemove', unlock);
+window.addEventListener('touchstart', unlock);
+window.addEventListener('touchend', unlock);
+// create a wrapper for old versions of `getUserMedia`
+let getUserMedia = (function(window) {
+	if (window.navigator.mediaDevices && window.navigator.mediaDevices.getUserMedia) {
+		// Browser supports promise based `getUserMedia`
+		return window.navigator.mediaDevices.getUserMedia.bind(window.navigator.mediaDevices);
+	}
+	let navigatorGetUserMedia = window.navigator.getUserMedia || window.navigator.webkitGetUserMedia || window.navigator.mozGetUserMedia;
+	if (navigatorGetUserMedia) {
+		// Browser supports old `getUserMedia` with callbacks.
+		return function(constraints) {
+			return new Promise(function(resolve, reject) {
+				navigatorGetUserMedia.call(window.navigator, constraints, resolve, reject);
+			});
+		};
+	}
+    
+	return function() {
+		throw 'getUserMedia is unsupported';
+	};
+}(window));
+    
+if (getUserMedia) { logMessage('Your browser supports getUserMedia.'); }
+else { logMessage('Your browser does not support getUserMedia.'); }
+
+
+/** Pre-render a noise buffer instead of generating noise on the fly. **/
+let noiseBuffer = (function(){
+	// the initial seed
+	Math.seed = 6;
+	Math.seededRandom = function(max, min){
+		max = max || 1;
+		min = min || 0;
+		Math.seed = ( Math.seed * 9301 + 49297 ) % 233280;
+		var rnd = Math.seed / 233280;
+
+		return min + rnd * (max - min);
+	};
+	var bufferSize = 2 * context.sampleRate;
+	var noiseBuffer = context.createBuffer(1, bufferSize, context.sampleRate);
+	var output = noiseBuffer.getChannelData(0);
+	for ( var i = 0; i < bufferSize; i++ ) {
+		output[i] = Math.seededRandom() * 2 - 1;
+	}
+	return noiseBuffer;
+})();
+/////////////////////////////////////////////////////////////////////////
+
+/** a lil hack. just be glad it isn't on Object.prototype. **/
+let isArray = function(object){
+	return Object.prototype.toString.call(object) === '[object Array]';
+};
+let valueOrDefault = function(value, def) {
+	var val = (value == null) ? def : value;
+	return val;
+};
+
+/** Set up the default ADSR envelope. **/
+let constructEnv = function(that, arg){
+	that.env = { //default envelope, if one is not specified on play
+		attack  : arg.env ? valueOrDefault(arg.env.attack,  0) : 0,    // time in seconds from onset to peak volume
+		decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
+		sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
+		hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14159) : 3.14159, // time in seconds to maintain sustain volume
+		release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
+	};
+	that.defaultEnv = {
+		attack  : arg.env ? valueOrDefault(arg.env.attack,  0) : 0,    // time in seconds from onset to peak volume
+		decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
+		sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
+		hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14159) : 3.14159, // time in seconds to maintain sustain volume
+		release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
+	};
+	that.userSetHold = !!(arg.env && arg.env.hold);
+};
+/////////////////////////////////////////
+
+
+/** Set up the default filter and filter envelope. **/
+let constructFilter = function(that, arg){
+
+	if ( !arg.filter ) { arg.filter = null; }
+
+	else if ( isArray(arg.filter) ) {
+		that.filter = arg.filter.map(function(filterArg){
+			return {
+				type : filterArg.type || 'lowpass',
+				frequency : filterArg.frequency || 600,
+				q : filterArg.q || 1,
+				env : filterArg.env || null,
+			};
+		});
+	}
+	else {
+		that.filter  = [{
+			type : arg.filter.type || 'lowpass',
+			frequency : arg.filter.frequency || 600,
+			q : arg.filter.q || 1,
+			env : arg.filter.env ||null,
+		}];
+	}
+};
+//////////////////////////////////////////////////////
+
+
+/** If the Wad uses an audio file as the source, request it from the server.
+Don't let the Wad play until all necessary files have been downloaded. **/
+let requestAudioFile = function(that, callback){
+	var request = new XMLHttpRequest();
+	request.open('GET', that.source, true);
+	request.responseType = 'arraybuffer';
+	that.playable--;
+	request.onload = function(){
+		context.decodeAudioData(request.response, function (decodedBuffer){
+			that.decodedBuffer = decodedBuffer;
+			if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
+				that.defaultEnv.hold = that.decodedBuffer.duration * ( 1 / that.rate );
+				that.env.hold = that.decodedBuffer.duration * ( 1 / that.rate );
+			}
+			that.duration = that.env.hold * 1000;
+
+			if ( callback ) { callback(that); }
+			that.playable++;
+			if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
+		});
+	};
+	request.send();
+};
+//////////////////////////////////////////////////////////////////////////
+
+/** Set up the vibrato LFO **/
+let constructVibrato = function(that, arg){
+	if ( arg.vibrato ) {
+		that.vibrato = {
+			shape     : valueOrDefault(arg.vibrato.shape, 'sine'),
+			speed     : valueOrDefault(arg.vibrato.speed, 1),
+			magnitude : valueOrDefault(arg.vibrato.magnitude, 5),
+			attack    : valueOrDefault(arg.vibrato.attack, 0)
+		};
+	}
+	else { that.vibrato = null; }
+};
+//////////////////////////////
+
+
+/** Set up the tremolo LFO **/
+let constructTremolo = function(that, arg){
+	if ( arg.tremolo ) {
+		that.tremolo = {
+			shape     : valueOrDefault(arg.tremolo.shape, 'sine'),
+			speed     : valueOrDefault(arg.tremolo.speed, 1),
+			magnitude : valueOrDefault(arg.tremolo.magnitude, 5),
+			attack    : valueOrDefault(arg.tremolo.attack, 1)
+		};
+	}
+	else { that.tremolo = null; }
+};
+//////////////////////////////
+
+/** Grab the reverb impulse response file from a server.
+You may want to change Wad.defaultImpulse to serve files from your own server.
+Check out http://www.voxengo.com/impulses/ for free impulse responses. **/
+let defaultImpulse = 'https://frivolous.biz/audio/widehall.wav';
+
+let constructReverb = function(that, arg){
+	if ( arg.reverb ) {
+		that.reverb = { wet : valueOrDefault(arg.reverb.wet, 1) };
+		var impulseURL = arg.reverb.impulse || defaultImpulse;
+		var request = new XMLHttpRequest();
+		request.open('GET', impulseURL, true);
+		request.responseType = 'arraybuffer';
+		that.playable--;
+		request.onload = function(){
+			context.decodeAudioData(request.response, function (decodedBuffer){
+
+				that.reverb.buffer = decodedBuffer;
+				that.playable++;
+				if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
+				if ( that instanceof _polywad__WEBPACK_IMPORTED_MODULE_1__["default"] ) { that.setUp(arg); }
+				if ( that.source === 'mic' && that.reverb && that.reverb.buffer && that.reverb.node && !that.reverb.node.buffer ) { // I think this is only relevant when calling play() with args on a mic
+					that.reverb.node.convolver.buffer = that.reverb.buffer;
+				}
+
+			});
+		};
+		request.send();
+	}
+	else {
+		that.reverb = null;
+	}
+};
+
+let constructPanning = function(that, arg){
+	if ( 'panning' in arg ) {
+		that.panning = { location : arg.panning };
+		if ( typeof(arg.panning) === 'number' ) {
+			that.panning.type = 'stereo';
+		}
+
+		else {
+			that.panning.type = '3d';
+			that.panning.panningModel   = arg.panningModel || 'equalpower';
+			that.panning.distanceModel  = arg.distanceModel; 
+			that.panning.maxDistance    = arg.maxDistance; 
+			that.panning.rolloffFactor  = arg.rolloffFactor;
+			that.panning.refDistance    = arg.refDistance;
+			that.panning.coneInnerAngle = arg.coneInnerAngle;
+			that.panning.coneOuterAngle = arg.coneOuterAngle;
+			that.panning.coneOuterGain  = arg.coneOuterGain;
+		}
+	}
+
+	else {
+		that.panning = {
+			location : 0,
+			type     : 'stereo',
+		};
+	}
+	if ( that.panning.type === 'stereo' && !context.createStereoPanner ) {
+		logMessage('Your browser does not support stereo panning. Falling back to 3D panning.');
+		that.panning = {
+			location     : [0,0,0],
+			type         : '3d',
+			panningModel : 'equalpower',
+		};
+	}
+};
+//////////////////////////////////////////////////////////////////////////////
+let constructDelay = function(that, arg){
+	if ( arg.delay ) {
+		that.delay = {
+			delayTime    : valueOrDefault(arg.delay.delayTime, .5),
+			maxDelayTime : valueOrDefault(arg.delay.maxDelayTime, 2),
+			feedback     : valueOrDefault(arg.delay.feedback, .25),
+			wet          : valueOrDefault(arg.delay.wet, .25)
+		};
+	}
+	else { that.delay = null; }
+};
+
+let permissionsGranted = { micConsent: false };
+/** Special initialization and configuration for microphone Wads **/
+let getConsent = function(that, arg) {
+	that.nodes             = [];
+	that.mediaStreamSource = null;
+	that.gain              = null;
+	return getUserMedia({audio: true, video: false}).then(function(stream) {
+		that.mediaStreamSource = context.createMediaStreamSource(stream);
+		permissionsGranted.micConsent = true;
+		setUpMic(that, arg);
+		return that;
+	}).catch(function(error) { logMessage('Error setting up microphone input: ', error); }); // This is the error callback.
+};
+////////////////////////////////////////////////////////////////////
+
+let setUpMic = function(that, arg){
+	that.nodes           = [];
+	that.gain            = context.createGain();
+	that.gain.gain.value = valueOrDefault(arg.volume,that.volume);
+	that.nodes.push(that.mediaStreamSource);
+	that.nodes.push(that.gain);
+  
+
+	if ( that.filter || arg.filter ) { createFilters(that, arg); }
+
+	if ( that.reverb || arg.reverb ) { setUpReverbOnPlay(that, arg); }
+
+	constructPanning(that, arg);
+	setUpPanningOnPlay(that, arg);
+
+	if ( that.delay || arg.delay ) {
+		setUpDelayOnPlay(that, arg);
+	}
+	setUpTunaOnPlay(that, arg);
+	that.setUpExternalFxOnPlay(arg, context);
+};
+
+
+/** When a note is played, these two functions will schedule changes in volume and filter frequency,
+as specified by the volume envelope and filter envelope **/
+let filterEnv = function(wad, arg){
+	wad.filter.forEach(function (filter, index){
+		filter.node.frequency.linearRampToValueAtTime(filter.frequency, arg.exactTime);
+		filter.node.frequency.linearRampToValueAtTime(filter.env.frequency, arg.exactTime + filter.env.attack);
+	});
+};
+
+let playEnv = function(wad, arg){
+	let loop = arg.loop || arg.loop;
+	let hold;
+	if ( wad.env.hold === -1 || (loop && !wad.userSetHold && !(arg.env && arg.env.hold) ) ){
+		hold = 999;
+	}
+	else { hold = wad.env.hold; }
+	wad.gain[0].gain.linearRampToValueAtTime(0.0001, arg.exactTime);
+	wad.gain[0].gain.linearRampToValueAtTime(wad.volume, arg.exactTime + wad.env.attack + 0.00001);
+	wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, arg.exactTime + wad.env.attack + wad.env.decay + 0.00002);
+	wad.gain[0].gain.linearRampToValueAtTime(wad.volume * wad.env.sustain, arg.exactTime + wad.env.attack + wad.env.decay + hold + 0.00003);
+	wad.gain[0].gain.linearRampToValueAtTime(0.0001, arg.exactTime + wad.env.attack + wad.env.decay + hold + wad.env.release + 0.00004);
+	// offset is only used by BufferSourceNodes. OscillatorNodes should safely ignore the offset.
+	wad.soundSource.start(arg.exactTime, arg.offset);
+	if ( !wad.soundSource.playbackRate ) { // audio clips naturally stop themselves at the end of the buffer's duration
+		wad.soundSource.stop(arg.exactTime + wad.env.attack + wad.env.decay + hold + wad.env.release + 0.00005);
+	}
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/** When all the nodes are set up for this Wad, this function plugs them into each other,
+with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
+let plugEmIn = function(that, arg){
+	let destination = ( arg && arg.destination ) || that.destination;
+	let lastStop;
+	for ( let i = 1; i < that.nodes.length; i++ ) {
+		let from;
+		let to;
+		if ( that.nodes[i-1].interface === 'custom' ) {
+			from = that.nodes[i-1].output;
+		}
+		else { // assume native interface
+			from = that.nodes[i-1];
+		}
+		if ( that.nodes[i].interface === 'custom' ) {
+			to = that.nodes[i].input;
+		}
+		else { // assume native interface
+			to = that.nodes[i];
+		}
+		from.connect(to);
+	}
+	if ( that.nodes[that.nodes.length-1].interface === 'custom') {
+		lastStop = that.nodes[that.nodes.length-1].output;
+	}
+	else { // assume native interface
+		lastStop = that.nodes[that.nodes.length-1];
+	}
+	lastStop.connect(destination);
+
+};
+
+
+/** Initialize and configure an oscillator node **/
+let setUpOscillator = function(that, arg){
+	arg = arg || {};
+	that.soundSource = context.createOscillator();
+	that.soundSource.type = that.source;
+	if ( arg.pitch ) {
+		if ( arg.pitch in _pitches__WEBPACK_IMPORTED_MODULE_2__["pitches"] ) {
+			that.soundSource.frequency.value = _pitches__WEBPACK_IMPORTED_MODULE_2__["pitches"][arg.pitch];
+		}
+		else {
+			that.soundSource.frequency.value = arg.pitch;
+		}
+	}
+	else {
+		that.soundSource.frequency.value = that.pitch;
+	}
+};
+///////////////////////////////////////////////////
+
+/** Set the ADSR volume envelope according to play() arguments, or revert to defaults **/
+let setUpEnvOnPlay = function(that, arg){
+	if ( arg && arg.env ) {
+		that.env.attack  = valueOrDefault(arg.env.attack, that.defaultEnv.attack);
+		that.env.decay   = valueOrDefault(arg.env.decay, that.defaultEnv.decay);
+		that.env.sustain = valueOrDefault(arg.env.sustain, that.defaultEnv.sustain);
+		that.env.hold    = valueOrDefault(arg.env.hold, that.defaultEnv.hold);
+		that.env.release = valueOrDefault(arg.env.release, that.defaultEnv.release);
+	}
+	else {
+		that.env = {
+			attack  : that.defaultEnv.attack,
+			decay   : that.defaultEnv.decay,
+			sustain : that.defaultEnv.sustain,
+			hold    : that.defaultEnv.hold,
+			release : that.defaultEnv.release
+		};
+	}
+
+};
+//////////////////////////////////////////////////////////////////////////////////
+
+
+/** Set the filter and filter envelope according to play() arguments, or revert to defaults **/
+
+let createFilters = function(that, arg){
+	if ( arg.filter && !isArray(arg.filter) ) {
+		arg.filter = [arg.filter];
+	}
+	that.filter.forEach(function (filter, i) {
+		filter.node                 = context.createBiquadFilter();
+		filter.node.type            = filter.type;
+		filter.node.frequency.value = ( arg.filter && arg.filter[i] ) ? ( arg.filter[i].frequency || filter.frequency ) : filter.frequency;
+		filter.node.Q.value         = ( arg.filter && arg.filter[i] ) ? ( arg.filter[i].q         || filter.q )         : filter.q;
+		if ( ( arg.filter && arg.filter[i].env || that.filter[i].env ) && !( that.source === 'mic' ) ) {
+			filter.env = {
+				attack    : ( arg.filter && arg.filter[i].env && arg.filter[i].env.attack )    || that.filter[i].env.attack,
+				frequency : ( arg.filter && arg.filter[i].env && arg.filter[i].env.frequency ) || that.filter[i].env.frequency
+			};
+		}
+
+		that.nodes.push(filter.node);
+	});
+};
+
+let setUpFilterOnPlay = function(that, arg){
+	if ( arg && arg.filter && that.filter ) {
+		if ( !isArray(arg.filter) ) arg.filter = [arg.filter];
+		createFilters(that, arg);
+	}
+	else if ( that.filter ) {
+		createFilters(that, that);
+	}
+};
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+/** Initialize and configure a convolver node for playback **/
+let setUpReverbOnPlay = function(that, arg){
+	var reverbNode = {
+		interface : 'custom',
+		input : context.createGain(),
+		convolver : context.createConvolver(),
+		wet : context.createGain(),
+		output : context.createGain()
+	};
+	reverbNode.convolver.buffer = that.reverb.buffer;
+	reverbNode.wet.gain.value   = that.reverb.wet;
+
+	reverbNode.input.connect(reverbNode.convolver);
+	reverbNode.input.connect(reverbNode.output);
+	reverbNode.convolver.connect(reverbNode.wet);
+	reverbNode.wet.connect(reverbNode.output);
+
+	that.reverb.node = reverbNode;
+	that.nodes.push(that.reverb.node);
+};
+//////////////////////////////////////////////////////////////
+
+
+/** Initialize and configure a panner node for playback **/
+let setUpPanningOnPlay = function(that, arg){
+	var panning = arg && arg.panning; // can be zero provided as argument
+	if (typeof panning === 'undefined') { panning = that.panning.location; }
+
+	if (typeof panning  === 'number' && context.createStereoPanner ) {
+		that.panning.node = context.createStereoPanner();
+		that.panning.node.pan.value = panning;
+		that.panning.type = 'stereo';
+	}
+	else {
+		that.panning.node = context.createPanner();
+		if ( typeof panning === 'number' ) {
+			that.panning.node.setPosition(panning, 0, 0);
+		}
+		else { // assume 3d panning, specified in a 3-element array. 
+			that.panning.node.setPosition(panning[0], panning[1], panning[2]);
+		}
+		that.panning.node.panningModel = arg.panningModel || that.panningModel || 'equalpower';
+		that.panning.type = '3d';
+
+		that.panning.node.distanceModel  = arg.distanceModel  || that.distanceModel  || that.panning.node.distanceModel;
+		that.panning.node.maxDistance    = arg.maxDistance    || that.maxDistance    || that.panning.node.maxDistance;
+		that.panning.node.rolloffFactor  = arg.rolloffFactor  || that.rolloffFactor  || that.panning.node.rolloffFactor;
+		that.panning.node.refDistance    = arg.refDistance    || that.refDistance    || that.panning.node.refDistance;
+		that.panning.node.coneInnerAngle = arg.coneInnerAngle || that.coneInnerAngle || that.panning.node.coneInnerAngle;
+		that.panning.node.coneOuterAngle = arg.coneOuterAngle || that.coneOuterAngle || that.panning.node.coneOuterAngle;
+		that.panning.node.coneOuterGain  = arg.coneOuterGain  || that.coneOuterGain  || that.panning.node.coneOuterGain;
+	}
+
+	that.nodes.push(that.panning.node);
+
+};
+
+
+/** Initialize and configure a vibrato LFO Wad for playback **/
+let setUpVibratoOnPlay = function(that, arg, Wad){
+	that.vibrato.wad = new Wad({
+		source : that.vibrato.shape,
+		pitch  : that.vibrato.speed,
+		volume : that.vibrato.magnitude,
+		env    : {
+			attack : that.vibrato.attack
+		},
+		destination : that.soundSource.frequency
+	});
+	that.vibrato.wad.play();
+};
+
+
+/** Initialize and configure a tremolo LFO Wad for playback **/
+let setUpTremoloOnPlay = function(that, arg, Wad){
+	that.tremolo.wad = new Wad({
+		source : that.tremolo.shape,
+		pitch  : that.tremolo.speed,
+		volume : that.tremolo.magnitude,
+		env    : {
+			attack : that.tremolo.attack,
+			hold   : 10
+		},
+		destination : that.gain[0].gain
+	});
+	that.tremolo.wad.play();
+};
+///////////////////////////////////////////////////////////////
+
+let setUpDelayOnPlay = function(that, arg){
+	if ( that.delay ) {
+		if ( !arg.delay ) { arg.delay = {}; }
+		//create the nodes we’ll use
+		var delayNode = { // the custom delay node
+			interface    : 'custom',
+			input        : context.createGain(),
+			output       : context.createGain(),
+			delayNode    : context.createDelay(that.delay.maxDelayTime), // the native delay node inside the custom delay node.
+			feedbackNode : context.createGain(),
+			wetNode      : context.createGain(),
+		};
+
+		//set some decent values
+		delayNode.delayNode.delayTime.value = valueOrDefault(arg.delay.delayTime, that.delay.delayTime);
+		delayNode.feedbackNode.gain.value   = valueOrDefault(arg.delay.feedback, that.delay.feedback);
+		delayNode.wetNode.gain.value        = valueOrDefault(arg.delay.wet, that.delay.wet);
+
+
+		//set up the routing
+		delayNode.input.connect(delayNode.delayNode);
+		delayNode.input.connect(delayNode.output);
+		delayNode.delayNode.connect(delayNode.feedbackNode);
+		delayNode.delayNode.connect(delayNode.wetNode);
+		delayNode.feedbackNode.connect(delayNode.delayNode);
+		delayNode.wetNode.connect(delayNode.output);
+		that.delay.delayNode = delayNode;
+
+		that.nodes.push(delayNode);
+	}
+};
+
+/** **/
+let constructCompressor = function(that, arg){
+	that.compressor = context.createDynamicsCompressor();
+	that.compressor.attack.value    = valueOrDefault(arg.compressor.attack, that.compressor.attack.value);
+	that.compressor.knee.value      = valueOrDefault(arg.compressor.knee, that.compressor.knee.value);
+	that.compressor.ratio.value     = valueOrDefault(arg.compressor.ratio, that.compressor.ratio.value);
+	that.compressor.release.value   = valueOrDefault(arg.compressor.release, that.compressor.release.value);
+	that.compressor.threshold.value = valueOrDefault(arg.compressor.threshold, that.compressor.threshold.value);
+	that.nodes.push(that.compressor);
+};
+
+let tuna = new tunajs__WEBPACK_IMPORTED_MODULE_0___default.a(context);
+let setUpTunaOnPlay = function(that, arg){
+	if ( !( that.tuna || arg.tuna ) ) { return; }
+	let tunaConfig = {};
+	if ( that.tuna ) {
+		for ( let key in that.tuna ) {
+			tunaConfig[key] = that.tuna[key];
+		}
+	}
+
+	// overwrite settings from `this` with settings from arg
+	if ( arg.tuna ) {
+		for ( let key in arg.tuna ) {
+			tunaConfig[key] = arg.tuna[key];
+		}
+	}
+	for ( let key in tunaConfig) {
+		let tunaEffect = new tuna[key](tunaConfig[key]);
+		that.nodes.push(tunaEffect);
+	}
+};
+///
+
+
+
+
+/***/ }),
+
+/***/ "./src/main.js":
+/*!*********************!*\
+  !*** ./src/main.js ***!
+  \*********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var _sound_iterator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sound_iterator */ "./src/sound_iterator.js");
+/* harmony import */ var _polywad__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./polywad */ "./src/polywad.js");
+/* harmony import */ var _presets__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./presets */ "./src/presets.js");
+/* harmony import */ var _pitches__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pitches */ "./src/pitches.js");
+/* harmony import */ var _midi__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./midi */ "./src/midi.js");
+/* harmony import */ var _wad_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./wad.js */ "./src/wad.js");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./common */ "./src/common.js");
+
+
+
+
+
+
+
+
+
+let Wad = _wad_js__WEBPACK_IMPORTED_MODULE_5__["default"];
+Wad.Poly = _polywad__WEBPACK_IMPORTED_MODULE_1__["default"];
+Wad.SoundIterator = function(args){ return new _sound_iterator__WEBPACK_IMPORTED_MODULE_0__["default"](args, Wad); };
+Wad.pitches = _pitches__WEBPACK_IMPORTED_MODULE_3__["pitches"];
+Wad.pitchesArray = _pitches__WEBPACK_IMPORTED_MODULE_3__["pitchesArray"];
+Wad.midiMap = _midi__WEBPACK_IMPORTED_MODULE_4__["midiMap"];
+Wad.assignMidiMap = _midi__WEBPACK_IMPORTED_MODULE_4__["assignMidiMap"];
+Wad.midiInstrument = _midi__WEBPACK_IMPORTED_MODULE_4__["midiInstrument"];
+Wad.midiInputs = _midi__WEBPACK_IMPORTED_MODULE_4__["midiInputs"];
+Wad.presets = _presets__WEBPACK_IMPORTED_MODULE_2__["default"];
+Wad.logs = _common__WEBPACK_IMPORTED_MODULE_6__["logStuff"];
+
+
+if(  true && module.exports) { module.exports = Wad; }
+
+/* harmony default export */ __webpack_exports__["default"] = (Wad);
+
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node_modules/webpack/buildin/harmony-module.js */ "./node_modules/webpack/buildin/harmony-module.js")(module)))
+
+/***/ }),
+
+/***/ "./src/midi.js":
+/*!*********************!*\
+  !*** ./src/midi.js ***!
+  \*********************/
+/*! exports provided: midiMap, assignMidiMap, midiInstrument, midiInputs */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "midiMap", function() { return midiMap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "assignMidiMap", function() { return assignMidiMap; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "midiInstrument", function() { return midiInstrument; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "midiInputs", function() { return midiInputs; });
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common */ "./src/common.js");
+/* harmony import */ var _pitches__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pitches */ "./src/pitches.js");
+
+
+
+
+let assignMidiMap = function(midiMap, which, success, failure){
+	which = which || 0;
+	navigator.requestMIDIAccess().then(function(){
+		if ( midiInputs[which] ) {
+			midiInputs[which].onmidimessage = midiMap;
+			if  ( typeof success === 'function' ) { success(); }
+		}
+		else if ( typeof failure === 'function' ) { failure(); }
+	});
+};
+let midiInstrument = {
+	play : function() { Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('playing midi');  },
+	stop : function() { Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('stopping midi'); }
+};
+
+let midiInputs  = [];
+
+let midiMap = function(event){
+	Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])(event.receivedTime, event.data, 2);
+	if ( event.data[0] === 144 ) { // 144 means the midi message has note data
+		if ( event.data[2] === 0 ) { // noteOn velocity of 0 means this is actually a noteOff message
+			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('Playing note: ', 2);
+			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])(_pitches__WEBPACK_IMPORTED_MODULE_1__["pitchesArray"][event.data[1]-12], 2);
+			midiInstrument.stop(_pitches__WEBPACK_IMPORTED_MODULE_1__["pitchesArray"][event.data[1]-12]);
+		}
+		else if ( event.data[2] > 0 ) {
+			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('Stopping note: ', 2);
+			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])(_pitches__WEBPACK_IMPORTED_MODULE_1__["pitchesArray"][event.data[1]-12], 2);
+			midiInstrument.play({pitch : _pitches__WEBPACK_IMPORTED_MODULE_1__["pitchesArray"][event.data[1]-12], label : _pitches__WEBPACK_IMPORTED_MODULE_1__["pitchesArray"][event.data[1]-12] });
+		}
+	}
+	else if ( event.data[0] === 176 ) { // 176 means the midi message has controller data
+		Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('controller');
+		if ( event.data[1] == 46 ) {
+			if ( event.data[2] == 127 ) { midiInstrument.pedalMod = true; }
+			else if ( event.data[2] == 0 ) { midiInstrument.pedalMod = false; }
+		}
+	}
+	else if ( event.data[0] === 224 ) { // 224 means the midi message has pitch bend data
+		Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('pitch bend');
+	}
+};
+
+
+let onSuccessCallback = function(midiAccess){
+
+	midiInputs = [];
+	var val = midiAccess.inputs.values();
+	for ( var o = val.next(); !o.done; o = val.next() ) {
+		midiInputs.push(o.value);
+	}
+	// Wad.midiInputs = [m.inputs.values().next().value];   // inputs = array of MIDIPorts
+	Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('MIDI inputs: ');
+	Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])(midiInputs);
+	// var outputs = m.outputs(); // outputs = array of MIDIPorts
+	for ( var i = 0; i < midiInputs.length; i++ ) {
+		midiInputs[i].onmidimessage = midiMap; // onmidimessage( event ), event.data & event.receivedTime are populated
+	}
+	// var o = m.outputs()[0];           // grab first output device
+	// o.send( [ 0x90, 0x45, 0x7f ] );     // full velocity note on A4 on channel zero
+	// o.send( [ 0x80, 0x45, 0x7f ], window.performance.now() + 1000 );  // full velocity A4 note off in one second.
+};
+let onErrorCallback = function(err){
+	Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('Failed to get MIDI access', err);
+};
+
+if ( navigator && navigator.requestMIDIAccess ) {
+	try {
+		navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
+	}
+	catch(err) {
+		Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('Failed to get MIDI access', err);
+	}
+}
+
+
+
+
+
+/***/ }),
+
+/***/ "./src/pitches.js":
+/*!************************!*\
+  !*** ./src/pitches.js ***!
+  \************************/
+/*! exports provided: pitches, pitchesArray */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pitches", function() { return pitches; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pitchesArray", function() { return pitchesArray; });
+
+//////////////////////////////////////////////////////////////////////////////////////
+/** This object is a mapping of note names to frequencies. **/
+//////////////////////////////////////////////////////////////
+let pitches = {
+	'A0'  : 27.5000,
+	'A#0' : 29.1352,
+	'Bb0' : 29.1352,
+	'B0'  : 30.8677,
+	'B#0' : 32.7032,
+	'Cb1' : 30.8677,
+	'C1'  : 32.7032,
+	'C#1' : 34.6478,
+	'Db1' : 34.6478,
+	'D1'  : 36.7081,
+	'D#1' : 38.8909,
+	'Eb1' : 38.8909,
+	'E1'  : 41.2034,
+	'Fb1' : 41.2034,
+	'E#1' : 43.6535,
+	'F1'  : 43.6535,
+	'F#1' : 46.2493,
+	'Gb1' : 46.2493,
+	'G1'  : 48.9994,
+	'G#1' : 51.9131,
+	'Ab1' : 51.9131,
+	'A1'  : 55.0000,
+	'A#1' : 58.2705,
+	'Bb1' : 58.2705,
+	'B1'  : 61.7354,
+	'Cb2' : 61.7354,
+	'B#1' : 65.4064,
+	'C2'  : 65.4064,
+	'C#2' : 69.2957,
+	'Db2' : 69.2957,
+	'D2'  : 73.4162,
+	'D#2' : 77.7817,
+	'Eb2' : 77.7817,
+	'E2'  : 82.4069,
+	'Fb2' : 82.4069,
+	'E#2' : 87.3071,
+	'F2'  : 87.3071,
+	'F#2' : 92.4986,
+	'Gb2' : 92.4986,
+	'G2'  : 97.9989,
+	'G#2' : 103.826,
+	'Ab2' : 103.826,
+	'A2'  : 110.000,
+	'A#2' : 116.541,
+	'Bb2' : 116.541,
+	'B2'  : 123.471,
+	'Cb3' : 123.471,
+	'B#2' : 130.813,
+	'C3'  : 130.813,
+	'C#3' : 138.591,
+	'Db3' : 138.591,
+	'D3'  : 146.832,
+	'D#3' : 155.563,
+	'Eb3' : 155.563,
+	'E3'  : 164.814,
+	'Fb3' : 164.814,
+	'E#3' : 174.614,
+	'F3'  : 174.614,
+	'F#3' : 184.997,
+	'Gb3' : 184.997,
+	'G3'  : 195.998,
+	'G#3' : 207.652,
+	'Ab3' : 207.652,
+	'A3'  : 220.000,
+	'A#3' : 233.082,
+	'Bb3' : 233.082,
+	'B3'  : 246.942,
+	'Cb4' : 246.942,
+	'B#3' : 261.626,
+	'C4'  : 261.626,
+	'C#4' : 277.183,
+	'Db4' : 277.183,
+	'D4'  : 293.665,
+	'D#4' : 311.127,
+	'Eb4' : 311.127,
+	'E4'  : 329.628,
+	'Fb4' : 329.628,
+	'E#4' : 349.228,
+	'F4'  : 349.228,
+	'F#4' : 369.994,
+	'Gb4' : 369.994,
+	'G4'  : 391.995,
+	'G#4' : 415.305,
+	'Ab4' : 415.305,
+	'A4'  : 440.000,
+	'A#4' : 466.164,
+	'Bb4' : 466.164,
+	'B4'  : 493.883,
+	'Cb5' : 493.883,
+	'B#4' : 523.251,
+	'C5'  : 523.251,
+	'C#5' : 554.365,
+	'Db5' : 554.365,
+	'D5'  : 587.330,
+	'D#5' : 622.254,
+	'Eb5' : 622.254,
+	'E5'  : 659.255,
+	'Fb5' : 659.255,
+	'E#5' : 698.456,
+	'F5'  : 698.456,
+	'F#5' : 739.989,
+	'Gb5' : 739.989,
+	'G5'  : 783.991,
+	'G#5' : 830.609,
+	'Ab5' : 830.609,
+	'A5'  : 880.000,
+	'A#5' : 932.328,
+	'Bb5' : 932.328,
+	'B5'  : 987.767,
+	'Cb6' : 987.767,
+	'B#5' : 1046.50,
+	'C6'  : 1046.50,
+	'C#6' : 1108.73,
+	'Db6' : 1108.73,
+	'D6'  : 1174.66,
+	'D#6' : 1244.51,
+	'Eb6' : 1244.51,
+	'Fb6' : 1318.51,
+	'E6'  : 1318.51,
+	'E#6' : 1396.91,
+	'F6'  : 1396.91,
+	'F#6' : 1479.98,
+	'Gb6' : 1479.98,
+	'G6'  : 1567.98,
+	'G#6' : 1661.22,
+	'Ab6' : 1661.22,
+	'A6'  : 1760.00,
+	'A#6' : 1864.66,
+	'Bb6' : 1864.66,
+	'B6'  : 1975.53,
+	'Cb7' : 1975.53,
+	'B#6' : 2093.00,
+	'C7'  : 2093.00,
+	'C#7' : 2217.46,
+	'Db7' : 2217.46,
+	'D7'  : 2349.32,
+	'D#7' : 2489.02,
+	'Eb7' : 2489.02,
+	'E7'  : 2637.02,
+	'Fb7' : 2637.02,
+	'E#7' : 2793.83,
+	'F7'  : 2793.83,
+	'F#7' : 2959.96,
+	'Gb7' : 2959.96,
+	'G7'  : 3135.96,
+	'G#7' : 3322.44,
+	'Ab7' : 3322.44,
+	'A7'  : 3520.00,
+	'A#7' : 3729.31,
+	'Bb7' : 3729.31,
+	'B7'  : 3951.07,
+	'Cb8' : 3951.07,
+	'B#7' : 4186.01,
+	'C8'  : 4186.01
+};
+
+
+let pitchesArray = [ // Just an array of note names. This can be useful for mapping MIDI data to notes.
+	'C0',
+	'C#0',
+	'D0',
+	'D#0',
+	'E0',
+	'F0',
+	'F#0',
+	'G0',
+	'G#0',
+	'A0',
+	'A#0',
+	'B0',
+	'C1',
+	'C#1',
+	'D1',
+	'D#1',
+	'E1',
+	'F1',
+	'F#1',
+	'G1',
+	'G#1',
+	'A1',
+	'A#1',
+	'B1',
+	'C2',
+	'C#2',
+	'D2',
+	'D#2',
+	'E2',
+	'F2',
+	'F#2',
+	'G2',
+	'G#2',
+	'A2',
+	'A#2',
+	'B2',
+	'C3',
+	'C#3',
+	'D3',
+	'D#3',
+	'E3',
+	'F3',
+	'F#3',
+	'G3',
+	'G#3',
+	'A3',
+	'A#3',
+	'B3',
+	'C4',
+	'C#4',
+	'D4',
+	'D#4',
+	'E4',
+	'F4',
+	'F#4',
+	'G4',
+	'G#4',
+	'A4',
+	'A#4',
+	'B4',
+	'C5',
+	'C#5',
+	'D5',
+	'D#5',
+	'E5',
+	'F5',
+	'F#5',
+	'G5',
+	'G#5',
+	'A5',
+	'A#5',
+	'B5',
+	'C6',
+	'C#6',
+	'D6',
+	'D#6',
+	'E6',
+	'F6',
+	'F#6',
+	'G6',
+	'G#6',
+	'A6',
+	'A#6',
+	'B6',
+	'C7',
+	'C#7',
+	'D7',
+	'D#7',
+	'E7',
+	'F7',
+	'F#7',
+	'G7',
+	'G#7',
+	'A7',
+	'A#7',
+	'B7',
+	'C8'
+];
+
+
+
+
+/***/ }),
+
+/***/ "./src/polywad.js":
+/*!************************!*\
+  !*** ./src/polywad.js ***!
+  \************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common */ "./src/common.js");
+/* harmony import */ var _pitches__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pitches */ "./src/pitches.js");
+
+
+
+
+var buflen = 2048;
+var buf = new Uint8Array( buflen );
+var MINVAL = 134;  // 128 == zero.  MINVAL is the "minimum detected signal" level.
+
+var noteFromPitch = function( frequency ) {
+	var noteNum = 12 * (Math.log( frequency / 440 )/Math.log(2) );
+	return Math.round( noteNum ) + 69;
+};
+
+var frequencyFromNoteNumber = function( note ) {
+	return 440 * Math.pow(2,(note-69)/12);
+};
+
+var centsOffFromPitch = function( frequency, note ) {
+	return Math.floor( 1200 * Math.log( frequency / frequencyFromNoteNumber( note ))/Math.log(2) );
+};
+
+
+function autoCorrelate( buf, sampleRate ) {
+	var MIN_SAMPLES = 4;    // corresponds to an 11kHz signal
+	var MAX_SAMPLES = 1000; // corresponds to a 44Hz signal
+	var SIZE = 1000;
+	var best_offset = -1;
+	var best_correlation = 0;
+	var rms = 0;
+	var foundGoodCorrelation = false;
+
+	if (buf.length < (SIZE + MAX_SAMPLES - MIN_SAMPLES))
+		return -1;  // Not enough data
+
+	for ( let i = 0; i < SIZE; i++ ) {
+		var val = ( buf[i] - 128 ) / 128;
+		rms += val * val;
+	}
+	rms = Math.sqrt(rms/SIZE);
+	if (rms<0.01)
+		return -1;
+
+	var lastCorrelation=1;
+	for (var offset = MIN_SAMPLES; offset <= MAX_SAMPLES; offset++) {
+		var correlation = 0;
+
+		for (let i=0; i<SIZE; i++) {
+			correlation += Math.abs(((buf[i] - 128)/128)-((buf[i+offset] - 128)/128));
+		}
+		correlation = 1 - (correlation/SIZE);
+		if ((correlation>0.9) && (correlation > lastCorrelation))
+			foundGoodCorrelation = true;
+		else if (foundGoodCorrelation) {
+			// short-circuit - we found a good correlation, then a bad one, so we'd just be seeing copies from here.
+			return sampleRate/best_offset;
+		}
+		lastCorrelation = correlation;
+		if (correlation > best_correlation) {
+			best_correlation = correlation;
+			best_offset = offset;
+		}
+	}
+	if (best_correlation > 0.01) {
+		// logMessage("f = " + sampleRate/best_offset + "Hz (rms: " + rms + " confidence: " + best_correlation + ")")
+		return sampleRate/best_offset;
+	}
+	return -1;
+	//  var best_frequency = sampleRate/best_offset;
+}
+
+function volumeAudioProcess( event ) {
+	var buf = event.inputBuffer.getChannelData(0);
+	var bufLength = buf.length;
+	var sum = 0;
+	var x;
+    
+	// Do a root-mean-square on the samples: sum up the squares...
+	for (var i=0; i<bufLength; i++) {
+		x = buf[i];
+		if (Math.abs(x)>=this.clipLevel) {
+			this.clipping = true;
+			this.lastClip = window.performance.now();
+		}
+		sum += x * x;
+	}
+    
+	// ... then take the square root of the sum.
+	var rms =  Math.sqrt(sum / bufLength);
+    
+	// Now smooth this out with the averaging factor applied
+	// to the previous sample - take the max here because we
+	// want "fast attack, slow release."
+	this.volume = Math.max(rms, this.volume*this.averaging);
+}
+
+function createAudioMeter(audioContext,clipLevel,averaging,clipLag) {
+	var processor = audioContext.createScriptProcessor(512);
+	processor.onaudioprocess = volumeAudioProcess;
+	processor.clipping = false;
+	processor.lastClip = 0;
+	processor.volume = 0;
+	processor.clipLevel = clipLevel || 0.98;
+	processor.averaging = averaging || 0.95;
+	processor.clipLag = clipLag || 750;
+    
+	// this will have no effect, since we don't copy the input to the output,
+	// but works around a current Chrome bug.
+	processor.connect(audioContext.destination);
+    
+	processor.checkClipping = function(){
+		if (!this.clipping){
+			return false;
+		}
+		if ((this.lastClip + this.clipLag) < window.performance.now()){
+			this.clipping = false;
+		}
+		return this.clipping;
+	};
+    
+	processor.shutdown = function(){
+		this.disconnect();
+		this.onaudioprocess = null;
+	};
+    
+	return processor;
+}
+const Polywad = function(arg){
+	if ( !arg ) { arg = {}; }
+	this.isSetUp  = false;
+	this.playable = 1;
+
+	if ( arg.reverb ) {
+		Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructReverb"])(this, arg); // We need to make sure we have downloaded the impulse response before continuing with the setup.
+	}
+	else {
+		this.setUp(arg);
+	}
+};
+
+Polywad.prototype.setUp = function(arg){ // Anything that needs to happen before reverb is set up can go here.
+	this.wads              = [];
+	this.input             = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createAnalyser();
+	this.input.fftSize     = 2048;
+	this.nodes             = [this.input];
+	this.destination       = arg.destination || _common__WEBPACK_IMPORTED_MODULE_0__["context"].destination; // the last node the sound is routed to
+	this.volume            = arg.volume || 1;
+	this.gain              = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createGain();
+	this.gain.gain.value   = this.volume;
+	this.output            = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createAnalyser();
+	this.tuna              = arg.tuna || null;
+	this.audioMeter        = null;
+
+	if ( arg.audioMeter ) {
+		this.audioMeter = createAudioMeter(_common__WEBPACK_IMPORTED_MODULE_0__["context"], arg.audioMeter.clipLevel, arg.audioMeter.averaging, arg.audioMeter.clipLag);
+		this.output.connect(this.audioMeter);
+	}
+
+	Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructFilter"])(this, arg);
+	if ( this.filter ) { Object(_common__WEBPACK_IMPORTED_MODULE_0__["createFilters"])(this, arg); }
+
+	if ( this.reverb ) { Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpReverbOnPlay"])(this, arg); }
+
+	this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_0__["context"]);
+
+	Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructPanning"])(this, arg);
+	Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpPanningOnPlay"])(this, arg);
+	if ( arg.compressor ) { Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructCompressor"])(this, arg); }
+
+	Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructDelay"])(this, arg);
+	Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpDelayOnPlay"])(this, arg);
+	Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpTunaOnPlay"])(this, arg);
+	this.nodes.push(this.gain);
+	this.nodes.push(this.output);
+	Object(_common__WEBPACK_IMPORTED_MODULE_0__["plugEmIn"])(this, arg);
+	this.isSetUp = true;
+	if ( arg.callback ) { arg.callback(this); }
+};
+
+Polywad.prototype.updatePitch = function( time ) {
+	this.input.getByteTimeDomainData( buf );
+	var ac = autoCorrelate( buf, _common__WEBPACK_IMPORTED_MODULE_0__["context"].sampleRate );
+
+	if ( ac !== -1 && ac !== 11025 && ac !== 12000 ) {
+		var pitch = ac;
+		this.pitch = Math.floor( pitch ) ;
+		var note = noteFromPitch( pitch );
+		this.noteName = _pitches__WEBPACK_IMPORTED_MODULE_1__["pitchesArray"][note - 12];
+		// Detune doesn't seem to work.
+		// var detune = centsOffFromPitch( pitch, note );
+		// if (detune == 0 ) {
+		//     this.detuneEstimate = 0;
+		// } else {
+
+		//     this.detuneEstimate = detune
+		// }
+	}
+	var that = this;
+	that.rafID = window.requestAnimationFrame( function(){ that.updatePitch(); } );
+};
+
+Polywad.prototype.stopUpdatingPitch = function(){
+	cancelAnimationFrame(this.rafID);
+};
+
+
+Polywad.prototype.setVolume = function(volume){
+	if ( this.isSetUp ) {
+		this.gain.gain.value = volume;
+	}
+	else {
+		Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('This PolyWad is not set up yet.');
+	}
+	return this;
+};
+
+Polywad.prototype.setPitch = function(pitch){
+	this.wads.forEach(function(wad){
+            
+		if ( pitch in _pitches__WEBPACK_IMPORTED_MODULE_1__["pitches"] ) {
+			if ( wad.soundSource ) {
+				wad.soundSource.frequency.value = _pitches__WEBPACK_IMPORTED_MODULE_1__["pitches"][pitch];
+			}
+			wad.pitch = _pitches__WEBPACK_IMPORTED_MODULE_1__["pitches"][pitch];
+		}
+		else {
+			if ( wad.soundSource ) {
+				wad.soundSource.frequency.value = pitch;
+			}
+			wad.pitch = pitch;
+		}
+		return this;
+	});
+};
+
+Polywad.prototype.play = function(arg){
+	if ( this.isSetUp ) {
+		if ( this.playable < 1 ) {
+			this.playOnLoad    = true;
+			this.playOnLoadArg = arg;
+		}
+		else {
+			if ( arg && arg.volume ) {
+				this.gain.gain.value = arg.volume; // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
+				arg.volume = undefined; // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad.
+			}
+			for ( var i = 0; i < this.wads.length; i++ ) {
+				this.wads[i].play(arg);
+			}
+		}
+	}
+	else {
+		Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('This PolyWad is not set up yet.');
+	}
+	return this;
+};
+
+Polywad.prototype.stop = function(arg){
+	if ( this.isSetUp ) {
+		for ( var i = 0; i < this.wads.length; i++ ) {
+			this.wads[i].stop(arg);
+		}
+	}
+};
+
+Polywad.prototype.add = function(wad){
+	if ( this.isSetUp ) {
+		wad.destination = this.input;
+		this.wads.push(wad);
+		if ( wad instanceof Polywad ) {
+			wad.output.disconnect(0);
+			wad.output.connect(this.input);
+		}
+	}
+	else {
+		Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('This PolyWad is not set up yet.');
+	}
+	return this;
+};
+
+
+
+Polywad.prototype.remove = function(wad){
+	if ( this.isSetUp ) {
+		for ( var i = 0; i < this.wads.length; i++ ) {
+			if ( this.wads[i] === wad ) {
+				this.wads[i].destination = _common__WEBPACK_IMPORTED_MODULE_0__["context"].destination;
+				this.wads.splice(i,1);
+				if ( wad instanceof Polywad ) {
+					wad.output.disconnect(0);
+					wad.output.connect(_common__WEBPACK_IMPORTED_MODULE_0__["context"].destination);
+				}
+			}
+		}
+	}
+	return this;
+};
+
+Polywad.prototype.constructExternalFx = function(arg, context){
+
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Polywad);
+
+
+/***/ }),
+
+/***/ "./src/presets.js":
+/*!************************!*\
+  !*** ./src/presets.js ***!
+  \************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+let presets = {
+	hiHatClosed : { source : 'noise', env : { attack : .001, decay : .008, sustain : .2, hold : .03, release : .01}, filter : { type : 'highpass', frequency : 400, q : 1 } },
+	snare : { source : 'noise', env : {attack : .001, decay : .01, sustain : .2, hold : .03, release : .02}, filter : {type : 'bandpass', frequency : 300, q : .180 } },
+	hiHatOpen : { source : 'noise', env : { attack : .001, decay : .008, sustain : .2, hold : .43, release : .01}, filter : { type : 'highpass', frequency : 100, q : .2 } },
+	ghost : { source : 'square', volume : .3, env : { attack : .01, decay : .002, sustain : .5, hold : 2.5, release : .3 }, filter : { type : 'lowpass', frequency : 600, q : 7, env : { attack : .7, frequency : 1600 } }, vibrato : { attack : 8, speed : 8, magnitude : 100 } },
+	piano : { source : 'square', volume : 1.4, env : { attack : .01, decay : .005, sustain : .2, hold : .015, release : .3 }, filter : { type : 'lowpass', frequency : 1200, q : 8.5, env : { attack : .2, frequency : 600 } } }
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (presets);
+
+
+/***/ }),
+
+/***/ "./src/sound_iterator.js":
+/*!*******************************!*\
+  !*** ./src/sound_iterator.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/*below is the es6. It was transpiled to es5 from:
+https://babeljs.io/en/repl
+search for:
+// start of ES5
+to get there
+
+export default class SoundIterator{
+    static defaultArgs = {
+        files: [], // either sound files or Wad audio objects
+        random: false, // either play a random order (true), or play in the order of the list (false)
+        randomPlaysBeforeRepeat: 0, // This value says the amount of plays that need to happen before a sound can be repeated. This only works if the length of the iterator is 3 or more, and this value is max 1 less than the length of the sound list.
+    }
+
+    constructor(args, Wad){
+        this.Wad = Wad //passed in from the Wad object that creates this iterator
+        args = Object.assign({}, SoundIterator.defaultArgs, args)
+        this.files = args.files
+        this.sounds = this.files.map(f=>f.play ? f : new Wad({source:f})) // checks if the item in the list is a wad or not.
+        this.randomSounds = this.sounds.slice() //creates a list of sounds that can be mutated if there are random sounds
+        this.random = args.random
+        this.randomPlaysBeforeRepeat = this.sounds.length > 3 && args.randomPlaysBeforeRepeat < this.sounds.length-1 ? args.randomPlaysBeforeRepeat : 0
+        this.index = 0 // keeps track of what item in the list is playing
+        this.waitingSounds = [] //has a list of the sounds that are waiting from randomPlaysBeforeRepeat
+    }
+
+    play(args={}){
+        if(!this.sounds.length) return 0
+        if(this.random){
+            const soundIndex = Math.floor(Math.random()*this.randomSounds.length)
+            const sound = this.randomSounds[soundIndex]
+            this.index = this.sounds.indexOf(sound)
+            this.waitingSounds = this.waitingSounds.filter(soundObj=>{
+                soundObj.plays -= 1
+                if(soundObj.plays < 1){
+                    this.randomSounds.push(soundObj.sound)
+                    return null
+                }
+                return true
+            })
+            if(this.randomPlaysBeforeRepeat){
+                this.randomSounds.splice(soundIndex, 1)
+                this.waitingSounds.push({plays: this.randomPlaysBeforeRepeat, sound: sound})
+            }
+            return sound.play(args)
+        } else {
+            const playingSound = this.sounds[this.index] ? this.sounds[this.index].play(args) : undefined
+            this.index += 1
+            if(this.index >= this.sounds.length){
+                this.index = 0
+            }
+            return playingSound    
+        }
+    }
+
+    add(sound){
+        if(!sound.play){
+            sound = new this.Wad({source: sound})
+        }
+        this.sounds.push(sound)
+        this.randomSounds.push(sound)
+        return this
+    }
+
+    remove(sound){
+        const soundIndex = this.sounds.indexOf(sound)
+        if(soundIndex === -1){
+            throw new Error(`That sound does not exist: ${sound}`)
+        }
+        this.sounds.splice(soundIndex, 1)
+        const randomSoundIndex = this.randomSounds.indexOf(sound)
+        if(randomSoundIndex === -1){
+            this.waitingSounds = this.waitingSounds.filter(obj => obj.sound === sound ? false : true)
+        } else {
+            this.randomSounds.splice(randomSoundIndex, 1)
+        }
+        return this
+    }
+}
+*/
+
+// start of ES5
+
+
+function _instanceof(left, right) { if (right != null && typeof Symbol !== 'undefined' && right[Symbol.hasInstance]) { return right[Symbol.hasInstance](left); } else { return left instanceof right; } }
+
+function _classCallCheck(instance, Constructor) { if (!_instanceof(instance, Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var SoundIterator =
+/*#__PURE__*/
+function () {
+	function SoundIterator(args, Wad) {
+		_classCallCheck(this, SoundIterator);
+
+		this.Wad = Wad; //passed in from the Wad object that creates this iterator
+
+		args = Object.assign({}, SoundIterator.defaultArgs, args);
+		this.files = args.files;
+		this.sounds = this.files.map(function (f) {
+			return f.play ? f : new Wad({
+				source: f
+			});
+		}); // checks if the item in the list is a wad or not.
+
+		this.randomSounds = this.sounds.slice(); //creates a list of sounds that can be mutated if there are random sounds
+
+		this.random = args.random;
+		this.randomPlaysBeforeRepeat = this.sounds.length > 3 && args.randomPlaysBeforeRepeat < this.sounds.length - 1 ? args.randomPlaysBeforeRepeat : 0;
+		this.index = 0; // keeps track of what item in the list is playing
+
+		this.waitingSounds = []; //has a list of the sounds that are waiting from randomPlaysBeforeRepeat
+	}
+
+	_createClass(SoundIterator, [{
+		key: 'play',
+		value: function play() {
+			var _this = this;
+
+			var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+			if (!this.sounds.length) return 0;
+
+			if (this.random) {
+				var soundIndex = Math.floor(Math.random() * this.randomSounds.length);
+				var sound = this.randomSounds[soundIndex];
+				this.index = this.sounds.indexOf(sound);
+				this.waitingSounds = this.waitingSounds.filter(function (soundObj) {
+					soundObj.plays -= 1;
+
+					if (soundObj.plays < 1) {
+						_this.randomSounds.push(soundObj.sound);
+
+						return null;
+					}
+
+					return true;
+				});
+
+				if (this.randomPlaysBeforeRepeat) {
+					this.randomSounds.splice(soundIndex, 1);
+					this.waitingSounds.push({
+						plays: this.randomPlaysBeforeRepeat,
+						sound: sound
+					});
+				}
+
+				return sound.play(args);
+			} else {
+				var playingSound = this.sounds[this.index] ? this.sounds[this.index].play(args) : undefined;
+				this.index += 1;
+
+				if (this.index >= this.sounds.length) {
+					this.index = 0;
+				}
+
+				return playingSound;
+			}
+		}
+	}, {
+		key: 'add',
+		value: function add(sound) {
+			if (!sound.play) {
+				sound = new this.Wad({
+					source: sound
+				});
+			}
+
+			this.sounds.push(sound);
+			this.randomSounds.push(sound);
+			return this;
+		}
+	}, {
+		key: 'remove',
+		value: function remove(sound) {
+			var soundIndex = this.sounds.indexOf(sound);
+
+			if (soundIndex === -1) {
+				throw new Error('That sound does not exist: '.concat(sound));
+			}
+
+			this.sounds.splice(soundIndex, 1);
+			var randomSoundIndex = this.randomSounds.indexOf(sound);
+
+			if (randomSoundIndex === -1) {
+				this.waitingSounds = this.waitingSounds.filter(function (obj) {
+					return obj.sound === sound ? false : true;
+				});
+			} else {
+				this.randomSounds.splice(randomSoundIndex, 1);
+			}
+
+			return this;
+		}
+	}]);
+
+	return SoundIterator;
+}();
+
+_defineProperty(SoundIterator, 'defaultArgs', {
+	files: [],
+	// either sound files or Wad audio objects
+	random: false,
+	// either play a random order (true), or play in the order of the list (false)
+	randomPlaysBeforeRepeat: 0 // This value says the amount of plays that need to happen before a sound can be repeated. This only works if the length of the iterator is 3 or more, and this value is max 1 less than the length of the sound list.
+
+});
+/* harmony default export */ __webpack_exports__["default"] = (SoundIterator);
+
+
+/***/ }),
+
+/***/ "./src/wad.js":
+/*!********************!*\
+  !*** ./src/wad.js ***!
+  \********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var tunajs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tunajs */ "./node_modules/tunajs/tuna.js");
+/* harmony import */ var tunajs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tunajs__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _audio_listener__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./audio_listener */ "./src/audio_listener.js");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./common */ "./src/common.js");
+
+
+
+
+let Wad = function(arg){
+	/** Set basic Wad properties **/
+	this.source        = arg.source;
+	this.destination   = arg.destination || _common__WEBPACK_IMPORTED_MODULE_2__["context"].destination; // the last node the sound is routed to
+	this.volume        = Object(_common__WEBPACK_IMPORTED_MODULE_2__["valueOrDefault"])(arg.volume, 1); // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
+	this.defaultVolume = this.volume;
+	this.playable      = 1; // if this is less than 1, this Wad is still waiting for a file to download before it can play
+	this.pitch         = Wad.pitches[arg.pitch] || arg.pitch || 440;
+	this.gain          = [];
+	this.detune        = arg.detune || 0; // In Cents.
+	this.offset        = arg.offset || 0;
+	this.loop          = arg.loop   || false;
+	this.tuna          = arg.tuna   || null;
+	this.rate          = arg.rate   || 1;
+	this.sprite        = arg.sprite || null;
+	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructEnv"])(this, arg);
+	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructFilter"])(this, arg);
+	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructVibrato"])(this, arg);
+	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructTremolo"])(this, arg);
+	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructReverb"])(this, arg);
+	this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
+	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructPanning"])(this, arg);
+	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructDelay"])(this, arg);
+	this.duration = (this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(this.rate)) * 1000;
+	////////////////////////////////
+
+
+	/** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
+	if ( this.source === 'noise' ) {
+		this.decodedBuffer = _common__WEBPACK_IMPORTED_MODULE_2__["noiseBuffer"];
+	}
+	//////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+	/** If the Wad's source is the microphone, the rest of the setup happens here. **/
+	else if ( this.source === 'mic' ) {
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["getConsent"])(this, arg);
+	}
+	//////////////////////////////////////////////////////////////////////////////////
+
+
+	/** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
+	else if ( !( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) ) {
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["requestAudioFile"])(this, arg.callback);
+
+		if ( this.sprite ) {
+			var thatWad = this;
+			for ( var sprite in this.sprite ) {
+				this[sprite] = {
+					sprite: this.sprite[sprite],
+					play: function(arg){
+						arg = arg || {};
+						arg.env = arg.env || {};
+						arg.env.hold = this.sprite[1] - this.sprite[0];
+						arg.offset = this.sprite[0];
+
+						return thatWad.play(arg);
+					}
+				};
+			}
+		}
+	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+	else { arg.callback && arg.callback(this); }
+	Wad.allWads.push(this);
+};
+Wad.allWads = [];
+Wad.audioContext = _common__WEBPACK_IMPORTED_MODULE_2__["context"];
+Wad.listener = new _audio_listener__WEBPACK_IMPORTED_MODULE_1__["default"](_common__WEBPACK_IMPORTED_MODULE_2__["context"]);
+if ( typeof tunajs__WEBPACK_IMPORTED_MODULE_0___default.a != undefined ) {
+	Wad.tuna = new tunajs__WEBPACK_IMPORTED_MODULE_0___default.a(Wad.audioContext);
+}
+
+/** Method to allow users to setup external fx in the constructor **/
+Wad.prototype.constructExternalFx = function(arg, context){
+	//override me in your own code
+};
+
+
+/** To be overrided by the user **/
+Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
+	//user does what is necessary here, and then maybe does something like:
+	// this.nodes.push(externalFX)
+};
+
+
+/** the play() method will create the various nodes that are required for this Wad to play,
+set properties on those nodes according to the constructor arguments and play() arguments,
+plug the nodes into each other with plugEmIn(),
+then finally play the sound by calling playEnv() **/
+Wad.prototype.play = function(arg){
+	arg = arg || { arg : null };
+	if ( this.playable < 1 ) {
+		this.playOnLoad    = true;
+		this.playOnLoadArg = arg;
+	}
+
+	else if ( this.source === 'mic' ) {
+		if ( _common__WEBPACK_IMPORTED_MODULE_2__["permissionsGranted"].micConsent ) {
+			if ( arg.arg === null ) {
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["plugEmIn"])(this, arg);
+			}
+			else {
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructFilter"])(this, arg);
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructVibrato"])(this, arg);
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructTremolo"])(this, arg);
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructReverb"])(this, arg);
+				this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructPanning"])(this, arg);
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructDelay"])(this, arg);
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpMic"])(this, arg);
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["plugEmIn"])(this, arg);
+			}
+		}
+		else { 
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You have not given your browser permission to use your microphone.');
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["getConsent"])(this, arg).then(() =>{
+				this.play(arg);
+			});
+		}
+	}
+
+	else { // setup oscillators or audio clips
+		this.nodes = [];
+		if ( !arg.wait ) { arg.wait = 0; }
+		if ( arg.volume ) { this.volume = arg.volume; }
+		else { this.volume = this.defaultVolume; }
+		arg.offset = arg.offset || this.offset || 0;
+
+
+		if ( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) {
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpOscillator"])(this, arg);
+		}
+
+		else {
+			this.soundSource = _common__WEBPACK_IMPORTED_MODULE_2__["context"].createBufferSource();
+			this.soundSource.buffer = this.decodedBuffer;
+			if ( this.source === 'noise' || this.loop || arg.loop ) {
+				this.soundSource.loop = true;
+			}
+			
+		}
+
+
+		if ( this.soundSource.detune ) {
+			this.soundSource.detune.value = arg.detune || this.detune;
+		}
+
+		if ( arg.wait === undefined ) {
+			arg.wait = 0;
+		}
+		if (arg.exactTime === undefined) {
+			arg.exactTime = _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + arg.wait;
+		}
+		this.lastPlayedTime = arg.exactTime - arg.offset;
+
+		this.nodes.push(this.soundSource);
+
+
+		/**  sets the volume envelope based on the play() arguments if present,
+or defaults to the constructor arguments if the volume envelope is not set on play() **/
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpEnvOnPlay"])(this, arg);
+		////////////////////////////////////////////////////////////////////////////////////////
+
+		if ( this.soundSource.playbackRate ) {
+			this.soundSource.playbackRate.value = arg.rate || this.rate;
+			this.env.hold = this.env.hold * (1/this.soundSource.playbackRate.value);
+		}
+
+		/**  sets up the filter and filter envelope based on the play() argument if present,
+or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpFilterOnPlay"])(this, arg);
+		///////////////////////////////////////////////////////////////////////////////////////////////////
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpTunaOnPlay"])(this, arg);
+
+		this.setUpExternalFxOnPlay(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
+
+
+		this.gain.unshift(_common__WEBPACK_IMPORTED_MODULE_2__["context"].createGain()); // sets up the gain node
+		this.gain[0].label = arg.label;
+		this.gain[0].soundSource = this.soundSource;
+		this.nodes.push(this.gain[0]);
+
+		if ( this.gain.length > 15 ) {
+			this.gain.length = 15;
+		}
+
+		// sets up reverb
+		if ( this.reverb ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpReverbOnPlay"])(this, arg); }
+
+		/**  sets panning based on the play() argument if present, or defaults to the constructor argument if panning is not set on play **/
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpPanningOnPlay"])(this, arg);
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpDelayOnPlay"])(this, arg);
+
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["plugEmIn"])(this, arg);
+
+		if ( this.filter && this.filter[0].env ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["filterEnv"])(this, arg); }
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["playEnv"])(this, arg);
+
+		//sets up vibrato LFO
+		if ( this.vibrato ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpVibratoOnPlay"])(this, arg, Wad); }
+
+		//sets up tremolo LFO
+		if ( this.tremolo ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpTremoloOnPlay"])(this, arg, Wad); }
+
+		var thatWad = this;
+
+		this.soundSource.onended = function(event){
+			thatWad.playPromiseResolve(thatWad);
+		};
+
+		if ( !arg.unpause ) {
+			this.playPromise = new Promise(function(resolve, reject){
+				thatWad.playPromiseResolve = resolve;
+			});
+			return this.playPromise;
+		}
+	}
+
+	if ( arg.callback ) { arg.callback(this); }
+
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+/** Change the volume of a wad at any time, including during playback **/
+Wad.prototype.setVolume = function(volume, timeConstant, label){
+	timeConstant = timeConstant || .01;
+	if ( label ) {
+		if ( this.gain.length > 0 ) {
+			for ( let i = 0; i < this.gain.length; i++ ) {
+				if ( this.gain[i].label === label ) {
+					this.gain[i].gain.setValueAtTime(volume, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
+				}
+			}
+		}
+	}
+	else {
+		this.defaultVolume = volume;
+		if ( this.gain.length > 0 ) { this.gain[0].gain.setValueAtTime(volume, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime); }
+	}
+	return this;
+};
+
+/**
+Change the playback rate of a Wad during playback.
+inputSpeed is a value of 0 < speed, and is the rate of playback of the audio.
+E.g. if input speed = 2.0, the playback will be twice as fast
+**/
+Wad.prototype.setRate = function(inputSpeed) {
+
+	//Check/Save the input
+	var speed;
+	if(inputSpeed && inputSpeed > 0) speed = inputSpeed;
+	else speed = 0;
+
+	//Check if we have a soundsource (Though we always should)
+	if(this.soundSource) {
+
+		//Set the value
+		this.soundSource.playbackRate.value = speed;
+	}
+	else {
+
+		//Inform that there is no sound source on the current wad
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('Sorry, but the wad does not contain a soundSource!');
+	}
+
+	return this;
+};
+
+Wad.prototype.setPitch = function(pitch, timeConstant, label){
+	timeConstant = timeConstant || .01;
+	if ( label ) {
+		for ( let i = 0; i < this.gain.length; i++ ) {
+			if ( this.gain[i].label === label ) {
+				if ( pitch in Wad.pitches ) {
+					this.gain[i].soundSource.frequency.setTargetAtTime(Wad.pitches[pitch], _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
+				}
+				else {
+					this.soundSource.frequency.settargetAtTime(pitch, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
+				}
+			}
+		}
+	}
+	else {
+		if ( pitch in Wad.pitches ) {
+			if ( this.soundSource ) {
+				this.soundSource.frequency.value = Wad.pitches[pitch];
+			}
+			this.pitch = Wad.pitches[pitch];
+		}
+		else {
+			if ( this.soundSource ) {
+				this.soundSource.frequency.value = pitch;
+			}
+			this.pitch = pitch;
+		}
+	}
+	return this;
+};
+
+Wad.prototype.setDetune = function(detune, timeConstant, label){
+	timeConstant = timeConstant || .01;
+	if ( label ) {
+		for ( let i = 0; i < this.gain.length; i++ ) {
+			if ( this.gain[i].label === label ) {
+				this.gain[i].soundSource.detune.setTargetAtTime(detune, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
+			}
+		}
+	}
+	else {
+		this.soundSource.detune.setTargetAtTime(detune, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
+	}
+	return this;
+};
+
+/** Change the panning of a Wad at any time, including during playback **/
+Wad.prototype.setPanning = function(panning, timeConstant, label){
+	timeConstant = timeConstant || .01;
+	if ( typeof panning === 'number' && !_common__WEBPACK_IMPORTED_MODULE_2__["context"].createStereoPanner ) {
+		panning = [panning, 0, 0];
+	}
+
+	this.panning.location = panning;
+	if ( Object(_common__WEBPACK_IMPORTED_MODULE_2__["isArray"])(panning) && this.panning.type === '3d' && this.panning.node ) {
+		this.panning.node.setPosition(panning[0], panning[1], panning[2]);
+
+	}
+	else if ( typeof panning === 'number' && this.panning.type === 'stereo' && this.panning.node) {
+		this.panning.node.pan.setTargetAtTime(panning, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
+	}
+
+	if ( Object(_common__WEBPACK_IMPORTED_MODULE_2__["isArray"])(panning) ) { this.panning.type = '3d'; }
+	else if ( typeof panning === 'number' ) { this.panning.type = 'stereo'; }
+	return this;
+};
+
+/**
+Change the Reverb of a Wad at any time, including during playback.
+inputWet is a value of 0 < wetness/gain < 1
+**/
+Wad.prototype.setReverb = function(inputWet) {
+
+	//Check/Save the input
+
+	var wet;
+	if(inputWet && inputWet > 0 && inputWet < 1) wet = inputWet;
+	else if(inputWet >= 1) wet = 1;
+	else wet = 0;
+
+	//Check if we have delay
+	if(this.reverb) {
+
+		//Set the value
+		this.reverb.wet = wet;
+
+		//Set the node's value, if it exists
+		if(this.reverb.node) {
+
+			this.reverb.node.wet.gain.value = wet;
+		}
+	}
+	else {
+
+		//Inform that there is no reverb on the current wad
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('Sorry, but the wad does not contain Reverb!');
+	}
+
+	return this;
+};
+
+
+/**
+Change the Delay of a Wad at any time, including during playback.
+inputTime is a value of time > 0, and is the time in seconds between each delayed playback.
+inputWet is a value of gain 0 < inputWet < 1, and is Relative volume change between the original sound and the first delayed playback.
+inputFeedback is a value of gain 0 < inputFeedback < 1, and is Relative volume change between each delayed playback and the next.
+**/
+Wad.prototype.setDelay = function(inputTime, inputWet, inputFeedback){
+
+	//Check/Save the input
+	var time;
+	if(inputTime && inputTime > 0) time = inputTime;
+	else time = 0;
+
+	var wet;
+	if(inputWet && inputWet > 0 && inputWet < 1) wet = inputWet;
+	else if(inputWet >= 1) wet = 1;
+	else wet = 0;
+
+	var feedback;
+	if(inputFeedback && inputFeedback > 0 && inputFeedback < 1) feedback = inputFeedback;
+	else if(inputFeedback >= 1) feedback = 1;
+	else feedback = 0;
+
+	//Check if we have delay
+	if(this.delay) {
+
+		//Set the value
+		this.delay.delayTime = time;
+		this.delay.wet = wet;
+		this.delay.feedback = feedback;
+
+		//Set the node's value, if it exists
+		if(this.delay.delayNode) {
+
+			this.delay.delayNode.delayNode.delayTime.value = time;
+			this.delay.delayNode.wetNode.gain.value = wet;
+			this.delay.delayNode.feedbackNode.gain.value = feedback;
+		}
+	}
+	else {
+
+		//Inform that there is no delay on the current wad
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('Sorry, but the wad does not contain delay!', 2);
+	}
+
+	return this;
+};
+
+
+Wad.prototype.pause = function(label){
+	this.pauseTime = _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime;
+	this.soundSource.onended = null;
+	this.stop(label);
+
+};
+Wad.prototype.unpause = function(arg){
+	arg = arg || {};
+	arg.unpause = true;
+	if ( this.pauseTime && (this.lastPlayedTime != null) ) {
+		arg.offset = this.pauseTime - this.lastPlayedTime;
+	}
+	else { 
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You tried to unpause a wad that was not played and paused, so it just played normally instead.', 2);
+	}
+	this.play(arg);
+};
+
+/** If multiple instances of a sound are playing simultaneously, stop() only can stop the most recent one **/
+Wad.prototype.stop = function(label){
+	if ( !( this.source === 'mic' ) ) {
+		if ( !(this.gain && this.gain.length) ){
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You tried to stop a Wad that never played. ', 2);
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])(this, 2);
+			return; // if the wad has never been played, there's no need to stop it
+		}
+		else if ( label ) {
+			for ( var i = 0; i < this.gain.length; i++ ) {
+				if ( this.gain[i].label === label ) {
+					this.gain[i].gain.cancelScheduledValues(_common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
+					this.gain[i].gain.setValueAtTime(this.gain[i].gain.value, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
+					this.gain[i].gain.linearRampToValueAtTime(.0001, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + this.env.release);
+
+
+				}
+			}
+		}
+		else if ( !label ) {
+			this.gain[0].gain.cancelScheduledValues(_common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
+			this.gain[0].gain.setValueAtTime(this.gain[0].gain.value, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
+			this.gain[0].gain.linearRampToValueAtTime(.0001, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + this.env.release);
+			try {
+				this.soundSource.stop(_common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + this.env.release);
+			}
+			catch(e){
+				/*
+					Safari for iOS (and maybe other browsers)
+					can't seem to handle calling stop() on a soundSource that already had stop() scheduled.
+					The spec says it should be fine, and cancel previous calls to stop, 
+					but Safari is throwing an error -- InvalidStateError: The object is in an invalid state.
+					I'm not really sure why this is happening, but at least we can manually run the ended event handler.
+				*/
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])(e,2);
+				var that = this;
+				setTimeout(function(){
+					that.soundSource.dispatchEvent(new Event('ended'));
+					that.soundSource.onended = null;
+				}, this.env.release * 1000);
+			}
+		}
+	}
+	else if (_common__WEBPACK_IMPORTED_MODULE_2__["permissionsGranted"].micConsent ) {
+		this.mediaStreamSource.disconnect(0);
+	}
+	else { Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You have not given your browser permission to use your microphone.');}
+	if ( this.tremolo ) {
+		this.tremolo.wad.stop();
+	}
+};
+
+Wad.stopAll = function(label){
+	for ( var i = 0; i < Wad.allWads.length; i++ ) {
+		Wad.allWads[i].stop(label);
+	}
+};
+Wad.setVolume = function(volume){
+	for ( var i = 0; i < Wad.allWads.length; i++ ) {
+		Wad.allWads[i].setVolume(volume);
+	}
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Wad);
+
+
+/***/ })
+
+/******/ })["default"];
+});
+//# sourceMappingURL=wad.js.map
 
 /***/ }),
 
@@ -106,12 +4774,13 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../build/wad.min.js */ "./build/wad.min.js");
-/* harmony import */ var _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_build_wad_min_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _build_wad_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../build/wad.js */ "./build/wad.js");
+/* harmony import */ var _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_build_wad_js__WEBPACK_IMPORTED_MODULE_0__);
 
+window.Wad = _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a;
 
-_build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a.logs.verbosity = 1;
-var ignition = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'./ignition.mp3'});
+_build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.logs.verbosity = 1;
+var ignition = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'./ignition.mp3'});
 document.getElementById('ignition').addEventListener('click', async function(){
 	// await ignition.play()
 	await ignition.play();
@@ -140,7 +4809,7 @@ document.getElementById('ignition-slower').addEventListener('click', async funct
 	});
 	console.log('slow ignition');
 });
-var helloMan = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({
+var helloMan = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({
 	source: './hello-man.wav',
 	sprite: {
 		hello: [0, .4],
@@ -160,7 +4829,7 @@ document.getElementById('sprite-ab').addEventListener('click', async function(){
 	await helloMan.play({env:{attack: .1, release:.02}});
 });
 
-var longClip = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'./do-re-mi.wav'});
+var longClip = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'./do-re-mi.wav'});
 document.getElementById('full-song').addEventListener('click', function(){
 	longClip.play().then(function(thatWad){
 		console.log('Clip finished.');
@@ -176,7 +4845,7 @@ document.getElementById('stop-full-song').addEventListener('click', function(){
 	longClip.stop();
 });
 
-var sine = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'sine', env: {attack: .07, hold: 1.5, release: .6}});
+var sine = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'sine', env: {attack: .07, hold: 1.5, release: .6}});
 
 document.getElementById('sine').addEventListener('click', async function(){
 	await sine.play();
@@ -223,8 +4892,8 @@ document.getElementById('stop').addEventListener('click', function(){
 });
 
 
-var sawtooth = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'sawtooth', env:{hold:1, release:.2}});
-var triangle = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'triangle', env:{hold:1, release:.2}});
+var sawtooth = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'sawtooth', env:{hold:1, release:.2}});
+var triangle = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'triangle', env:{hold:1, release:.2}});
 
 var volumeDisplay = document.getElementById('polywad-volume');
 var clippingDisplay = document.getElementById('polywad-clipping');
@@ -235,7 +4904,7 @@ let displayAudioMeter = function(thatWad){
 		clippingDisplay.innerText = thatWad.audioMeter.checkClipping();
 	}, 50);
 };
-let polywad = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a.Poly({
+let polywad = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.Poly({
 	reverb  : {
 		wet     : 1,                                            
 		impulse : '/widehall.wav' 
@@ -271,7 +4940,7 @@ var logPitch = function(){
 	rafId = requestAnimationFrame(logPitch);
 };
 document.getElementById('mic-consent').addEventListener('click', function(){
-	voice = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({
+	voice = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({
 		source  : 'mic',
 		// reverb  : {
 		//     wet : .4
@@ -283,7 +4952,7 @@ document.getElementById('mic-consent').addEventListener('click', function(){
 		// panning : -.2
 	});
 
-	tuner = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a.Poly();
+	tuner = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.Poly();
 	// tuner.setVolume(0) // mute the tuner to avoid feedback
 	tuner.add(voice);
 
@@ -295,7 +4964,7 @@ document.getElementById('mic-play').addEventListener('click', function(){
 	voice.play();
 });
 document.getElementById('mic-stop').addEventListener('click', function(){
-	console.log('Play mic');
+	console.log('Stop mic');
 	voice.stop();
 });
 document.getElementById('detect-pitch').addEventListener('click', function(){
@@ -320,7 +4989,7 @@ var tunaConfig = {
 		frequency: 700
 	}
 };
-var withoutTuna = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a(tunaConfig);
+var withoutTuna = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a(tunaConfig);
 
 tunaConfig.tuna = {
 	Chorus : {
@@ -331,7 +5000,7 @@ tunaConfig.tuna = {
 	}
 }; 
 
-var withTuna = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a(tunaConfig);
+var withTuna = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a(tunaConfig);
 
 tunaConfig.tuna = {
 	Phaser: {
@@ -343,7 +5012,7 @@ tunaConfig.tuna = {
 		bypass: 0
 	}
 };
-var tunaPhaser = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a(tunaConfig);
+var tunaPhaser = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a(tunaConfig);
 
 document.getElementById('no-tuna').addEventListener('click', function(){
 	withoutTuna.play();
@@ -357,10 +5026,10 @@ document.getElementById('tuna-phaser').addEventListener('click', function(){
 
 //SoundIterator
 
-var iterator = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a.SoundIterator({files: [
-	new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({source: 'sawtooth', volume: 0.5, env:{hold:1}}),
-	new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({source: 'square', volume: 0.5, env:{hold:1}}),
-	new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({source: 'sine', volume: 0.5, env:{hold:1}}),
+var iterator = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.SoundIterator({files: [
+	new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source: 'sawtooth', volume: 0.5, env:{hold:1}}),
+	new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source: 'square', volume: 0.5, env:{hold:1}}),
+	new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source: 'sine', volume: 0.5, env:{hold:1}}),
 ]});
 
 document.getElementById('play-next-nonrandom-sound').addEventListener('click', function(){
@@ -380,7 +5049,7 @@ document.getElementById('play-next-sound-with-1-randomPlaysBeforeRepeat').addEve
 	iterator.play();
 });
 
-var newSound = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'triangle', volume: 0.5, env:{hold:1}});
+var newSound = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'triangle', volume: 0.5, env:{hold:1}});
 
 document.getElementById('add-sound').addEventListener('click', function(){
 	iterator.add(newSound);
@@ -392,11 +5061,11 @@ document.getElementById('remove-sound').addEventListener('click', function(){
 
 // AudioListener
 
-var listenerReferenceSound = new _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a({
+var listenerReferenceSound = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({
 	source: './ignition.mp3',
 	panning: [0,0,0]
 });
-var listener = _build_wad_min_js__WEBPACK_IMPORTED_MODULE_0___default.a.listener;
+var listener = _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.listener;
 
 document.getElementById('listener-move-left').addEventListener('click', function(){
 	listener.setPosition(listener.positionX.value-1, listener.positionY.value, listener.positionZ.value);

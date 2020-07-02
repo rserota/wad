@@ -1,7 +1,6 @@
 import SoundIterator from './sound_iterator';
 import Polywad from './polywad';
 import presets from './presets';
-import { logStuff } from './common';
 import {
 	pitches,
 	pitchesArray,
@@ -13,6 +12,7 @@ import {
 	midiInstrument,
 } from './midi';
 import WebAudioDAW from './wad.js';
+import { logStuff } from './common';
 
 
 let Wad = WebAudioDAW;

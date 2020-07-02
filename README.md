@@ -27,8 +27,8 @@
 1. [MIDI Input](#midi-input)
 1. [Access to the Audio Context](#access-to-the-audio-context)
 1. [Cross-browser Compatibility](#cross-browser-compatibility)
-1. [How to Contribute](#how-to-contribute)
 1. [Acknowledgements](#acknowledgements)
+1. [How to Contribute](#how-to-contribute)
 1. [API Documentation](#api-documentation)
 
 
@@ -413,13 +413,22 @@ When Wad.js loads initially, it automatically creates an Audio Context. It shoul
 WadJS works best in Chrome, decently in Safari for iOS, and it works poorly in Firefox. I have not tested it in any other browsers. I would greatly appreciate contributions to help Wad.js run optimally in any browser that supports Web Audio, especially mobile browsers.
 
 
-## How To Contribute
-
-
-
 ## Acknowledgements
 
-The synthesizer icon at the top of this readme was created by Anatolii Badii from Noun Project
+The synthesizer icon at the top of this readme was created by Anatolii Badii from Noun Project.
+
+## How to Contribute
+
+There are many ways that you can help make WadJS better, including testing it in different environments and raising issues. 
+However, if you'd like to contribute code to WadJS, here are some tips and guidelines:
+
+1. Fork the repo.
+1. Add/edit source files in /src.
+1. Build the project with `npm run build`, or build automatically after changes with `npm run watch`.
+1. Webpack output is written to /build.
+1. Follow the style rules in `.eslintrc` (use tabs and semicolons). You can check/fix your style with `npm run lint`.
+1. WadJS does not have automated tests, but there is a manual testing page in `/test`. If you add or modify a feature in WadJS, please change the test page so that I can easily hear what you did. The test code is also built when your run `npm run build`. 
+1. Submit a pull request. 
 
 
 ## API Documentation

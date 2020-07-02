@@ -15,6 +15,7 @@ import {
 	constructPanning,
 	constructDelay,
 	getConsent,
+	permissionsGranted,
 	setUpMic,
 	setUpPanningOnPlay,
 	setUpVibratoOnPlay,
@@ -97,7 +98,6 @@ let Wad = function(arg){
 	Wad.allWads.push(this);
 };
 Wad.allWads = [];
-Wad.micConsent = false;
 Wad.audioContext = context;
 Wad.listener = new AudioListener(context);
 if ( typeof Tuna != undefined ) {
@@ -129,7 +129,7 @@ Wad.prototype.play = function(arg){
 	}
 
 	else if ( this.source === 'mic' ) {
-		if ( Wad.micConsent ) {
+		if ( permissionsGranted.micConsent ) {
 			if ( arg.arg === null ) {
 				plugEmIn(this, arg);
 			}
@@ -147,8 +147,8 @@ Wad.prototype.play = function(arg){
 		}
 		else { 
 			logMessage('You have not given your browser permission to use your microphone.');
-			getConsent(this, arg).then(function (that) {
-				that.play(arg);
+			getConsent(this, arg).then(() =>{
+				this.play(arg);
 			});
 		}
 	}
@@ -234,10 +234,10 @@ or defaults to the constructor argument if the filter and filter envelope are no
 		playEnv(this, arg);
 
 		//sets up vibrato LFO
-		if ( this.vibrato ) { setUpVibratoOnPlay(this, arg); }
+		if ( this.vibrato ) { setUpVibratoOnPlay(this, arg, Wad); }
 
 		//sets up tremolo LFO
-		if ( this.tremolo ) { setUpTremoloOnPlay(this, arg); }
+		if ( this.tremolo ) { setUpTremoloOnPlay(this, arg, Wad); }
 
 		var thatWad = this;
 
@@ -518,7 +518,7 @@ Wad.prototype.stop = function(label){
 			}
 		}
 	}
-	else if (Wad.micConsent ) {
+	else if (permissionsGranted.micConsent ) {
 		this.mediaStreamSource.disconnect(0);
 	}
 	else { logMessage('You have not given your browser permission to use your microphone.');}

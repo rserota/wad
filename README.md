@@ -36,13 +36,13 @@
 
 To use Wad.js in your project, simply include the script in your HTML file.
 ```html
-	<script src="https://unpkg.com/web-audio-daw"></script>
+<script src="https://unpkg.com/web-audio-daw"></script>
 ```
 
 Wad.js is also available as an npm module.
 
 ```sh
-	npm install web-audio-daw
+npm install web-audio-daw
 ```
 
 ```javascript

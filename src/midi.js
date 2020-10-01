@@ -76,22 +76,7 @@ let onErrorCallback = function(err){
 	if ( navigator && navigator.requestMIDIAccess ) {
 		try {
 			let midiAccess = await navigator.requestMIDIAccess();
-			logMessage('MIDI Access: ', 2);
-			logMessage(midiAccess, 2);
-			var val = midiAccess.inputs.values();
-			for ( var o = val.next(); !o.done; o = val.next() ) {
-				midiInputs.push(o.value);
-			}
-			// Wad.midiInputs = [m.inputs.values().next().value];   // inputs = array of MIDIPorts
-			logMessage('MIDI inputs: ');
-			logMessage(midiInputs);
-			// var outputs = m.outputs(); // outputs = array of MIDIPorts
-			for ( var i = 0; i < midiInputs.length; i++ ) {
-				midiInputs[i].onmidimessage = midiMap; // onmidimessage( event ), event.data & event.receivedTime are populated
-			}
-			// var o = m.outputs()[0];           // grab first output device
-			// o.send( [ 0x90, 0x45, 0x7f ] );     // full velocity note on A4 on channel zero
-			// o.send( [ 0x80, 0x45, 0x7f ], window.performance.now() + 1000 );  // full velocity A4 note off in one second.
+			onSuccessCallback(midiAccess);
 		}
 		catch(err) {
 			onErrorCallback();

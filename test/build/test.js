@@ -2711,7 +2711,7 @@ let noiseBuffer = (function(){
 	}
 	return noiseBuffer;
 })();
-/////////////////////////////////////////////////////////////////////////
+
 
 /** a lil hack. just be glad it isn't on Object.prototype. **/
 let isArray = function(object){
@@ -3370,18 +3370,38 @@ let onSuccessCallback = function(midiAccess){
 	// o.send( [ 0x90, 0x45, 0x7f ] );     // full velocity note on A4 on channel zero
 	// o.send( [ 0x80, 0x45, 0x7f ], window.performance.now() + 1000 );  // full velocity A4 note off in one second.
 };
+
 let onErrorCallback = function(err){
 	Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('Failed to get MIDI access', err);
 };
 
-if ( navigator && navigator.requestMIDIAccess ) {
-	try {
-		navigator.requestMIDIAccess().then(onSuccessCallback, onErrorCallback);
+(async function(){
+
+	if ( navigator && navigator.requestMIDIAccess ) {
+		try {
+			let midiAccess = await navigator.requestMIDIAccess();
+			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('MIDI Access: ', 2);
+			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])(midiAccess, 2);
+			var val = midiAccess.inputs.values();
+			for ( var o = val.next(); !o.done; o = val.next() ) {
+				midiInputs.push(o.value);
+			}
+			// Wad.midiInputs = [m.inputs.values().next().value];   // inputs = array of MIDIPorts
+			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('MIDI inputs: ');
+			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])(midiInputs);
+			// var outputs = m.outputs(); // outputs = array of MIDIPorts
+			for ( var i = 0; i < midiInputs.length; i++ ) {
+				midiInputs[i].onmidimessage = midiMap; // onmidimessage( event ), event.data & event.receivedTime are populated
+			}
+			// var o = m.outputs()[0];           // grab first output device
+			// o.send( [ 0x90, 0x45, 0x7f ] );     // full velocity note on A4 on channel zero
+			// o.send( [ 0x80, 0x45, 0x7f ], window.performance.now() + 1000 );  // full velocity A4 note off in one second.
+		}
+		catch(err) {
+			onErrorCallback();
+		}
 	}
-	catch(err) {
-		Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('Failed to get MIDI access', err);
-	}
-}
+})();
 
 
 

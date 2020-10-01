@@ -149,7 +149,10 @@ let constructRecorder = function(thatWad,arg){
 	thatWad.recorder = {};
 	thatWad.recorder.mediaStreamDestination = context.createMediaStreamDestination();
 	thatWad.output.connect(thatWad.recorder.mediaStreamDestination);
-	thatWad.recorder.mediaRecorder = new MediaRecorder(thatWad.recorder.mediaStreamDestination.stream);
+	thatWad.recorder.mediaRecorder = new MediaRecorder(thatWad.recorder.mediaStreamDestination.stream, {
+		//audioBitsPerSecond : 128000,
+		mimeType : 'audio/webm'
+	});
 	thatWad.recorder.chunks = [];
 	thatWad.recorder.mediaRecorder.ondataavailable = function(evt) {
 		// push each chunk (blobs) in an array
@@ -158,7 +161,9 @@ let constructRecorder = function(thatWad,arg){
 
 	thatWad.recorder.mediaRecorder.onstop = function(evt) {
 		// Make blob out of our blobs, and open it.
-		var blob = new Blob(thatWad.recorder.chunks, { 'type' : 'audio/ogg; codecs=opus' });
+		// todo - parameterize blob args, codecs etc
+		var blob = new Blob(thatWad.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
+		//var blob = new Blob(thatWad.recorder.chunks, { 'type' : 'audio/' });
 		window.open(URL.createObjectURL(blob));
 	};
 };

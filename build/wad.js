@@ -3612,25 +3612,25 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var buflen = 2048;
-var buf = new Uint8Array( buflen );
-var MINVAL = 134;  // 128 == zero.  MINVAL is the "minimum detected signal" level.
+let buflen = 2048;
+let buf = new Uint8Array( buflen );
+let MINVAL = 134;  // 128 == zero.  MINVAL is the "minimum detected signal" level.
 
-var noteFromPitch = function( frequency ) {
-	var noteNum = 12 * (Math.log( frequency / 440 )/Math.log(2) );
+let noteFromPitch = function( frequency ) {
+	let noteNum = 12 * (Math.log( frequency / 440 )/Math.log(2) );
 	return Math.round( noteNum ) + 69;
 };
 
-var frequencyFromNoteNumber = function( note ) {
+let frequencyFromNoteNumber = function( note ) {
 	return 440 * Math.pow(2,(note-69)/12);
 };
 
-var centsOffFromPitch = function( frequency, note ) {
+let centsOffFromPitch = function( frequency, note ) {
 	return Math.floor( 1200 * Math.log( frequency / frequencyFromNoteNumber( note ))/Math.log(2) );
 };
 
 
-function autoCorrelate( buf, sampleRate ) {
+let autoCorrelate = function( buf, sampleRate ) {
 	var MIN_SAMPLES = 4;    // corresponds to an 11kHz signal
 	var MAX_SAMPLES = 1000; // corresponds to a 44Hz signal
 	var SIZE = 1000;
@@ -3643,15 +3643,16 @@ function autoCorrelate( buf, sampleRate ) {
 		return -1;  // Not enough data
 
 	for ( let i = 0; i < SIZE; i++ ) {
-		var val = ( buf[i] - 128 ) / 128;
+		let val = ( buf[i] - 128 ) / 128;
 		rms += val * val;
 	}
 	rms = Math.sqrt(rms/SIZE);
-	if (rms<0.01)
+	if (rms<0.01) {
 		return -1;
+	}
 
-	var lastCorrelation=1;
-	for (var offset = MIN_SAMPLES; offset <= MAX_SAMPLES; offset++) {
+	let lastCorrelation=1;
+	for (let offset = MIN_SAMPLES; offset <= MAX_SAMPLES; offset++) {
 		var correlation = 0;
 
 		for (let i=0; i<SIZE; i++) {
@@ -3676,16 +3677,16 @@ function autoCorrelate( buf, sampleRate ) {
 	}
 	return -1;
 	//  var best_frequency = sampleRate/best_offset;
-}
+};
 
-function volumeAudioProcess( event ) {
-	var buf = event.inputBuffer.getChannelData(0);
-	var bufLength = buf.length;
-	var sum = 0;
-	var x;
+let volumeAudioProcess = function( event ) {
+	let buf = event.inputBuffer.getChannelData(0);
+	let bufLength = buf.length;
+	let sum = 0;
+	let x;
     
 	// Do a root-mean-square on the samples: sum up the squares...
-	for (var i=0; i<bufLength; i++) {
+	for (let i=0; i<bufLength; i++) {
 		x = buf[i];
 		if (Math.abs(x)>=this.clipLevel) {
 			this.clipping = true;
@@ -3695,13 +3696,14 @@ function volumeAudioProcess( event ) {
 	}
     
 	// ... then take the square root of the sum.
-	var rms =  Math.sqrt(sum / bufLength);
+	let rms =  Math.sqrt(sum / bufLength);
     
 	// Now smooth this out with the averaging factor applied
 	// to the previous sample - take the max here because we
 	// want "fast attack, slow release."
 	this.volume = Math.max(rms, this.volume*this.averaging);
-}
+};
+
 
 function createAudioMeter(audioContext,clipLevel,averaging,clipLag) {
 	var processor = audioContext.createScriptProcessor(512);
@@ -3734,6 +3736,26 @@ function createAudioMeter(audioContext,clipLevel,averaging,clipLag) {
     
 	return processor;
 }
+
+
+let constructRecorder = function(thatWad,arg){
+	thatWad.recorder = {};
+	thatWad.recorder.mediaStreamDestination = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createMediaStreamDestination();
+	thatWad.output.connect(thatWad.recorder.mediaStreamDestination);
+	thatWad.recorder.mediaRecorder = new MediaRecorder(thatWad.recorder.mediaStreamDestination.stream);
+	thatWad.recorder.chunks = [];
+	thatWad.recorder.mediaRecorder.ondataavailable = function(evt) {
+		// push each chunk (blobs) in an array
+		thatWad.recorder.chunks.push(evt.data);
+	};
+
+	thatWad.recorder.mediaRecorder.onstop = function(evt) {
+		// Make blob out of our blobs, and open it.
+		var blob = new Blob(thatWad.recorder.chunks, { 'type' : 'audio/ogg; codecs=opus' });
+		window.open(URL.createObjectURL(blob));
+	};
+};
+
 const Polywad = function(arg){
 	if ( !arg ) { arg = {}; }
 	this.isSetUp  = false;
@@ -3759,11 +3781,13 @@ Polywad.prototype.setUp = function(arg){ // Anything that needs to happen before
 	this.output            = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createAnalyser();
 	this.tuna              = arg.tuna || null;
 	this.audioMeter        = null;
+	this.recorder          = null;
 
 	if ( arg.audioMeter ) {
 		this.audioMeter = createAudioMeter(_common__WEBPACK_IMPORTED_MODULE_0__["context"], arg.audioMeter.clipLevel, arg.audioMeter.averaging, arg.audioMeter.clipLag);
 		this.output.connect(this.audioMeter);
 	}
+
 
 	Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructFilter"])(this, arg);
 	if ( this.filter ) { Object(_common__WEBPACK_IMPORTED_MODULE_0__["createFilters"])(this, arg); }
@@ -3775,6 +3799,7 @@ Polywad.prototype.setUp = function(arg){ // Anything that needs to happen before
 	Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructPanning"])(this, arg);
 	Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpPanningOnPlay"])(this, arg);
 	if ( arg.compressor ) { Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructCompressor"])(this, arg); }
+	if ( arg.recorder ) { constructRecorder(this, arg); }
 
 	Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructDelay"])(this, arg);
 	Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpDelayOnPlay"])(this, arg);

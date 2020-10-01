@@ -120,17 +120,18 @@ var triangle = new Wad({source:'triangle', env:{hold:1, release:.2}});
 var volumeDisplay = document.getElementById('polywad-volume');
 var clippingDisplay = document.getElementById('polywad-clipping');
 let displayAudioMeter = function(thatWad){
-	polywad.add(sawtooth).add(triangle);
+	thatWad.add(sawtooth).add(triangle);
 	setInterval(function(){
 		volumeDisplay.innerText = Math.round(thatWad.audioMeter.volume * 1000);
 		clippingDisplay.innerText = thatWad.audioMeter.checkClipping();
 	}, 50);
 };
-let polywad = new Wad.Poly({
+window.polywad = new Wad.Poly({
 	reverb  : {
 		wet     : 1,                                            
 		impulse : '/widehall.wav' 
 	},
+	recorder: true,
 	audioMeter: {
 		clipLevel: .98,
 		averaging: .95,
@@ -323,3 +324,6 @@ document.getElementById('listener-face-right').addEventListener('click', functio
 document.getElementById('listener-orientation').addEventListener('click', function(){
 	alert('The listener is at: ' + JSON.stringify(listener.getOrientation()));
 });
+
+
+

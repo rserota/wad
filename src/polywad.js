@@ -38,13 +38,13 @@ let centsOffFromPitch = function( frequency, note ) {
 
 
 let autoCorrelate = function( buf, sampleRate ) {
-	var MIN_SAMPLES = 4;    // corresponds to an 11kHz signal
-	var MAX_SAMPLES = 1000; // corresponds to a 44Hz signal
-	var SIZE = 1000;
-	var best_offset = -1;
-	var best_correlation = 0;
-	var rms = 0;
-	var foundGoodCorrelation = false;
+	let MIN_SAMPLES = 4;    // corresponds to an 11kHz signal
+	let MAX_SAMPLES = 1000; // corresponds to a 44Hz signal
+	let SIZE = 1000;
+	let best_offset = -1;
+	let best_correlation = 0;
+	let rms = 0;
+	let foundGoodCorrelation = false;
 
 	if (buf.length < (SIZE + MAX_SAMPLES - MIN_SAMPLES))
 		return -1;  // Not enough data
@@ -60,7 +60,7 @@ let autoCorrelate = function( buf, sampleRate ) {
 
 	let lastCorrelation=1;
 	for (let offset = MIN_SAMPLES; offset <= MAX_SAMPLES; offset++) {
-		var correlation = 0;
+		let correlation = 0;
 
 		for (let i=0; i<SIZE; i++) {
 			correlation += Math.abs(((buf[i] - 128)/128)-((buf[i+offset] - 128)/128));
@@ -113,7 +113,7 @@ let volumeAudioProcess = function( event ) {
 
 
 function createAudioMeter(audioContext,clipLevel,averaging,clipLag) {
-	var processor = audioContext.createScriptProcessor(512);
+	let processor = audioContext.createScriptProcessor(512);
 	processor.onaudioprocess = volumeAudioProcess;
 	processor.clipping = false;
 	processor.lastClip = 0;
@@ -149,7 +149,7 @@ let constructRecorder = function(thatWad,arg){
 	thatWad.recorder = {};
 	thatWad.recorder.mediaStreamDestination = context.createMediaStreamDestination();
 	thatWad.output.connect(thatWad.recorder.mediaStreamDestination);
-	thatWad.recorder.mediaRecorder = new MediaRecorder(thatWad.recorder.mediaStreamDestination.stream, {
+	thatWad.recorder.mediaRecorder = new MediaRecorder(thatWad.recorder.mediaStreamDestination.stream, arg.recorder.options || {
 		//audioBitsPerSecond : 128000,
 		mimeType : 'audio/webm'
 	});
@@ -159,11 +159,9 @@ let constructRecorder = function(thatWad,arg){
 		thatWad.recorder.chunks.push(evt.data);
 	};
 
-	thatWad.recorder.mediaRecorder.onstop = function(evt) {
+	thatWad.recorder.mediaRecorder.onstop = arg.recorder.onstop || function(evt) {
 		// Make blob out of our blobs, and open it.
-		// todo - parameterize blob args, codecs etc
-		var blob = new Blob(thatWad.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
-		//var blob = new Blob(thatWad.recorder.chunks, { 'type' : 'audio/' });
+		let blob = new Blob(thatWad.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
 		window.open(URL.createObjectURL(blob));
 	};
 };
@@ -225,12 +223,12 @@ Polywad.prototype.setUp = function(arg){ // Anything that needs to happen before
 
 Polywad.prototype.updatePitch = function( time ) {
 	this.input.getByteTimeDomainData( buf );
-	var ac = autoCorrelate( buf, context.sampleRate );
+	let ac = autoCorrelate( buf, context.sampleRate );
 
 	if ( ac !== -1 && ac !== 11025 && ac !== 12000 ) {
-		var pitch = ac;
+		let pitch = ac;
 		this.pitch = Math.floor( pitch ) ;
-		var note = noteFromPitch( pitch );
+		let note = noteFromPitch( pitch );
 		this.noteName = pitchesArray[note - 12];
 		// Detune doesn't seem to work.
 		// var detune = centsOffFromPitch( pitch, note );
@@ -241,7 +239,7 @@ Polywad.prototype.updatePitch = function( time ) {
 		//     this.detuneEstimate = detune
 		// }
 	}
-	var that = this;
+	let that = this;
 	that.rafID = window.requestAnimationFrame( function(){ that.updatePitch(); } );
 };
 
@@ -303,7 +301,7 @@ Polywad.prototype.play = function(arg){
 
 Polywad.prototype.stop = function(arg){
 	if ( this.isSetUp ) {
-		for ( var i = 0; i < this.wads.length; i++ ) {
+		for ( let i = 0; i < this.wads.length; i++ ) {
 			this.wads[i].stop(arg);
 		}
 	}
@@ -328,7 +326,7 @@ Polywad.prototype.add = function(wad){
 
 Polywad.prototype.remove = function(wad){
 	if ( this.isSetUp ) {
-		for ( var i = 0; i < this.wads.length; i++ ) {
+		for ( let i = 0; i < this.wads.length; i++ ) {
 			if ( this.wads[i] === wad ) {
 				this.wads[i].destination = context.destination;
 				this.wads.splice(i,1);

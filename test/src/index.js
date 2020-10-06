@@ -127,6 +127,7 @@ let displayAudioMeter = function(thatWad){
 	}, 50);
 };
 window.polywad = new Wad.Poly({
+	volume: .5,
 	reverb  : {
 		wet     : 1,                                            
 		impulse : '/widehall.wav' 

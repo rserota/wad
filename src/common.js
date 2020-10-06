@@ -5,17 +5,17 @@ import { pitches } from './pitches';
 
 let audioContext = window.AudioContext || window.webkitAudioContext;
 
-let logStuff = {
+let logStats = {
 	verbosity: 0,
 	suppressedLogs: 0
 };
 
 let logMessage = function(message, logLevel){
 	logLevel = logLevel || 1;
-	if ( logStuff.verbosity >= logLevel ) {
+	if ( logStats.verbosity >= logLevel ) {
 		console.log(message);
 	} 
-	else { logStuff.suppressedLogs++; }
+	else { logStats.suppressedLogs++; }
 };
     
 let aScene = document.querySelector('a-scene');
@@ -617,7 +617,7 @@ let setUpTunaOnPlay = function(that, arg){
 ///
 
 export {
-	logStuff,
+	logStats,
 	logMessage,
 	context,
 	noiseBuffer,

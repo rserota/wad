@@ -12,7 +12,7 @@ import {
 	midiInstrument,
 } from './midi';
 import WebAudioDAW from './wad.js';
-import { logStuff } from './common';
+import { logStats } from './common';
 
 
 let Wad = WebAudioDAW;
@@ -25,7 +25,7 @@ Wad.assignMidiMap = assignMidiMap;
 Wad.midiInstrument = midiInstrument;
 Wad.midiInputs = midiInputs;
 Wad.presets = presets;
-Wad.logs = logStuff;
+Wad.logs = logStats;
 
 
 if(typeof module !== 'undefined' && module.exports) { module.exports = Wad; }

@@ -1,4 +1,4 @@
-# WadJS ![npm](https://img.shields.io/npm/v/web-audio-daw) ![npm](https://img.shields.io/npm/dw/web-audio-daw?style=plastic) 
+# WadJS ![npm](https://img.shields.io/npm/v/web-audio-daw) <a href="https://www.npmjs.com/package/web-audio-daw"><img alt="npm" src="https://img.shields.io/npm/dw/web-audio-daw"></a> 
 #### A Javascript library for manipulating audio. It's like jQuery for your ears. 
 
 ![Wad Logo](/logo.png?raw=true)

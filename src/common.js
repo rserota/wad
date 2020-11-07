@@ -37,12 +37,12 @@ let unlock = function(){
 	else if ( context.state === 'running' ) {
 		logMessage('The audio context is running.', 2);
 		logMessage(context, 2);
-		window.removeEventListener('mousemove', unlock);
+		window.removeEventListener('click', unlock);
 		window.removeEventListener('touchstart', unlock);
 		window.removeEventListener('touchend', unlock);
 	}
 };
-window.addEventListener('mousemove', unlock);
+window.addEventListener('click', unlock);
 window.addEventListener('touchstart', unlock);
 window.addEventListener('touchend', unlock);
 // create a wrapper for old versions of `getUserMedia`

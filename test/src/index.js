@@ -156,15 +156,13 @@ document.getElementById('polywad-stop').addEventListener('click', function(){
 	polywad.stop();
 });
 
-var voice;
-var tuner;
 var rafId;
 var logPitch = function(){
 	console.log(tuner.pitch, tuner.noteName);
 	rafId = requestAnimationFrame(logPitch);
 };
 document.getElementById('mic-consent').addEventListener('click', function(){
-	voice = new Wad({
+	window.voice = new Wad({
 		source  : 'mic',
 		// reverb  : {
 		//     wet : .4
@@ -176,7 +174,9 @@ document.getElementById('mic-consent').addEventListener('click', function(){
 		// panning : -.2
 	});
 
-	tuner = new Wad.Poly();
+	window.tuner = new Wad.Poly({
+		recorder: {},
+	});
 	// tuner.setVolume(0) // mute the tuner to avoid feedback
 	tuner.add(voice);
 
@@ -190,6 +190,14 @@ document.getElementById('mic-play').addEventListener('click', function(){
 document.getElementById('mic-stop').addEventListener('click', function(){
 	console.log('Stop mic');
 	voice.stop();
+});
+document.getElementById('mic-record').addEventListener('click', function(){
+	console.log('record mic');
+	tuner.recorder.start();
+});
+document.getElementById('mic-record-stop').addEventListener('click', function(){
+	console.log('stop recording mic');
+	tuner.recorder.stop();
 });
 document.getElementById('detect-pitch').addEventListener('click', function(){
 	tuner.updatePitch();

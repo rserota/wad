@@ -426,8 +426,8 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.convolver.input);
         this.convolver.output.connect(this.makeupNode);
         this.makeupNode.connect(this.output);
-
-        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain.value);
+        //don't use makeupGain setter at init to avoid smoothing
+        this.makeupNode.gain.value = initValue(properties.makeupGain, this.defaults.makeupGain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Cabinet.prototype = Object.create(Super, {
@@ -619,7 +619,13 @@ return /******/ (function(modules) { // webpackBootstrap
         this.makeupNode.connect(this.output);
 
         this.automakeup = initValue(properties.automakeup, this.defaults.automakeup.value);
-        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain.value);
+
+        //don't use makeupGain setter at initialization to avoid smoothing
+        if (this.automakeup) {
+            this.makeupNode.gain.value = dbToWAVolume(this.computeMakeup());
+        } else {
+            this.makeupNode.gain.value = dbToWAVolume(initValue(properties.makeupGain, this.defaults.makeupGain.value));
+        }
         this.threshold = initValue(properties.threshold, this.defaults.threshold.value);
         this.release = initValue(properties.release, this.defaults.release.value);
         this.attack = initValue(properties.attack, this.defaults.attack.value);
@@ -785,14 +791,15 @@ return /******/ (function(modules) { // webpackBootstrap
         this.wet.connect(this.output);
         this.dry.connect(this.output);
 
-        this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
-        this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
-        this.highCut = properties.highCut || this.defaults.highCut.value;
-        this.buffer = properties.impulse || "../impulses/ir_rev_short.wav";
-        this.lowCut = properties.lowCut || this.defaults.lowCut.value;
-        this.level = initValue(properties.level, this.defaults.level.value);
+        //don't use setters at init to avoid smoothing
+        this.dry.gain.value = initValue(properties.dryLevel, this.defaults.dryLevel.value);
+        this.wet.gain.value = initValue(properties.wetLevel, this.defaults.wetLevel.value);
+        this.filterHigh.frequency.value = properties.highCut || this.defaults.highCut.value;
+        this.filterLow.frequency.value = properties.lowCut || this.defaults.lowCut.value;
+        this.output.gain.value = initValue(properties.level, this.defaults.level.value);
         this.filterHigh.type = "lowpass";
         this.filterLow.type = "highpass";
+        this.buffer = properties.impulse || "../impulses/ir_rev_short.wav";
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Convolver.prototype = Object.create(Super, {
@@ -937,10 +944,11 @@ return /******/ (function(modules) { // webpackBootstrap
         this.dry.connect(this.output);
 
         this.delayTime = properties.delayTime || this.defaults.delayTime.value;
-        this.feedback = initValue(properties.feedback, this.defaults.feedback.value);
-        this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
-        this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
-        this.cutoff = properties.cutoff || this.defaults.cutoff.value;
+        //don't use setters at init to avoid smoothing
+        this.feedbackNode.gain.value = initValue(properties.feedback, this.defaults.feedback.value);
+        this.wet.gain.value = initValue(properties.wetLevel, this.defaults.wetLevel.value);
+        this.dry.gain.value = initValue(properties.dryLevel, this.defaults.dryLevel.value);
+        this.filter.frequency.value = properties.cutoff || this.defaults.cutoff.value;
         this.filter.type = "lowpass";
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
@@ -1052,10 +1060,11 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.filter);
         this.filter.connect(this.output);
 
-        this.frequency = properties.frequency || this.defaults.frequency.value;
+        //don't use setters for freq and gain at init to avoid smoothing
+        this.filter.frequency.value = properties.frequency || this.defaults.frequency.value;
         this.Q = properties.resonance || this.defaults.Q.value;
         this.filterType = initValue(properties.filterType, this.defaults.filterType.value);
-        this.gain = initValue(properties.gain, this.defaults.gain.value);
+        this.filter.gain.value = initValue(properties.gain, this.defaults.gain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Filter.prototype = Object.create(Super, {
@@ -1149,7 +1158,8 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.gainNode);
         this.gainNode.connect(this.output);
 
-        this.gain = initValue(properties.gain, this.defaults.gain.value);
+        //don't use setter at init to avoid smoothing
+        this.gainNode.gain.value = initValue(properties.gain, this.defaults.gain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Gain.prototype = Object.create(Super, {
@@ -2489,12 +2499,12 @@ class AudioListener{
 /*!***********************!*\
   !*** ./src/common.js ***!
   \***********************/
-/*! exports provided: logStuff, logMessage, context, noiseBuffer, isArray, valueOrDefault, constructEnv, constructFilter, requestAudioFile, constructVibrato, constructTremolo, constructReverb, constructPanning, constructDelay, constructCompressor, getConsent, permissionsGranted, setUpMic, setUpPanningOnPlay, setUpVibratoOnPlay, setUpTremoloOnPlay, setUpDelayOnPlay, setUpTunaOnPlay, plugEmIn, setUpEnvOnPlay, setUpFilterOnPlay, setUpReverbOnPlay, filterEnv, playEnv, setUpOscillator, createFilters */
+/*! exports provided: logStats, logMessage, context, noiseBuffer, isArray, valueOrDefault, constructEnv, constructFilter, requestAudioFile, constructVibrato, constructTremolo, constructReverb, constructPanning, constructDelay, constructCompressor, getConsent, permissionsGranted, setUpMic, setUpPanningOnPlay, setUpVibratoOnPlay, setUpTremoloOnPlay, setUpDelayOnPlay, setUpTunaOnPlay, plugEmIn, setUpEnvOnPlay, setUpFilterOnPlay, setUpReverbOnPlay, filterEnv, playEnv, setUpOscillator, createFilters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logStuff", function() { return logStuff; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logStats", function() { return logStats; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logMessage", function() { return logMessage; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "context", function() { return context; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "noiseBuffer", function() { return noiseBuffer; });
@@ -2536,17 +2546,17 @@ __webpack_require__.r(__webpack_exports__);
 
 let audioContext = window.AudioContext || window.webkitAudioContext;
 
-let logStuff = {
+let logStats = {
 	verbosity: 0,
 	suppressedLogs: 0
 };
 
 let logMessage = function(message, logLevel){
 	logLevel = logLevel || 1;
-	if ( logStuff.verbosity >= logLevel ) {
+	if ( logStats.verbosity >= logLevel ) {
 		console.log(message);
 	} 
-	else { logStuff.suppressedLogs++; }
+	else { logStats.suppressedLogs++; }
 };
     
 let aScene = document.querySelector('a-scene');
@@ -2568,12 +2578,12 @@ let unlock = function(){
 	else if ( context.state === 'running' ) {
 		logMessage('The audio context is running.', 2);
 		logMessage(context, 2);
-		window.removeEventListener('mousemove', unlock);
+		window.removeEventListener('click', unlock);
 		window.removeEventListener('touchstart', unlock);
 		window.removeEventListener('touchend', unlock);
 	}
 };
-window.addEventListener('mousemove', unlock);
+window.addEventListener('click', unlock);
 window.addEventListener('touchstart', unlock);
 window.addEventListener('touchend', unlock);
 // create a wrapper for old versions of `getUserMedia`
@@ -3187,7 +3197,7 @@ Wad.assignMidiMap = _midi__WEBPACK_IMPORTED_MODULE_4__["assignMidiMap"];
 Wad.midiInstrument = _midi__WEBPACK_IMPORTED_MODULE_4__["midiInstrument"];
 Wad.midiInputs = _midi__WEBPACK_IMPORTED_MODULE_4__["midiInputs"];
 Wad.presets = _presets__WEBPACK_IMPORTED_MODULE_2__["default"];
-Wad.logs = _common__WEBPACK_IMPORTED_MODULE_6__["logStuff"];
+Wad.logs = _common__WEBPACK_IMPORTED_MODULE_6__["logStats"];
 
 
 if( true && module.exports) { module.exports = Wad; }
@@ -3290,22 +3300,7 @@ let onErrorCallback = function(err){
 	if ( navigator && navigator.requestMIDIAccess ) {
 		try {
 			let midiAccess = await navigator.requestMIDIAccess();
-			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('MIDI Access: ', 2);
-			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])(midiAccess, 2);
-			var val = midiAccess.inputs.values();
-			for ( var o = val.next(); !o.done; o = val.next() ) {
-				midiInputs.push(o.value);
-			}
-			// Wad.midiInputs = [m.inputs.values().next().value];   // inputs = array of MIDIPorts
-			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('MIDI inputs: ');
-			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])(midiInputs);
-			// var outputs = m.outputs(); // outputs = array of MIDIPorts
-			for ( var i = 0; i < midiInputs.length; i++ ) {
-				midiInputs[i].onmidimessage = midiMap; // onmidimessage( event ), event.data & event.receivedTime are populated
-			}
-			// var o = m.outputs()[0];           // grab first output device
-			// o.send( [ 0x90, 0x45, 0x7f ] );     // full velocity note on A4 on channel zero
-			// o.send( [ 0x80, 0x45, 0x7f ], window.performance.now() + 1000 );  // full velocity A4 note off in one second.
+			onSuccessCallback(midiAccess);
 		}
 		catch(err) {
 			onErrorCallback();
@@ -3631,13 +3626,13 @@ let centsOffFromPitch = function( frequency, note ) {
 
 
 let autoCorrelate = function( buf, sampleRate ) {
-	var MIN_SAMPLES = 4;    // corresponds to an 11kHz signal
-	var MAX_SAMPLES = 1000; // corresponds to a 44Hz signal
-	var SIZE = 1000;
-	var best_offset = -1;
-	var best_correlation = 0;
-	var rms = 0;
-	var foundGoodCorrelation = false;
+	let MIN_SAMPLES = 4;    // corresponds to an 11kHz signal
+	let MAX_SAMPLES = 1000; // corresponds to a 44Hz signal
+	let SIZE = 1000;
+	let best_offset = -1;
+	let best_correlation = 0;
+	let rms = 0;
+	let foundGoodCorrelation = false;
 
 	if (buf.length < (SIZE + MAX_SAMPLES - MIN_SAMPLES))
 		return -1;  // Not enough data
@@ -3653,7 +3648,7 @@ let autoCorrelate = function( buf, sampleRate ) {
 
 	let lastCorrelation=1;
 	for (let offset = MIN_SAMPLES; offset <= MAX_SAMPLES; offset++) {
-		var correlation = 0;
+		let correlation = 0;
 
 		for (let i=0; i<SIZE; i++) {
 			correlation += Math.abs(((buf[i] - 128)/128)-((buf[i+offset] - 128)/128));
@@ -3706,7 +3701,7 @@ let volumeAudioProcess = function( event ) {
 
 
 function createAudioMeter(audioContext,clipLevel,averaging,clipLag) {
-	var processor = audioContext.createScriptProcessor(512);
+	let processor = audioContext.createScriptProcessor(512);
 	processor.onaudioprocess = volumeAudioProcess;
 	processor.clipping = false;
 	processor.lastClip = 0;
@@ -3742,7 +3737,7 @@ let constructRecorder = function(thatWad,arg){
 	thatWad.recorder = {};
 	thatWad.recorder.mediaStreamDestination = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createMediaStreamDestination();
 	thatWad.output.connect(thatWad.recorder.mediaStreamDestination);
-	thatWad.recorder.mediaRecorder = new MediaRecorder(thatWad.recorder.mediaStreamDestination.stream, {
+	thatWad.recorder.mediaRecorder = new MediaRecorder(thatWad.recorder.mediaStreamDestination.stream, arg.recorder.options || {
 		//audioBitsPerSecond : 128000,
 		mimeType : 'audio/webm'
 	});
@@ -3752,13 +3747,16 @@ let constructRecorder = function(thatWad,arg){
 		thatWad.recorder.chunks.push(evt.data);
 	};
 
-	thatWad.recorder.mediaRecorder.onstop = function(evt) {
+	thatWad.recorder.mediaRecorder.onstop = arg.recorder.onstop || function(evt) {
 		// Make blob out of our blobs, and open it.
-		// todo - parameterize blob args, codecs etc
-		var blob = new Blob(thatWad.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
-		//var blob = new Blob(thatWad.recorder.chunks, { 'type' : 'audio/' });
+		let blob = new Blob(thatWad.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
 		window.open(URL.createObjectURL(blob));
 	};
+
+	// add some aliases to make the API a bit simpler
+	for ( let method of ['start', 'stop', 'pause', 'resume' , 'requestData'] ) {
+		thatWad.recorder[method] = thatWad.recorder.mediaRecorder[method].bind(thatWad.recorder.mediaRecorder)
+	}
 };
 
 const Polywad = function(arg){
@@ -3818,12 +3816,12 @@ Polywad.prototype.setUp = function(arg){ // Anything that needs to happen before
 
 Polywad.prototype.updatePitch = function( time ) {
 	this.input.getByteTimeDomainData( buf );
-	var ac = autoCorrelate( buf, _common__WEBPACK_IMPORTED_MODULE_0__["context"].sampleRate );
+	let ac = autoCorrelate( buf, _common__WEBPACK_IMPORTED_MODULE_0__["context"].sampleRate );
 
 	if ( ac !== -1 && ac !== 11025 && ac !== 12000 ) {
-		var pitch = ac;
+		let pitch = ac;
 		this.pitch = Math.floor( pitch ) ;
-		var note = noteFromPitch( pitch );
+		let note = noteFromPitch( pitch );
 		this.noteName = _pitches__WEBPACK_IMPORTED_MODULE_1__["pitchesArray"][note - 12];
 		// Detune doesn't seem to work.
 		// var detune = centsOffFromPitch( pitch, note );
@@ -3834,7 +3832,7 @@ Polywad.prototype.updatePitch = function( time ) {
 		//     this.detuneEstimate = detune
 		// }
 	}
-	var that = this;
+	let that = this;
 	that.rafID = window.requestAnimationFrame( function(){ that.updatePitch(); } );
 };
 
@@ -3896,7 +3894,7 @@ Polywad.prototype.play = function(arg){
 
 Polywad.prototype.stop = function(arg){
 	if ( this.isSetUp ) {
-		for ( var i = 0; i < this.wads.length; i++ ) {
+		for ( let i = 0; i < this.wads.length; i++ ) {
 			this.wads[i].stop(arg);
 		}
 	}
@@ -3921,7 +3919,7 @@ Polywad.prototype.add = function(wad){
 
 Polywad.prototype.remove = function(wad){
 	if ( this.isSetUp ) {
-		for ( var i = 0; i < this.wads.length; i++ ) {
+		for ( let i = 0; i < this.wads.length; i++ ) {
 			if ( this.wads[i] === wad ) {
 				this.wads[i].destination = _common__WEBPACK_IMPORTED_MODULE_0__["context"].destination;
 				this.wads.splice(i,1);

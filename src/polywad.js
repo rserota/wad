@@ -164,6 +164,11 @@ let constructRecorder = function(thatWad,arg){
 		let blob = new Blob(thatWad.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
 		window.open(URL.createObjectURL(blob));
 	};
+
+	// add some aliases to make the API a bit simpler
+	for ( let method of ['start', 'stop', 'pause', 'resume' , 'requestData'] ) {
+		thatWad.recorder[method] = thatWad.recorder.mediaRecorder[method].bind(thatWad.recorder.mediaRecorder)
+	}
 };
 
 const Polywad = function(arg){

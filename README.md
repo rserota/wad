@@ -1,4 +1,4 @@
-# WadJS
+# WadJS ![npm](https://img.shields.io/npm/v/web-audio-daw) <a href="https://www.npmjs.com/package/web-audio-daw"><img alt="npm" src="https://img.shields.io/npm/dw/web-audio-daw"></a> 
 #### A Javascript library for manipulating audio. It's like jQuery for your ears. 
 
 ![Wad Logo](/logo.png?raw=true)
@@ -37,15 +37,15 @@
 
 ## Installation
 
-To use Wad.js in your project, simply include the script in your HTML file.
+To use WadJS in your project, simply include the script in your HTML file.
 ```html
-	<script src="https://unpkg.com/web-audio-daw"></script>
+<script src="https://unpkg.com/web-audio-daw"></script>
 ```
 
-Wad.js is also available as an npm module.
+WadJS is also available as an npm module.
 
 ```sh
-	npm install web-audio-daw
+npm install web-audio-daw
 ```
 
 ```javascript
@@ -76,7 +76,7 @@ The `Wad` constructor and the `play()` method both accept many optional argument
 
 
 ## Panning
-Wad.js supports two types of panning: stereo-panning, and 3d-panning. Stereo-panning works the same way panning works in most audio software. With stereo panning, you can specify the left/right balance of the sound using a number between 1 and -1. A value of 1 means the sound is panned hard-right, and a value of -1 means the sound is panned hard-left. 
+WadJS supports two types of panning: stereo-panning, and 3d-panning. Stereo-panning works the same way panning works in most audio software. With stereo panning, you can specify the left/right balance of the sound using a number between 1 and -1. A value of 1 means the sound is panned hard-right, and a value of -1 means the sound is panned hard-left. 
 
 With 3d-panning, you don't directly set the left/right stereo balance. Rather, the panning setting describes the distance of the sound source from the audio listener. Any time you would pass in a panning parameter (either to the constructor, the <code>play()</code> method, or the <code>setPanning()</code> method), you can pass it in as a three element array to specify the X, Y, and Z location of the sound. You can set the panning to arbitrarily high or low values, but it will make the sound very quiet, since it's very far away.
 When using 3d-panning, there are two different panning models that can be used. The HRTF panning model is higher quality, but the equalpower panning model is more performant. If not specified, the equalpower panning model is used. 
@@ -158,10 +158,10 @@ helloWorld.hello.play({env:{attack: .1, release:.02}})
 
 ## Logging
 
-Wad.js can log various warnings and notices to the console, but these are disabled by default. To view these messages in the console, you can increase Wad's verbosity.
+WadJS can log various warnings and notices to the console, but these are disabled by default. To view these messages in the console, you can increase Wad's verbosity.
 
 ```javascript
-Wad.logs.verbosity = 0 // Wad.js will print nothing to your console. This is the default setting. 
+Wad.logs.verbosity = 0 // WadJS will print nothing to your console. This is the default setting. 
 Wad.logs.verbosity = 1 // View some notices and warnings, e.g. audio context started, midi devices connected, etc. These logs should not print more than once.
 Wad.logs.verbosity = 2 // View all notices and warnings, including those from play() and stop(). These logs might print many times. 
 
@@ -189,7 +189,7 @@ iterator.remove(sound) // pass in the Wad instance you want to have removed from
 
 ## Tuna Effects
 
-Tuna, everyone's favorite Web Audio effects library, is included in Wad.js. This makes it super easy to add effects from Tuna to any Wad or PolyWad.
+Tuna, everyone's favorite Web Audio effects library, is included in WadJS. This makes it super easy to add effects from Tuna to any Wad or PolyWad.
 
 ```javascript
 let itBeTuna = new Wad({
@@ -217,7 +217,7 @@ For more information about the various Tuna effects and the arguments they take,
 
 ## Audio Listener
 
-Wad.js wraps the [AudioListener](<https://developer.mozilla.org/en-US/docs/Web/API/AudioListener>) to provide uniformity across browsers. The AudioListener is only useful when using 3D panning. You can use both the standard listener.positionX.value or the setPosition function to move the listener. The default position and orientation is: positionX=0, positionY=0, positionZ=0, forwardX=0, forwardY=0, forwardZ=-1, upX=0, upY=1, upZ=0.
+WadJS wraps the [AudioListener](<https://developer.mozilla.org/en-US/docs/Web/API/AudioListener>) to provide uniformity across browsers. The AudioListener is only useful when using 3D panning. You can use both the standard listener.positionX.value or the setPosition function to move the listener. The default position and orientation is: positionX=0, positionY=0, positionZ=0, forwardX=0, forwardY=0, forwardZ=-1, upX=0, upY=1, upZ=0.
 
 - Wad.listener.setPosition(x,y,z) -> setPosition moves the listener to the specified coordinates. Take note that the web audio API has X move left and right, y move up and down, and z move forward and back. So if one is moving around a flat environment, then x and z will want to be used, and not X and Y.
 - Wad.listener. setOrientation(forwardX, forwardY, forwardZ, upX, upY, upZ) -> This takes two [direction vectors.](<https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:vectors/x9e81a4f98389efdf:component-form/a/vector-magnitude-and-direction-review>) Neither vector's coordinates have units. The first vector is the direction the user's nose is facing. The second vector is the direction of the top of the listener's head.
@@ -273,7 +273,7 @@ Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
 
 ## Presets
 
-If you'd like to use a pre-configured Wad, check out the presets.  They should give you a better idea of the sorts of sounds that you can create with Wad.js.  For example, you can create a Wad using the preset 'hiHatClosed' like this:
+If you'd like to use a pre-configured Wad, check out the presets.  They should give you a better idea of the sorts of sounds that you can create with WadJS.  For example, you can create a Wad using the preset 'hiHatClosed' like this:
 
 ```javascript
 var hat = new Wad(Wad.presets.hiHatClosed);
@@ -436,13 +436,13 @@ tuner.stopUpdatingPitch(); // Stop calculating the pitch if you don't need to kn
 
 ## MIDI Input
 
-Wad.js can read MIDI data from MIDI instruments and controllers, and you can set handlers to respond to that data. When Wad.js initializes, it tries to automatically detect any connected MIDI devices, and creates a reference to it in the array <code>Wad.midiInputs</code>. To handle MIDI data, assign a MIDI handler function to a MIDI device's <code>onmidimessage</code> property.  By default, Wad is configured to log MIDI messages to the console, which should be sufficient if you are quickly testing your devices. If you want to quickly set up a MIDI keyboard to play a Wad, assign a Wad of your choice (or any object with <code>play()</code> and <code>stop()</code> methods) to <code>Wad.midiInstrument</code>.
+WadJS can read MIDI data from MIDI instruments and controllers, and you can set handlers to respond to that data. When WadJS initializes, it tries to automatically detect any connected MIDI devices, and creates a reference to it in the array <code>Wad.midiInputs</code>. To handle MIDI data, assign a MIDI handler function to a MIDI device's <code>onmidimessage</code> property.  By default, Wad is configured to log MIDI messages to the console, which should be sufficient if you are quickly testing your devices. If you want to quickly set up a MIDI keyboard to play a Wad, assign a Wad of your choice (or any object with <code>play()</code> and <code>stop()</code> methods) to <code>Wad.midiInstrument</code>.
 
 ```javascript
 Wad.midiInstrument = new Wad({source : 'sine'});
 ```
 
-If you want to get creative with how Wad.js handles MIDI data, I strongly encourage you to write your own MIDI handler functions. For example, note-on velocity (how hard you press a key when playing a note) usually modulates the volume of a note, but it might sound interesting if you configure note-on velocity to modulate the attack or filter frequency instead. 
+If you want to get creative with how WadJS handles MIDI data, I strongly encourage you to write your own MIDI handler functions. For example, note-on velocity (how hard you press a key when playing a note) usually modulates the volume of a note, but it might sound interesting if you configure note-on velocity to modulate the attack or filter frequency instead. 
 
 ```javascript
 var midiMap = function(event){
@@ -463,11 +463,11 @@ If you have multiple MIDI devices that you would like to use simultaneously, you
 
 ## Access to the Audio Context
 
-When Wad.js loads initially, it automatically creates an Audio Context. It shouldn't be necessary to access the Audio Context directly, but if you need it for some reason, it is exposed at <code>Wad.audioContext</code>. <span id="a-frame-integration">If you are using <a href="https://aframe.io/">A-Frame</a> in your application and Wad.js detects an `<a-scene>` element on the page, Wad.js will use A-Frame's Audio Context and Audio Listener, instead of creating its own.</span>
+When WadJS loads initially, it automatically creates an Audio Context. It shouldn't be necessary to access the Audio Context directly, but if you need it for some reason, it is exposed at <code>Wad.audioContext</code>. <span id="a-frame-integration">If you are using <a href="https://aframe.io/">A-Frame</a> in your application and WadJS detects an `<a-scene>` element on the page, WadJS will use A-Frame's Audio Context and Audio Listener, instead of creating its own.</span>
 
 ## Cross-Browser Compatibility
 
-WadJS works best in Chrome, decently in Safari for iOS, and it works poorly in Firefox. I have not tested it in any other browsers. I would greatly appreciate contributions to help Wad.js run optimally in any browser that supports Web Audio, especially mobile browsers.
+WadJS works best in Chrome, decently in Safari for iOS, and it works poorly in Firefox. I have not tested it in any other browsers. I would greatly appreciate contributions to help WadJS run optimally in any browser that supports Web Audio, especially mobile browsers.
 
 
 ## Acknowledgements

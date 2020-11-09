@@ -3838,10 +3838,11 @@ let constructRecorder = function(thatWad,arg){
 	};
 
 	thatWad.recorder.mediaRecorder.onstop = arg.recorder.onstop || function(evt) {
-		// Make blob out of our blobs, and open it.
-		let blob = new Blob(thatWad.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
+		// Make blob out of our chunks, and open it.
+		let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
 		window.open(URL.createObjectURL(blob));
 	};
+	thatWad.recorder.mediaRecorder.onstop = thatWad.recorder.mediaRecorder.onstop.bind(thatWad)
 
 	// add some aliases to make the API a bit simpler
 	for ( let method of ['start', 'stop', 'pause', 'resume' , 'requestData'] ) {
@@ -5001,7 +5002,12 @@ document.getElementById('mic-consent').addEventListener('click', function(){
 	});
 
 	window.tuner = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.Poly({
-		recorder: {},
+		recorder: {
+			onstop: function(){
+				let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
+				window.recordedAudio = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:URL.createObjectURL(blob)})
+			}
+		},
 	});
 	// tuner.setVolume(0) // mute the tuner to avoid feedback
 	tuner.add(voice);

@@ -175,7 +175,12 @@ document.getElementById('mic-consent').addEventListener('click', function(){
 	});
 
 	window.tuner = new Wad.Poly({
-		recorder: {},
+		recorder: {
+			onstop: function(){
+				let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
+				window.recordedAudio = new Wad({source:URL.createObjectURL(blob)})
+			}
+		},
 	});
 	// tuner.setVolume(0) // mute the tuner to avoid feedback
 	tuner.add(voice);

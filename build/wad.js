@@ -3748,10 +3748,11 @@ let constructRecorder = function(thatWad,arg){
 	};
 
 	thatWad.recorder.mediaRecorder.onstop = arg.recorder.onstop || function(evt) {
-		// Make blob out of our blobs, and open it.
-		let blob = new Blob(thatWad.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
+		// Make blob out of our chunks, and open it.
+		let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
 		window.open(URL.createObjectURL(blob));
 	};
+	thatWad.recorder.mediaRecorder.onstop = thatWad.recorder.mediaRecorder.onstop.bind(thatWad)
 
 	// add some aliases to make the API a bit simpler
 	for ( let method of ['start', 'stop', 'pause', 'resume' , 'requestData'] ) {

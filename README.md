@@ -22,6 +22,7 @@
 1. [Presets](#presets)
 1. [Polywads](#polywads)
 1. [Compression](#compression)
+1. [Recording](#recording)
 1. [Audio Meter](#audio-meter)
 1. [Pitch Detection](#pitch-detection)
 1. [MIDI Input](#midi-input)
@@ -30,6 +31,8 @@
 1. [Acknowledgements](#acknowledgements)
 1. [How to Contribute](#how-to-contribute)
 1. [API Documentation](#api-documentation)
+1. [Showcase](#showcase)
+
 
 
 ## Installation
@@ -326,6 +329,60 @@ var compressor = new Wad.Poly({
         threshold : -24  // The decibel value above which the compression will start taking effect. This parameter ranges from -100 to 0.
     }
 })
+```
+
+## Recording
+
+PolyWads can be created with a recorder, which can save the output of the PolyWad to an audio file. 
+
+```javascript
+    let voice = new Wad({source: 'mic'})
+    let polywad = new Wad.Poly({
+        recorder: {
+            options: { mimeType : 'audio/webm' },
+            onstop: function(event) {
+                let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
+                window.open(URL.createObjectURL(blob));
+            };
+        }
+    })
+    polywad.add(voice)
+    voice.play()
+    polywad.recorder.start()
+    // make some noise
+    polywad.recorder.stop() // a new window should open, where you can download the file you just created
+
+```
+
+The `options` that are specified above get passed directly into the `MediaRecorder` constructor. The `onstop` method that is specified above is used to handle the `onstop` event of the `MediaRecorder`. 
+Methods from the MediaRecorder (`start`, `stop`, `pause`, `resume`, `requestData`) have been aliased to `polywad.recorder` for convenience. The MediaRecorder itself can be accessed at `polywad.recorder.mediaRecorder`.
+Read more about these [here](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder). 
+The snippet above shows the default values for `options` and `onstop`, so that polywad could have been created simply like this:
+
+```javascript
+    let polywad = new Wad.Poly({ recorder: {} })
+```
+
+Alternatively, you can use the recorded audio as the source for a new Wad.
+
+```javascript
+    let recordings = [];
+    let voice = new Wad({source: 'mic'});
+    let polywad = new Wad.Poly({
+        recorder: {
+            options: { mimeType : 'audio/webm' },
+            onstop: function(event) {
+                let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
+                recordings.push(new Wad({source:URL.createObjectURL(blob)}))
+            };
+        }
+    });
+    polywad.add(voice);
+    voice.play();
+    polywad.recorder.start(); // make some noise
+    polywad.recorder.stop(); 
+    recordings[0].play()
+
 ```
 
 ## Audio Meter
@@ -637,6 +694,8 @@ Change the delay settings of a wad.
 | args.compressor.ratio | number  | 12 | The amount of dB change in input for a 1 dB change in output. This parameter ranges from 1 to 20. |                             |
 | args.compressor.release | number  | 0.25 | The amount of time (in seconds) to increase the gain by 10dB. This parameter ranges from 0 to 1. |                             |
 | args.compressor.threshold | number  | -24 | The decibel value above which the compression will start taking effect. This parameter ranges from -100 to 0. |                             |
+| args.recorder.options | object | ... | The options passed to the MediaRecorder constructor. |
+| args.recorder.onstop | function | ... | The callback used to handle the onstop event from the MediaRecorder.
 
 ### Wad.Poly.prototype.add(wad)
 
@@ -699,9 +758,10 @@ This method is used to set up a MIDI event handler.
 | failure | function | none | A callback function that runs after failing to set up the MIDI map. |
 
 
+## Showcase
 
+Here are some examples of music, games, and other projects that people have built with WadJS. 
+If you'd like your work to be featured here, feel free to send me a link, or just create a pull request. 
 
-
-
-
+Music by @Linsheng - https://lenshang.github.io/trigon.js/index.htm
 

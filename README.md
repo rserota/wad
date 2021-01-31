@@ -374,14 +374,14 @@ Alternatively, you can use the recorded audio as the source for a new Wad.
             onstop: function(event) {
                 let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
                 recordings.push(new Wad({source:URL.createObjectURL(blob)}))
-            };
+            }
         }
     });
     polywad.add(voice);
     voice.play();
     polywad.recorder.start(); // make some noise
     polywad.recorder.stop(); 
-    recordings[0].play()
+    recordings[0] && recordings[0].play()
 
 ```
 

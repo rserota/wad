@@ -279,6 +279,16 @@ Wad.prototype.setVolume = function(volume, timeConstant, label){
 	return this;
 };
 
+Wad.prototype.reverse = function(){
+	if ( this.decodedBuffer ) {
+		Array.prototype.reverse.call( this.decodedBuffer.getChannelData(0) );
+		Array.prototype.reverse.call( this.decodedBuffer.getChannelData(1) );
+	}
+	else {
+		logMessage("You tried to reverse something that isn't reversible")
+	}
+};
+
 /**
 Change the playback rate of a Wad during playback.
 inputSpeed is a value of 0 < speed, and is the rate of playback of the audio.

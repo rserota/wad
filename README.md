@@ -661,6 +661,10 @@ Change the volume of the reverb of a wad.
 
 Change the delay settings of a wad. 
 
+### Wad.prototype.reverse()
+
+Reverses a wad that uses an audio clip as its source.
+
 ### Wad.setVolume(volume)
 
 | Property | Type    | Default         | Description                      |

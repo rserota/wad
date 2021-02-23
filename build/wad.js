@@ -426,8 +426,8 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.convolver.input);
         this.convolver.output.connect(this.makeupNode);
         this.makeupNode.connect(this.output);
-        //don't use makeupGain setter at init to avoid smoothing
-        this.makeupNode.gain.value = initValue(properties.makeupGain, this.defaults.makeupGain.value);
+
+        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Cabinet.prototype = Object.create(Super, {
@@ -619,13 +619,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.makeupNode.connect(this.output);
 
         this.automakeup = initValue(properties.automakeup, this.defaults.automakeup.value);
-
-        //don't use makeupGain setter at initialization to avoid smoothing
-        if (this.automakeup) {
-            this.makeupNode.gain.value = dbToWAVolume(this.computeMakeup());
-        } else {
-            this.makeupNode.gain.value = dbToWAVolume(initValue(properties.makeupGain, this.defaults.makeupGain.value));
-        }
+        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain.value);
         this.threshold = initValue(properties.threshold, this.defaults.threshold.value);
         this.release = initValue(properties.release, this.defaults.release.value);
         this.attack = initValue(properties.attack, this.defaults.attack.value);
@@ -791,15 +785,14 @@ return /******/ (function(modules) { // webpackBootstrap
         this.wet.connect(this.output);
         this.dry.connect(this.output);
 
-        //don't use setters at init to avoid smoothing
-        this.dry.gain.value = initValue(properties.dryLevel, this.defaults.dryLevel.value);
-        this.wet.gain.value = initValue(properties.wetLevel, this.defaults.wetLevel.value);
-        this.filterHigh.frequency.value = properties.highCut || this.defaults.highCut.value;
-        this.filterLow.frequency.value = properties.lowCut || this.defaults.lowCut.value;
-        this.output.gain.value = initValue(properties.level, this.defaults.level.value);
+        this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
+        this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
+        this.highCut = properties.highCut || this.defaults.highCut.value;
+        this.buffer = properties.impulse || "../impulses/ir_rev_short.wav";
+        this.lowCut = properties.lowCut || this.defaults.lowCut.value;
+        this.level = initValue(properties.level, this.defaults.level.value);
         this.filterHigh.type = "lowpass";
         this.filterLow.type = "highpass";
-        this.buffer = properties.impulse || "../impulses/ir_rev_short.wav";
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Convolver.prototype = Object.create(Super, {
@@ -944,11 +937,10 @@ return /******/ (function(modules) { // webpackBootstrap
         this.dry.connect(this.output);
 
         this.delayTime = properties.delayTime || this.defaults.delayTime.value;
-        //don't use setters at init to avoid smoothing
-        this.feedbackNode.gain.value = initValue(properties.feedback, this.defaults.feedback.value);
-        this.wet.gain.value = initValue(properties.wetLevel, this.defaults.wetLevel.value);
-        this.dry.gain.value = initValue(properties.dryLevel, this.defaults.dryLevel.value);
-        this.filter.frequency.value = properties.cutoff || this.defaults.cutoff.value;
+        this.feedback = initValue(properties.feedback, this.defaults.feedback.value);
+        this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
+        this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
+        this.cutoff = properties.cutoff || this.defaults.cutoff.value;
         this.filter.type = "lowpass";
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
@@ -1060,11 +1052,10 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.filter);
         this.filter.connect(this.output);
 
-        //don't use setters for freq and gain at init to avoid smoothing
-        this.filter.frequency.value = properties.frequency || this.defaults.frequency.value;
+        this.frequency = properties.frequency || this.defaults.frequency.value;
         this.Q = properties.resonance || this.defaults.Q.value;
         this.filterType = initValue(properties.filterType, this.defaults.filterType.value);
-        this.filter.gain.value = initValue(properties.gain, this.defaults.gain.value);
+        this.gain = initValue(properties.gain, this.defaults.gain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Filter.prototype = Object.create(Super, {
@@ -1158,8 +1149,7 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.gainNode);
         this.gainNode.connect(this.output);
 
-        //don't use setter at init to avoid smoothing
-        this.gainNode.gain.value = initValue(properties.gain, this.defaults.gain.value);
+        this.gain = initValue(properties.gain, this.defaults.gain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Gain.prototype = Object.create(Super, {
@@ -4452,6 +4442,16 @@ Wad.prototype.setVolume = function(volume, timeConstant, label){
 		if ( this.gain.length > 0 ) { this.gain[0].gain.setValueAtTime(volume, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime); }
 	}
 	return this;
+};
+
+Wad.prototype.reverse = function(){
+	if ( this.decodedBuffer ) {
+		Array.prototype.reverse.call( this.decodedBuffer.getChannelData(0) );
+		Array.prototype.reverse.call( this.decodedBuffer.getChannelData(1) );
+	}
+	else {
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])("You tried to reverse something that isn't reversible")
+	}
 };
 
 /**

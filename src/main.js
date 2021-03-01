@@ -1,5 +1,6 @@
 import SoundIterator from './sound_iterator';
 import Polywad from './polywad';
+import Clock from './clock';
 import presets from './presets';
 import {
 	pitches,
@@ -17,6 +18,7 @@ import { logStats } from './common';
 
 let Wad = WebAudioDAW;
 Wad.Poly = Polywad;
+Wad.Clock = Clock;
 Wad.SoundIterator = function(args){ return new SoundIterator(args, Wad); };
 Wad.pitches = pitches;
 Wad.pitchesArray = pitchesArray;

@@ -1,6 +1,7 @@
 import Wad from '../../build/wad.js';
 window.Wad = Wad;
 
+
 Wad.logs.verbosity = 1;
 var ignition = new Wad({source:'./ignition.mp3'});
 document.getElementById('ignition').addEventListener('click', async function(){
@@ -343,4 +344,15 @@ document.getElementById('listener-orientation').addEventListener('click', functi
 });
 
 
+const buzz = new Wad({
+	source: 'noise',
+	env: {
+		attack:.04,
+		hold:.1,
+		release:.1,
+	}
+});
 
+document.getElementById('clock-start').addEventListener('click', function(){
+	alert('The listener is at: ' + JSON.stringify(listener.getOrientation()));
+});

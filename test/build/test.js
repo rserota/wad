@@ -2575,6 +2575,49 @@ class AudioListener{
 
 /***/ }),
 
+/***/ "./src/clock.js":
+/*!**********************!*\
+  !*** ./src/clock.js ***!
+  \**********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Clock; });
+
+class Clock {
+	constructor(beatLength, beatsPerLoop){
+		this.hooks = [];
+		this.rafId = null;
+		this.curBeat = null;
+		this.beatLength = beatLength;
+		this.beatsPerLoop = beatsPerLoop;
+
+	}
+	startUpdate(){
+		this.rafId = requestAnimationFrame(this.update.bind(this));
+	}
+	update(){
+		const beat = Math.floor(performance.now() / this.beatLength);
+		const beatInBar = (beat % this.beatsPerLoop)+1;
+		if ( beat != this.curBeat ) {
+			this.curBeat = beat;
+			for ( let hook of Object.values(this.hooks) ){
+				if ( typeof hook === 'function' ) {
+					hook({beat, beatInBar});
+				}
+			}
+		}
+
+		this.rafId = requestAnimationFrame(this.update.bind(this));
+	}
+
+}
+
+
+/***/ }),
+
 /***/ "./src/common.js":
 /*!***********************!*\
   !*** ./src/common.js ***!
@@ -3253,11 +3296,12 @@ let setUpTunaOnPlay = function(that, arg){
 __webpack_require__.r(__webpack_exports__);
 /* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var _sound_iterator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./sound_iterator */ "./src/sound_iterator.js");
 /* harmony import */ var _polywad__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./polywad */ "./src/polywad.js");
-/* harmony import */ var _presets__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./presets */ "./src/presets.js");
-/* harmony import */ var _pitches__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./pitches */ "./src/pitches.js");
-/* harmony import */ var _midi__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./midi */ "./src/midi.js");
-/* harmony import */ var _wad_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./wad.js */ "./src/wad.js");
-/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./common */ "./src/common.js");
+/* harmony import */ var _clock__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./clock */ "./src/clock.js");
+/* harmony import */ var _presets__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./presets */ "./src/presets.js");
+/* harmony import */ var _pitches__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./pitches */ "./src/pitches.js");
+/* harmony import */ var _midi__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./midi */ "./src/midi.js");
+/* harmony import */ var _wad_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./wad.js */ "./src/wad.js");
+/* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./common */ "./src/common.js");
 
 
 
@@ -3267,17 +3311,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-let Wad = _wad_js__WEBPACK_IMPORTED_MODULE_5__["default"];
+
+let Wad = _wad_js__WEBPACK_IMPORTED_MODULE_6__["default"];
 Wad.Poly = _polywad__WEBPACK_IMPORTED_MODULE_1__["default"];
+Wad.Clock = _clock__WEBPACK_IMPORTED_MODULE_2__["default"];
 Wad.SoundIterator = function(args){ return new _sound_iterator__WEBPACK_IMPORTED_MODULE_0__["default"](args, Wad); };
-Wad.pitches = _pitches__WEBPACK_IMPORTED_MODULE_3__["pitches"];
-Wad.pitchesArray = _pitches__WEBPACK_IMPORTED_MODULE_3__["pitchesArray"];
-Wad.midiMap = _midi__WEBPACK_IMPORTED_MODULE_4__["midiMap"];
-Wad.assignMidiMap = _midi__WEBPACK_IMPORTED_MODULE_4__["assignMidiMap"];
-Wad.midiInstrument = _midi__WEBPACK_IMPORTED_MODULE_4__["midiInstrument"];
-Wad.midiInputs = _midi__WEBPACK_IMPORTED_MODULE_4__["midiInputs"];
-Wad.presets = _presets__WEBPACK_IMPORTED_MODULE_2__["default"];
-Wad.logs = _common__WEBPACK_IMPORTED_MODULE_6__["logStats"];
+Wad.pitches = _pitches__WEBPACK_IMPORTED_MODULE_4__["pitches"];
+Wad.pitchesArray = _pitches__WEBPACK_IMPORTED_MODULE_4__["pitchesArray"];
+Wad.midiMap = _midi__WEBPACK_IMPORTED_MODULE_5__["midiMap"];
+Wad.assignMidiMap = _midi__WEBPACK_IMPORTED_MODULE_5__["assignMidiMap"];
+Wad.midiInstrument = _midi__WEBPACK_IMPORTED_MODULE_5__["midiInstrument"];
+Wad.midiInputs = _midi__WEBPACK_IMPORTED_MODULE_5__["midiInputs"];
+Wad.presets = _presets__WEBPACK_IMPORTED_MODULE_3__["default"];
+Wad.logs = _common__WEBPACK_IMPORTED_MODULE_7__["logStats"];
 
 
 if(  true && module.exports) { module.exports = Wad; }
@@ -4827,6 +4873,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_build_wad_js__WEBPACK_IMPORTED_MODULE_0__);
 
 window.Wad = _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a;
+
+window.buzz = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({
+	source: 'noise',
+	env: {
+		attack:.05,
+		hold:.1,
+		release:.2,
+	}
+});
 
 _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.logs.verbosity = 1;
 var ignition = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'./ignition.mp3'});

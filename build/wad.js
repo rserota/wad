@@ -2505,8 +2505,11 @@ class Clock {
 		this.beatsPerLoop = beatsPerLoop;
 
 	}
-	startUpdate(){
+	start(){
 		this.rafId = requestAnimationFrame(this.update.bind(this));
+	}
+	stop(){
+		cancelAnimationFrame(this.rafId);
 	}
 	update(){
 		const beat = Math.floor(performance.now() / this.beatLength);

@@ -344,15 +344,56 @@ document.getElementById('listener-orientation').addEventListener('click', functi
 });
 
 
-const buzz = new Wad({
-	source: 'noise',
-	env: {
-		attack:.04,
-		hold:.1,
-		release:.1,
-	}
+const closedHat = new Wad({
+	source: 'hatClosed.wav',
+});
+const openHat = new Wad({
+	source:'/hatOpen.wav'
+});
+const kick = new Wad({
+	source:'/kick.mp3'
+});
+const openHatBeats = [2,4,6,8,10,12,14,16];
+const kickBeats = [1,3,5,7,9,11,13,15];
+const closedHatBeats = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+
+const clock = new Wad.Clock(600, 16);
+document.getElementById('start-clock').addEventListener('click', function(){
+	console.log('clock?' , clock)
+	clock.start();
+});
+document.getElementById('stop-clock').addEventListener('click', function(){
+	clock.stop();
+});
+document.getElementById('toggle-pattern-a').addEventListener('click', function(){
+	clock.hooks.closedHat = clock.hooks.closedHat
+		? null
+		: (args)=>{
+			if ( closedHatBeats.includes(args.beatInBar) ) {
+				closedHat.play();
+			}
+		};
+});
+document.getElementById('toggle-pattern-b').addEventListener('click', function(){
+	clock.hooks.openHat = clock.hooks.openHat
+		? null
+		: (args)=>{
+			if ( openHatBeats.includes(args.beatInBar) ) {
+				openHat.play();
+			}
+		};
+});
+document.getElementById('toggle-pattern-c').addEventListener('click', function(){
+	clock.hooks.kick = clock.hooks.kick
+		? null
+		: (args)=>{
+			if ( kickBeats.includes(args.beatInBar) ) {
+				kick.play();
+			}
+		};
 });
 
-document.getElementById('clock-start').addEventListener('click', function(){
-	alert('The listener is at: ' + JSON.stringify(listener.getOrientation()));
-});
+
+
+
+

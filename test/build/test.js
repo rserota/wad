@@ -2595,8 +2595,11 @@ class Clock {
 		this.beatsPerLoop = beatsPerLoop;
 
 	}
-	startUpdate(){
+	start(){
 		this.rafId = requestAnimationFrame(this.update.bind(this));
+	}
+	stop(){
+		cancelAnimationFrame(this.rafId);
 	}
 	update(){
 		const beat = Math.floor(performance.now() / this.beatLength);
@@ -4874,14 +4877,6 @@ __webpack_require__.r(__webpack_exports__);
 
 window.Wad = _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a;
 
-window.buzz = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({
-	source: 'noise',
-	env: {
-		attack:.05,
-		hold:.1,
-		release:.2,
-	}
-});
 
 _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.logs.verbosity = 1;
 var ignition = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'./ignition.mp3'});
@@ -5223,6 +5218,58 @@ document.getElementById('listener-face-right').addEventListener('click', functio
 document.getElementById('listener-orientation').addEventListener('click', function(){
 	alert('The listener is at: ' + JSON.stringify(listener.getOrientation()));
 });
+
+
+const closedHat = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({
+	source: 'hatClosed.wav',
+});
+const openHat = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({
+	source:'/hatOpen.wav'
+});
+const kick = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({
+	source:'/kick.mp3'
+});
+const openHatBeats = [2,4,6,8,10,12,14,16];
+const kickBeats = [1,3,5,7,9,11,13,15];
+const closedHatBeats = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16];
+
+const clock = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.Clock(600, 16);
+document.getElementById('start-clock').addEventListener('click', function(){
+	console.log('clock?' , clock)
+	clock.start();
+});
+document.getElementById('stop-clock').addEventListener('click', function(){
+	clock.stop();
+});
+document.getElementById('toggle-pattern-a').addEventListener('click', function(){
+	clock.hooks.closedHat = clock.hooks.closedHat
+		? null
+		: (args)=>{
+			if ( closedHatBeats.includes(args.beatInBar) ) {
+				closedHat.play();
+			}
+		};
+});
+document.getElementById('toggle-pattern-b').addEventListener('click', function(){
+	clock.hooks.openHat = clock.hooks.openHat
+		? null
+		: (args)=>{
+			if ( openHatBeats.includes(args.beatInBar) ) {
+				openHat.play();
+			}
+		};
+});
+document.getElementById('toggle-pattern-c').addEventListener('click', function(){
+	clock.hooks.kick = clock.hooks.kick
+		? null
+		: (args)=>{
+			if ( kickBeats.includes(args.beatInBar) ) {
+				kick.play();
+			}
+		};
+});
+
+
 
 
 

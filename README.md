@@ -26,6 +26,7 @@
 1. [Audio Meter](#audio-meter)
 1. [Pitch Detection](#pitch-detection)
 1. [MIDI Input](#midi-input)
+1. [Clocks](#clocks)
 1. [Access to the Audio Context](#access-to-the-audio-context)
 1. [Cross-browser Compatibility](#cross-browser-compatibility)
 1. [Acknowledgements](#acknowledgements)
@@ -460,6 +461,10 @@ If you have multiple MIDI devices that you would like to use simultaneously, you
 ```
 
 `Wad.assignMidiMap` can also accept success and failure callbacks as its third and fourth arguments, to handle cases where the MIDI device you are trying to assign to cannot be found. 
+
+## Clocks
+
+A clock is a simple utility that helps 
 
 ## Access to the Audio Context
 

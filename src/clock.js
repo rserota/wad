@@ -6,9 +6,11 @@ export default class Clock {
 		this.curBeat = null;
 		this.beatLength = beatLength;
 		this.beatsPerLoop = beatsPerLoop;
+		this.startTime = 0;
 
 	}
 	start(){
+		this.startTime = performance.now()
 		this.rafId = requestAnimationFrame(this.update.bind(this));
 	}
 	stop(){

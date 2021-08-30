@@ -426,8 +426,8 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.convolver.input);
         this.convolver.output.connect(this.makeupNode);
         this.makeupNode.connect(this.output);
-
-        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain.value);
+        //don't use makeupGain setter at init to avoid smoothing
+        this.makeupNode.gain.value = initValue(properties.makeupGain, this.defaults.makeupGain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Cabinet.prototype = Object.create(Super, {
@@ -619,7 +619,13 @@ return /******/ (function(modules) { // webpackBootstrap
         this.makeupNode.connect(this.output);
 
         this.automakeup = initValue(properties.automakeup, this.defaults.automakeup.value);
-        this.makeupGain = initValue(properties.makeupGain, this.defaults.makeupGain.value);
+
+        //don't use makeupGain setter at initialization to avoid smoothing
+        if (this.automakeup) {
+            this.makeupNode.gain.value = dbToWAVolume(this.computeMakeup());
+        } else {
+            this.makeupNode.gain.value = dbToWAVolume(initValue(properties.makeupGain, this.defaults.makeupGain.value));
+        }
         this.threshold = initValue(properties.threshold, this.defaults.threshold.value);
         this.release = initValue(properties.release, this.defaults.release.value);
         this.attack = initValue(properties.attack, this.defaults.attack.value);
@@ -785,14 +791,15 @@ return /******/ (function(modules) { // webpackBootstrap
         this.wet.connect(this.output);
         this.dry.connect(this.output);
 
-        this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
-        this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
-        this.highCut = properties.highCut || this.defaults.highCut.value;
-        this.buffer = properties.impulse || "../impulses/ir_rev_short.wav";
-        this.lowCut = properties.lowCut || this.defaults.lowCut.value;
-        this.level = initValue(properties.level, this.defaults.level.value);
+        //don't use setters at init to avoid smoothing
+        this.dry.gain.value = initValue(properties.dryLevel, this.defaults.dryLevel.value);
+        this.wet.gain.value = initValue(properties.wetLevel, this.defaults.wetLevel.value);
+        this.filterHigh.frequency.value = properties.highCut || this.defaults.highCut.value;
+        this.filterLow.frequency.value = properties.lowCut || this.defaults.lowCut.value;
+        this.output.gain.value = initValue(properties.level, this.defaults.level.value);
         this.filterHigh.type = "lowpass";
         this.filterLow.type = "highpass";
+        this.buffer = properties.impulse || "../impulses/ir_rev_short.wav";
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Convolver.prototype = Object.create(Super, {
@@ -937,10 +944,11 @@ return /******/ (function(modules) { // webpackBootstrap
         this.dry.connect(this.output);
 
         this.delayTime = properties.delayTime || this.defaults.delayTime.value;
-        this.feedback = initValue(properties.feedback, this.defaults.feedback.value);
-        this.wetLevel = initValue(properties.wetLevel, this.defaults.wetLevel.value);
-        this.dryLevel = initValue(properties.dryLevel, this.defaults.dryLevel.value);
-        this.cutoff = properties.cutoff || this.defaults.cutoff.value;
+        //don't use setters at init to avoid smoothing
+        this.feedbackNode.gain.value = initValue(properties.feedback, this.defaults.feedback.value);
+        this.wet.gain.value = initValue(properties.wetLevel, this.defaults.wetLevel.value);
+        this.dry.gain.value = initValue(properties.dryLevel, this.defaults.dryLevel.value);
+        this.filter.frequency.value = properties.cutoff || this.defaults.cutoff.value;
         this.filter.type = "lowpass";
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
@@ -1052,10 +1060,11 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.filter);
         this.filter.connect(this.output);
 
-        this.frequency = properties.frequency || this.defaults.frequency.value;
+        //don't use setters for freq and gain at init to avoid smoothing
+        this.filter.frequency.value = properties.frequency || this.defaults.frequency.value;
         this.Q = properties.resonance || this.defaults.Q.value;
         this.filterType = initValue(properties.filterType, this.defaults.filterType.value);
-        this.gain = initValue(properties.gain, this.defaults.gain.value);
+        this.filter.gain.value = initValue(properties.gain, this.defaults.gain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Filter.prototype = Object.create(Super, {
@@ -1149,7 +1158,8 @@ return /******/ (function(modules) { // webpackBootstrap
         this.activateNode.connect(this.gainNode);
         this.gainNode.connect(this.output);
 
-        this.gain = initValue(properties.gain, this.defaults.gain.value);
+        //don't use setter at init to avoid smoothing
+        this.gainNode.gain.value = initValue(properties.gain, this.defaults.gain.value);
         this.bypass = properties.bypass || this.defaults.bypass.value;
     };
     Tuna.prototype.Gain.prototype = Object.create(Super, {
@@ -2004,6 +2014,7 @@ return /******/ (function(modules) { // webpackBootstrap
             }
         },
         filterFreqTimeout: {
+            writable: true,
             value: 0
         },
         setFilterFreq: {
@@ -2068,7 +2079,7 @@ return /******/ (function(modules) { // webpackBootstrap
             },
             set: function(value) {
                 this._resonance = value;
-                this.filterPeaking.Q = this._resonance;
+                this.filterPeaking.Q.value = this._resonance;
             }
         },
         init: {
@@ -2633,22 +2644,14 @@ let valueOrDefault = function(value, def) {
 };
 
 /** Set up the default ADSR envelope. **/
-let constructEnv = function(that, arg){
-	that.env = { //default envelope, if one is not specified on play
+let constructEnv = function(arg){
+	return { //default envelope, if one is not specified on play
 		attack  : arg.env ? valueOrDefault(arg.env.attack,  0) : 0,    // time in seconds from onset to peak volume
 		decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
 		sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
 		hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14159) : 3.14159, // time in seconds to maintain sustain volume
 		release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
 	};
-	that.defaultEnv = {
-		attack  : arg.env ? valueOrDefault(arg.env.attack,  0) : 0,    // time in seconds from onset to peak volume
-		decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
-		sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
-		hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14159) : 3.14159, // time in seconds to maintain sustain volume
-		release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
-	};
-	that.userSetHold = !!(arg.env && arg.env.hold);
 };
 /////////////////////////////////////////
 
@@ -2937,7 +2940,7 @@ let setUpOscillator = function(that, arg){
 ///////////////////////////////////////////////////
 
 /** Set the ADSR volume envelope according to play() arguments, or revert to defaults **/
-let setUpEnvOnPlay = function(that, arg){
+let setUpEnvOnPlay = function(that, arg){ //_
 	if ( arg && arg.env ) {
 		that.env.attack  = valueOrDefault(arg.env.attack, that.defaultEnv.attack);
 		that.env.decay   = valueOrDefault(arg.env.decay, that.defaultEnv.decay);
@@ -3187,6 +3190,7 @@ Wad.assignMidiMap = _midi__WEBPACK_IMPORTED_MODULE_4__["assignMidiMap"];
 Wad.midiInstrument = _midi__WEBPACK_IMPORTED_MODULE_4__["midiInstrument"];
 Wad.midiInputs = _midi__WEBPACK_IMPORTED_MODULE_4__["midiInputs"];
 Wad.presets = _presets__WEBPACK_IMPORTED_MODULE_2__["default"];
+Wad.common = _common__WEBPACK_IMPORTED_MODULE_6__;
 Wad.logs = _common__WEBPACK_IMPORTED_MODULE_6__["logStats"];
 
 
@@ -4211,7 +4215,10 @@ let Wad = function(arg){
 	this.tuna          = arg.tuna   || null;
 	this.rate          = arg.rate   || 1;
 	this.sprite        = arg.sprite || null;
-	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructEnv"])(this, arg);
+
+	this.env = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructEnv"])(arg);
+	this.defaultEnv = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructEnv"])(arg);
+	this.userSetHold = !!(arg.env && arg.env.hold); //_
 	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructFilter"])(this, arg);
 	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructVibrato"])(this, arg);
 	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructTremolo"])(this, arg);
@@ -4220,21 +4227,18 @@ let Wad = function(arg){
 	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructPanning"])(this, arg);
 	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructDelay"])(this, arg);
 	this.duration = (this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(this.rate)) * 1000;
-	////////////////////////////////
 
 
 	/** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
 	if ( this.source === 'noise' ) {
 		this.decodedBuffer = _common__WEBPACK_IMPORTED_MODULE_2__["noiseBuffer"];
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 	/** If the Wad's source is the microphone, the rest of the setup happens here. **/
 	else if ( this.source === 'mic' ) {
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["getConsent"])(this, arg);
 	}
-	//////////////////////////////////////////////////////////////////////////////////
 
 
 	/** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
@@ -4258,7 +4262,6 @@ let Wad = function(arg){
 			}
 		}
 	}
-	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	else { arg.callback && arg.callback(this); }
 	Wad.allWads.push(this);
 };
@@ -4421,8 +4424,6 @@ or defaults to the constructor argument if the filter and filter envelope are no
 	if ( arg.callback ) { arg.callback(this); }
 
 };
-
-//////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** Change the volume of a wad at any time, including during playback **/

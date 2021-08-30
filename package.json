@@ -9,7 +9,8 @@
 		"build-compressed": "webpack --config webpack.config.min.js",
 		"build-tests": "webpack --config webpack.config.test.js",
 		"watch": "./node_modules/watch/cli.js 'npm run build' .",
-		"lint": "./node_modules/eslint/bin/eslint.js --fix ./src"
+		"lint": "./node_modules/eslint/bin/eslint.js --fix ./src",
+		"test": "jasmine-browser-runner runSpecs"
 	},
 	"repository": {
 		"type": "git",
@@ -36,6 +37,7 @@
 		"webpack-cli": "^3.1.1"
 	},
 	"dependencies": {
+		"lodash": "^4.17.21",
 		"tunajs": "^1.0.8"
 	}
 }

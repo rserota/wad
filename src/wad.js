@@ -46,7 +46,10 @@ let Wad = function(arg){
 	this.tuna          = arg.tuna   || null;
 	this.rate          = arg.rate   || 1;
 	this.sprite        = arg.sprite || null;
-	constructEnv(this, arg);
+
+	this.env = constructEnv(arg);
+	this.defaultEnv = constructEnv(arg);
+	this.userSetHold = !!(arg.env && arg.env.hold); //_
 	constructFilter(this, arg);
 	constructVibrato(this, arg);
 	constructTremolo(this, arg);
@@ -55,21 +58,18 @@ let Wad = function(arg){
 	constructPanning(this, arg);
 	constructDelay(this, arg);
 	this.duration = (this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(this.rate)) * 1000;
-	////////////////////////////////
 
 
 	/** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
 	if ( this.source === 'noise' ) {
 		this.decodedBuffer = noiseBuffer;
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 	/** If the Wad's source is the microphone, the rest of the setup happens here. **/
 	else if ( this.source === 'mic' ) {
 		getConsent(this, arg);
 	}
-	//////////////////////////////////////////////////////////////////////////////////
 
 
 	/** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
@@ -93,7 +93,6 @@ let Wad = function(arg){
 			}
 		}
 	}
-	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	else { arg.callback && arg.callback(this); }
 	Wad.allWads.push(this);
 };
@@ -256,8 +255,6 @@ or defaults to the constructor argument if the filter and filter envelope are no
 	if ( arg.callback ) { arg.callback(this); }
 
 };
-
-//////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** Change the volume of a wad at any time, including during playback **/

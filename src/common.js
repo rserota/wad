@@ -102,22 +102,14 @@ let valueOrDefault = function(value, def) {
 };
 
 /** Set up the default ADSR envelope. **/
-let constructEnv = function(that, arg){
-	that.env = { //default envelope, if one is not specified on play
+let constructEnv = function(arg){
+	return { //default envelope, if one is not specified on play
 		attack  : arg.env ? valueOrDefault(arg.env.attack,  0) : 0,    // time in seconds from onset to peak volume
 		decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
 		sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
 		hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14159) : 3.14159, // time in seconds to maintain sustain volume
 		release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
 	};
-	that.defaultEnv = {
-		attack  : arg.env ? valueOrDefault(arg.env.attack,  0) : 0,    // time in seconds from onset to peak volume
-		decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
-		sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
-		hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14159) : 3.14159, // time in seconds to maintain sustain volume
-		release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
-	};
-	that.userSetHold = !!(arg.env && arg.env.hold);
 };
 /////////////////////////////////////////
 
@@ -406,7 +398,7 @@ let setUpOscillator = function(that, arg){
 ///////////////////////////////////////////////////
 
 /** Set the ADSR volume envelope according to play() arguments, or revert to defaults **/
-let setUpEnvOnPlay = function(that, arg){
+let setUpEnvOnPlay = function(that, arg){ //_
 	if ( arg && arg.env ) {
 		that.env.attack  = valueOrDefault(arg.env.attack, that.defaultEnv.attack);
 		that.env.decay   = valueOrDefault(arg.env.decay, that.defaultEnv.decay);

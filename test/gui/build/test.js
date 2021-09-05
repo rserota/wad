@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./test/src/index.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./test/gui/src/index.js");
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -4815,16 +4815,16 @@ Wad.setVolume = function(volume){
 
 /***/ }),
 
-/***/ "./test/src/index.js":
-/*!***************************!*\
-  !*** ./test/src/index.js ***!
-  \***************************/
+/***/ "./test/gui/src/index.js":
+/*!*******************************!*\
+  !*** ./test/gui/src/index.js ***!
+  \*******************************/
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _build_wad_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../build/wad.js */ "./build/wad.js");
+/* harmony import */ var _build_wad_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../build/wad.js */ "./build/wad.js");
 /* harmony import */ var _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_build_wad_js__WEBPACK_IMPORTED_MODULE_0__);
 
 window.Wad = _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a;
@@ -4961,7 +4961,7 @@ window.polywad = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.Poly({
 	volume: .5,
 	reverb  : {
 		wet     : 1,                                            
-		impulse : '/widehall.wav' 
+		impulse : 'widehall.wav' 
 	},
 	recorder: true,
 	audioMeter: {

@@ -10,7 +10,7 @@
 		"build-tests": "webpack --config webpack.config.test.js",
 		"watch": "./node_modules/watch/cli.js 'npm run build' .",
 		"lint": "./node_modules/eslint/bin/eslint.js --fix ./src",
-		"test": "jasmine-browser-runner runSpecs"
+		"test": "npx http-server ./test"
 	},
 	"repository": {
 		"type": "git",

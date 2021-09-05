@@ -3280,7 +3280,7 @@ Wad.assignMidiMap = _midi__WEBPACK_IMPORTED_MODULE_4__["assignMidiMap"];
 Wad.midiInstrument = _midi__WEBPACK_IMPORTED_MODULE_4__["midiInstrument"];
 Wad.midiInputs = _midi__WEBPACK_IMPORTED_MODULE_4__["midiInputs"];
 Wad.presets = _presets__WEBPACK_IMPORTED_MODULE_2__["default"];
-Wad.common = _common__WEBPACK_IMPORTED_MODULE_6__;
+Wad._common = _common__WEBPACK_IMPORTED_MODULE_6__;
 Wad.logs = _common__WEBPACK_IMPORTED_MODULE_6__["logStats"];
 
 
@@ -3836,11 +3836,11 @@ let constructRecorder = function(thatWad,arg){
 		let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
 		window.open(URL.createObjectURL(blob));
 	};
-	thatWad.recorder.mediaRecorder.onstop = thatWad.recorder.mediaRecorder.onstop.bind(thatWad)
+	thatWad.recorder.mediaRecorder.onstop = thatWad.recorder.mediaRecorder.onstop.bind(thatWad);
 
 	// add some aliases to make the API a bit simpler
 	for ( let method of ['start', 'stop', 'pause', 'resume' , 'requestData'] ) {
-		thatWad.recorder[method] = thatWad.recorder.mediaRecorder[method].bind(thatWad.recorder.mediaRecorder)
+		thatWad.recorder[method] = thatWad.recorder.mediaRecorder[method].bind(thatWad.recorder.mediaRecorder);
 	}
 };
 
@@ -4541,7 +4541,7 @@ Wad.prototype.reverse = function(){
 		Array.prototype.reverse.call( this.decodedBuffer.getChannelData(1) );
 	}
 	else {
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])("You tried to reverse something that isn't reversible")
+		Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You tried to reverse something that isn\'t reversible');
 	}
 };
 
@@ -5009,7 +5009,7 @@ document.getElementById('mic-consent').addEventListener('click', function(){
 		recorder: {
 			onstop: function(){
 				let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
-				window.recordedAudio = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:URL.createObjectURL(blob)})
+				window.recordedAudio = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:URL.createObjectURL(blob)});
 			}
 		},
 	});

@@ -1,31 +1,41 @@
-describe("_common functions - ", function() {
+/* eslint-disable no-undef */
+describe('_common functions - ', function() {
 
-	describe("createEnv", function() {
-
-		it("should create an env object when passed valid arguments", function() {
-			const validArgs = {
-				env : {
-					attack: .1,
-					decay: .2,
-					sustain: .9,
-					hold: 2,
-					release: 1,
-				},
+	describe('createEnv', function() {
+		const defaultArgs = {
+			env : {
+				attack: 0,
+				decay: 0,
+				sustain: 1,
+				hold: 3.14159,
+				release: 0,
+			},
+		};
+		const validArgs = {
+			env : {
+				attack: .1,
+				decay: .2,
+				sustain: .9,
+				hold: 2,
+				release: 1,
 			}
-			const constructedEnv = Wad.common.constructEnv(validArgs)
-			console.log('??', constructedEnv);
+		}
 
+		it('should create an env object when passed valid arguments', function() {
+			const constructedEnv = Wad._common.constructEnv(validArgs);
+			expect(constructedEnv).toEqual(validArgs.env);
 		});
 
-		it("should create an env object with defaults when arguments are missing", function() {
+		it('should create an env object with defaults when arguments are missing', function() {
 
-			const noEnv = {}
-			const emptyEnv = {env:{}}
-			const constructedEnv1 = Wad.common.constructEnv(noEnv)
-			const constructedEnv2 = Wad.common.constructEnv(emptyEnv)
-			console.log('??', constructedEnv1);
+			const noEnv = {};
+			const emptyEnv = {env:{}};
+			const constructedEnv1 = Wad._common.constructEnv(noEnv);
+			const constructedEnv2 = Wad._common.constructEnv(emptyEnv);
+			expect(constructedEnv1).toEqual(defaultArgs.env)
+			expect(constructedEnv2).toEqual(defaultArgs.env)
 			console.log('??', constructedEnv2);
 
 		});
-  });
+	});
 });

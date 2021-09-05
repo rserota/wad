@@ -282,7 +282,7 @@ Wad.prototype.reverse = function(){
 		Array.prototype.reverse.call( this.decodedBuffer.getChannelData(1) );
 	}
 	else {
-		logMessage("You tried to reverse something that isn't reversible")
+		logMessage('You tried to reverse something that isn\'t reversible');
 	}
 };
 

@@ -181,7 +181,7 @@ document.getElementById('mic-consent').addEventListener('click', function(){
 		recorder: {
 			onstop: function(){
 				let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
-				window.recordedAudio = new Wad({source:URL.createObjectURL(blob)})
+				window.recordedAudio = new Wad({source:URL.createObjectURL(blob)});
 			}
 		},
 	});

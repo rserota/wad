@@ -25,7 +25,7 @@ Wad.assignMidiMap = assignMidiMap;
 Wad.midiInstrument = midiInstrument;
 Wad.midiInputs = midiInputs;
 Wad.presets = presets;
-Wad.common = common;
+Wad._common = common;
 Wad.logs = logStats;
 
 

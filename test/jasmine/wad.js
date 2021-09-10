@@ -1,1 +1,1 @@
-../build/wad.js
+../../build/wad.js

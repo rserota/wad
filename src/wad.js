@@ -50,7 +50,8 @@ let Wad = function(arg){
 	this.env = constructEnv(arg);
 	this.defaultEnv = constructEnv(arg);
 	this.userSetHold = !!(arg.env && arg.env.hold); //_
-	constructFilter(this, arg);
+	//constructFilter(this, arg);
+	this.filter = constructFilter(arg);
 	constructVibrato(this, arg);
 	constructTremolo(this, arg);
 	constructReverb(this, arg);

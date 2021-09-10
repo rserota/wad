@@ -1,6 +1,7 @@
 import Tuna from 'tunajs';
 import Polywad from './polywad';
 import { pitches } from './pitches';
+import _ from 'lodash';
 
 
 let audioContext = window.AudioContext || window.webkitAudioContext;
@@ -111,16 +112,15 @@ let constructEnv = function(arg){
 		release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
 	};
 };
-/////////////////////////////////////////
 
 
 /** Set up the default filter and filter envelope. **/
-let constructFilter = function(that, arg){
+let constructFilter = function(arg){
 
-	if ( !arg.filter ) { arg.filter = null; }
+	if ( !arg.filter ) { return null; }
 
-	else if ( isArray(arg.filter) ) {
-		that.filter = arg.filter.map(function(filterArg){
+	else if ( _.isArray(arg.filter) ) {
+		return arg.filter.map(function(filterArg){
 			return {
 				type : filterArg.type || 'lowpass',
 				frequency : filterArg.frequency || 600,
@@ -130,7 +130,7 @@ let constructFilter = function(that, arg){
 		});
 	}
 	else {
-		that.filter  = [{
+		return [{
 			type : arg.filter.type || 'lowpass',
 			frequency : arg.filter.frequency || 600,
 			q : arg.filter.q || 1,
@@ -138,7 +138,6 @@ let constructFilter = function(that, arg){
 		}];
 	}
 };
-//////////////////////////////////////////////////////
 
 
 /** If the Wad uses an audio file as the source, request it from the server.

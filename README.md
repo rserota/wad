@@ -343,7 +343,7 @@ PolyWads can be created with a recorder, which can save the output of the PolyWa
             onstop: function(event) {
                 let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
                 window.open(URL.createObjectURL(blob));
-            };
+            }
         }
     })
     polywad.add(voice)

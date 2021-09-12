@@ -20016,11 +20016,11 @@ let valueOrDefault = function(value, def) {
 /** Set up the default ADSR envelope. **/
 let constructEnv = function(arg){
 	return { //default envelope, if one is not specified on play
-		attack  : arg.env ? valueOrDefault(arg.env.attack,  0) : 0,    // time in seconds from onset to peak volume
-		decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
-		sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
-		hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14159) : 3.14159, // time in seconds to maintain sustain volume
-		release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
+		attack   : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'env.attack', 0),    // time in seconds from onset to peak volume
+		decay    : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'env.decay', 0),    // time in seconds from peak volume to sustain volume
+		sustain  : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'env.sustain', 1),    // sustain volume level, as a percentage of the max
+		hold     : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'env.hold', 3.14159),    // time in seconds to maintain sustain volume
+		release  : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'env.release', 0),    // time in seconds from release to zero volume
 	};
 };
 
@@ -20074,36 +20074,33 @@ let requestAudioFile = function(that, callback){
 	};
 	request.send();
 };
-//////////////////////////////////////////////////////////////////////////
 
 /** Set up the vibrato LFO **/
-let constructVibrato = function(that, arg){
+let constructVibrato = function(arg){
 	if ( arg.vibrato ) {
-		that.vibrato = {
-			shape     : valueOrDefault(arg.vibrato.shape, 'sine'),
-			speed     : valueOrDefault(arg.vibrato.speed, 1),
-			magnitude : valueOrDefault(arg.vibrato.magnitude, 5),
-			attack    : valueOrDefault(arg.vibrato.attack, 0)
+		return {
+			shape     : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'vibrato.shape', 'sine'),
+			speed     : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'vibrato.speed', 1),
+			magnitude : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'vibrato.magnitude', 5),
+			attack    : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'vibrato.attack', 0),
 		};
 	}
-	else { that.vibrato = null; }
+	else { return null; }
 };
-//////////////////////////////
 
 
 /** Set up the tremolo LFO **/
-let constructTremolo = function(that, arg){
+let constructTremolo = function(arg){
 	if ( arg.tremolo ) {
-		that.tremolo = {
-			shape     : valueOrDefault(arg.tremolo.shape, 'sine'),
-			speed     : valueOrDefault(arg.tremolo.speed, 1),
-			magnitude : valueOrDefault(arg.tremolo.magnitude, 5),
-			attack    : valueOrDefault(arg.tremolo.attack, 1)
+		return {
+			shape     : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'tremolo.shape', 'sine'),
+			speed     : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'tremolo.speed', 1),
+			magnitude : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'tremolo.magnitude', 5),
+			attack    : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'tremolo.attack', 1)
 		};
 	}
-	else { that.tremolo = null; }
+	else { return null; }
 };
-//////////////////////////////
 
 /** Grab the reverb impulse response file from a server.
 You may want to change Wad.defaultImpulse to serve files from your own server.
@@ -21587,10 +21584,9 @@ let Wad = function(arg){
 	this.env = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructEnv"])(arg);
 	this.defaultEnv = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructEnv"])(arg);
 	this.userSetHold = !!(arg.env && arg.env.hold); //_
-	//constructFilter(this, arg);
 	this.filter = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructFilter"])(arg);
-	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructVibrato"])(this, arg);
-	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructTremolo"])(this, arg);
+	this.vibrato = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructVibrato"])(arg);
+	this.tremolo = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructTremolo"])(arg);
 	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructReverb"])(this, arg);
 	this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
 	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructPanning"])(this, arg);

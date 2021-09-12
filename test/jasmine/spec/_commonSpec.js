@@ -32,14 +32,13 @@ describe('_common functions - ', function() {
 			const emptyEnv = {env:{}};
 			const constructedEnv1 = Wad._common.constructEnv(noEnv);
 			const constructedEnv2 = Wad._common.constructEnv(emptyEnv);
-			expect(constructedEnv1).toEqual(defaultArgs.env)
-			expect(constructedEnv2).toEqual(defaultArgs.env)
-			console.log('??', constructedEnv2);
+			expect(constructedEnv1).toEqual(defaultArgs.env);
+			expect(constructedEnv2).toEqual(defaultArgs.env);
 
 		});
 	});
 
-	describe('createFilter', function() {
+	describe('constructFilter', function() {
 		const defaultFilterArgs = {type: 'lowpass', q:1, frequency:600, env: null};
 
 		it('should create an array with a single filter when passed an object', function() {
@@ -66,11 +65,10 @@ describe('_common functions - ', function() {
 			expect(constructedFilters[0]).toEqual(defaultFilterArgs);
 			expect(constructedFilters[1]).toEqual(validFilterArgs);
 
-			console.log('cons filter', constructedFilters);
 		});
 
 		it('returns null if filter is not defined', function() {
-			const noFilter = {foo:'bar'};
+			const noFilter = {source:'sine'};
 			const constructedWithoutFilter = Wad._common.constructFilter(noFilter);
 			expect(constructedWithoutFilter).toBe(null);
 		});
@@ -78,6 +76,76 @@ describe('_common functions - ', function() {
 		it('returns a filter with default paramters when arguments are missing', function(){
 			const defaultFilter = Wad._common.constructFilter({filter:{}});
 			expect(defaultFilter[0]).toEqual(defaultFilterArgs);
+		});
+	});
+
+	describe('constructVibrato', function() {
+		const defaultArgs = {
+			vibrato : {
+				shape: 'sine',
+				speed: 1,
+				magnitude: 5,
+				attack: 0,
+			},
+		};
+		const validArgs = {
+			vibrato : {
+				shape: 'sawtooth',
+				speed: 2,
+				magnitude: 3,
+				attack: 2,
+			},
+		};
+
+		it('should create a vibrato object when passed valid arguments', function() {
+			const constructedVibrato = Wad._common.constructVibrato(validArgs);
+			expect(constructedVibrato).toEqual(validArgs.vibrato);
+		});
+
+		it('should create an vibrato object with defaults when arguments are missing', function() {
+
+			const noVibrato = {};
+			const emptyVibrato = {vibrato:{}};
+			const constructedWithEmptyVibrato = Wad._common.constructVibrato(emptyVibrato);
+			const constructedWithNoVibrato = Wad._common.constructVibrato(noVibrato);
+			expect(constructedWithEmptyVibrato ).toEqual(defaultArgs.vibrato);
+			expect(constructedWithNoVibrato).toEqual(null);
+
+		});
+	});
+
+	describe('constructTremolo', function() {
+		const defaultArgs = {
+			tremolo : {
+				shape: 'sine',
+				speed: 1,
+				magnitude: 5,
+				attack: 1,
+			},
+		};
+		const validArgs = {
+			tremolo : {
+				shape: 'sawtooth',
+				speed: 2,
+				magnitude: 3,
+				attack: 2,
+			},
+		};
+
+		it('should create a tremolo object when passed valid arguments', function() {
+			const constructedTremolo = Wad._common.constructTremolo(validArgs);
+			expect(constructedTremolo).toEqual(validArgs.tremolo);
+		});
+
+		it('should create an tremolo object with defaults when arguments are missing', function() {
+
+			const noTremolo = {};
+			const emptyTremolo = {tremolo:{}};
+			const constructedWithEmptyTremolo = Wad._common.constructTremolo(emptyTremolo);
+			const constructedWithNoTremolo = Wad._common.constructTremolo(noTremolo);
+			expect(constructedWithEmptyTremolo ).toEqual(defaultArgs.tremolo);
+			expect(constructedWithNoTremolo).toEqual(null);
+
 		});
 	});
 });

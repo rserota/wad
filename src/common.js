@@ -198,7 +198,6 @@ let defaultImpulse = 'https://frivolous.biz/audio/widehall.wav';
 
 let constructReverb = function(that, arg){
 	if ( arg.reverb ) {
-		that.reverb = { wet : valueOrDefault(arg.reverb.wet, 1) };
 		var impulseURL = arg.reverb.impulse || defaultImpulse;
 		var request = new XMLHttpRequest();
 		request.open('GET', impulseURL, true);
@@ -218,9 +217,10 @@ let constructReverb = function(that, arg){
 			});
 		};
 		request.send();
+		return { wet : _.get(arg, 'reverb.wet', 1) };
 	}
 	else {
-		that.reverb = null;
+		return null;
 	}
 };
 

@@ -148,4 +148,30 @@ describe('_common functions - ', function() {
 
 		});
 	});
+
+	describe('constructReverb', function() {
+		const defaultArgs = {
+			reverb : { wet: 1 },
+		};
+
+		const validArgs = {
+			reverb : { wet: .6 },
+		};
+
+		it('should create a reverb object when passed valid arguments', function() {
+			const constructedReverb = Wad._common.constructReverb({}, validArgs);
+			expect(constructedReverb).toEqual(validArgs.reverb);
+		});
+
+		it('should create a reverb object with defaults when arguments are missing', function() {
+
+			const noReverb = {};
+			const emptyReverb = {reverb:{}};
+			const constructedWithEmptyReverb = Wad._common.constructReverb({}, emptyReverb);
+			const constructedWithNoReverb = Wad._common.constructReverb({}, noReverb);
+			expect(constructedWithEmptyReverb ).toEqual(defaultArgs.reverb);
+			expect(constructedWithNoReverb).toEqual(null);
+
+		});
+	});
 });

@@ -20019,7 +20019,6 @@ let defaultImpulse = 'https://frivolous.biz/audio/widehall.wav';
 
 let constructReverb = function(that, arg){
 	if ( arg.reverb ) {
-		that.reverb = { wet : valueOrDefault(arg.reverb.wet, 1) };
 		var impulseURL = arg.reverb.impulse || defaultImpulse;
 		var request = new XMLHttpRequest();
 		request.open('GET', impulseURL, true);
@@ -20039,9 +20038,10 @@ let constructReverb = function(that, arg){
 			});
 		};
 		request.send();
+		return { wet : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'reverb.wet', 1) };
 	}
 	else {
-		that.reverb = null;
+		return null;
 	}
 };
 
@@ -21497,7 +21497,7 @@ let Wad = function(arg){
 	this.filter = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructFilter"])(arg);
 	this.vibrato = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructVibrato"])(arg);
 	this.tremolo = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructTremolo"])(arg);
-	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructReverb"])(this, arg);
+	this.reverb = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructReverb"])(this, arg);
 	this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
 	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructPanning"])(this, arg);
 	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructDelay"])(this, arg);
@@ -21540,6 +21540,7 @@ let Wad = function(arg){
 	else { arg.callback && arg.callback(this); }
 	Wad.allWads.push(this);
 };
+
 Wad.allWads = [];
 Wad.audioContext = _common__WEBPACK_IMPORTED_MODULE_2__["context"];
 Wad.listener = new _audio_listener__WEBPACK_IMPORTED_MODULE_1__["default"](_common__WEBPACK_IMPORTED_MODULE_2__["context"]);

@@ -53,7 +53,7 @@ let Wad = function(arg){
 	this.filter = constructFilter(arg);
 	this.vibrato = constructVibrato(arg);
 	this.tremolo = constructTremolo(arg);
-	constructReverb(this, arg);
+	this.reverb = constructReverb(this, arg);
 	this.constructExternalFx(arg, context);
 	constructPanning(this, arg);
 	constructDelay(this, arg);
@@ -96,6 +96,7 @@ let Wad = function(arg){
 	else { arg.callback && arg.callback(this); }
 	Wad.allWads.push(this);
 };
+
 Wad.allWads = [];
 Wad.audioContext = context;
 Wad.listener = new AudioListener(context);

@@ -53,9 +53,9 @@ let Wad = function(arg){
 	this.filter = constructFilter(arg);
 	this.vibrato = constructVibrato(arg);
 	this.tremolo = constructTremolo(arg);
-	this.reverb = constructReverb(this, arg);
+	this.reverb = constructReverb(this, arg); // has side-effects
 	this.constructExternalFx(arg, context);
-	constructPanning(this, arg);
+	this.panning = constructPanning(arg);
 	constructDelay(this, arg);
 	this.duration = (this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(this.rate)) * 1000;
 

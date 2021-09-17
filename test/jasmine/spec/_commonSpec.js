@@ -80,6 +80,7 @@ describe('_common functions - ', function() {
 	});
 
 	describe('constructVibrato', function() {
+
 		const defaultArgs = {
 			vibrato : {
 				shape: 'sine',
@@ -88,6 +89,7 @@ describe('_common functions - ', function() {
 				attack: 0,
 			},
 		};
+
 		const validArgs = {
 			vibrato : {
 				shape: 'sawtooth',
@@ -102,15 +104,13 @@ describe('_common functions - ', function() {
 			expect(constructedVibrato).toEqual(validArgs.vibrato);
 		});
 
-		it('should create an vibrato object with defaults when arguments are missing', function() {
-
+		it('should create a vibrato object with defaults when arguments are missing', function() {
 			const noVibrato = {};
 			const emptyVibrato = {vibrato:{}};
 			const constructedWithEmptyVibrato = Wad._common.constructVibrato(emptyVibrato);
 			const constructedWithNoVibrato = Wad._common.constructVibrato(noVibrato);
 			expect(constructedWithEmptyVibrato ).toEqual(defaultArgs.vibrato);
 			expect(constructedWithNoVibrato).toEqual(null);
-
 		});
 	});
 
@@ -137,8 +137,7 @@ describe('_common functions - ', function() {
 			expect(constructedTremolo).toEqual(validArgs.tremolo);
 		});
 
-		it('should create an tremolo object with defaults when arguments are missing', function() {
-
+		it('should create a tremolo object with defaults when arguments are missing', function() {
 			const noTremolo = {};
 			const emptyTremolo = {tremolo:{}};
 			const constructedWithEmptyTremolo = Wad._common.constructTremolo(emptyTremolo);
@@ -164,14 +163,48 @@ describe('_common functions - ', function() {
 		});
 
 		it('should create a reverb object with defaults when arguments are missing', function() {
-
 			const noReverb = {};
 			const emptyReverb = {reverb:{}};
 			const constructedWithEmptyReverb = Wad._common.constructReverb({}, emptyReverb);
 			const constructedWithNoReverb = Wad._common.constructReverb({}, noReverb);
 			expect(constructedWithEmptyReverb ).toEqual(defaultArgs.reverb);
 			expect(constructedWithNoReverb).toEqual(null);
-
 		});
 	});
+
+	describe('constructPanning', function() {
+		it('should create a stereo panning object when passsed a number', function() {
+			const numberPanning = Wad._common.constructPanning({panning:-4});
+			expect(numberPanning).toEqual({location:-4,type:'stereo'});
+		});
+
+		it('should create a 3d panning object when passsed an array ', function() {
+			const arrayPanning = Wad._common.constructPanning({panning:[-4,1,3]});
+
+			expect(arrayPanning).toEqual({
+				location:[-4,1,3],
+				type:'3d',
+				panningModel:'equalpower',
+				distanceModel: undefined,
+				maxDistance: undefined,
+				rolloffFactor: undefined,
+				refDistance: undefined,
+				coneInnerAngle: undefined,
+				coneOuterAngle: undefined,
+				coneOuterGain: undefined,
+			});
+		});
+
+		it('should create a panning object with defaults when arguments are missing', function() {
+			const defaultPanning = Wad._common.constructPanning({});
+
+			expect(defaultPanning).toEqual({
+				location : 0,
+				type     : 'stereo',
+			});
+		});
+	});
+
+
+
 });

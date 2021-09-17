@@ -224,42 +224,44 @@ let constructReverb = function(that, arg){
 	}
 };
 
-let constructPanning = function(that, arg){
+let constructPanning = function(arg){
+	let panning = null;
 	if ( 'panning' in arg ) {
-		that.panning = { location : arg.panning };
+		panning = { location : arg.panning };
 		if ( typeof(arg.panning) === 'number' ) {
-			that.panning.type = 'stereo';
+			panning.type = 'stereo';
 		}
 
 		else {
-			that.panning.type = '3d';
-			that.panning.panningModel   = arg.panningModel || 'equalpower';
-			that.panning.distanceModel  = arg.distanceModel; 
-			that.panning.maxDistance    = arg.maxDistance; 
-			that.panning.rolloffFactor  = arg.rolloffFactor;
-			that.panning.refDistance    = arg.refDistance;
-			that.panning.coneInnerAngle = arg.coneInnerAngle;
-			that.panning.coneOuterAngle = arg.coneOuterAngle;
-			that.panning.coneOuterGain  = arg.coneOuterGain;
+			panning.type = '3d';
+			panning.panningModel   = arg.panningModel || 'equalpower';
+			panning.distanceModel  = arg.distanceModel; 
+			panning.maxDistance    = arg.maxDistance; 
+			panning.rolloffFactor  = arg.rolloffFactor;
+			panning.refDistance    = arg.refDistance;
+			panning.coneInnerAngle = arg.coneInnerAngle;
+			panning.coneOuterAngle = arg.coneOuterAngle;
+			panning.coneOuterGain  = arg.coneOuterGain;
 		}
 	}
 
 	else {
-		that.panning = {
+		panning = {
 			location : 0,
 			type     : 'stereo',
 		};
 	}
-	if ( that.panning.type === 'stereo' && !context.createStereoPanner ) {
+	if ( panning.type === 'stereo' && !context.createStereoPanner ) {
 		logMessage('Your browser does not support stereo panning. Falling back to 3D panning.');
-		that.panning = {
+		panning = {
 			location     : [0,0,0],
 			type         : '3d',
 			panningModel : 'equalpower',
 		};
 	}
+	return panning;
 };
-//////////////////////////////////////////////////////////////////////////////
+
 let constructDelay = function(that, arg){
 	if ( arg.delay ) {
 		that.delay = {

@@ -205,6 +205,37 @@ describe('_common functions - ', function() {
 		});
 	});
 
+	describe('constructDelay', function() {
+		it('should create a delay object when passsed valid arguments', function() {
+			const validDelay = Wad._common.constructDelay({delay: {
+				delayTime: 1,
+				maxDelayTime:4,
+				feedback:.4,
+				wet:.8,
+			}});
+
+			expect(validDelay).toEqual({
+				delayTime: 1,
+				maxDelayTime:4,
+				feedback:.4,
+				wet:.8,
+			});
+		});
+
+		it('should create a delay object with default values when arguments are missing', function() {
+			const emptyDelay = Wad._common.constructDelay({delay:{}});
+			const noDelay = Wad._common.constructDelay({})
+
+			expect(emptyDelay).toEqual({
+				delayTime: .5,
+				maxDelayTime:2,
+				feedback:.25,
+				wet:.25
+				,
+			});
+			expect(noDelay).toEqual(null);
+		});
+	});
 
 
 });

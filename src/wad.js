@@ -53,11 +53,11 @@ let Wad = function(arg){
 	this.filter = constructFilter(arg);
 	this.vibrato = constructVibrato(arg);
 	this.tremolo = constructTremolo(arg);
-	this.reverb = constructReverb(this, arg); // has side-effects
-	this.constructExternalFx(arg, context);
 	this.panning = constructPanning(arg);
-	constructDelay(this, arg);
+	this.delay = constructDelay(arg);
+	this.reverb = constructReverb(this, arg); // has side-effects
 	this.duration = (this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(this.rate)) * 1000;
+	this.constructExternalFx(arg, context);
 
 
 	/** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
@@ -134,13 +134,13 @@ Wad.prototype.play = function(arg){
 				plugEmIn(this, arg);
 			}
 			else {
-				constructFilter(this, arg);
-				constructVibrato(this, arg);
-				constructTremolo(this, arg);
-				constructReverb(this, arg);
+				this.filter = constructFilter(arg);
+				this.vibrato = constructVibrato(arg);
+				this.tremolo = constructTremolo(arg);
+				this.reverb = constructReverb(arg);
+				this.panning = constructPanning(arg);
+				this.delay = constructDelay(arg);
 				this.constructExternalFx(arg, context);
-				constructPanning(this, arg);
-				constructDelay(this, arg);
 				setUpMic(this, arg);
 				plugEmIn(this, arg);
 			}
@@ -394,7 +394,7 @@ Wad.prototype.setReverb = function(inputWet) {
 	else if(inputWet >= 1) wet = 1;
 	else wet = 0;
 
-	//Check if we have delay
+	//Check if we have reverb
 	if(this.reverb) {
 
 		//Set the value

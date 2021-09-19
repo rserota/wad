@@ -20083,16 +20083,16 @@ let constructPanning = function(arg){
 	return panning;
 };
 
-let constructDelay = function(that, arg){
+let constructDelay = function(arg){
 	if ( arg.delay ) {
-		that.delay = {
-			delayTime    : valueOrDefault(arg.delay.delayTime, .5),
-			maxDelayTime : valueOrDefault(arg.delay.maxDelayTime, 2),
-			feedback     : valueOrDefault(arg.delay.feedback, .25),
-			wet          : valueOrDefault(arg.delay.wet, .25)
+		return {
+			delayTime    : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'delay.delayTime', .5),
+			maxDelayTime : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'delay.maxDelayTime', 2),
+			feedback     : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'delay.feedback', .25),
+			wet          : lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'delay.wet', .25),
 		};
 	}
-	else { that.delay = null; }
+	else { return null; }
 };
 
 let permissionsGranted = { micConsent: false };
@@ -20108,7 +20108,6 @@ let getConsent = function(that, arg) {
 		return that;
 	}).catch(function(error) { logMessage('Error setting up microphone input: ', error); }); // This is the error callback.
 };
-////////////////////////////////////////////////////////////////////
 
 let setUpMic = function(that, arg){
 	that.nodes           = [];
@@ -20359,7 +20358,6 @@ let setUpTremoloOnPlay = function(that, arg, Wad){
 	});
 	that.tremolo.wad.play();
 };
-///////////////////////////////////////////////////////////////
 
 let setUpDelayOnPlay = function(that, arg){
 	if ( that.delay ) {
@@ -20393,7 +20391,6 @@ let setUpDelayOnPlay = function(that, arg){
 	}
 };
 
-/** **/
 let constructCompressor = function(that, arg){
 	that.compressor = context.createDynamicsCompressor();
 	that.compressor.attack.value    = valueOrDefault(arg.compressor.attack, that.compressor.attack.value);
@@ -20425,7 +20422,6 @@ let setUpTunaOnPlay = function(that, arg){
 		that.nodes.push(tunaEffect);
 	}
 };
-///
 
 
 
@@ -21499,11 +21495,11 @@ let Wad = function(arg){
 	this.filter = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructFilter"])(arg);
 	this.vibrato = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructVibrato"])(arg);
 	this.tremolo = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructTremolo"])(arg);
-	this.reverb = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructReverb"])(this, arg); // has side-effects
-	this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
 	this.panning = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructPanning"])(arg);
-	Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructDelay"])(this, arg);
+	this.delay = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructDelay"])(arg);
+	this.reverb = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructReverb"])(this, arg); // has side-effects
 	this.duration = (this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(this.rate)) * 1000;
+	this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
 
 
 	/** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
@@ -21580,13 +21576,13 @@ Wad.prototype.play = function(arg){
 				Object(_common__WEBPACK_IMPORTED_MODULE_2__["plugEmIn"])(this, arg);
 			}
 			else {
-				Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructFilter"])(this, arg);
-				Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructVibrato"])(this, arg);
-				Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructTremolo"])(this, arg);
-				Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructReverb"])(this, arg);
+				this.filter = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructFilter"])(arg);
+				this.vibrato = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructVibrato"])(arg);
+				this.tremolo = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructTremolo"])(arg);
+				this.reverb = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructReverb"])(arg);
+				this.panning = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructPanning"])(arg);
+				this.delay = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructDelay"])(arg);
 				this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
-				Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructPanning"])(this, arg);
-				Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructDelay"])(this, arg);
 				Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpMic"])(this, arg);
 				Object(_common__WEBPACK_IMPORTED_MODULE_2__["plugEmIn"])(this, arg);
 			}
@@ -21840,7 +21836,7 @@ Wad.prototype.setReverb = function(inputWet) {
 	else if(inputWet >= 1) wet = 1;
 	else wet = 0;
 
-	//Check if we have delay
+	//Check if we have reverb
 	if(this.reverb) {
 
 		//Set the value

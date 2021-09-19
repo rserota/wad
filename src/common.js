@@ -262,16 +262,16 @@ let constructPanning = function(arg){
 	return panning;
 };
 
-let constructDelay = function(that, arg){
+let constructDelay = function(arg){
 	if ( arg.delay ) {
-		that.delay = {
-			delayTime    : valueOrDefault(arg.delay.delayTime, .5),
-			maxDelayTime : valueOrDefault(arg.delay.maxDelayTime, 2),
-			feedback     : valueOrDefault(arg.delay.feedback, .25),
-			wet          : valueOrDefault(arg.delay.wet, .25)
+		return {
+			delayTime    : _.get(arg, 'delay.delayTime', .5),
+			maxDelayTime : _.get(arg, 'delay.maxDelayTime', 2),
+			feedback     : _.get(arg, 'delay.feedback', .25),
+			wet          : _.get(arg, 'delay.wet', .25),
 		};
 	}
-	else { that.delay = null; }
+	else { return null; }
 };
 
 let permissionsGranted = { micConsent: false };
@@ -287,7 +287,6 @@ let getConsent = function(that, arg) {
 		return that;
 	}).catch(function(error) { logMessage('Error setting up microphone input: ', error); }); // This is the error callback.
 };
-////////////////////////////////////////////////////////////////////
 
 let setUpMic = function(that, arg){
 	that.nodes           = [];
@@ -538,7 +537,6 @@ let setUpTremoloOnPlay = function(that, arg, Wad){
 	});
 	that.tremolo.wad.play();
 };
-///////////////////////////////////////////////////////////////
 
 let setUpDelayOnPlay = function(that, arg){
 	if ( that.delay ) {
@@ -572,7 +570,6 @@ let setUpDelayOnPlay = function(that, arg){
 	}
 };
 
-/** **/
 let constructCompressor = function(that, arg){
 	that.compressor = context.createDynamicsCompressor();
 	that.compressor.attack.value    = valueOrDefault(arg.compressor.attack, that.compressor.attack.value);
@@ -604,7 +601,6 @@ let setUpTunaOnPlay = function(that, arg){
 		that.nodes.push(tunaEffect);
 	}
 };
-///
 
 export {
 	logStats,

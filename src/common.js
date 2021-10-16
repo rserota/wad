@@ -291,7 +291,7 @@ let getConsent = function(that, arg) {
 let setUpMic = function(that, arg){
 	that.nodes           = [];
 	that.gain            = context.createGain();
-	that.gain.gain.value = valueOrDefault(arg.volume,that.volume);
+	that.gain.gain.value = _.get(arg, 'volume', that.volume);
 	that.nodes.push(that.mediaStreamSource);
 	that.nodes.push(that.gain);
   
@@ -392,16 +392,15 @@ let setUpOscillator = function(that, arg){
 		that.soundSource.frequency.value = that.pitch;
 	}
 };
-///////////////////////////////////////////////////
 
 /** Set the ADSR volume envelope according to play() arguments, or revert to defaults **/
 let setUpEnvOnPlay = function(that, arg){ //_
 	if ( arg && arg.env ) {
-		that.env.attack  = valueOrDefault(arg.env.attack, that.defaultEnv.attack);
-		that.env.decay   = valueOrDefault(arg.env.decay, that.defaultEnv.decay);
-		that.env.sustain = valueOrDefault(arg.env.sustain, that.defaultEnv.sustain);
-		that.env.hold    = valueOrDefault(arg.env.hold, that.defaultEnv.hold);
-		that.env.release = valueOrDefault(arg.env.release, that.defaultEnv.release);
+		that.env.attack  = _.get(arg, 'env.attack', that.defaultEnv.attack);
+		that.env.decay   = _.get(arg, 'env.decay', that.defaultEnv.decay);
+		that.env.sustain = _.get(arg,'env.sustain', that.defaultEnv.sustain);
+		that.env.hold    = _.get(arg, 'env.hold', that.defaultEnv.hold);
+		that.env.release = _.get(arg, 'env.release', that.defaultEnv.release);
 	}
 	else {
 		that.env = {
@@ -552,9 +551,9 @@ let setUpDelayOnPlay = function(that, arg){
 		};
 
 		//set some decent values
-		delayNode.delayNode.delayTime.value = valueOrDefault(arg.delay.delayTime, that.delay.delayTime);
-		delayNode.feedbackNode.gain.value   = valueOrDefault(arg.delay.feedback, that.delay.feedback);
-		delayNode.wetNode.gain.value        = valueOrDefault(arg.delay.wet, that.delay.wet);
+		delayNode.delayNode.delayTime.value = _.get(arg, 'delay.delayTime', that.delay.delayTime);
+		delayNode.feedbackNode.gain.value   = _.get(arg, 'delay.feedback', that.delay.feedback);
+		delayNode.wetNode.gain.value        = _.get(arg, 'delay.wet', that.delay.wet);
 
 
 		//set up the routing

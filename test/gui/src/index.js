@@ -2,7 +2,7 @@ import Wad from '../../../build/wad.js';
 window.Wad = Wad;
 
 Wad.logs.verbosity = 1;
-var ignition = new Wad({source:'./ignition.mp3'});
+let ignition = new Wad({source:'./ignition.mp3'});
 document.getElementById('ignition').addEventListener('click', async function(){
 	// await ignition.play()
 	await ignition.play();
@@ -31,7 +31,7 @@ document.getElementById('ignition-slower').addEventListener('click', async funct
 	});
 	console.log('slow ignition');
 });
-var helloMan = new Wad({
+let helloMan = new Wad({
 	source: './hello-man.wav',
 	sprite: {
 		hello: [0, .4],
@@ -51,7 +51,7 @@ document.getElementById('sprite-ab').addEventListener('click', async function(){
 	await helloMan.play({env:{attack: .1, release:.02}});
 });
 
-var longClip = new Wad({source:'./do-re-mi.wav'});
+let longClip = new Wad({source:'./do-re-mi.wav'});
 document.getElementById('full-song').addEventListener('click', function(){
 	longClip.play().then(function(thatWad){
 		console.log('Clip finished.');
@@ -70,7 +70,7 @@ document.getElementById('reverse-full-song').addEventListener('click', function(
 	longClip.reverse();
 });
 
-var sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .6}});
+let sine = new Wad({source:'sine', env: {attack: .07, hold: 1.5, release: .6}});
 
 document.getElementById('sine').addEventListener('click', async function(){
 	await sine.play();
@@ -117,11 +117,11 @@ document.getElementById('stop').addEventListener('click', function(){
 });
 
 
-var sawtooth = new Wad({source:'sawtooth', env:{hold:1, release:.2}});
-var triangle = new Wad({source:'triangle', env:{hold:1, release:.2}});
+let sawtooth = new Wad({source:'sawtooth', env:{hold:1, release:.2}});
+let triangle = new Wad({source:'triangle', env:{hold:1, release:.2}});
 
-var volumeDisplay = document.getElementById('polywad-volume');
-var clippingDisplay = document.getElementById('polywad-clipping');
+let volumeDisplay = document.getElementById('polywad-volume');
+let clippingDisplay = document.getElementById('polywad-clipping');
 let displayAudioMeter = function(thatWad){
 	thatWad.add(sawtooth).add(triangle);
 	setInterval(function(){
@@ -129,12 +129,13 @@ let displayAudioMeter = function(thatWad){
 		clippingDisplay.innerText = thatWad.audioMeter.checkClipping();
 	}, 50);
 };
-window.polywad = new Wad.Poly({
+let polywad = window.polywad = new Wad.Poly({
 	volume: .5,
 	reverb  : {
 		wet     : 1,                                            
 		impulse : 'widehall.wav' 
 	},
+	panning: [0,0,0],
 	recorder: true,
 	audioMeter: {
 		clipLevel: .98,
@@ -151,6 +152,12 @@ document.getElementById('polywad').addEventListener('click', function(){
 document.getElementById('polywad-set-pitch').addEventListener('click', function(){
 	polywad.setPitch('B3');
 });
+document.getElementById('polywad-pan-left').addEventListener('click', function(){
+	polywad.setPanning([-1,0,0]);
+});
+document.getElementById('polywad-pan-right').addEventListener('click', function(){
+	polywad.setPanning([1,0,0]);
+});
 
 document.getElementById('stop').addEventListener('click', function(){
 	sine.stop();
@@ -159,8 +166,8 @@ document.getElementById('polywad-stop').addEventListener('click', function(){
 	polywad.stop();
 });
 
-var rafId;
-var logPitch = function(){
+let rafId, tuner, voice;
+let logPitch = function(){
 	console.log(tuner.pitch, tuner.noteName);
 	rafId = requestAnimationFrame(logPitch);
 };

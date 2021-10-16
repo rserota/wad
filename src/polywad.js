@@ -178,7 +178,7 @@ const Polywad = function(arg){
 	this.playable = 1;
 
 	if ( arg.reverb ) {
-		constructReverb(this, arg); // We need to make sure we have downloaded the impulse response before continuing with the setup.
+		this.reverb = constructReverb(this, arg); // We need to make sure we have downloaded the impulse response before continuing with the setup.
 	}
 	else {
 		this.setUp(arg);
@@ -212,7 +212,7 @@ Polywad.prototype.setUp = function(arg){ // Anything that needs to happen before
 
 	this.constructExternalFx(arg, context);
 
-	constructPanning(this, arg);
+	this.panning = constructPanning(arg);
 	setUpPanningOnPlay(this, arg);
 	if ( arg.compressor ) { constructCompressor(this, arg); }
 	if ( arg.recorder ) { constructRecorder(this, arg); }

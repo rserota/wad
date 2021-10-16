@@ -93,15 +93,6 @@ let noiseBuffer = (function(){
 })();
 
 
-/** a lil hack. just be glad it isn't on Object.prototype. **/
-let isArray = function(object){
-	return Object.prototype.toString.call(object) === '[object Array]';
-};
-let valueOrDefault = function(value, def) {
-	var val = (value == null) ? def : value;
-	return val;
-};
-
 /** Set up the default ADSR envelope. **/
 let constructEnv = function(arg){
 	return { //default envelope, if one is not specified on play
@@ -339,8 +330,6 @@ let playEnv = function(wad, arg){
 	}
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 /** When all the nodes are set up for this Wad, this function plugs them into each other,
 with special handling for nodes with custom interfaces (e.g. reverb, delay). **/
@@ -413,13 +402,12 @@ let setUpEnvOnPlay = function(that, arg){ //_
 	}
 
 };
-//////////////////////////////////////////////////////////////////////////////////
 
 
 /** Set the filter and filter envelope according to play() arguments, or revert to defaults **/
 
 let createFilters = function(that, arg){
-	if ( arg.filter && !isArray(arg.filter) ) {
+	if ( arg.filter && !_.isArray(arg.filter) ) {
 		arg.filter = [arg.filter];
 	}
 	that.filter.forEach(function (filter, i) {
@@ -440,7 +428,7 @@ let createFilters = function(that, arg){
 
 let setUpFilterOnPlay = function(that, arg){
 	if ( arg && arg.filter && that.filter ) {
-		if ( !isArray(arg.filter) ) arg.filter = [arg.filter];
+		if ( !_.isArray(arg.filter) ) arg.filter = [arg.filter];
 		createFilters(that, arg);
 	}
 	else if ( that.filter ) {
@@ -571,11 +559,11 @@ let setUpDelayOnPlay = function(that, arg){
 
 let constructCompressor = function(that, arg){
 	that.compressor = context.createDynamicsCompressor();
-	that.compressor.attack.value    = valueOrDefault(arg.compressor.attack, that.compressor.attack.value);
-	that.compressor.knee.value      = valueOrDefault(arg.compressor.knee, that.compressor.knee.value);
-	that.compressor.ratio.value     = valueOrDefault(arg.compressor.ratio, that.compressor.ratio.value);
-	that.compressor.release.value   = valueOrDefault(arg.compressor.release, that.compressor.release.value);
-	that.compressor.threshold.value = valueOrDefault(arg.compressor.threshold, that.compressor.threshold.value);
+	that.compressor.attack.value    = _.get(arg, 'compressor.attack', that.compressor.attack.value);
+	that.compressor.knee.value      = _.get(arg, 'compressor.knee', that.compressor.knee.value);
+	that.compressor.ratio.value     = _.get(arg, 'compressor.ratio', that.compressor.ratio.value);
+	that.compressor.release.value   = _.get(arg, 'compressor.release', that.compressor.release.value);
+	that.compressor.threshold.value = _.get(arg, 'compressor.threshold', that.compressor.threshold.value);
 	that.nodes.push(that.compressor);
 };
 
@@ -606,8 +594,6 @@ export {
 	logMessage,
 	context,
 	noiseBuffer,
-	isArray,
-	valueOrDefault,
 	constructEnv,
 	constructFilter,
 	requestAudioFile,

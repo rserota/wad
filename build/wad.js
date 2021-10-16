@@ -19777,7 +19777,7 @@ class AudioListener{
 /*!***********************!*\
   !*** ./src/common.js ***!
   \***********************/
-/*! exports provided: logStats, logMessage, context, noiseBuffer, isArray, valueOrDefault, constructEnv, constructFilter, requestAudioFile, constructVibrato, constructTremolo, constructReverb, constructPanning, constructDelay, constructCompressor, getConsent, permissionsGranted, setUpMic, setUpPanningOnPlay, setUpVibratoOnPlay, setUpTremoloOnPlay, setUpDelayOnPlay, setUpTunaOnPlay, plugEmIn, setUpEnvOnPlay, setUpFilterOnPlay, setUpReverbOnPlay, filterEnv, playEnv, setUpOscillator, createFilters */
+/*! exports provided: logStats, logMessage, context, noiseBuffer, constructEnv, constructFilter, requestAudioFile, constructVibrato, constructTremolo, constructReverb, constructPanning, constructDelay, constructCompressor, getConsent, permissionsGranted, setUpMic, setUpPanningOnPlay, setUpVibratoOnPlay, setUpTremoloOnPlay, setUpDelayOnPlay, setUpTunaOnPlay, plugEmIn, setUpEnvOnPlay, setUpFilterOnPlay, setUpReverbOnPlay, filterEnv, playEnv, setUpOscillator, createFilters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19786,8 +19786,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logMessage", function() { return logMessage; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "context", function() { return context; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "noiseBuffer", function() { return noiseBuffer; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isArray", function() { return isArray; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "valueOrDefault", function() { return valueOrDefault; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructEnv", function() { return constructEnv; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructFilter", function() { return constructFilter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "requestAudioFile", function() { return requestAudioFile; });
@@ -19913,15 +19911,6 @@ let noiseBuffer = (function(){
 	return noiseBuffer;
 })();
 
-
-/** a lil hack. just be glad it isn't on Object.prototype. **/
-let isArray = function(object){
-	return Object.prototype.toString.call(object) === '[object Array]';
-};
-let valueOrDefault = function(value, def) {
-	var val = (value == null) ? def : value;
-	return val;
-};
 
 /** Set up the default ADSR envelope. **/
 let constructEnv = function(arg){
@@ -20112,7 +20101,7 @@ let getConsent = function(that, arg) {
 let setUpMic = function(that, arg){
 	that.nodes           = [];
 	that.gain            = context.createGain();
-	that.gain.gain.value = valueOrDefault(arg.volume,that.volume);
+	that.gain.gain.value = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'volume', that.volume);
 	that.nodes.push(that.mediaStreamSource);
 	that.nodes.push(that.gain);
   
@@ -20159,8 +20148,6 @@ let playEnv = function(wad, arg){
 		wad.soundSource.stop(arg.exactTime + wad.env.attack + wad.env.decay + hold + wad.env.release + 0.00005);
 	}
 };
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** When all the nodes are set up for this Wad, this function plugs them into each other,
@@ -20213,16 +20200,15 @@ let setUpOscillator = function(that, arg){
 		that.soundSource.frequency.value = that.pitch;
 	}
 };
-///////////////////////////////////////////////////
 
 /** Set the ADSR volume envelope according to play() arguments, or revert to defaults **/
 let setUpEnvOnPlay = function(that, arg){ //_
 	if ( arg && arg.env ) {
-		that.env.attack  = valueOrDefault(arg.env.attack, that.defaultEnv.attack);
-		that.env.decay   = valueOrDefault(arg.env.decay, that.defaultEnv.decay);
-		that.env.sustain = valueOrDefault(arg.env.sustain, that.defaultEnv.sustain);
-		that.env.hold    = valueOrDefault(arg.env.hold, that.defaultEnv.hold);
-		that.env.release = valueOrDefault(arg.env.release, that.defaultEnv.release);
+		that.env.attack  = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'env.attack', that.defaultEnv.attack);
+		that.env.decay   = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'env.decay', that.defaultEnv.decay);
+		that.env.sustain = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg,'env.sustain', that.defaultEnv.sustain);
+		that.env.hold    = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'env.hold', that.defaultEnv.hold);
+		that.env.release = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'env.release', that.defaultEnv.release);
 	}
 	else {
 		that.env = {
@@ -20235,13 +20221,12 @@ let setUpEnvOnPlay = function(that, arg){ //_
 	}
 
 };
-//////////////////////////////////////////////////////////////////////////////////
 
 
 /** Set the filter and filter envelope according to play() arguments, or revert to defaults **/
 
 let createFilters = function(that, arg){
-	if ( arg.filter && !isArray(arg.filter) ) {
+	if ( arg.filter && !lodash__WEBPACK_IMPORTED_MODULE_3___default.a.isArray(arg.filter) ) {
 		arg.filter = [arg.filter];
 	}
 	that.filter.forEach(function (filter, i) {
@@ -20262,7 +20247,7 @@ let createFilters = function(that, arg){
 
 let setUpFilterOnPlay = function(that, arg){
 	if ( arg && arg.filter && that.filter ) {
-		if ( !isArray(arg.filter) ) arg.filter = [arg.filter];
+		if ( !lodash__WEBPACK_IMPORTED_MODULE_3___default.a.isArray(arg.filter) ) arg.filter = [arg.filter];
 		createFilters(that, arg);
 	}
 	else if ( that.filter ) {
@@ -20373,9 +20358,9 @@ let setUpDelayOnPlay = function(that, arg){
 		};
 
 		//set some decent values
-		delayNode.delayNode.delayTime.value = valueOrDefault(arg.delay.delayTime, that.delay.delayTime);
-		delayNode.feedbackNode.gain.value   = valueOrDefault(arg.delay.feedback, that.delay.feedback);
-		delayNode.wetNode.gain.value        = valueOrDefault(arg.delay.wet, that.delay.wet);
+		delayNode.delayNode.delayTime.value = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'delay.delayTime', that.delay.delayTime);
+		delayNode.feedbackNode.gain.value   = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'delay.feedback', that.delay.feedback);
+		delayNode.wetNode.gain.value        = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'delay.wet', that.delay.wet);
 
 
 		//set up the routing
@@ -20393,11 +20378,11 @@ let setUpDelayOnPlay = function(that, arg){
 
 let constructCompressor = function(that, arg){
 	that.compressor = context.createDynamicsCompressor();
-	that.compressor.attack.value    = valueOrDefault(arg.compressor.attack, that.compressor.attack.value);
-	that.compressor.knee.value      = valueOrDefault(arg.compressor.knee, that.compressor.knee.value);
-	that.compressor.ratio.value     = valueOrDefault(arg.compressor.ratio, that.compressor.ratio.value);
-	that.compressor.release.value   = valueOrDefault(arg.compressor.release, that.compressor.release.value);
-	that.compressor.threshold.value = valueOrDefault(arg.compressor.threshold, that.compressor.threshold.value);
+	that.compressor.attack.value    = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'compressor.attack', that.compressor.attack.value);
+	that.compressor.knee.value      = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'compressor.knee', that.compressor.knee.value);
+	that.compressor.ratio.value     = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'compressor.ratio', that.compressor.ratio.value);
+	that.compressor.release.value   = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'compressor.release', that.compressor.release.value);
+	that.compressor.threshold.value = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'compressor.threshold', that.compressor.threshold.value);
 	that.nodes.push(that.compressor);
 };
 
@@ -21033,7 +21018,7 @@ const Polywad = function(arg){
 	this.playable = 1;
 
 	if ( arg.reverb ) {
-		Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructReverb"])(this, arg); // We need to make sure we have downloaded the impulse response before continuing with the setup.
+		this.reverb = Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructReverb"])(this, arg); // We need to make sure we have downloaded the impulse response before continuing with the setup.
 	}
 	else {
 		this.setUp(arg);
@@ -21067,7 +21052,7 @@ Polywad.prototype.setUp = function(arg){ // Anything that needs to happen before
 
 	this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_0__["context"]);
 
-	Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructPanning"])(this, arg);
+	this.panning = Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructPanning"])(arg);
 	Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpPanningOnPlay"])(this, arg);
 	if ( arg.compressor ) { Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructCompressor"])(this, arg); }
 	if ( arg.recorder ) { constructRecorder(this, arg); }
@@ -21469,6 +21454,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tunajs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(tunajs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _audio_listener__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./audio_listener */ "./src/audio_listener.js");
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./common */ "./src/common.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -21477,7 +21465,7 @@ let Wad = function(arg){
 	/** Set basic Wad properties **/
 	this.source        = arg.source;
 	this.destination   = arg.destination || _common__WEBPACK_IMPORTED_MODULE_2__["context"].destination; // the last node the sound is routed to
-	this.volume        = Object(_common__WEBPACK_IMPORTED_MODULE_2__["valueOrDefault"])(arg.volume, 1); // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
+	this.volume        = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'volume', 1); // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
 	this.defaultVolume = this.volume;
 	this.playable      = 1; // if this is less than 1, this Wad is still waiting for a file to download before it can play
 	this.pitch         = Wad.pitches[arg.pitch] || arg.pitch || 440;
@@ -21810,7 +21798,7 @@ Wad.prototype.setPanning = function(panning, timeConstant, label){
 	}
 
 	this.panning.location = panning;
-	if ( Object(_common__WEBPACK_IMPORTED_MODULE_2__["isArray"])(panning) && this.panning.type === '3d' && this.panning.node ) {
+	if ( lodash__WEBPACK_IMPORTED_MODULE_3___default.a.isArray(panning) && this.panning.type === '3d' && this.panning.node ) {
 		this.panning.node.setPosition(panning[0], panning[1], panning[2]);
 
 	}
@@ -21818,7 +21806,7 @@ Wad.prototype.setPanning = function(panning, timeConstant, label){
 		this.panning.node.pan.setTargetAtTime(panning, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
 	}
 
-	if ( Object(_common__WEBPACK_IMPORTED_MODULE_2__["isArray"])(panning) ) { this.panning.type = '3d'; }
+	if ( lodash__WEBPACK_IMPORTED_MODULE_3___default.a.isArray(panning) ) { this.panning.type = '3d'; }
 	else if ( typeof panning === 'number' ) { this.panning.type = 'stereo'; }
 	return this;
 };

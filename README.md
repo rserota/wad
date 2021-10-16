@@ -740,7 +740,7 @@ This method sets the default pitch for each wad inside this polywad.
 | -------- | ------ | ------- | ---------------------------------------- |
 | volume   | number | none    | The new volume setting for this polywad. |   
 
-### Wad.prototype.setPanning(panning, timeConstant)
+### Wad.Poly.prototype.setPanning(panning, timeConstant)
 
 | Property     | Type            | Default         | Description |
 | ------------ | --------------- | --------------  | ----------- |

@@ -349,7 +349,7 @@ Wad.prototype.setDetune = function(detune, timeConstant, label){
 };
 
 /** Change the panning of a Wad at any time, including during playback **/
-Wad.prototype.setPanning = function(panning, timeConstant, label){
+Wad.prototype.setPanning = function(panning, timeConstant){
 	timeConstant = timeConstant || .01;
 	if ( typeof panning === 'number' && !context.createStereoPanner ) {
 		panning = [panning, 0, 0];

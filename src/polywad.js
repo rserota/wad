@@ -283,6 +283,13 @@ Polywad.prototype.setPitch = function(pitch){
 	});
 };
 
+Polywad.prototype.setPanning = function(panning, timeConstant){
+	//for ( var i = 0; i < this.wads.length; i++ ) {
+		//this.wads[i].setPanning(panning, timeConstant);
+	//}
+	Wad.prototype.setPanning.call(this, panning, timeConstant);
+};
+
 Polywad.prototype.play = function(arg){
 	if ( this.isSetUp ) {
 		if ( this.playable < 1 ) {

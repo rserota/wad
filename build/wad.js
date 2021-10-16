@@ -21123,6 +21123,13 @@ Polywad.prototype.setPitch = function(pitch){
 	});
 };
 
+Polywad.prototype.setPanning = function(panning, timeConstant){
+	//for ( var i = 0; i < this.wads.length; i++ ) {
+		//this.wads[i].setPanning(panning, timeConstant);
+	//}
+	Wad.prototype.setPanning.call(this, panning, timeConstant);
+};
+
 Polywad.prototype.play = function(arg){
 	if ( this.isSetUp ) {
 		if ( this.playable < 1 ) {
@@ -21489,18 +21496,15 @@ let Wad = function(arg){
 	this.duration = (this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(this.rate)) * 1000;
 	this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
 
-
 	/** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
 	if ( this.source === 'noise' ) {
 		this.decodedBuffer = _common__WEBPACK_IMPORTED_MODULE_2__["noiseBuffer"];
 	}
 
-
 	/** If the Wad's source is the microphone, the rest of the setup happens here. **/
 	else if ( this.source === 'mic' ) {
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["getConsent"])(this, arg);
 	}
-
 
 	/** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
 	else if ( !( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) ) {
@@ -21524,6 +21528,7 @@ let Wad = function(arg){
 		}
 	}
 	else { arg.callback && arg.callback(this); }
+
 	Wad.allWads.push(this);
 };
 
@@ -21590,11 +21595,9 @@ Wad.prototype.play = function(arg){
 		else { this.volume = this.defaultVolume; }
 		arg.offset = arg.offset || this.offset || 0;
 
-
 		if ( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) {
 			Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpOscillator"])(this, arg);
 		}
-
 		else {
 			this.soundSource = _common__WEBPACK_IMPORTED_MODULE_2__["context"].createBufferSource();
 			this.soundSource.buffer = this.decodedBuffer;
@@ -21604,7 +21607,6 @@ Wad.prototype.play = function(arg){
 			
 		}
 
-
 		if ( this.soundSource.detune ) {
 			this.soundSource.detune.value = arg.detune || this.detune;
 		}
@@ -21612,6 +21614,7 @@ Wad.prototype.play = function(arg){
 		if ( arg.wait === undefined ) {
 			arg.wait = 0;
 		}
+
 		if (arg.exactTime === undefined) {
 			arg.exactTime = _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + arg.wait;
 		}
@@ -21619,11 +21622,9 @@ Wad.prototype.play = function(arg){
 
 		this.nodes.push(this.soundSource);
 
-
 		/**  sets the volume envelope based on the play() arguments if present,
 or defaults to the constructor arguments if the volume envelope is not set on play() **/
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpEnvOnPlay"])(this, arg);
-		////////////////////////////////////////////////////////////////////////////////////////
 
 		if ( this.soundSource.playbackRate ) {
 			this.soundSource.playbackRate.value = arg.rate || this.rate;
@@ -21633,11 +21634,9 @@ or defaults to the constructor arguments if the volume envelope is not set on pl
 		/**  sets up the filter and filter envelope based on the play() argument if present,
 or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpFilterOnPlay"])(this, arg);
-		///////////////////////////////////////////////////////////////////////////////////////////////////
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpTunaOnPlay"])(this, arg);
 
 		this.setUpExternalFxOnPlay(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
-
 
 		this.gain.unshift(_common__WEBPACK_IMPORTED_MODULE_2__["context"].createGain()); // sets up the gain node
 		this.gain[0].label = arg.label;
@@ -21648,13 +21647,10 @@ or defaults to the constructor argument if the filter and filter envelope are no
 			this.gain.length = 15;
 		}
 
-		// sets up reverb
 		if ( this.reverb ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpReverbOnPlay"])(this, arg); }
 
 		/**  sets panning based on the play() argument if present, or defaults to the constructor argument if panning is not set on play **/
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpPanningOnPlay"])(this, arg);
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpDelayOnPlay"])(this, arg);
 
@@ -21791,7 +21787,7 @@ Wad.prototype.setDetune = function(detune, timeConstant, label){
 };
 
 /** Change the panning of a Wad at any time, including during playback **/
-Wad.prototype.setPanning = function(panning, timeConstant, label){
+Wad.prototype.setPanning = function(panning, timeConstant){
 	timeConstant = timeConstant || .01;
 	if ( typeof panning === 'number' && !_common__WEBPACK_IMPORTED_MODULE_2__["context"].createStereoPanner ) {
 		panning = [panning, 0, 0];

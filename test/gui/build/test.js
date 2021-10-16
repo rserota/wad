@@ -21213,6 +21213,13 @@ Polywad.prototype.setPitch = function(pitch){
 	});
 };
 
+Polywad.prototype.setPanning = function(panning, timeConstant){
+	//for ( var i = 0; i < this.wads.length; i++ ) {
+		//this.wads[i].setPanning(panning, timeConstant);
+	//}
+	Wad.prototype.setPanning.call(this, panning, timeConstant);
+};
+
 Polywad.prototype.play = function(arg){
 	if ( this.isSetUp ) {
 		if ( this.playable < 1 ) {
@@ -21579,18 +21586,15 @@ let Wad = function(arg){
 	this.duration = (this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(this.rate)) * 1000;
 	this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
 
-
 	/** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
 	if ( this.source === 'noise' ) {
 		this.decodedBuffer = _common__WEBPACK_IMPORTED_MODULE_2__["noiseBuffer"];
 	}
 
-
 	/** If the Wad's source is the microphone, the rest of the setup happens here. **/
 	else if ( this.source === 'mic' ) {
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["getConsent"])(this, arg);
 	}
-
 
 	/** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
 	else if ( !( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) ) {
@@ -21614,6 +21618,7 @@ let Wad = function(arg){
 		}
 	}
 	else { arg.callback && arg.callback(this); }
+
 	Wad.allWads.push(this);
 };
 
@@ -21680,11 +21685,9 @@ Wad.prototype.play = function(arg){
 		else { this.volume = this.defaultVolume; }
 		arg.offset = arg.offset || this.offset || 0;
 
-
 		if ( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) {
 			Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpOscillator"])(this, arg);
 		}
-
 		else {
 			this.soundSource = _common__WEBPACK_IMPORTED_MODULE_2__["context"].createBufferSource();
 			this.soundSource.buffer = this.decodedBuffer;
@@ -21694,7 +21697,6 @@ Wad.prototype.play = function(arg){
 			
 		}
 
-
 		if ( this.soundSource.detune ) {
 			this.soundSource.detune.value = arg.detune || this.detune;
 		}
@@ -21702,6 +21704,7 @@ Wad.prototype.play = function(arg){
 		if ( arg.wait === undefined ) {
 			arg.wait = 0;
 		}
+
 		if (arg.exactTime === undefined) {
 			arg.exactTime = _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + arg.wait;
 		}
@@ -21709,11 +21712,9 @@ Wad.prototype.play = function(arg){
 
 		this.nodes.push(this.soundSource);
 
-
 		/**  sets the volume envelope based on the play() arguments if present,
 or defaults to the constructor arguments if the volume envelope is not set on play() **/
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpEnvOnPlay"])(this, arg);
-		////////////////////////////////////////////////////////////////////////////////////////
 
 		if ( this.soundSource.playbackRate ) {
 			this.soundSource.playbackRate.value = arg.rate || this.rate;
@@ -21723,11 +21724,9 @@ or defaults to the constructor arguments if the volume envelope is not set on pl
 		/**  sets up the filter and filter envelope based on the play() argument if present,
 or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpFilterOnPlay"])(this, arg);
-		///////////////////////////////////////////////////////////////////////////////////////////////////
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpTunaOnPlay"])(this, arg);
 
 		this.setUpExternalFxOnPlay(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
-
 
 		this.gain.unshift(_common__WEBPACK_IMPORTED_MODULE_2__["context"].createGain()); // sets up the gain node
 		this.gain[0].label = arg.label;
@@ -21738,13 +21737,10 @@ or defaults to the constructor argument if the filter and filter envelope are no
 			this.gain.length = 15;
 		}
 
-		// sets up reverb
 		if ( this.reverb ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpReverbOnPlay"])(this, arg); }
 
 		/**  sets panning based on the play() argument if present, or defaults to the constructor argument if panning is not set on play **/
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpPanningOnPlay"])(this, arg);
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpDelayOnPlay"])(this, arg);
 
@@ -21881,7 +21877,7 @@ Wad.prototype.setDetune = function(detune, timeConstant, label){
 };
 
 /** Change the panning of a Wad at any time, including during playback **/
-Wad.prototype.setPanning = function(panning, timeConstant, label){
+Wad.prototype.setPanning = function(panning, timeConstant){
 	timeConstant = timeConstant || .01;
 	if ( typeof panning === 'number' && !_common__WEBPACK_IMPORTED_MODULE_2__["context"].createStereoPanner ) {
 		panning = [panning, 0, 0];
@@ -22092,7 +22088,7 @@ __webpack_require__.r(__webpack_exports__);
 window.Wad = _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a;
 
 _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.logs.verbosity = 1;
-var ignition = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'./ignition.mp3'});
+let ignition = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'./ignition.mp3'});
 document.getElementById('ignition').addEventListener('click', async function(){
 	// await ignition.play()
 	await ignition.play();
@@ -22121,7 +22117,7 @@ document.getElementById('ignition-slower').addEventListener('click', async funct
 	});
 	console.log('slow ignition');
 });
-var helloMan = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({
+let helloMan = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({
 	source: './hello-man.wav',
 	sprite: {
 		hello: [0, .4],
@@ -22141,7 +22137,7 @@ document.getElementById('sprite-ab').addEventListener('click', async function(){
 	await helloMan.play({env:{attack: .1, release:.02}});
 });
 
-var longClip = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'./do-re-mi.wav'});
+let longClip = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'./do-re-mi.wav'});
 document.getElementById('full-song').addEventListener('click', function(){
 	longClip.play().then(function(thatWad){
 		console.log('Clip finished.');
@@ -22160,7 +22156,7 @@ document.getElementById('reverse-full-song').addEventListener('click', function(
 	longClip.reverse();
 });
 
-var sine = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'sine', env: {attack: .07, hold: 1.5, release: .6}});
+let sine = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'sine', env: {attack: .07, hold: 1.5, release: .6}});
 
 document.getElementById('sine').addEventListener('click', async function(){
 	await sine.play();
@@ -22207,11 +22203,11 @@ document.getElementById('stop').addEventListener('click', function(){
 });
 
 
-var sawtooth = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'sawtooth', env:{hold:1, release:.2}});
-var triangle = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'triangle', env:{hold:1, release:.2}});
+let sawtooth = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'sawtooth', env:{hold:1, release:.2}});
+let triangle = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'triangle', env:{hold:1, release:.2}});
 
-var volumeDisplay = document.getElementById('polywad-volume');
-var clippingDisplay = document.getElementById('polywad-clipping');
+let volumeDisplay = document.getElementById('polywad-volume');
+let clippingDisplay = document.getElementById('polywad-clipping');
 let displayAudioMeter = function(thatWad){
 	thatWad.add(sawtooth).add(triangle);
 	setInterval(function(){
@@ -22219,12 +22215,13 @@ let displayAudioMeter = function(thatWad){
 		clippingDisplay.innerText = thatWad.audioMeter.checkClipping();
 	}, 50);
 };
-window.polywad = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.Poly({
+let polywad = window.polywad = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.Poly({
 	volume: .5,
 	reverb  : {
 		wet     : 1,                                            
 		impulse : 'widehall.wav' 
 	},
+	panning: [0,0,0],
 	recorder: true,
 	audioMeter: {
 		clipLevel: .98,
@@ -22241,6 +22238,12 @@ document.getElementById('polywad').addEventListener('click', function(){
 document.getElementById('polywad-set-pitch').addEventListener('click', function(){
 	polywad.setPitch('B3');
 });
+document.getElementById('polywad-pan-left').addEventListener('click', function(){
+	polywad.setPanning([-1,0,0]);
+});
+document.getElementById('polywad-pan-right').addEventListener('click', function(){
+	polywad.setPanning([1,0,0]);
+});
 
 document.getElementById('stop').addEventListener('click', function(){
 	sine.stop();
@@ -22249,8 +22252,8 @@ document.getElementById('polywad-stop').addEventListener('click', function(){
 	polywad.stop();
 });
 
-var rafId;
-var logPitch = function(){
+let rafId, tuner, voice;
+let logPitch = function(){
 	console.log(tuner.pitch, tuner.noteName);
 	rafId = requestAnimationFrame(logPitch);
 };

@@ -740,13 +740,21 @@ This method sets the default pitch for each wad inside this polywad.
 | -------- | ------ | ------- | ---------------------------------------- |
 | volume   | number | none    | The new volume setting for this polywad. |   
 
+### Wad.prototype.setPanning(panning, timeConstant)
+
+| Property     | Type            | Default         | Description |
+| ------------ | --------------- | --------------  | ----------- |
+| panning      | object or array | none (required) | New detune setting. |
+| timeConstant | string          | none            | Time in seconds for 63% of the transition to complete. | 
+
+Change the panning of this polywad at any time, even during playback.
 
 ### Wad.Poly.prototype.updatePitch()
 
 This method is used for pitch detection. After calling it, the polywad will calculate the frequency of its output, and write that information to `this.pitch` and `this.noteName`.
 
 
-### Wad.Poly.prototype.updatePitch()
+### Wad.Poly.prototype.stopUpdatingPitch()
 
 This method stops the polywad from continuing to detect the pitch in real time. 
 

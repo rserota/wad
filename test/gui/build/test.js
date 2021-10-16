@@ -1,12 +1,102 @@
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = "./test/gui/src/index.js");
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./build/wad.js":
+/*!**********************!*\
+  !*** ./build/wad.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
 (function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
+	if(true)
 		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["Wad"] = factory();
-	else
-		root["Wad"] = factory();
+	else {}
 })(window, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -541,7 +631,7 @@ return /******/ (function(modules) { // webpackBootstrap
   var root = freeGlobal || freeSelf || Function('return this')();
 
   /** Detect free variable `exports`. */
-  var freeExports =  true && exports && !exports.nodeType && exports;
+  var freeExports =   true && exports && !exports.nodeType && exports;
 
   /** Detect free variable `module`. */
   var freeModule = freeExports && typeof module == 'object' && module && !module.nodeType && module;
@@ -17434,7 +17524,7 @@ return /******/ (function(modules) { // webpackBootstrap
         STRING = "string",
         INT = "int";
 
-    if ( true && module.exports) {
+    if (  true && module.exports) {
         module.exports = Tuna;
     } else if (true) {
         window.define("Tuna", definition);
@@ -20452,7 +20542,7 @@ Wad._common = _common__WEBPACK_IMPORTED_MODULE_6__;
 Wad.logs = _common__WEBPACK_IMPORTED_MODULE_6__["logStats"];
 
 
-if( true && module.exports) { module.exports = Wad; }
+if(  true && module.exports) { module.exports = Wad; }
 
 /* harmony default export */ __webpack_exports__["default"] = (Wad);
 
@@ -21984,3 +22074,369 @@ Wad.setVolume = function(volume){
 /******/ })["default"];
 });
 //# sourceMappingURL=wad.js.map
+
+/***/ }),
+
+/***/ "./test/gui/src/index.js":
+/*!*******************************!*\
+  !*** ./test/gui/src/index.js ***!
+  \*******************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _build_wad_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../build/wad.js */ "./build/wad.js");
+/* harmony import */ var _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_build_wad_js__WEBPACK_IMPORTED_MODULE_0__);
+
+window.Wad = _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a;
+
+_build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.logs.verbosity = 1;
+var ignition = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'./ignition.mp3'});
+document.getElementById('ignition').addEventListener('click', async function(){
+	// await ignition.play()
+	await ignition.play();
+	console.log('ignition');
+	await ignition.play();
+	console.log('ignition');
+	await ignition.play();
+	console.log('ignition');
+
+});
+document.getElementById('ignition-faster').addEventListener('click', async function(){
+	await ignition.play({ rate: 2.0, });
+	console.log('fast ignition');
+	await ignition.play({ rate: 2.0, });
+	console.log('fast ignition');
+	await ignition.play({ rate: 2.0, });
+	console.log('fast ignition');
+});
+document.getElementById('ignition-slower').addEventListener('click', async function(){
+	await ignition.play({
+		rate: 0.5,
+	});
+	console.log('slow ignition');
+	await ignition.play({
+		rate: 0.5,
+	});
+	console.log('slow ignition');
+});
+var helloMan = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({
+	source: './hello-man.wav',
+	sprite: {
+		hello: [0, .4],
+		man  : [.4,1]
+	}
+});
+document.getElementById('sprite-a').addEventListener('click', async function(){
+	await helloMan.hello.play({env:{release:.02}});
+	await helloMan.hello.play({rate: 1.1, volume:1.2, env:{release:.02}});
+});
+document.getElementById('sprite-b').addEventListener('click', async function(){
+	await helloMan.man.play({env:{attack: .1, release:.02}});
+	await helloMan.man.play({env:{attack: .1, release:.02}});
+});
+document.getElementById('sprite-ab').addEventListener('click', async function(){
+	await helloMan.play({env:{attack: .1, release:.02}});
+	await helloMan.play({env:{attack: .1, release:.02}});
+});
+
+var longClip = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'./do-re-mi.wav'});
+document.getElementById('full-song').addEventListener('click', function(){
+	longClip.play().then(function(thatWad){
+		console.log('Clip finished.');
+	});
+});
+document.getElementById('pause-full-song').addEventListener('click', function(){
+	longClip.pause();
+});
+document.getElementById('unpause-full-song').addEventListener('click', function(){
+	longClip.unpause();
+});
+document.getElementById('stop-full-song').addEventListener('click', function(){
+	longClip.stop();
+});
+document.getElementById('reverse-full-song').addEventListener('click', function(){
+	longClip.reverse();
+});
+
+var sine = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'sine', env: {attack: .07, hold: 1.5, release: .6}});
+
+document.getElementById('sine').addEventListener('click', async function(){
+	await sine.play();
+	await sine.play();
+});
+document.getElementById('sine-left').addEventListener('click', async function(){
+	await sine.play({panning: -1, label: 'left'});
+	await sine.play({panning: -1, label: 'left'});
+});
+document.getElementById('sine-right').addEventListener('click', async function(){
+	await sine.play({panning: 1, label: 'right'});
+	await sine.play({panning: 1, label: 'right'});
+});
+
+document.getElementById('detune').addEventListener('click', function(){
+	sine.setDetune(100);
+});
+document.getElementById('detune-left').addEventListener('click', function(){
+	sine.setDetune(100, null, 'left');
+});
+document.getElementById('detune-right').addEventListener('click', function(){
+	sine.setDetune(100, null, 'right');
+});
+
+
+document.getElementById('dampen').addEventListener('click', function(){
+	sine.setVolume(.1);
+});
+document.getElementById('dampen-left').addEventListener('click', function(){
+	sine.setVolume(.1, null, 'left');
+});
+document.getElementById('dampen-right').addEventListener('click', function(){
+	sine.setVolume(.1, null, 'right');
+});
+
+document.getElementById('pan').addEventListener('click', function(){
+	sine.setPanning(1);
+});
+document.getElementById('set-pitch').addEventListener('click', function(){
+	sine.setPitch('B3');
+});
+document.getElementById('stop').addEventListener('click', function(){
+	sine.stop();
+});
+
+
+var sawtooth = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'sawtooth', env:{hold:1, release:.2}});
+var triangle = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'triangle', env:{hold:1, release:.2}});
+
+var volumeDisplay = document.getElementById('polywad-volume');
+var clippingDisplay = document.getElementById('polywad-clipping');
+let displayAudioMeter = function(thatWad){
+	thatWad.add(sawtooth).add(triangle);
+	setInterval(function(){
+		volumeDisplay.innerText = Math.round(thatWad.audioMeter.volume * 1000);
+		clippingDisplay.innerText = thatWad.audioMeter.checkClipping();
+	}, 50);
+};
+window.polywad = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.Poly({
+	volume: .5,
+	reverb  : {
+		wet     : 1,                                            
+		impulse : 'widehall.wav' 
+	},
+	recorder: true,
+	audioMeter: {
+		clipLevel: .98,
+		averaging: .95,
+		clipLag: 750,
+	},
+	callback: displayAudioMeter
+});
+
+
+document.getElementById('polywad').addEventListener('click', function(){
+	polywad.play();
+});
+document.getElementById('polywad-set-pitch').addEventListener('click', function(){
+	polywad.setPitch('B3');
+});
+
+document.getElementById('stop').addEventListener('click', function(){
+	sine.stop();
+});
+document.getElementById('polywad-stop').addEventListener('click', function(){
+	polywad.stop();
+});
+
+var rafId;
+var logPitch = function(){
+	console.log(tuner.pitch, tuner.noteName);
+	rafId = requestAnimationFrame(logPitch);
+};
+document.getElementById('mic-consent').addEventListener('click', function(){
+	window.voice = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({
+		source  : 'mic',
+		// reverb  : {
+		//     wet : .4
+		// },
+		// filter  : {
+		//     type      : 'highpass',
+		//     frequency : 700
+		// },
+		// panning : -.2
+	});
+
+	window.tuner = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.Poly({
+		recorder: {
+			onstop: function(){
+				let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
+				window.recordedAudio = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:URL.createObjectURL(blob)});
+			}
+		},
+	});
+	// tuner.setVolume(0) // mute the tuner to avoid feedback
+	tuner.add(voice);
+
+
+});
+
+document.getElementById('mic-play').addEventListener('click', function(){
+	console.log('Play mic');
+	voice.play();
+});
+document.getElementById('mic-stop').addEventListener('click', function(){
+	console.log('Stop mic');
+	voice.stop();
+});
+document.getElementById('mic-record').addEventListener('click', function(){
+	console.log('record mic');
+	tuner.recorder.start();
+});
+document.getElementById('mic-record-stop').addEventListener('click', function(){
+	console.log('stop recording mic');
+	tuner.recorder.stop();
+});
+document.getElementById('detect-pitch').addEventListener('click', function(){
+	tuner.updatePitch();
+	logPitch();
+});
+document.getElementById('stop-detect-pitch').addEventListener('click', function(){
+	tuner.stopUpdatingPitch();
+	cancelAnimationFrame(rafId);
+});
+
+
+var tunaConfig = {
+	source: 'sawtooth',
+	env: {
+		attack: .1,
+		hold: 2,
+		release: .4
+	},
+	filter: {
+		type: 'lowpass',
+		frequency: 700
+	}
+};
+var withoutTuna = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a(tunaConfig);
+
+tunaConfig.tuna = {
+	Chorus : {
+		intensity: 0.3,  //0 to 1
+		rate: 4,         //0.001 to 8
+		stereoPhase: 0, //0 to 180
+		bypass: 0
+	}
+}; 
+
+var withTuna = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a(tunaConfig);
+
+tunaConfig.tuna = {
+	Phaser: {
+		rate: 1.2,                     //0.01 to 8 is a decent range, but higher values are possible
+		depth: 0.3,                    //0 to 1
+		feedback: 0.2,                 //0 to 1+
+		stereoPhase: 30,               //0 to 180
+		baseModulationFrequency: 700,  //500 to 1500
+		bypass: 0
+	}
+};
+var tunaPhaser = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a(tunaConfig);
+
+document.getElementById('no-tuna').addEventListener('click', function(){
+	withoutTuna.play();
+});
+document.getElementById('tuna-chorus').addEventListener('click', function(){
+	withTuna.play();
+});
+document.getElementById('tuna-phaser').addEventListener('click', function(){
+	tunaPhaser.play();
+});
+
+//SoundIterator
+
+var iterator = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.SoundIterator({files: [
+	new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source: 'sawtooth', volume: 0.5, env:{hold:1}}),
+	new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source: 'square', volume: 0.5, env:{hold:1}}),
+	new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source: 'sine', volume: 0.5, env:{hold:1}}),
+]});
+
+document.getElementById('play-next-nonrandom-sound').addEventListener('click', function(){
+	iterator.random = false;
+	iterator.play();
+});
+
+document.getElementById('play-next-random-sound').addEventListener('click', function(){
+	iterator.random = true;
+	iterator.randomPlaysBeforeRepeat = 0;
+	iterator.play();
+});
+
+document.getElementById('play-next-sound-with-1-randomPlaysBeforeRepeat').addEventListener('click', function(){
+	iterator.random = true;
+	iterator.randomPlaysBeforeRepeat = 1;
+	iterator.play();
+});
+
+var newSound = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({source:'triangle', volume: 0.5, env:{hold:1}});
+
+document.getElementById('add-sound').addEventListener('click', function(){
+	iterator.add(newSound);
+});
+
+document.getElementById('remove-sound').addEventListener('click', function(){
+	iterator.remove(newSound);
+});
+
+// AudioListener
+
+var listenerReferenceSound = new _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a({
+	source: './ignition.mp3',
+	panning: [0,0,0]
+});
+var listener = _build_wad_js__WEBPACK_IMPORTED_MODULE_0___default.a.listener;
+
+document.getElementById('listener-move-left').addEventListener('click', function(){
+	listener.setPosition(listener.positionX.value-1, listener.positionY.value, listener.positionZ.value);
+	listenerReferenceSound.play();
+});
+
+document.getElementById('listener-move-right').addEventListener('click', function(){
+	listener.positionX.value += 1;
+	listenerReferenceSound.play();
+});
+
+document.getElementById('listener-position').addEventListener('click', function(){
+	alert('The listener is at: ' + JSON.stringify(listener.getPosition()));
+});
+
+document.getElementById('listener-face-left').addEventListener('click', function(){
+	listener.setOrientation(-1, 0, 0, listener.upX.value, listener.upY.value, listener.upZ.value);
+	listenerReferenceSound.play();
+});
+
+document.getElementById('listener-face-forward').addEventListener('click', function(){
+	listener.setOrientation(0, 0, -1, listener.upX.value, listener.upY.value, listener.upZ.value);
+	listenerReferenceSound.play();
+});
+
+document.getElementById('listener-face-right').addEventListener('click', function(){
+	listener.forwardX.value = 1;
+	listener.forwardY.value = 0;
+	listener.forwardZ.value = 0;
+	listenerReferenceSound.play();
+});
+
+document.getElementById('listener-orientation').addEventListener('click', function(){
+	alert('The listener is at: ' + JSON.stringify(listener.getOrientation()));
+});
+
+
+
+
+
+/***/ })
+
+/******/ });
+//# sourceMappingURL=test.js.map

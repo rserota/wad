@@ -1,6 +1,7 @@
 import Tuna from 'tunajs';
 import Polywad from './polywad';
 import { pitches } from './pitches';
+import _ from 'lodash';
 
 
 let audioContext = window.AudioContext || window.webkitAudioContext;
@@ -92,43 +93,25 @@ let noiseBuffer = (function(){
 })();
 
 
-/** a lil hack. just be glad it isn't on Object.prototype. **/
-let isArray = function(object){
-	return Object.prototype.toString.call(object) === '[object Array]';
-};
-let valueOrDefault = function(value, def) {
-	var val = (value == null) ? def : value;
-	return val;
-};
-
 /** Set up the default ADSR envelope. **/
-let constructEnv = function(that, arg){
-	that.env = { //default envelope, if one is not specified on play
-		attack  : arg.env ? valueOrDefault(arg.env.attack,  0) : 0,    // time in seconds from onset to peak volume
-		decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
-		sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
-		hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14159) : 3.14159, // time in seconds to maintain sustain volume
-		release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
+let constructEnv = function(arg){
+	return { //default envelope, if one is not specified on play
+		attack   : _.get(arg, 'env.attack', 0),    // time in seconds from onset to peak volume
+		decay    : _.get(arg, 'env.decay', 0),    // time in seconds from peak volume to sustain volume
+		sustain  : _.get(arg, 'env.sustain', 1),    // sustain volume level, as a percentage of the max
+		hold     : _.get(arg, 'env.hold', 3.14159),    // time in seconds to maintain sustain volume
+		release  : _.get(arg, 'env.release', 0),    // time in seconds from release to zero volume
 	};
-	that.defaultEnv = {
-		attack  : arg.env ? valueOrDefault(arg.env.attack,  0) : 0,    // time in seconds from onset to peak volume
-		decay   : arg.env ? valueOrDefault(arg.env.decay,   0) : 0,    // time in seconds from peak volume to sustain volume
-		sustain : arg.env ? valueOrDefault(arg.env.sustain, 1) : 1,    // sustain volume level, as a percent of peak volume. min:0, max:1
-		hold    : arg.env ? valueOrDefault(arg.env.hold, 3.14159) : 3.14159, // time in seconds to maintain sustain volume
-		release : arg.env ? valueOrDefault(arg.env.release, 0) : 0     // time in seconds from sustain volume to zero volume
-	};
-	that.userSetHold = !!(arg.env && arg.env.hold);
 };
-/////////////////////////////////////////
 
 
 /** Set up the default filter and filter envelope. **/
-let constructFilter = function(that, arg){
+let constructFilter = function(arg){
 
-	if ( !arg.filter ) { arg.filter = null; }
+	if ( !arg.filter ) { return null; }
 
-	else if ( isArray(arg.filter) ) {
-		that.filter = arg.filter.map(function(filterArg){
+	else if ( _.isArray(arg.filter) ) {
+		return arg.filter.map(function(filterArg){
 			return {
 				type : filterArg.type || 'lowpass',
 				frequency : filterArg.frequency || 600,
@@ -138,7 +121,7 @@ let constructFilter = function(that, arg){
 		});
 	}
 	else {
-		that.filter  = [{
+		return [{
 			type : arg.filter.type || 'lowpass',
 			frequency : arg.filter.frequency || 600,
 			q : arg.filter.q || 1,
@@ -146,7 +129,6 @@ let constructFilter = function(that, arg){
 		}];
 	}
 };
-//////////////////////////////////////////////////////
 
 
 /** If the Wad uses an audio file as the source, request it from the server.
@@ -172,36 +154,33 @@ let requestAudioFile = function(that, callback){
 	};
 	request.send();
 };
-//////////////////////////////////////////////////////////////////////////
 
 /** Set up the vibrato LFO **/
-let constructVibrato = function(that, arg){
+let constructVibrato = function(arg){
 	if ( arg.vibrato ) {
-		that.vibrato = {
-			shape     : valueOrDefault(arg.vibrato.shape, 'sine'),
-			speed     : valueOrDefault(arg.vibrato.speed, 1),
-			magnitude : valueOrDefault(arg.vibrato.magnitude, 5),
-			attack    : valueOrDefault(arg.vibrato.attack, 0)
+		return {
+			shape     : _.get(arg, 'vibrato.shape', 'sine'),
+			speed     : _.get(arg, 'vibrato.speed', 1),
+			magnitude : _.get(arg, 'vibrato.magnitude', 5),
+			attack    : _.get(arg, 'vibrato.attack', 0),
 		};
 	}
-	else { that.vibrato = null; }
+	else { return null; }
 };
-//////////////////////////////
 
 
 /** Set up the tremolo LFO **/
-let constructTremolo = function(that, arg){
+let constructTremolo = function(arg){
 	if ( arg.tremolo ) {
-		that.tremolo = {
-			shape     : valueOrDefault(arg.tremolo.shape, 'sine'),
-			speed     : valueOrDefault(arg.tremolo.speed, 1),
-			magnitude : valueOrDefault(arg.tremolo.magnitude, 5),
-			attack    : valueOrDefault(arg.tremolo.attack, 1)
+		return {
+			shape     : _.get(arg, 'tremolo.shape', 'sine'),
+			speed     : _.get(arg, 'tremolo.speed', 1),
+			magnitude : _.get(arg, 'tremolo.magnitude', 5),
+			attack    : _.get(arg, 'tremolo.attack', 1)
 		};
 	}
-	else { that.tremolo = null; }
+	else { return null; }
 };
-//////////////////////////////
 
 /** Grab the reverb impulse response file from a server.
 You may want to change Wad.defaultImpulse to serve files from your own server.
@@ -210,7 +189,6 @@ let defaultImpulse = 'https://frivolous.biz/audio/widehall.wav';
 
 let constructReverb = function(that, arg){
 	if ( arg.reverb ) {
-		that.reverb = { wet : valueOrDefault(arg.reverb.wet, 1) };
 		var impulseURL = arg.reverb.impulse || defaultImpulse;
 		var request = new XMLHttpRequest();
 		request.open('GET', impulseURL, true);
@@ -230,58 +208,61 @@ let constructReverb = function(that, arg){
 			});
 		};
 		request.send();
+		return { wet : _.get(arg, 'reverb.wet', 1) };
 	}
 	else {
-		that.reverb = null;
+		return null;
 	}
 };
 
-let constructPanning = function(that, arg){
+let constructPanning = function(arg){
+	let panning = null;
 	if ( 'panning' in arg ) {
-		that.panning = { location : arg.panning };
+		panning = { location : arg.panning };
 		if ( typeof(arg.panning) === 'number' ) {
-			that.panning.type = 'stereo';
+			panning.type = 'stereo';
 		}
 
 		else {
-			that.panning.type = '3d';
-			that.panning.panningModel   = arg.panningModel || 'equalpower';
-			that.panning.distanceModel  = arg.distanceModel; 
-			that.panning.maxDistance    = arg.maxDistance; 
-			that.panning.rolloffFactor  = arg.rolloffFactor;
-			that.panning.refDistance    = arg.refDistance;
-			that.panning.coneInnerAngle = arg.coneInnerAngle;
-			that.panning.coneOuterAngle = arg.coneOuterAngle;
-			that.panning.coneOuterGain  = arg.coneOuterGain;
+			panning.type = '3d';
+			panning.panningModel   = arg.panningModel || 'equalpower';
+			panning.distanceModel  = arg.distanceModel; 
+			panning.maxDistance    = arg.maxDistance; 
+			panning.rolloffFactor  = arg.rolloffFactor;
+			panning.refDistance    = arg.refDistance;
+			panning.coneInnerAngle = arg.coneInnerAngle;
+			panning.coneOuterAngle = arg.coneOuterAngle;
+			panning.coneOuterGain  = arg.coneOuterGain;
 		}
 	}
 
 	else {
-		that.panning = {
+		panning = {
 			location : 0,
 			type     : 'stereo',
 		};
 	}
-	if ( that.panning.type === 'stereo' && !context.createStereoPanner ) {
+	if ( panning.type === 'stereo' && !context.createStereoPanner ) {
 		logMessage('Your browser does not support stereo panning. Falling back to 3D panning.');
-		that.panning = {
+		panning = {
 			location     : [0,0,0],
 			type         : '3d',
 			panningModel : 'equalpower',
 		};
 	}
+	return panning;
 };
-//////////////////////////////////////////////////////////////////////////////
-let constructDelay = function(that, arg){
+
+let constructDelay = function(arg){
 	if ( arg.delay ) {
-		that.delay = {
-			delayTime    : valueOrDefault(arg.delay.delayTime, .5),
-			maxDelayTime : valueOrDefault(arg.delay.maxDelayTime, 2),
-			feedback     : valueOrDefault(arg.delay.feedback, .25),
-			wet          : valueOrDefault(arg.delay.wet, .25)
+		return {
+			delayTime    : _.get(arg, 'delay.delayTime', .5),
+			maxDelayTime : _.get(arg, 'delay.maxDelayTime', 2),
+			feedback     : _.get(arg, 'delay.feedback', .25),
+			wet          : _.get(arg, 'delay.wet', .25),
 		};
 	}
-	else { that.delay = null; }
+	else { return null; }
 };
 
 let permissionsGranted = { micConsent: false };
@@ -297,12 +278,11 @@ let getConsent = function(that, arg) {
 		return that;
 	}).catch(function(error) { logMessage('Error setting up microphone input: ', error); }); // This is the error callback.
 };
-////////////////////////////////////////////////////////////////////
 
 let setUpMic = function(that, arg){
 	that.nodes           = [];
 	that.gain            = context.createGain();
-	that.gain.gain.value = valueOrDefault(arg.volume,that.volume);
+	that.gain.gain.value = _.get(arg, 'volume', that.volume);
 	that.nodes.push(that.mediaStreamSource);
 	that.nodes.push(that.gain);
   
@@ -349,8 +329,6 @@ let playEnv = function(wad, arg){
 		wad.soundSource.stop(arg.exactTime + wad.env.attack + wad.env.decay + hold + wad.env.release + 0.00005);
 	}
 };
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /** When all the nodes are set up for this Wad, this function plugs them into each other,
@@ -403,16 +381,15 @@ let setUpOscillator = function(that, arg){
 		that.soundSource.frequency.value = that.pitch;
 	}
 };
-///////////////////////////////////////////////////
 
 /** Set the ADSR volume envelope according to play() arguments, or revert to defaults **/
-let setUpEnvOnPlay = function(that, arg){
+let setUpEnvOnPlay = function(that, arg){ //_
 	if ( arg && arg.env ) {
-		that.env.attack  = valueOrDefault(arg.env.attack, that.defaultEnv.attack);
-		that.env.decay   = valueOrDefault(arg.env.decay, that.defaultEnv.decay);
-		that.env.sustain = valueOrDefault(arg.env.sustain, that.defaultEnv.sustain);
-		that.env.hold    = valueOrDefault(arg.env.hold, that.defaultEnv.hold);
-		that.env.release = valueOrDefault(arg.env.release, that.defaultEnv.release);
+		that.env.attack  = _.get(arg, 'env.attack', that.defaultEnv.attack);
+		that.env.decay   = _.get(arg, 'env.decay', that.defaultEnv.decay);
+		that.env.sustain = _.get(arg,'env.sustain', that.defaultEnv.sustain);
+		that.env.hold    = _.get(arg, 'env.hold', that.defaultEnv.hold);
+		that.env.release = _.get(arg, 'env.release', that.defaultEnv.release);
 	}
 	else {
 		that.env = {
@@ -425,13 +402,12 @@ let setUpEnvOnPlay = function(that, arg){
 	}
 
 };
-//////////////////////////////////////////////////////////////////////////////////
 
 
 /** Set the filter and filter envelope according to play() arguments, or revert to defaults **/
 
 let createFilters = function(that, arg){
-	if ( arg.filter && !isArray(arg.filter) ) {
+	if ( arg.filter && !_.isArray(arg.filter) ) {
 		arg.filter = [arg.filter];
 	}
 	that.filter.forEach(function (filter, i) {
@@ -452,7 +428,7 @@ let createFilters = function(that, arg){
 
 let setUpFilterOnPlay = function(that, arg){
 	if ( arg && arg.filter && that.filter ) {
-		if ( !isArray(arg.filter) ) arg.filter = [arg.filter];
+		if ( !_.isArray(arg.filter) ) arg.filter = [arg.filter];
 		createFilters(that, arg);
 	}
 	else if ( that.filter ) {
@@ -548,7 +524,6 @@ let setUpTremoloOnPlay = function(that, arg, Wad){
 	});
 	that.tremolo.wad.play();
 };
-///////////////////////////////////////////////////////////////
 
 let setUpDelayOnPlay = function(that, arg){
 	if ( that.delay ) {
@@ -564,9 +539,9 @@ let setUpDelayOnPlay = function(that, arg){
 		};
 
 		//set some decent values
-		delayNode.delayNode.delayTime.value = valueOrDefault(arg.delay.delayTime, that.delay.delayTime);
-		delayNode.feedbackNode.gain.value   = valueOrDefault(arg.delay.feedback, that.delay.feedback);
-		delayNode.wetNode.gain.value        = valueOrDefault(arg.delay.wet, that.delay.wet);
+		delayNode.delayNode.delayTime.value = _.get(arg, 'delay.delayTime', that.delay.delayTime);
+		delayNode.feedbackNode.gain.value   = _.get(arg, 'delay.feedback', that.delay.feedback);
+		delayNode.wetNode.gain.value        = _.get(arg, 'delay.wet', that.delay.wet);
 
 
 		//set up the routing
@@ -582,14 +557,13 @@ let setUpDelayOnPlay = function(that, arg){
 	}
 };
 
-/** **/
 let constructCompressor = function(that, arg){
 	that.compressor = context.createDynamicsCompressor();
-	that.compressor.attack.value    = valueOrDefault(arg.compressor.attack, that.compressor.attack.value);
-	that.compressor.knee.value      = valueOrDefault(arg.compressor.knee, that.compressor.knee.value);
-	that.compressor.ratio.value     = valueOrDefault(arg.compressor.ratio, that.compressor.ratio.value);
-	that.compressor.release.value   = valueOrDefault(arg.compressor.release, that.compressor.release.value);
-	that.compressor.threshold.value = valueOrDefault(arg.compressor.threshold, that.compressor.threshold.value);
+	that.compressor.attack.value    = _.get(arg, 'compressor.attack', that.compressor.attack.value);
+	that.compressor.knee.value      = _.get(arg, 'compressor.knee', that.compressor.knee.value);
+	that.compressor.ratio.value     = _.get(arg, 'compressor.ratio', that.compressor.ratio.value);
+	that.compressor.release.value   = _.get(arg, 'compressor.release', that.compressor.release.value);
+	that.compressor.threshold.value = _.get(arg, 'compressor.threshold', that.compressor.threshold.value);
 	that.nodes.push(that.compressor);
 };
 
@@ -614,15 +588,12 @@ let setUpTunaOnPlay = function(that, arg){
 		that.nodes.push(tunaEffect);
 	}
 };
-///
 
 export {
 	logStats,
 	logMessage,
 	context,
 	noiseBuffer,
-	isArray,
-	valueOrDefault,
 	constructEnv,
 	constructFilter,
 	requestAudioFile,

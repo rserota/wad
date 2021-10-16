@@ -4,8 +4,6 @@ import {
 	logMessage,
 	context,
 	noiseBuffer,
-	isArray,
-	valueOrDefault,
 	constructEnv,
 	constructFilter,
 	requestAudioFile,
@@ -30,12 +28,13 @@ import {
 	playEnv,
 	setUpOscillator,
 } from './common';
+import _ from 'lodash';
 
 let Wad = function(arg){
 	/** Set basic Wad properties **/
 	this.source        = arg.source;
 	this.destination   = arg.destination || context.destination; // the last node the sound is routed to
-	this.volume        = valueOrDefault(arg.volume, 1); // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
+	this.volume        = _.get(arg, 'volume', 1); // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
 	this.defaultVolume = this.volume;
 	this.playable      = 1; // if this is less than 1, this Wad is still waiting for a file to download before it can play
 	this.pitch         = Wad.pitches[arg.pitch] || arg.pitch || 440;
@@ -46,31 +45,28 @@ let Wad = function(arg){
 	this.tuna          = arg.tuna   || null;
 	this.rate          = arg.rate   || 1;
 	this.sprite        = arg.sprite || null;
-	constructEnv(this, arg);
-	constructFilter(this, arg);
-	constructVibrato(this, arg);
-	constructTremolo(this, arg);
-	constructReverb(this, arg);
-	this.constructExternalFx(arg, context);
-	constructPanning(this, arg);
-	constructDelay(this, arg);
-	this.duration = (this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(this.rate)) * 1000;
-	////////////////////////////////
 
+	this.env = constructEnv(arg);
+	this.defaultEnv = constructEnv(arg);
+	this.userSetHold = !!(arg.env && arg.env.hold); //_
+	this.filter = constructFilter(arg);
+	this.vibrato = constructVibrato(arg);
+	this.tremolo = constructTremolo(arg);
+	this.panning = constructPanning(arg);
+	this.delay = constructDelay(arg);
+	this.reverb = constructReverb(this, arg); // has side-effects
+	this.duration = (this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(this.rate)) * 1000;
+	this.constructExternalFx(arg, context);
 
 	/** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
 	if ( this.source === 'noise' ) {
 		this.decodedBuffer = noiseBuffer;
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 	/** If the Wad's source is the microphone, the rest of the setup happens here. **/
 	else if ( this.source === 'mic' ) {
 		getConsent(this, arg);
 	}
-	//////////////////////////////////////////////////////////////////////////////////
-
 
 	/** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
 	else if ( !( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) ) {
@@ -93,10 +89,11 @@ let Wad = function(arg){
 			}
 		}
 	}
-	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	else { arg.callback && arg.callback(this); }
+
 	Wad.allWads.push(this);
 };
+
 Wad.allWads = [];
 Wad.audioContext = context;
 Wad.listener = new AudioListener(context);
@@ -134,13 +131,13 @@ Wad.prototype.play = function(arg){
 				plugEmIn(this, arg);
 			}
 			else {
-				constructFilter(this, arg);
-				constructVibrato(this, arg);
-				constructTremolo(this, arg);
-				constructReverb(this, arg);
+				this.filter = constructFilter(arg);
+				this.vibrato = constructVibrato(arg);
+				this.tremolo = constructTremolo(arg);
+				this.reverb = constructReverb(arg);
+				this.panning = constructPanning(arg);
+				this.delay = constructDelay(arg);
 				this.constructExternalFx(arg, context);
-				constructPanning(this, arg);
-				constructDelay(this, arg);
 				setUpMic(this, arg);
 				plugEmIn(this, arg);
 			}
@@ -160,11 +157,9 @@ Wad.prototype.play = function(arg){
 		else { this.volume = this.defaultVolume; }
 		arg.offset = arg.offset || this.offset || 0;
 
-
 		if ( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) {
 			setUpOscillator(this, arg);
 		}
-
 		else {
 			this.soundSource = context.createBufferSource();
 			this.soundSource.buffer = this.decodedBuffer;
@@ -174,7 +169,6 @@ Wad.prototype.play = function(arg){
 			
 		}
 
-
 		if ( this.soundSource.detune ) {
 			this.soundSource.detune.value = arg.detune || this.detune;
 		}
@@ -182,6 +176,7 @@ Wad.prototype.play = function(arg){
 		if ( arg.wait === undefined ) {
 			arg.wait = 0;
 		}
+
 		if (arg.exactTime === undefined) {
 			arg.exactTime = context.currentTime + arg.wait;
 		}
@@ -189,11 +184,9 @@ Wad.prototype.play = function(arg){
 
 		this.nodes.push(this.soundSource);
 
-
 		/**  sets the volume envelope based on the play() arguments if present,
 or defaults to the constructor arguments if the volume envelope is not set on play() **/
 		setUpEnvOnPlay(this, arg);
-		////////////////////////////////////////////////////////////////////////////////////////
 
 		if ( this.soundSource.playbackRate ) {
 			this.soundSource.playbackRate.value = arg.rate || this.rate;
@@ -203,11 +196,9 @@ or defaults to the constructor arguments if the volume envelope is not set on pl
 		/**  sets up the filter and filter envelope based on the play() argument if present,
 or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
 		setUpFilterOnPlay(this, arg);
-		///////////////////////////////////////////////////////////////////////////////////////////////////
 		setUpTunaOnPlay(this, arg);
 
 		this.setUpExternalFxOnPlay(arg, context);
-
 
 		this.gain.unshift(context.createGain()); // sets up the gain node
 		this.gain[0].label = arg.label;
@@ -218,13 +209,10 @@ or defaults to the constructor argument if the filter and filter envelope are no
 			this.gain.length = 15;
 		}
 
-		// sets up reverb
 		if ( this.reverb ) { setUpReverbOnPlay(this, arg); }
 
 		/**  sets panning based on the play() argument if present, or defaults to the constructor argument if panning is not set on play **/
 		setUpPanningOnPlay(this, arg);
-		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 		setUpDelayOnPlay(this, arg);
 
@@ -257,8 +245,6 @@ or defaults to the constructor argument if the filter and filter envelope are no
 
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////
-
 
 /** Change the volume of a wad at any time, including during playback **/
 Wad.prototype.setVolume = function(volume, timeConstant, label){
@@ -285,7 +271,7 @@ Wad.prototype.reverse = function(){
 		Array.prototype.reverse.call( this.decodedBuffer.getChannelData(1) );
 	}
 	else {
-		logMessage("You tried to reverse something that isn't reversible")
+		logMessage('You tried to reverse something that isn\'t reversible');
 	}
 };
 
@@ -370,7 +356,7 @@ Wad.prototype.setPanning = function(panning, timeConstant, label){
 	}
 
 	this.panning.location = panning;
-	if ( isArray(panning) && this.panning.type === '3d' && this.panning.node ) {
+	if ( _.isArray(panning) && this.panning.type === '3d' && this.panning.node ) {
 		this.panning.node.setPosition(panning[0], panning[1], panning[2]);
 
 	}
@@ -378,7 +364,7 @@ Wad.prototype.setPanning = function(panning, timeConstant, label){
 		this.panning.node.pan.setTargetAtTime(panning, context.currentTime, timeConstant);
 	}
 
-	if ( isArray(panning) ) { this.panning.type = '3d'; }
+	if ( _.isArray(panning) ) { this.panning.type = '3d'; }
 	else if ( typeof panning === 'number' ) { this.panning.type = 'stereo'; }
 	return this;
 };
@@ -396,7 +382,7 @@ Wad.prototype.setReverb = function(inputWet) {
 	else if(inputWet >= 1) wet = 1;
 	else wet = 0;
 
-	//Check if we have delay
+	//Check if we have reverb
 	if(this.reverb) {
 
 		//Set the value

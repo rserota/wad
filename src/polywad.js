@@ -164,11 +164,11 @@ let constructRecorder = function(thatWad,arg){
 		let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
 		window.open(URL.createObjectURL(blob));
 	};
-	thatWad.recorder.mediaRecorder.onstop = thatWad.recorder.mediaRecorder.onstop.bind(thatWad)
+	thatWad.recorder.mediaRecorder.onstop = thatWad.recorder.mediaRecorder.onstop.bind(thatWad);
 
 	// add some aliases to make the API a bit simpler
 	for ( let method of ['start', 'stop', 'pause', 'resume' , 'requestData'] ) {
-		thatWad.recorder[method] = thatWad.recorder.mediaRecorder[method].bind(thatWad.recorder.mediaRecorder)
+		thatWad.recorder[method] = thatWad.recorder.mediaRecorder[method].bind(thatWad.recorder.mediaRecorder);
 	}
 };
 
@@ -178,7 +178,7 @@ const Polywad = function(arg){
 	this.playable = 1;
 
 	if ( arg.reverb ) {
-		constructReverb(this, arg); // We need to make sure we have downloaded the impulse response before continuing with the setup.
+		this.reverb = constructReverb(this, arg); // We need to make sure we have downloaded the impulse response before continuing with the setup.
 	}
 	else {
 		this.setUp(arg);
@@ -212,7 +212,7 @@ Polywad.prototype.setUp = function(arg){ // Anything that needs to happen before
 
 	this.constructExternalFx(arg, context);
 
-	constructPanning(this, arg);
+	this.panning = constructPanning(arg);
 	setUpPanningOnPlay(this, arg);
 	if ( arg.compressor ) { constructCompressor(this, arg); }
 	if ( arg.recorder ) { constructRecorder(this, arg); }

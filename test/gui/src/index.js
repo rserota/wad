@@ -1,4 +1,4 @@
-import Wad from '../../build/wad.js';
+import Wad from '../../../build/wad.js';
 window.Wad = Wad;
 
 Wad.logs.verbosity = 1;
@@ -133,7 +133,7 @@ window.polywad = new Wad.Poly({
 	volume: .5,
 	reverb  : {
 		wet     : 1,                                            
-		impulse : '/widehall.wav' 
+		impulse : 'widehall.wav' 
 	},
 	recorder: true,
 	audioMeter: {
@@ -181,7 +181,7 @@ document.getElementById('mic-consent').addEventListener('click', function(){
 		recorder: {
 			onstop: function(){
 				let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
-				window.recordedAudio = new Wad({source:URL.createObjectURL(blob)})
+				window.recordedAudio = new Wad({source:URL.createObjectURL(blob)});
 			}
 		},
 	});

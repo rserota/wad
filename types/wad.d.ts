@@ -6,8 +6,21 @@ export type Envelope = {
     hold?: number;
     release?: number;
 };
+export type FilterConfig = {
+    type?: 'lowpass' | 'highpass' | 'bandpass' | 'lowshelf' | 'highshelf' | 'peaking' | 'notch' | 'allpass';
+    frequency?: number;
+    q?: number;
+    env?: FilterEnvConfig;
+};
+export type FilterEnvConfig = {
+    frequency?: number;
+    attack?: number;
+};
 export type WadConfig = {
-    source: string;
+    /**
+     * - sine, square, sawtooth, triangle, or noise
+     */
+    source: 'sine' | 'square' | 'sawtooth' | 'triangle' | 'noise';
     /**
      * - From 0 to 1
      */
@@ -24,7 +37,7 @@ export type WadConfig = {
      * - Each key is the name of a sprite. The value is a two-element array, containing the start and end time of that sprite, in seconds.
      */
     sprite?: object;
-    filter?: FilterConfig;
+    filter?: FilterConfig | FilterConfig[];
 };
 /**
  * @typedef {object} Envelope
@@ -35,8 +48,20 @@ export type WadConfig = {
  * @property {number} [release]
  */
 /**
+ * @typedef {object} FilterConfig
+ * @property {'lowpass'|'highpass'|'bandpass'|'lowshelf'|'highshelf'|'peaking'|'notch'|'allpass'} [type]
+ * @property {number} [frequency]
+ * @property {number} [q]
+ * @property {FilterEnvConfig} [env]
+ */
+/**
+ * @typedef {object} FilterEnvConfig
+ * @property {number} [frequency]
+ * @property {number} [attack]
+ */
+/**
  * @typedef {object} WadConfig
- * @property {string} source
+ * @property {'sine'|'square'|'sawtooth'|'triangle'|'noise'} source - sine, square, sawtooth, triangle, or noise
  * @property {number} [volume] - From 0 to 1
  * @property {string|number} [pitch]
  * @property {number} [detune]
@@ -47,13 +72,10 @@ export type WadConfig = {
  * @property {object} [tuna]
  * @property {number} [rate]
  * @property {object} [sprite] - Each key is the name of a sprite. The value is a two-element array, containing the start and end time of that sprite, in seconds.
- * @property {FilterConfig} [filter]
+ * @property {FilterConfig|FilterConfig[]} [filter]
  *
  */
 declare class Wad {
-    static allWads: any[];
-    static audioContext: any;
-    static listener: AudioListener;
     static stopAll(label: any): void;
     static setVolume(volume: any): void;
     /**
@@ -62,7 +84,7 @@ declare class Wad {
      */
     constructor(arg: WadConfig);
     /** Set basic Wad properties **/
-    source: string;
+    source: "sawtooth" | "sine" | "square" | "triangle" | "noise";
     destination: any;
     volume: any;
     defaultVolume: any;
@@ -148,7 +170,7 @@ declare class Wad {
     **/
     setRate(inputSpeed: any): Wad;
     setPitch(pitch: any, timeConstant: any, label: any): Wad;
-    setDetune: (detune: any, timeConstant: any, label: any) => any;
+    setDetune(detune: any, timeConstant: any, label: any): Wad;
     /** Change the panning of a Wad at any time, including during playback **/
     setPanning(panning: any, timeConstant: any): Wad;
     /**
@@ -173,5 +195,12 @@ declare class Wad {
     /** To be overrided by the user **/
     setUpExternalFxOnPlay(arg: any, context: any): void;
 }
+declare namespace Wad {
+    export const allWads: any[];
+    export { context as audioContext };
+    export const listener: AudioListener;
+    export const tuna: any;
+}
+import { context } from "./common";
 import AudioListener from "./audio_listener";
 //# sourceMappingURL=wad.d.ts.map

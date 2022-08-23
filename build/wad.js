@@ -21465,69 +21465,552 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-let Wad = function(arg){
-	/** Set basic Wad properties **/
-	this.source        = arg.source;
-	this.destination   = arg.destination || _common__WEBPACK_IMPORTED_MODULE_2__["context"].destination; // the last node the sound is routed to
-	this.volume        = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'volume', 1); // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
-	this.defaultVolume = this.volume;
-	this.playable      = 1; // if this is less than 1, this Wad is still waiting for a file to download before it can play
-	this.pitch         = Wad.pitches[arg.pitch] || arg.pitch || 440;
-	this.gain          = [];
-	this.detune        = arg.detune || 0; // In Cents.
-	this.offset        = arg.offset || 0;
-	this.loop          = arg.loop   || false;
-	this.tuna          = arg.tuna   || null;
-	this.rate          = arg.rate   || 1;
-	this.sprite        = arg.sprite || null;
+/**
+ * @typedef {object} Envelope
+ * @property {number} [attack]
+ * @property {number} [decay]
+ * @property {number} [sustain]
+ * @property {number} [hold]
+ * @property {number} [release]
+ */
 
-	this.env = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructEnv"])(arg);
-	this.defaultEnv = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructEnv"])(arg);
-	this.userSetHold = !!(arg.env && arg.env.hold); //_
-	this.filter = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructFilter"])(arg);
-	this.vibrato = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructVibrato"])(arg);
-	this.tremolo = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructTremolo"])(arg);
-	this.panning = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructPanning"])(arg);
-	this.delay = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructDelay"])(arg);
-	this.reverb = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructReverb"])(this, arg); // has side-effects
-	this.duration = (this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(this.rate)) * 1000;
-	this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
+/**
+ * @typedef {object[]} FilterConfig
+ * @property {string} [FilterConfig[].type]
+ * @property {number} [FilterConfig[].frequency]
+ * @property {number} [FilterConfig[].q]
+ * @property {FilterEnvConfig} [FilterConfig[].env]
+ */
 
-	/** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
-	if ( this.source === 'noise' ) {
-		this.decodedBuffer = _common__WEBPACK_IMPORTED_MODULE_2__["noiseBuffer"];
-	}
+/**
+ * @typedef {object} FilterEnvConfig
+ * @property {number} [frequency]
+ * @property {number} [attack]
+ */
 
-	/** If the Wad's source is the microphone, the rest of the setup happens here. **/
-	else if ( this.source === 'mic' ) {
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["getConsent"])(this, arg);
-	}
+/**
+ * @typedef {object} WadConfig
+ * @property {string} source
+ * @property {number} [volume] - From 0 to 1
+ * @property {string|number} [pitch]
+ * @property {number} [detune]
+ * @property {Envelope} [env]
+ * @property {object} [destination]
+ * @property {number} [offset]
+ * @property {boolean} [loop]
+ * @property {object} [tuna]
+ * @property {number} [rate]
+ * @property {object} [sprite] - Each key is the name of a sprite. The value is a two-element array, containing the start and end time of that sprite, in seconds. 
+ * @property {FilterConfig} [filter]
+ * 
+ */
 
-	/** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
-	else if ( !( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) ) {
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["requestAudioFile"])(this, arg.callback);
+class Wad {
 
-		if ( this.sprite ) {
-			var thatWad = this;
-			for ( var sprite in this.sprite ) {
-				this[sprite] = {
-					sprite: this.sprite[sprite],
-					play: function(arg){
-						arg = arg || {};
-						arg.env = arg.env || {};
-						arg.env.hold = this.sprite[1] - this.sprite[0];
-						arg.offset = this.sprite[0];
-
-						return thatWad.play(arg);
-					}
-				};
-			}
+	static stopAll(label){
+		for ( var i = 0; i < Wad.allWads.length; i++ ) {
+			Wad.allWads[i].stop(label);
 		}
 	}
-	else { arg.callback && arg.callback(this); }
+	static setVolume(volume){
+		for ( var i = 0; i < Wad.allWads.length; i++ ) {
+			Wad.allWads[i].setVolume(volume);
+		}
+	}
 
-	Wad.allWads.push(this);
-};
+	/**
+	 * 
+	 * @param {WadConfig} arg 
+	 */
+	constructor(arg){
+		/** Set basic Wad properties **/
+		this.source        = arg.source;
+		this.destination   = arg.destination || _common__WEBPACK_IMPORTED_MODULE_2__["context"].destination; // the last node the sound is routed to
+		this.volume        = lodash__WEBPACK_IMPORTED_MODULE_3___default.a.get(arg, 'volume', 1); // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
+		this.defaultVolume = this.volume;
+		this.playable      = 1; // if this is less than 1, this Wad is still waiting for a file to download before it can play
+		this.pitch         = Wad.pitches[arg.pitch] || arg.pitch || 440;
+		this.gain          = [];
+		this.detune        = arg.detune || 0; // In Cents.
+		this.offset        = arg.offset || 0;
+		this.loop          = arg.loop   || false;
+		this.tuna          = arg.tuna   || null;
+		this.rate          = arg.rate   || 1;
+		this.sprite        = arg.sprite || null;
+
+		this.env = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructEnv"])(arg);
+		this.defaultEnv = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructEnv"])(arg);
+		this.userSetHold = !!(arg.env && arg.env.hold); //_
+		this.filter = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructFilter"])(arg);
+		this.vibrato = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructVibrato"])(arg);
+		this.tremolo = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructTremolo"])(arg);
+		this.panning = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructPanning"])(arg);
+		this.delay = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructDelay"])(arg);
+		this.reverb = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructReverb"])(this, arg); // has side-effects
+		this.duration = (this.env.attack + this.env.decay + this.env.hold + this.env.release) * (1/(this.rate)) * 1000;
+		this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
+
+		/** If the Wad's source is noise, set the Wad's buffer to the noise buffer we created earlier. **/
+		if ( this.source === 'noise' ) {
+			this.decodedBuffer = _common__WEBPACK_IMPORTED_MODULE_2__["noiseBuffer"];
+		}
+
+		/** If the Wad's source is the microphone, the rest of the setup happens here. **/
+		else if ( this.source === 'mic' ) {
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["getConsent"])(this, arg);
+		}
+
+		/** If the source is not a pre-defined value, assume it is a URL for an audio file, and grab it now. **/
+		else if ( !( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) ) {
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["requestAudioFile"])(this, arg.callback);
+
+			if ( this.sprite ) {
+				var thatWad = this;
+				for ( var sprite in this.sprite ) {
+					this[sprite] = {
+						sprite: this.sprite[sprite],
+						play: function(arg){
+							arg = arg || {};
+							arg.env = arg.env || {};
+							arg.env.hold = this.sprite[1] - this.sprite[0];
+							arg.offset = this.sprite[0];
+
+							return thatWad.play(arg);
+						}
+					};
+				}
+			}
+		}
+		else { arg.callback && arg.callback(this); }
+
+		Wad.allWads.push(this);
+	}
+	
+
+	/** the play() method will create the various nodes that are required for this Wad to play,
+	set properties on those nodes according to the constructor arguments and play() arguments,
+	plug the nodes into each other with plugEmIn(),
+	then finally play the sound by calling playEnv() **/
+	play(arg){
+		arg = arg || { arg : null };
+		if ( this.playable < 1 ) {
+			this.playOnLoad    = true;
+			this.playOnLoadArg = arg;
+		}
+
+		else if ( this.source === 'mic' ) {
+			if ( _common__WEBPACK_IMPORTED_MODULE_2__["permissionsGranted"].micConsent ) {
+				if ( arg.arg === null ) {
+					Object(_common__WEBPACK_IMPORTED_MODULE_2__["plugEmIn"])(this, arg);
+				}
+				else {
+					this.filter = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructFilter"])(arg);
+					this.vibrato = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructVibrato"])(arg);
+					this.tremolo = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructTremolo"])(arg);
+					this.reverb = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructReverb"])(arg);
+					this.panning = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructPanning"])(arg);
+					this.delay = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructDelay"])(arg);
+					this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
+					Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpMic"])(this, arg);
+					Object(_common__WEBPACK_IMPORTED_MODULE_2__["plugEmIn"])(this, arg);
+				}
+			}
+			else { 
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You have not given your browser permission to use your microphone.');
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["getConsent"])(this, arg).then(() =>{
+					this.play(arg);
+				});
+			}
+		}
+
+		else { // setup oscillators or audio clips
+			this.nodes = [];
+			if ( !arg.wait ) { arg.wait = 0; }
+			if ( arg.volume ) { this.volume = arg.volume; }
+			else { this.volume = this.defaultVolume; }
+			arg.offset = arg.offset || this.offset || 0;
+
+			if ( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) {
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpOscillator"])(this, arg);
+			}
+			else {
+				this.soundSource = _common__WEBPACK_IMPORTED_MODULE_2__["context"].createBufferSource();
+				this.soundSource.buffer = this.decodedBuffer;
+				if ( this.source === 'noise' || this.loop || arg.loop ) {
+					this.soundSource.loop = true;
+				}
+				
+			}
+
+			if ( this.soundSource.detune ) {
+				this.soundSource.detune.value = arg.detune || this.detune;
+			}
+
+			if ( arg.wait === undefined ) {
+				arg.wait = 0;
+			}
+
+			if (arg.exactTime === undefined) {
+				arg.exactTime = _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + arg.wait;
+			}
+			this.lastPlayedTime = arg.exactTime - arg.offset;
+
+			this.nodes.push(this.soundSource);
+
+			/**  sets the volume envelope based on the play() arguments if present,
+	or defaults to the constructor arguments if the volume envelope is not set on play() **/
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpEnvOnPlay"])(this, arg);
+
+			if ( this.soundSource.playbackRate ) {
+				this.soundSource.playbackRate.value = arg.rate || this.rate;
+				this.env.hold = this.env.hold * (1/this.soundSource.playbackRate.value);
+			}
+
+			/**  sets up the filter and filter envelope based on the play() argument if present,
+	or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpFilterOnPlay"])(this, arg);
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpTunaOnPlay"])(this, arg);
+
+			this.setUpExternalFxOnPlay(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
+
+			this.gain.unshift(_common__WEBPACK_IMPORTED_MODULE_2__["context"].createGain()); // sets up the gain node
+			this.gain[0].label = arg.label;
+			this.gain[0].soundSource = this.soundSource;
+			this.nodes.push(this.gain[0]);
+
+			if ( this.gain.length > 15 ) {
+				this.gain.length = 15;
+			}
+
+			if ( this.reverb ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpReverbOnPlay"])(this, arg); }
+
+			/**  sets panning based on the play() argument if present, or defaults to the constructor argument if panning is not set on play **/
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpPanningOnPlay"])(this, arg);
+
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpDelayOnPlay"])(this, arg);
+
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["plugEmIn"])(this, arg);
+
+			if ( this.filter && this.filter[0].env ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["filterEnv"])(this, arg); }
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["playEnv"])(this, arg);
+
+			//sets up vibrato LFO
+			if ( this.vibrato ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpVibratoOnPlay"])(this, arg, Wad); }
+
+			//sets up tremolo LFO
+			if ( this.tremolo ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpTremoloOnPlay"])(this, arg, Wad); }
+
+			var thatWad = this;
+
+			this.soundSource.onended = function(event){
+				thatWad.playPromiseResolve(thatWad);
+			};
+
+			if ( !arg.unpause ) {
+				this.playPromise = new Promise(function(resolve, reject){
+					thatWad.playPromiseResolve = resolve;
+				});
+				return this.playPromise;
+			}
+		}
+
+		if ( arg.callback ) { arg.callback(this); }
+
+	}
+
+
+
+	/** Change the volume of a wad at any time, including during playback **/
+	setVolume(volume, timeConstant, label){
+		timeConstant = timeConstant || .01;
+		if ( label ) {
+			if ( this.gain.length > 0 ) {
+				for ( let i = 0; i < this.gain.length; i++ ) {
+					if ( this.gain[i].label === label ) {
+						this.gain[i].gain.setValueAtTime(volume, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
+					}
+				}
+			}
+		}
+		else {
+			this.defaultVolume = volume;
+			if ( this.gain.length > 0 ) { this.gain[0].gain.setValueAtTime(volume, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime); }
+		}
+		return this;
+	}
+
+	reverse(){
+		if ( this.decodedBuffer ) {
+			Array.prototype.reverse.call( this.decodedBuffer.getChannelData(0) );
+			Array.prototype.reverse.call( this.decodedBuffer.getChannelData(1) );
+		}
+		else {
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You tried to reverse something that isn\'t reversible');
+		}
+	}
+
+		
+	/**
+	Change the playback rate of a Wad during playback.
+	inputSpeed is a value of 0 < speed, and is the rate of playback of the audio.
+	E.g. if input speed = 2.0, the playback will be twice as fast
+	**/
+	setRate(inputSpeed) {
+
+		//Check/Save the input
+		var speed;
+		if(inputSpeed && inputSpeed > 0) speed = inputSpeed;
+		else speed = 0;
+
+		//Check if we have a soundsource (Though we always should)
+		if(this.soundSource) {
+
+			//Set the value
+			this.soundSource.playbackRate.value = speed;
+		}
+		else {
+
+			//Inform that there is no sound source on the current wad
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('Sorry, but the wad does not contain a soundSource!');
+		}
+
+		return this;
+	}
+
+	setPitch(pitch, timeConstant, label){
+		timeConstant = timeConstant || .01;
+		if ( label ) {
+			for ( let i = 0; i < this.gain.length; i++ ) {
+				if ( this.gain[i].label === label ) {
+					if ( pitch in Wad.pitches ) {
+						this.gain[i].soundSource.frequency.setTargetAtTime(Wad.pitches[pitch], _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
+					}
+					else {
+						this.soundSource.frequency.settargetAtTime(pitch, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
+					}
+				}
+			}
+		}
+		else {
+			if ( pitch in Wad.pitches ) {
+				if ( this.soundSource ) {
+					this.soundSource.frequency.value = Wad.pitches[pitch];
+				}
+				this.pitch = Wad.pitches[pitch];
+			}
+			else {
+				if ( this.soundSource ) {
+					this.soundSource.frequency.value = pitch;
+				}
+				this.pitch = pitch;
+			}
+		}
+		return this;
+	}
+
+	setDetune(detune, timeConstant, label){
+		timeConstant = timeConstant || .01;
+		if ( label ) {
+			for ( let i = 0; i < this.gain.length; i++ ) {
+				if ( this.gain[i].label === label ) {
+					this.gain[i].soundSource.detune.setTargetAtTime(detune, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
+				}
+			}
+		}
+		else {
+			this.soundSource.detune.setTargetAtTime(detune, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
+		}
+		return this;
+	};
+
+	/** Change the panning of a Wad at any time, including during playback **/
+	setPanning(panning, timeConstant){
+		timeConstant = timeConstant || .01;
+		if ( typeof panning === 'number' && !_common__WEBPACK_IMPORTED_MODULE_2__["context"].createStereoPanner ) {
+			panning = [panning, 0, 0];
+		}
+
+		this.panning.location = panning;
+		if ( lodash__WEBPACK_IMPORTED_MODULE_3___default.a.isArray(panning) && this.panning.type === '3d' && this.panning.node ) {
+			this.panning.node.setPosition(panning[0], panning[1], panning[2]);
+
+		}
+		else if ( typeof panning === 'number' && this.panning.type === 'stereo' && this.panning.node) {
+			this.panning.node.pan.setTargetAtTime(panning, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
+		}
+
+		if ( lodash__WEBPACK_IMPORTED_MODULE_3___default.a.isArray(panning) ) { this.panning.type = '3d'; }
+		else if ( typeof panning === 'number' ) { this.panning.type = 'stereo'; }
+		return this;
+	};
+
+	/**
+	Change the Reverb of a Wad at any time, including during playback.
+	inputWet is a value of 0 < wetness/gain < 1
+	**/
+	setReverb(inputWet) {
+
+		//Check/Save the input
+
+		var wet;
+		if(inputWet && inputWet > 0 && inputWet < 1) wet = inputWet;
+		else if(inputWet >= 1) wet = 1;
+		else wet = 0;
+
+		//Check if we have reverb
+		if(this.reverb) {
+
+			//Set the value
+			this.reverb.wet = wet;
+
+			//Set the node's value, if it exists
+			if(this.reverb.node) {
+
+				this.reverb.node.wet.gain.value = wet;
+			}
+		}
+		else {
+
+			//Inform that there is no reverb on the current wad
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('Sorry, but the wad does not contain Reverb!');
+		}
+
+		return this;
+	}
+
+
+	/**
+	Change the Delay of a Wad at any time, including during playback.
+	inputTime is a value of time > 0, and is the time in seconds between each delayed playback.
+	inputWet is a value of gain 0 < inputWet < 1, and is Relative volume change between the original sound and the first delayed playback.
+	inputFeedback is a value of gain 0 < inputFeedback < 1, and is Relative volume change between each delayed playback and the next.
+	**/
+	setDelay(inputTime, inputWet, inputFeedback){
+
+		//Check/Save the input
+		var time;
+		if(inputTime && inputTime > 0) time = inputTime;
+		else time = 0;
+
+		var wet;
+		if(inputWet && inputWet > 0 && inputWet < 1) wet = inputWet;
+		else if(inputWet >= 1) wet = 1;
+		else wet = 0;
+
+		var feedback;
+		if(inputFeedback && inputFeedback > 0 && inputFeedback < 1) feedback = inputFeedback;
+		else if(inputFeedback >= 1) feedback = 1;
+		else feedback = 0;
+
+		//Check if we have delay
+		if(this.delay) {
+
+			//Set the value
+			this.delay.delayTime = time;
+			this.delay.wet = wet;
+			this.delay.feedback = feedback;
+
+			//Set the node's value, if it exists
+			if(this.delay.delayNode) {
+
+				this.delay.delayNode.delayNode.delayTime.value = time;
+				this.delay.delayNode.wetNode.gain.value = wet;
+				this.delay.delayNode.feedbackNode.gain.value = feedback;
+			}
+		}
+		else {
+
+			//Inform that there is no delay on the current wad
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('Sorry, but the wad does not contain delay!', 2);
+		}
+
+		return this;
+	}
+
+
+	pause(label){
+		this.pauseTime = _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime;
+		this.soundSource.onended = null;
+		this.stop(label);
+
+	}
+	unpause(arg){
+		arg = arg || {};
+		arg.unpause = true;
+		if ( this.pauseTime && (this.lastPlayedTime != null) ) {
+			arg.offset = this.pauseTime - this.lastPlayedTime;
+		}
+		else { 
+			Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You tried to unpause a wad that was not played and paused, so it just played normally instead.', 2);
+		}
+		this.play(arg);
+	}
+
+	/** If multiple instances of a sound are playing simultaneously, stop() only can stop the most recent one **/
+	stop(label){
+		if ( !( this.source === 'mic' ) ) {
+			if ( !(this.gain && this.gain.length) ){
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You tried to stop a Wad that never played. ', 2);
+				Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])(this, 2);
+				return; // if the wad has never been played, there's no need to stop it
+			}
+			else if ( label ) {
+				for ( var i = 0; i < this.gain.length; i++ ) {
+					if ( this.gain[i].label === label ) {
+						this.gain[i].gain.cancelScheduledValues(_common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
+						this.gain[i].gain.setValueAtTime(this.gain[i].gain.value, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
+						this.gain[i].gain.linearRampToValueAtTime(.0001, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + this.env.release);
+
+
+					}
+				}
+			}
+			else if ( !label ) {
+				this.gain[0].gain.cancelScheduledValues(_common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
+				this.gain[0].gain.setValueAtTime(this.gain[0].gain.value, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
+				this.gain[0].gain.linearRampToValueAtTime(.0001, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + this.env.release);
+				try {
+					this.soundSource.stop(_common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + this.env.release);
+				}
+				catch(e){
+					/*
+						Safari for iOS (and maybe other browsers)
+						can't seem to handle calling stop() on a soundSource that already had stop() scheduled.
+						The spec says it should be fine, and cancel previous calls to stop, 
+						but Safari is throwing an error -- InvalidStateError: The object is in an invalid state.
+						I'm not really sure why this is happening, but at least we can manually run the ended event handler.
+					*/
+					Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])(e,2);
+					var that = this;
+					setTimeout(function(){
+						that.soundSource.dispatchEvent(new Event('ended'));
+						that.soundSource.onended = null;
+					}, this.env.release * 1000);
+				}
+			}
+		}
+		else if (_common__WEBPACK_IMPORTED_MODULE_2__["permissionsGranted"].micConsent ) {
+			this.mediaStreamSource.disconnect(0);
+		}
+		else { Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You have not given your browser permission to use your microphone.');}
+		if ( this.tremolo ) {
+			this.tremolo.wad.stop();
+		}
+	};
+
+
+	/** Method to allow users to setup external fx in the constructor **/
+	constructExternalFx(arg, context){
+		//override me in your own code
+	}
+
+	/** To be overrided by the user **/
+	setUpExternalFxOnPlay(arg, context){
+		//user does what is necessary here, and then maybe does something like:
+		// this.nodes.push(externalFX)
+	}
+
+}
 
 Wad.allWads = [];
 Wad.audioContext = _common__WEBPACK_IMPORTED_MODULE_2__["context"];
@@ -21536,438 +22019,14 @@ if ( typeof tunajs__WEBPACK_IMPORTED_MODULE_0___default.a != undefined ) {
 	Wad.tuna = new tunajs__WEBPACK_IMPORTED_MODULE_0___default.a(Wad.audioContext);
 }
 
-/** Method to allow users to setup external fx in the constructor **/
-Wad.prototype.constructExternalFx = function(arg, context){
-	//override me in your own code
-};
 
 
-/** To be overrided by the user **/
-Wad.prototype.setUpExternalFxOnPlay = function(arg, context){
-	//user does what is necessary here, and then maybe does something like:
-	// this.nodes.push(externalFX)
-};
 
 
-/** the play() method will create the various nodes that are required for this Wad to play,
-set properties on those nodes according to the constructor arguments and play() arguments,
-plug the nodes into each other with plugEmIn(),
-then finally play the sound by calling playEnv() **/
-Wad.prototype.play = function(arg){
-	arg = arg || { arg : null };
-	if ( this.playable < 1 ) {
-		this.playOnLoad    = true;
-		this.playOnLoadArg = arg;
-	}
 
-	else if ( this.source === 'mic' ) {
-		if ( _common__WEBPACK_IMPORTED_MODULE_2__["permissionsGranted"].micConsent ) {
-			if ( arg.arg === null ) {
-				Object(_common__WEBPACK_IMPORTED_MODULE_2__["plugEmIn"])(this, arg);
-			}
-			else {
-				this.filter = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructFilter"])(arg);
-				this.vibrato = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructVibrato"])(arg);
-				this.tremolo = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructTremolo"])(arg);
-				this.reverb = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructReverb"])(arg);
-				this.panning = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructPanning"])(arg);
-				this.delay = Object(_common__WEBPACK_IMPORTED_MODULE_2__["constructDelay"])(arg);
-				this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
-				Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpMic"])(this, arg);
-				Object(_common__WEBPACK_IMPORTED_MODULE_2__["plugEmIn"])(this, arg);
-			}
-		}
-		else { 
-			Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You have not given your browser permission to use your microphone.');
-			Object(_common__WEBPACK_IMPORTED_MODULE_2__["getConsent"])(this, arg).then(() =>{
-				this.play(arg);
-			});
-		}
-	}
 
-	else { // setup oscillators or audio clips
-		this.nodes = [];
-		if ( !arg.wait ) { arg.wait = 0; }
-		if ( arg.volume ) { this.volume = arg.volume; }
-		else { this.volume = this.defaultVolume; }
-		arg.offset = arg.offset || this.offset || 0;
 
-		if ( this.source in { 'sine' : 0, 'sawtooth' : 0, 'square' : 0, 'triangle' : 0 } ) {
-			Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpOscillator"])(this, arg);
-		}
-		else {
-			this.soundSource = _common__WEBPACK_IMPORTED_MODULE_2__["context"].createBufferSource();
-			this.soundSource.buffer = this.decodedBuffer;
-			if ( this.source === 'noise' || this.loop || arg.loop ) {
-				this.soundSource.loop = true;
-			}
-			
-		}
 
-		if ( this.soundSource.detune ) {
-			this.soundSource.detune.value = arg.detune || this.detune;
-		}
-
-		if ( arg.wait === undefined ) {
-			arg.wait = 0;
-		}
-
-		if (arg.exactTime === undefined) {
-			arg.exactTime = _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + arg.wait;
-		}
-		this.lastPlayedTime = arg.exactTime - arg.offset;
-
-		this.nodes.push(this.soundSource);
-
-		/**  sets the volume envelope based on the play() arguments if present,
-or defaults to the constructor arguments if the volume envelope is not set on play() **/
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpEnvOnPlay"])(this, arg);
-
-		if ( this.soundSource.playbackRate ) {
-			this.soundSource.playbackRate.value = arg.rate || this.rate;
-			this.env.hold = this.env.hold * (1/this.soundSource.playbackRate.value);
-		}
-
-		/**  sets up the filter and filter envelope based on the play() argument if present,
-or defaults to the constructor argument if the filter and filter envelope are not set on play() **/
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpFilterOnPlay"])(this, arg);
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpTunaOnPlay"])(this, arg);
-
-		this.setUpExternalFxOnPlay(arg, _common__WEBPACK_IMPORTED_MODULE_2__["context"]);
-
-		this.gain.unshift(_common__WEBPACK_IMPORTED_MODULE_2__["context"].createGain()); // sets up the gain node
-		this.gain[0].label = arg.label;
-		this.gain[0].soundSource = this.soundSource;
-		this.nodes.push(this.gain[0]);
-
-		if ( this.gain.length > 15 ) {
-			this.gain.length = 15;
-		}
-
-		if ( this.reverb ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpReverbOnPlay"])(this, arg); }
-
-		/**  sets panning based on the play() argument if present, or defaults to the constructor argument if panning is not set on play **/
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpPanningOnPlay"])(this, arg);
-
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpDelayOnPlay"])(this, arg);
-
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["plugEmIn"])(this, arg);
-
-		if ( this.filter && this.filter[0].env ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["filterEnv"])(this, arg); }
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["playEnv"])(this, arg);
-
-		//sets up vibrato LFO
-		if ( this.vibrato ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpVibratoOnPlay"])(this, arg, Wad); }
-
-		//sets up tremolo LFO
-		if ( this.tremolo ) { Object(_common__WEBPACK_IMPORTED_MODULE_2__["setUpTremoloOnPlay"])(this, arg, Wad); }
-
-		var thatWad = this;
-
-		this.soundSource.onended = function(event){
-			thatWad.playPromiseResolve(thatWad);
-		};
-
-		if ( !arg.unpause ) {
-			this.playPromise = new Promise(function(resolve, reject){
-				thatWad.playPromiseResolve = resolve;
-			});
-			return this.playPromise;
-		}
-	}
-
-	if ( arg.callback ) { arg.callback(this); }
-
-};
-
-
-/** Change the volume of a wad at any time, including during playback **/
-Wad.prototype.setVolume = function(volume, timeConstant, label){
-	timeConstant = timeConstant || .01;
-	if ( label ) {
-		if ( this.gain.length > 0 ) {
-			for ( let i = 0; i < this.gain.length; i++ ) {
-				if ( this.gain[i].label === label ) {
-					this.gain[i].gain.setValueAtTime(volume, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
-				}
-			}
-		}
-	}
-	else {
-		this.defaultVolume = volume;
-		if ( this.gain.length > 0 ) { this.gain[0].gain.setValueAtTime(volume, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime); }
-	}
-	return this;
-};
-
-Wad.prototype.reverse = function(){
-	if ( this.decodedBuffer ) {
-		Array.prototype.reverse.call( this.decodedBuffer.getChannelData(0) );
-		Array.prototype.reverse.call( this.decodedBuffer.getChannelData(1) );
-	}
-	else {
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You tried to reverse something that isn\'t reversible');
-	}
-};
-
-/**
-Change the playback rate of a Wad during playback.
-inputSpeed is a value of 0 < speed, and is the rate of playback of the audio.
-E.g. if input speed = 2.0, the playback will be twice as fast
-**/
-Wad.prototype.setRate = function(inputSpeed) {
-
-	//Check/Save the input
-	var speed;
-	if(inputSpeed && inputSpeed > 0) speed = inputSpeed;
-	else speed = 0;
-
-	//Check if we have a soundsource (Though we always should)
-	if(this.soundSource) {
-
-		//Set the value
-		this.soundSource.playbackRate.value = speed;
-	}
-	else {
-
-		//Inform that there is no sound source on the current wad
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('Sorry, but the wad does not contain a soundSource!');
-	}
-
-	return this;
-};
-
-Wad.prototype.setPitch = function(pitch, timeConstant, label){
-	timeConstant = timeConstant || .01;
-	if ( label ) {
-		for ( let i = 0; i < this.gain.length; i++ ) {
-			if ( this.gain[i].label === label ) {
-				if ( pitch in Wad.pitches ) {
-					this.gain[i].soundSource.frequency.setTargetAtTime(Wad.pitches[pitch], _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
-				}
-				else {
-					this.soundSource.frequency.settargetAtTime(pitch, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
-				}
-			}
-		}
-	}
-	else {
-		if ( pitch in Wad.pitches ) {
-			if ( this.soundSource ) {
-				this.soundSource.frequency.value = Wad.pitches[pitch];
-			}
-			this.pitch = Wad.pitches[pitch];
-		}
-		else {
-			if ( this.soundSource ) {
-				this.soundSource.frequency.value = pitch;
-			}
-			this.pitch = pitch;
-		}
-	}
-	return this;
-};
-
-Wad.prototype.setDetune = function(detune, timeConstant, label){
-	timeConstant = timeConstant || .01;
-	if ( label ) {
-		for ( let i = 0; i < this.gain.length; i++ ) {
-			if ( this.gain[i].label === label ) {
-				this.gain[i].soundSource.detune.setTargetAtTime(detune, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
-			}
-		}
-	}
-	else {
-		this.soundSource.detune.setTargetAtTime(detune, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
-	}
-	return this;
-};
-
-/** Change the panning of a Wad at any time, including during playback **/
-Wad.prototype.setPanning = function(panning, timeConstant){
-	timeConstant = timeConstant || .01;
-	if ( typeof panning === 'number' && !_common__WEBPACK_IMPORTED_MODULE_2__["context"].createStereoPanner ) {
-		panning = [panning, 0, 0];
-	}
-
-	this.panning.location = panning;
-	if ( lodash__WEBPACK_IMPORTED_MODULE_3___default.a.isArray(panning) && this.panning.type === '3d' && this.panning.node ) {
-		this.panning.node.setPosition(panning[0], panning[1], panning[2]);
-
-	}
-	else if ( typeof panning === 'number' && this.panning.type === 'stereo' && this.panning.node) {
-		this.panning.node.pan.setTargetAtTime(panning, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
-	}
-
-	if ( lodash__WEBPACK_IMPORTED_MODULE_3___default.a.isArray(panning) ) { this.panning.type = '3d'; }
-	else if ( typeof panning === 'number' ) { this.panning.type = 'stereo'; }
-	return this;
-};
-
-/**
-Change the Reverb of a Wad at any time, including during playback.
-inputWet is a value of 0 < wetness/gain < 1
-**/
-Wad.prototype.setReverb = function(inputWet) {
-
-	//Check/Save the input
-
-	var wet;
-	if(inputWet && inputWet > 0 && inputWet < 1) wet = inputWet;
-	else if(inputWet >= 1) wet = 1;
-	else wet = 0;
-
-	//Check if we have reverb
-	if(this.reverb) {
-
-		//Set the value
-		this.reverb.wet = wet;
-
-		//Set the node's value, if it exists
-		if(this.reverb.node) {
-
-			this.reverb.node.wet.gain.value = wet;
-		}
-	}
-	else {
-
-		//Inform that there is no reverb on the current wad
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('Sorry, but the wad does not contain Reverb!');
-	}
-
-	return this;
-};
-
-
-/**
-Change the Delay of a Wad at any time, including during playback.
-inputTime is a value of time > 0, and is the time in seconds between each delayed playback.
-inputWet is a value of gain 0 < inputWet < 1, and is Relative volume change between the original sound and the first delayed playback.
-inputFeedback is a value of gain 0 < inputFeedback < 1, and is Relative volume change between each delayed playback and the next.
-**/
-Wad.prototype.setDelay = function(inputTime, inputWet, inputFeedback){
-
-	//Check/Save the input
-	var time;
-	if(inputTime && inputTime > 0) time = inputTime;
-	else time = 0;
-
-	var wet;
-	if(inputWet && inputWet > 0 && inputWet < 1) wet = inputWet;
-	else if(inputWet >= 1) wet = 1;
-	else wet = 0;
-
-	var feedback;
-	if(inputFeedback && inputFeedback > 0 && inputFeedback < 1) feedback = inputFeedback;
-	else if(inputFeedback >= 1) feedback = 1;
-	else feedback = 0;
-
-	//Check if we have delay
-	if(this.delay) {
-
-		//Set the value
-		this.delay.delayTime = time;
-		this.delay.wet = wet;
-		this.delay.feedback = feedback;
-
-		//Set the node's value, if it exists
-		if(this.delay.delayNode) {
-
-			this.delay.delayNode.delayNode.delayTime.value = time;
-			this.delay.delayNode.wetNode.gain.value = wet;
-			this.delay.delayNode.feedbackNode.gain.value = feedback;
-		}
-	}
-	else {
-
-		//Inform that there is no delay on the current wad
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('Sorry, but the wad does not contain delay!', 2);
-	}
-
-	return this;
-};
-
-
-Wad.prototype.pause = function(label){
-	this.pauseTime = _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime;
-	this.soundSource.onended = null;
-	this.stop(label);
-
-};
-Wad.prototype.unpause = function(arg){
-	arg = arg || {};
-	arg.unpause = true;
-	if ( this.pauseTime && (this.lastPlayedTime != null) ) {
-		arg.offset = this.pauseTime - this.lastPlayedTime;
-	}
-	else { 
-		Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You tried to unpause a wad that was not played and paused, so it just played normally instead.', 2);
-	}
-	this.play(arg);
-};
-
-/** If multiple instances of a sound are playing simultaneously, stop() only can stop the most recent one **/
-Wad.prototype.stop = function(label){
-	if ( !( this.source === 'mic' ) ) {
-		if ( !(this.gain && this.gain.length) ){
-			Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You tried to stop a Wad that never played. ', 2);
-			Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])(this, 2);
-			return; // if the wad has never been played, there's no need to stop it
-		}
-		else if ( label ) {
-			for ( var i = 0; i < this.gain.length; i++ ) {
-				if ( this.gain[i].label === label ) {
-					this.gain[i].gain.cancelScheduledValues(_common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
-					this.gain[i].gain.setValueAtTime(this.gain[i].gain.value, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
-					this.gain[i].gain.linearRampToValueAtTime(.0001, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + this.env.release);
-
-
-				}
-			}
-		}
-		else if ( !label ) {
-			this.gain[0].gain.cancelScheduledValues(_common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
-			this.gain[0].gain.setValueAtTime(this.gain[0].gain.value, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime);
-			this.gain[0].gain.linearRampToValueAtTime(.0001, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + this.env.release);
-			try {
-				this.soundSource.stop(_common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime + this.env.release);
-			}
-			catch(e){
-				/*
-					Safari for iOS (and maybe other browsers)
-					can't seem to handle calling stop() on a soundSource that already had stop() scheduled.
-					The spec says it should be fine, and cancel previous calls to stop, 
-					but Safari is throwing an error -- InvalidStateError: The object is in an invalid state.
-					I'm not really sure why this is happening, but at least we can manually run the ended event handler.
-				*/
-				Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])(e,2);
-				var that = this;
-				setTimeout(function(){
-					that.soundSource.dispatchEvent(new Event('ended'));
-					that.soundSource.onended = null;
-				}, this.env.release * 1000);
-			}
-		}
-	}
-	else if (_common__WEBPACK_IMPORTED_MODULE_2__["permissionsGranted"].micConsent ) {
-		this.mediaStreamSource.disconnect(0);
-	}
-	else { Object(_common__WEBPACK_IMPORTED_MODULE_2__["logMessage"])('You have not given your browser permission to use your microphone.');}
-	if ( this.tremolo ) {
-		this.tremolo.wad.stop();
-	}
-};
-
-Wad.stopAll = function(label){
-	for ( var i = 0; i < Wad.allWads.length; i++ ) {
-		Wad.allWads[i].stop(label);
-	}
-};
-Wad.setVolume = function(volume){
-	for ( var i = 0; i < Wad.allWads.length; i++ ) {
-		Wad.allWads[i].setVolume(volume);
-	}
-};
 
 /* harmony default export */ __webpack_exports__["default"] = (Wad);
 

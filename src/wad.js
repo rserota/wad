@@ -40,11 +40,11 @@ import _ from 'lodash';
  */
 
 /**
- * @typedef {object[]} FilterConfig
- * @property {string} [FilterConfig[].type]
- * @property {number} [FilterConfig[].frequency]
- * @property {number} [FilterConfig[].q]
- * @property {FilterEnvConfig} [FilterConfig[].env]
+ * @typedef {object} FilterConfig
+ * @property {'lowpass'|'highpass'|'bandpass'|'lowshelf'|'highshelf'|'peaking'|'notch'|'allpass'} [type]
+ * @property {number} [frequency]
+ * @property {number} [q]
+ * @property {FilterEnvConfig} [env]
  */
 
 /**
@@ -55,7 +55,7 @@ import _ from 'lodash';
 
 /**
  * @typedef {object} WadConfig
- * @property {string} source
+ * @property {'sine'|'square'|'sawtooth'|'triangle'|'noise'} source - sine, square, sawtooth, triangle, or noise
  * @property {number} [volume] - From 0 to 1
  * @property {string|number} [pitch]
  * @property {number} [detune]
@@ -66,14 +66,11 @@ import _ from 'lodash';
  * @property {object} [tuna]
  * @property {number} [rate]
  * @property {object} [sprite] - Each key is the name of a sprite. The value is a two-element array, containing the start and end time of that sprite, in seconds. 
- * @property {FilterConfig} [filter]
+ * @property {FilterConfig|FilterConfig[]} [filter]
  * 
  */
 
 class Wad {
-	static allWads = [];
-	static audioContext = context;
-	static listener = new AudioListener(context);
 
 	static stopAll(label){
 		for ( var i = 0; i < Wad.allWads.length; i++ ) {
@@ -376,7 +373,7 @@ class Wad {
 		return this;
 	}
 
-	setDetune = function(detune, timeConstant, label){
+	setDetune(detune, timeConstant, label){
 		timeConstant = timeConstant || .01;
 		if ( label ) {
 			for ( let i = 0; i < this.gain.length; i++ ) {
@@ -580,6 +577,9 @@ class Wad {
 
 }
 
+Wad.allWads = [];
+Wad.audioContext = context;
+Wad.listener = new AudioListener(context);
 if ( typeof Tuna != undefined ) {
 	Wad.tuna = new Tuna(Wad.audioContext);
 }

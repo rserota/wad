@@ -54,6 +54,35 @@ import _ from 'lodash';
  */
 
 /**
+ * @typedef {object} VibratoConfig
+ * @property {'sine'|'sawtooth'|'square'|'triangle'} [shape]
+ * @property {number} [magnitude]
+ * @property {number} [speed]
+ * @property {number} [attack]
+ */
+
+/**
+ * @typedef {object} TremoloConfig
+ * @property {'sine'|'sawtooth'|'square'|'triangle'} [shape]
+ * @property {number} [magnitude]
+ * @property {number} [speed]
+ * @property {number} [attack]
+ */
+
+/**
+ * @typedef {object} ReverbConfig
+ * @property {number} [wet]
+ * @property {string} [impulse]
+ */
+
+/**
+ * @typedef {object} DelayConfig
+ * @property {number} [delayTime]
+ * @property {number} [wet]
+ * @property {number} [feedback]
+ */
+
+/**
  * @typedef {object} WadConfig
  * @property {'sine'|'square'|'sawtooth'|'triangle'|'noise'} source - sine, square, sawtooth, triangle, or noise
  * @property {number} [volume] - From 0 to 1
@@ -67,16 +96,30 @@ import _ from 'lodash';
  * @property {number} [rate]
  * @property {object} [sprite] - Each key is the name of a sprite. The value is a two-element array, containing the start and end time of that sprite, in seconds. 
  * @property {FilterConfig|FilterConfig[]} [filter]
+ * @property {VibratoConfig} [vibrato]
+ * @property {TremoloConfig} [tremolo]
+ * @property {number|array} [panning]
+ * @property {'equalpower'|'HRTF'} [panningModel]
+ * @property {string} [rolloffFactor]
+ * @property {ReverbConfig} [reverb]
+ * @property {DelayConfig} [delay]
  * 
  */
 
 class Wad {
 
+	/**
+	 * @param {string} [label]
+	 */
 	static stopAll(label){
 		for ( var i = 0; i < Wad.allWads.length; i++ ) {
 			Wad.allWads[i].stop(label);
 		}
 	}
+
+	/**
+	 * @param {number} volume 
+	 */
 	static setVolume(volume){
 		for ( var i = 0; i < Wad.allWads.length; i++ ) {
 			Wad.allWads[i].setVolume(volume);
@@ -84,7 +127,6 @@ class Wad {
 	}
 
 	/**
-	 * 
 	 * @param {WadConfig} arg 
 	 */
 	constructor(arg){
@@ -156,6 +198,25 @@ class Wad {
 	set properties on those nodes according to the constructor arguments and play() arguments,
 	plug the nodes into each other with plugEmIn(),
 	then finally play the sound by calling playEnv() **/
+	
+	/**
+	 * @typedef {object} PlayArgs
+	 * @property {number} [volume]
+	 * @property {number} [wait]
+	 * @property {boolean} [loop]
+	 * @property {number} [offset]
+	 * @property {number} [rate]
+	 * @property {string|number} [pitch]
+	 * @property {string} [label]
+	 * @property {Envelope} [env]
+	 * @property {number|array} [panning]
+	 * @property {FilterConfig|FilterConfig[]} [filter]
+	 * @property {DelayConfig} [delay]
+	 */
+
+	/**
+	 * @param {PlayArgs} [args]
+	 */
 	play(arg){
 		arg = arg || { arg : null };
 		if ( this.playable < 1 ) {
@@ -286,6 +347,11 @@ class Wad {
 
 
 	/** Change the volume of a wad at any time, including during playback **/
+	/**
+	 * @param {number} volume 
+	 * @param {number} [timeConstant]
+	 * @param {string} [label] 
+	 */
 	setVolume(volume, timeConstant, label){
 		timeConstant = timeConstant || .01;
 		if ( label ) {
@@ -320,6 +386,10 @@ class Wad {
 	inputSpeed is a value of 0 < speed, and is the rate of playback of the audio.
 	E.g. if input speed = 2.0, the playback will be twice as fast
 	**/
+
+	/**
+	 * @param {number} inputSpeed 
+	 */
 	setRate(inputSpeed) {
 
 		//Check/Save the input
@@ -342,6 +412,11 @@ class Wad {
 		return this;
 	}
 
+	/**
+	 * @param {string|number} pitch 
+	 * @param {number} [timeConstant]
+	 * @param {string} [label] 
+	 */
 	setPitch(pitch, timeConstant, label){
 		timeConstant = timeConstant || .01;
 		if ( label ) {
@@ -373,6 +448,11 @@ class Wad {
 		return this;
 	}
 
+	/**
+	 * @param {number} detune 
+	 * @param {number} [timeConstant]
+	 * @param {string} [label] 
+	 */
 	setDetune(detune, timeConstant, label){
 		timeConstant = timeConstant || .01;
 		if ( label ) {
@@ -386,9 +466,13 @@ class Wad {
 			this.soundSource.detune.setTargetAtTime(detune, context.currentTime, timeConstant);
 		}
 		return this;
-	};
+	}
 
 	/** Change the panning of a Wad at any time, including during playback **/
+	/**
+	 * @param {number|array} panning 
+	 * @param {number} [timeConstant]
+	 */
 	setPanning(panning, timeConstant){
 		timeConstant = timeConstant || .01;
 		if ( typeof panning === 'number' && !context.createStereoPanner ) {
@@ -407,12 +491,15 @@ class Wad {
 		if ( _.isArray(panning) ) { this.panning.type = '3d'; }
 		else if ( typeof panning === 'number' ) { this.panning.type = 'stereo'; }
 		return this;
-	};
+	}
 
 	/**
 	Change the Reverb of a Wad at any time, including during playback.
 	inputWet is a value of 0 < wetness/gain < 1
 	**/
+	/**
+	 * @param {number} inputWet
+	 */
 	setReverb(inputWet) {
 
 		//Check/Save the input
@@ -450,6 +537,11 @@ class Wad {
 	inputWet is a value of gain 0 < inputWet < 1, and is Relative volume change between the original sound and the first delayed playback.
 	inputFeedback is a value of gain 0 < inputFeedback < 1, and is Relative volume change between each delayed playback and the next.
 	**/
+	/**
+	 * @param {number} delayTime 
+	 * @param {number} wet 
+	 * @param {number} feedback 
+	 */
 	setDelay(inputTime, inputWet, inputFeedback){
 
 		//Check/Save the input
@@ -493,12 +585,19 @@ class Wad {
 	}
 
 
+	/**
+	 * @param {string} [label]
+	 */
 	pause(label){
 		this.pauseTime = context.currentTime;
 		this.soundSource.onended = null;
 		this.stop(label);
 
 	}
+
+	/**
+	 * @param {PlayArgs} [args] 
+	 */
 	unpause(arg){
 		arg = arg || {};
 		arg.unpause = true;
@@ -512,6 +611,10 @@ class Wad {
 	}
 
 	/** If multiple instances of a sound are playing simultaneously, stop() only can stop the most recent one **/
+
+	/**
+	 * @param {string} label 
+	 */
 	stop(label){
 		if ( !( this.source === 'mic' ) ) {
 			if ( !(this.gain && this.gain.length) ){
@@ -561,7 +664,7 @@ class Wad {
 		if ( this.tremolo ) {
 			this.tremolo.wad.stop();
 		}
-	};
+	}
 
 
 	/** Method to allow users to setup external fx in the constructor **/

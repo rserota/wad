@@ -30,81 +30,8 @@ import {
 } from './common';
 import _ from 'lodash';
 
-/**
- * @typedef {object} Envelope
- * @property {number} [attack]
- * @property {number} [decay]
- * @property {number} [sustain]
- * @property {number} [hold]
- * @property {number} [release]
- */
 
-/**
- * @typedef {object} FilterConfig
- * @property {'lowpass'|'highpass'|'bandpass'|'lowshelf'|'highshelf'|'peaking'|'notch'|'allpass'} [type]
- * @property {number} [frequency]
- * @property {number} [q]
- * @property {FilterEnvConfig} [env]
- */
 
-/**
- * @typedef {object} FilterEnvConfig
- * @property {number} [frequency]
- * @property {number} [attack]
- */
-
-/**
- * @typedef {object} VibratoConfig
- * @property {'sine'|'sawtooth'|'square'|'triangle'} [shape]
- * @property {number} [magnitude]
- * @property {number} [speed]
- * @property {number} [attack]
- */
-
-/**
- * @typedef {object} TremoloConfig
- * @property {'sine'|'sawtooth'|'square'|'triangle'} [shape]
- * @property {number} [magnitude]
- * @property {number} [speed]
- * @property {number} [attack]
- */
-
-/**
- * @typedef {object} ReverbConfig
- * @property {number} [wet]
- * @property {string} [impulse]
- */
-
-/**
- * @typedef {object} DelayConfig
- * @property {number} [delayTime]
- * @property {number} [wet]
- * @property {number} [feedback]
- */
-
-/**
- * @typedef {object} WadConfig
- * @property {'sine'|'square'|'sawtooth'|'triangle'|'noise'} source - sine, square, sawtooth, triangle, or noise
- * @property {number} [volume] - From 0 to 1
- * @property {string|number} [pitch]
- * @property {number} [detune]
- * @property {Envelope} [env]
- * @property {object} [destination]
- * @property {number} [offset]
- * @property {boolean} [loop]
- * @property {object} [tuna]
- * @property {number} [rate]
- * @property {object} [sprite] - Each key is the name of a sprite. The value is a two-element array, containing the start and end time of that sprite, in seconds. 
- * @property {FilterConfig|FilterConfig[]} [filter]
- * @property {VibratoConfig} [vibrato]
- * @property {TremoloConfig} [tremolo]
- * @property {number|array} [panning]
- * @property {'equalpower'|'HRTF'} [panningModel]
- * @property {string} [rolloffFactor]
- * @property {ReverbConfig} [reverb]
- * @property {DelayConfig} [delay]
- * 
- */
 
 class Wad {
 
@@ -125,6 +52,82 @@ class Wad {
 			Wad.allWads[i].setVolume(volume);
 		}
 	}
+
+	/**
+	 * @typedef {object} DelayConfig
+	 * @property {number} [delayTime]
+	 * @property {number} [wet]
+	 * @property {number} [feedback]
+	 */
+
+	/**
+	 * @typedef {object} Envelope
+	 * @property {number} [attack]
+	 * @property {number} [decay]
+	 * @property {number} [sustain]
+	 * @property {number} [hold]
+	 * @property {number} [release]
+	 */
+
+	/**
+	 * @typedef {object} FilterConfig
+	 * @property {'lowpass'|'highpass'|'bandpass'|'lowshelf'|'highshelf'|'peaking'|'notch'|'allpass'} [type]
+	 * @property {number} [frequency]
+	 * @property {number} [q]
+	 * @property {FilterEnvConfig} [env]
+	 */
+
+	/**
+	 * @typedef {object} FilterEnvConfig
+	 * @property {number} [frequency]
+	 * @property {number} [attack]
+	 */
+
+	/**
+	 * @typedef {object} VibratoConfig
+	 * @property {'sine'|'sawtooth'|'square'|'triangle'} [shape]
+	 * @property {number} [magnitude]
+	 * @property {number} [speed]
+	 * @property {number} [attack]
+	 */
+
+	/**
+	 * @typedef {object} TremoloConfig
+	 * @property {'sine'|'sawtooth'|'square'|'triangle'} [shape]
+	 * @property {number} [magnitude]
+	 * @property {number} [speed]
+	 * @property {number} [attack]
+	 */
+
+	/**
+	 * @typedef {object} ReverbConfig
+	 * @property {number} [wet]
+	 * @property {string} [impulse]
+	 */
+
+	/**
+	 * @typedef {object} WadConfig
+	 * @property {'sine'|'square'|'sawtooth'|'triangle'|'noise'} source - sine, square, sawtooth, triangle, or noise
+	 * @property {number} [volume] - From 0 to 1
+	 * @property {string|number} [pitch]
+	 * @property {number} [detune]
+	 * @property {Envelope} [env]
+	 * @property {object} [destination]
+	 * @property {number} [offset]
+	 * @property {boolean} [loop]
+	 * @property {object} [tuna]
+	 * @property {number} [rate]
+	 * @property {object} [sprite] - Each key is the name of a sprite. The value is a two-element array, containing the start and end time of that sprite, in seconds. 
+	 * @property {FilterConfig|FilterConfig[]} [filter]
+	 * @property {VibratoConfig} [vibrato]
+	 * @property {TremoloConfig} [tremolo]
+	 * @property {number|array} [panning]
+	 * @property {'equalpower'|'HRTF'} [panningModel]
+	 * @property {string} [rolloffFactor]
+	 * @property {ReverbConfig} [reverb]
+	 * @property {DelayConfig} [delay]
+	 * 
+	 */
 
 	/**
 	 * @param {WadConfig} arg 
@@ -215,7 +218,7 @@ class Wad {
 	 */
 
 	/**
-	 * @param {PlayArgs} [args]
+	 * @param {PlayArgs} [arg]
 	 */
 	play(arg){
 		arg = arg || { arg : null };

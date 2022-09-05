@@ -172,186 +172,202 @@ let constructRecorder = function(thatWad,arg){
 	}
 };
 
-const Polywad = function(arg){
-	if ( !arg ) { arg = {}; }
-	this.isSetUp  = false;
-	this.playable = 1;
+class Polywad {
+	constructor(arg){
 
-	if ( arg.reverb ) {
-		this.reverb = constructReverb(this, arg); // We need to make sure we have downloaded the impulse response before continuing with the setup.
-	}
-	else {
-		this.setUp(arg);
-	}
-};
+		if ( !arg ) { arg = {}; }
+		this.isSetUp  = false;
+		this.playable = 1;
 
-Polywad.prototype.setUp = function(arg){ // Anything that needs to happen before reverb is set up can go here.
-	this.wads              = [];
-	this.input             = context.createAnalyser();
-	this.input.fftSize     = 2048;
-	this.nodes             = [this.input];
-	this.destination       = arg.destination || context.destination; // the last node the sound is routed to
-	this.volume            = arg.volume || 1;
-	this.gain              = context.createGain();
-	this.gain.gain.value   = this.volume;
-	this.output            = context.createAnalyser();
-	this.tuna              = arg.tuna || null;
-	this.audioMeter        = null;
-	this.recorder          = null;
-
-	if ( arg.audioMeter ) {
-		this.audioMeter = createAudioMeter(context, arg.audioMeter.clipLevel, arg.audioMeter.averaging, arg.audioMeter.clipLag);
-		this.output.connect(this.audioMeter);
-	}
-
-
-	constructFilter(this, arg);
-	if ( this.filter ) { createFilters(this, arg); }
-
-	if ( this.reverb ) { setUpReverbOnPlay(this, arg); }
-
-	this.constructExternalFx(arg, context);
-
-	this.panning = constructPanning(arg);
-	setUpPanningOnPlay(this, arg);
-	if ( arg.compressor ) { constructCompressor(this, arg); }
-	if ( arg.recorder ) { constructRecorder(this, arg); }
-
-	constructDelay(this, arg);
-	setUpDelayOnPlay(this, arg);
-	setUpTunaOnPlay(this, arg);
-	this.nodes.push(this.gain);
-	this.nodes.push(this.output);
-	plugEmIn(this, arg);
-	this.isSetUp = true;
-	if ( arg.callback ) { arg.callback(this); }
-};
-
-Polywad.prototype.updatePitch = function( time ) {
-	this.input.getByteTimeDomainData( buf );
-	let ac = autoCorrelate( buf, context.sampleRate );
-
-	if ( ac !== -1 && ac !== 11025 && ac !== 12000 ) {
-		let pitch = ac;
-		this.pitch = Math.floor( pitch ) ;
-		let note = noteFromPitch( pitch );
-		this.noteName = pitchesArray[note - 12];
-		// Detune doesn't seem to work.
-		// var detune = centsOffFromPitch( pitch, note );
-		// if (detune == 0 ) {
-		//     this.detuneEstimate = 0;
-		// } else {
-
-		//     this.detuneEstimate = detune
-		// }
-	}
-	let that = this;
-	that.rafID = window.requestAnimationFrame( function(){ that.updatePitch(); } );
-};
-
-Polywad.prototype.stopUpdatingPitch = function(){
-	cancelAnimationFrame(this.rafID);
-};
-
-
-Polywad.prototype.setVolume = function(volume){
-	if ( this.isSetUp ) {
-		this.gain.gain.value = volume;
-	}
-	else {
-		logMessage('This PolyWad is not set up yet.');
-	}
-	return this;
-};
-
-Polywad.prototype.setPitch = function(pitch){
-	this.wads.forEach(function(wad){
-            
-		if ( pitch in pitches ) {
-			if ( wad.soundSource ) {
-				wad.soundSource.frequency.value = pitches[pitch];
-			}
-			wad.pitch = pitches[pitch];
+		if ( arg.reverb ) {
+			this.reverb = constructReverb(this, arg); // We need to make sure we have downloaded the impulse response before continuing with the setup.
 		}
 		else {
-			if ( wad.soundSource ) {
-				wad.soundSource.frequency.value = pitch;
-			}
-			wad.pitch = pitch;
+			this.setUp(arg);
+		}
+	}
+	setUp(arg){ // Anything that needs to happen before reverb is set up can go here.
+		this.wads              = [];
+		this.input             = context.createAnalyser();
+		this.input.fftSize     = 2048;
+		this.nodes             = [this.input];
+		this.destination       = arg.destination || context.destination; // the last node the sound is routed to
+		this.volume            = arg.volume || 1;
+		this.gain              = context.createGain();
+		this.gain.gain.value   = this.volume;
+		this.output            = context.createAnalyser();
+		this.tuna              = arg.tuna || null;
+		this.audioMeter        = null;
+		this.recorder          = null;
+
+		if ( arg.audioMeter ) {
+			this.audioMeter = createAudioMeter(context, arg.audioMeter.clipLevel, arg.audioMeter.averaging, arg.audioMeter.clipLag);
+			this.output.connect(this.audioMeter);
+		}
+
+
+		constructFilter(this, arg);
+		if ( this.filter ) { createFilters(this, arg); }
+
+		if ( this.reverb ) { setUpReverbOnPlay(this, arg); }
+
+		this.constructExternalFx(arg, context);
+
+		this.panning = constructPanning(arg);
+		setUpPanningOnPlay(this, arg);
+		if ( arg.compressor ) { constructCompressor(this, arg); }
+		if ( arg.recorder ) { constructRecorder(this, arg); }
+
+		constructDelay(this, arg);
+		setUpDelayOnPlay(this, arg);
+		setUpTunaOnPlay(this, arg);
+		this.nodes.push(this.gain);
+		this.nodes.push(this.output);
+		plugEmIn(this, arg);
+		this.isSetUp = true;
+		if ( arg.callback ) { arg.callback(this); }
+	}
+
+	updatePitch() {
+		this.input.getByteTimeDomainData( buf );
+		let ac = autoCorrelate( buf, context.sampleRate );
+
+		if ( ac !== -1 && ac !== 11025 && ac !== 12000 ) {
+			let pitch = ac;
+			this.pitch = Math.floor( pitch ) ;
+			let note = noteFromPitch( pitch );
+			this.noteName = pitchesArray[note - 12];
+			// Detune doesn't seem to work.
+			// var detune = centsOffFromPitch( pitch, note );
+			// if (detune == 0 ) {
+			//     this.detuneEstimate = 0;
+			// } else {
+
+			//     this.detuneEstimate = detune
+			// }
+		}
+		let that = this;
+		that.rafID = window.requestAnimationFrame( function(){ that.updatePitch(); } );
+	}
+
+	stopUpdatingPitch(){
+		cancelAnimationFrame(this.rafID);
+	}
+
+	/**
+	 * @param {number} volume 
+	 */
+	setVolume(volume){
+		if ( this.isSetUp ) {
+			this.gain.gain.value = volume;
+		}
+		else {
+			logMessage('This PolyWad is not set up yet.');
 		}
 		return this;
-	});
-};
+	}
 
-Polywad.prototype.setPanning = function(panning, timeConstant){
-	Wad.prototype.setPanning.call(this, panning, timeConstant);
-};
-
-Polywad.prototype.play = function(arg){
-	if ( this.isSetUp ) {
-		if ( this.playable < 1 ) {
-			this.playOnLoad    = true;
-			this.playOnLoadArg = arg;
-		}
-		else {
-			if ( arg && arg.volume ) {
-				this.gain.gain.value = arg.volume; // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
-				arg.volume = undefined; // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad.
+	/**
+	 * @param {string|number} pitch 
+	 */
+	setPitch(pitch){
+		this.wads.forEach(function(wad){
+				
+			if ( pitch in pitches ) {
+				if ( wad.soundSource ) {
+					wad.soundSource.frequency.value = pitches[pitch];
+				}
+				wad.pitch = pitches[pitch];
 			}
-			for ( var i = 0; i < this.wads.length; i++ ) {
-				this.wads[i].play(arg);
+			else {
+				if ( wad.soundSource ) {
+					wad.soundSource.frequency.value = pitch;
+				}
+				wad.pitch = pitch;
 			}
-		}
+			return this;
+		});
 	}
-	else {
-		logMessage('This PolyWad is not set up yet.');
+	
+ 
+	/**
+	 * @param {number|array} panning 
+	 * @param {number} [timeConstant] 
+	 */
+	setPanning(panning, timeConstant){
+		Wad.prototype.setPanning.call(this, panning, timeConstant);
 	}
-	return this;
-};
 
-Polywad.prototype.stop = function(arg){
-	if ( this.isSetUp ) {
-		for ( let i = 0; i < this.wads.length; i++ ) {
-			this.wads[i].stop(arg);
-		}
-	}
-};
-
-Polywad.prototype.add = function(wad){
-	if ( this.isSetUp ) {
-		wad.destination = this.input;
-		this.wads.push(wad);
-		if ( wad instanceof Polywad ) {
-			wad.output.disconnect(0);
-			wad.output.connect(this.input);
-		}
-	}
-	else {
-		logMessage('This PolyWad is not set up yet.');
-	}
-	return this;
-};
-
-
-
-Polywad.prototype.remove = function(wad){
-	if ( this.isSetUp ) {
-		for ( let i = 0; i < this.wads.length; i++ ) {
-			if ( this.wads[i] === wad ) {
-				this.wads[i].destination = context.destination;
-				this.wads.splice(i,1);
-				if ( wad instanceof Polywad ) {
-					wad.output.disconnect(0);
-					wad.output.connect(context.destination);
+	/**
+	 * @param {PlayArgs} [arg]
+	 */
+	play(arg){
+		if ( this.isSetUp ) {
+			if ( this.playable < 1 ) {
+				this.playOnLoad    = true;
+				this.playOnLoadArg = arg;
+			}
+			else {
+				if ( arg && arg.volume ) {
+					this.gain.gain.value = arg.volume; // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
+					arg.volume = undefined; // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad.
+				}
+				for ( var i = 0; i < this.wads.length; i++ ) {
+					this.wads[i].play(arg);
 				}
 			}
 		}
+		else {
+			logMessage('This PolyWad is not set up yet.');
+		}
+		return this;
 	}
-	return this;
-};
 
-Polywad.prototype.constructExternalFx = function(arg, context){
+	stop(arg){
+		if ( this.isSetUp ) {
+			for ( let i = 0; i < this.wads.length; i++ ) {
+				this.wads[i].stop(arg);
+			}
+		}
+	}
 
-};
+	add(wad){
+		if ( this.isSetUp ) {
+			wad.destination = this.input;
+			this.wads.push(wad);
+			if ( wad instanceof Polywad ) {
+				wad.output.disconnect(0);
+				wad.output.connect(this.input);
+			}
+		}
+		else {
+			logMessage('This PolyWad is not set up yet.');
+		}
+		return this;
+	}
+	remove(wad){
+		if ( this.isSetUp ) {
+			for ( let i = 0; i < this.wads.length; i++ ) {
+				if ( this.wads[i] === wad ) {
+					this.wads[i].destination = context.destination;
+					this.wads.splice(i,1);
+					if ( wad instanceof Polywad ) {
+						wad.output.disconnect(0);
+						wad.output.connect(context.destination);
+					}
+				}
+			}
+		}
+		return this;
+	}
+
+	constructExternalFx(arg, context){ }
+}
+
+
+
+
+
+
 
 export default Polywad;

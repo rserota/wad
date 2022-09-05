@@ -732,7 +732,7 @@ Change the volume for this polywad (separate from the volume from of the individ
 | volume   | number | none    | The new volume setting for this polywad. |   
 
 
-### Wad.Poly.prototype.setPitch(volume)
+### Wad.Poly.prototype.setPitch(pitch)
 
 This method sets the default pitch for each wad inside this polywad. 
 
@@ -744,7 +744,7 @@ This method sets the default pitch for each wad inside this polywad.
 
 | Property     | Type            | Default         | Description |
 | ------------ | --------------- | --------------  | ----------- |
-| panning      | object or array | none (required) | New detune setting. |
+| panning      | number or array | none (required) | New panning setting. |
 | timeConstant | string          | none            | Time in seconds for 63% of the transition to complete. | 
 
 Change the panning of this polywad at any time, even during playback.

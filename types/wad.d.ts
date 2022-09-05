@@ -238,6 +238,7 @@ declare class Wad {
      */
     /**
      * @param {PlayArgs} [arg]
+     * @returns {promise}
      */
     play(arg?: {
         volume?: number;
@@ -277,7 +278,7 @@ declare class Wad {
             wet?: number;
             feedback?: number;
         };
-    }): any;
+    }): Promise<any>;
     playOnLoad: boolean;
     playOnLoadArg: {
         volume?: number;
@@ -397,10 +398,165 @@ declare class Wad {
     setUpExternalFxOnPlay(arg: any, context: any): void;
 }
 declare namespace Wad {
-    export const allWads: any[];
+    export { Poly };
+    export const allWads: Wad[];
     export { context as audioContext };
     export const listener: AudioListener;
     export const tuna: any;
+}
+declare class Poly {
+    /**
+     * @typedef {object} CompressorConfig
+     * @property {number} [attack]
+     * @property {number} [knee]
+     * @property {number} [ratio]
+     * @property {number} [release]
+     * @property {number} [threshold]
+     */
+    /**
+     * @typedef {object} AudioMeterConfig
+     * @property {number} [clipLevel]
+     * @property {number} [averaging]
+     * @property {number} [clipLag]
+     */
+    /**
+     * @typedef {object} RecorderConfig
+     * @property {object} options
+     * @property {function} onstop
+     */
+    /**
+     * @typedef {object} PolyWadConfig
+     * @property {number} [volume] - From 0 to 1
+     * @property {number|array} [panning]
+     * @property {FilterConfig|FilterConfig[]} [filter]
+     * @property {DelayConfig} [delay]
+     * @property {ReverbConfig} [reverb]
+     * @property {object} [destination]
+     * @property {object} [tuna]
+     * @property {AudioMeterConfig} [audioMeter]
+     * @property {CompressorConfig} [compressor]
+     * @property {RecorderConfig} [recorder]
+     */
+    /**
+     * @param {PolyWadConfig} arg
+     */
+    constructor(arg: {
+        /**
+         * - From 0 to 1
+         */
+        volume?: number;
+        panning?: number | any[];
+        filter?: {
+            type?: "allpass" | "bandpass" | "highpass" | "highshelf" | "lowpass" | "lowshelf" | "notch" | "peaking";
+            frequency?: number;
+            q?: number;
+            env?: {
+                frequency?: number;
+                attack?: number;
+            };
+        } | {
+            type?: "allpass" | "bandpass" | "highpass" | "highshelf" | "lowpass" | "lowshelf" | "notch" | "peaking";
+            frequency?: number;
+            q?: number;
+            env?: {
+                frequency?: number;
+                attack?: number;
+            };
+        }[];
+        delay?: {
+            delayTime?: number;
+            wet?: number;
+            feedback?: number;
+        };
+        reverb?: {
+            wet?: number;
+            impulse?: string;
+        };
+        destination?: object;
+        tuna?: object;
+        audioMeter?: {
+            clipLevel?: number;
+            averaging?: number;
+            clipLag?: number;
+        };
+        compressor?: {
+            attack?: number;
+            knee?: number;
+            ratio?: number;
+            release?: number;
+            threshold?: number;
+        };
+        recorder?: {
+            options: object;
+            onstop: Function;
+        };
+    });
+    /**
+     * @param {Wad} wad
+     */
+    add(wad: Wad): void;
+    /**
+     * @param {Wad} wad
+     */
+    remove(wad: Wad): void;
+    /**
+     * @param {PlayArgs} [arg]
+     */
+    play(arg?: {
+        volume?: number;
+        wait?: number;
+        loop?: boolean;
+        offset?: number;
+        rate?: number;
+        pitch?: string | number;
+        label?: string;
+        env?: {
+            attack?: number;
+            decay?: number;
+            sustain?: number;
+            hold?: number;
+            release?: number;
+        };
+        panning?: number | any[];
+        filter?: {
+            type?: "allpass" | "bandpass" | "highpass" | "highshelf" | "lowpass" | "lowshelf" | "notch" | "peaking";
+            frequency?: number;
+            q?: number;
+            env?: {
+                frequency?: number;
+                attack?: number;
+            };
+        } | {
+            type?: "allpass" | "bandpass" | "highpass" | "highshelf" | "lowpass" | "lowshelf" | "notch" | "peaking";
+            frequency?: number;
+            q?: number;
+            env?: {
+                frequency?: number;
+                attack?: number;
+            };
+        }[];
+        delay?: {
+            delayTime?: number;
+            wet?: number;
+            feedback?: number;
+        };
+    }): void;
+    /**
+     * @param {string} [label]
+     */
+    stop(label?: string): void;
+    /**
+     * @param {number} volume
+     */
+    setVolume(volume: number): void;
+    /**
+     * @param {string|number} pitch
+     */
+    setPitch(pitch: string | number): void;
+    /**
+     * @param {string|number} pitch
+     */
+    setPanning(panning: any): void;
 }
 import { context } from "./common";
 import AudioListener from "./audio_listener";

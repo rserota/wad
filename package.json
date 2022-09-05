@@ -10,7 +10,8 @@
 		"build-tests": "webpack --config webpack.config.test.js",
 		"watch": "./node_modules/watch/cli.js 'npm run build' .",
 		"lint": "./node_modules/eslint/bin/eslint.js --fix ./src",
-		"test": "npx http-server ./test"
+		"test": "npx http-server ./test",
+		"generate-types": "npx tsc"
 	},
 	"types": "types/main.js",
 	"repository": {

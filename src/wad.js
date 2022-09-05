@@ -219,6 +219,7 @@ class Wad {
 
 	/**
 	 * @param {PlayArgs} [arg]
+	 * @returns {promise} 
 	 */
 	play(arg){
 		arg = arg || { arg : null };
@@ -354,6 +355,7 @@ class Wad {
 	 * @param {number} volume 
 	 * @param {number} [timeConstant]
 	 * @param {string} [label] 
+	 * @returns {Wad} 
 	 */
 	setVolume(volume, timeConstant, label){
 		timeConstant = timeConstant || .01;
@@ -392,6 +394,7 @@ class Wad {
 
 	/**
 	 * @param {number} inputSpeed 
+	 * @returns {Wad}
 	 */
 	setRate(inputSpeed) {
 
@@ -419,6 +422,7 @@ class Wad {
 	 * @param {string|number} pitch 
 	 * @param {number} [timeConstant]
 	 * @param {string} [label] 
+	 * @returns {Wad} 
 	 */
 	setPitch(pitch, timeConstant, label){
 		timeConstant = timeConstant || .01;
@@ -455,6 +459,7 @@ class Wad {
 	 * @param {number} detune 
 	 * @param {number} [timeConstant]
 	 * @param {string} [label] 
+	 * @returns {Wad} 
 	 */
 	setDetune(detune, timeConstant, label){
 		timeConstant = timeConstant || .01;
@@ -475,6 +480,7 @@ class Wad {
 	/**
 	 * @param {number|array} panning 
 	 * @param {number} [timeConstant]
+	 * @returns {Wad}
 	 */
 	setPanning(panning, timeConstant){
 		timeConstant = timeConstant || .01;
@@ -502,6 +508,7 @@ class Wad {
 	**/
 	/**
 	 * @param {number} inputWet
+	 * @returns {Wad} 
 	 */
 	setReverb(inputWet) {
 
@@ -544,6 +551,7 @@ class Wad {
 	 * @param {number} delayTime 
 	 * @param {number} wet 
 	 * @param {number} feedback 
+	 * @returns {Wad} 
 	 */
 	setDelay(inputTime, inputWet, inputFeedback){
 
@@ -683,7 +691,98 @@ class Wad {
 
 }
 
+/*
+ * Due to the structure of the project (the PolyWad class is a static method of the Wad class),
+ * The typedefs for PolyWad appear here, instead of in polywad.js. 
+ */
+
+Wad.Poly = class{
+
+	/**
+	 * @typedef {object} CompressorConfig
+	 * @property {number} [attack]
+	 * @property {number} [knee]
+	 * @property {number} [ratio]
+	 * @property {number} [release]
+	 * @property {number} [threshold]
+	 */
+
+	/**
+	 * @typedef {object} AudioMeterConfig
+	 * @property {number} [clipLevel]
+	 * @property {number} [averaging]
+	 * @property {number} [clipLag]
+	 */
+
+	/**
+	 * @typedef {object} RecorderConfig
+	 * @property {object} options
+	 * @property {function} onstop
+	 */
+
+	/**
+	 * @typedef {object} PolyWadConfig
+	 * @property {number} [volume] - From 0 to 1
+	 * @property {number|array} [panning]
+	 * @property {FilterConfig|FilterConfig[]} [filter]
+	 * @property {DelayConfig} [delay]
+	 * @property {ReverbConfig} [reverb]
+	 * @property {object} [destination]
+	 * @property {object} [tuna]
+	 * @property {AudioMeterConfig} [audioMeter]
+	 * @property {CompressorConfig} [compressor]
+	 * @property {RecorderConfig} [recorder]
+	 */
+
+	/**
+	 * @param {PolyWadConfig} arg 
+	 */
+	constructor(arg){}
+
+	/**
+	 * @param {Wad} wad
+	 */
+	add(wad){}
+
+	/**
+	 * @param {Wad} wad
+	 */
+	remove(wad){}
+
+	/**
+	 * @param {PlayArgs} [arg]
+	 */
+	play(arg){}
+
+	/**
+	 * @param {string} [label]
+	 */
+	stop(label){}
+
+	/**
+	 * @param {number} volume
+	 */
+	setVolume(volume){}
+
+	/**
+	 * @param {string|number} pitch
+	 */
+	setPitch(pitch){}
+
+	/**
+	 * @param {string|number} pitch
+	 */
+	setPanning(panning){}
+};
+
+/**
+ * @type {Wad[]}
+ */
 Wad.allWads = [];
+
+/**
+ * @type {object}
+ */
 Wad.audioContext = context;
 Wad.listener = new AudioListener(context);
 if ( typeof Tuna != undefined ) {

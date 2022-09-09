@@ -498,7 +498,8 @@ However, if you'd like to contribute code to WadJS, here are some tips and guide
 | args.source               | string            | none (required)   | To make a wad that plays an audio clip, set this to the url for the audio file. To make a wad that plays an oscillator, set this to 'sine', 'square', 'sawtooth', 'triangle', or 'noise'. To create a wad that processes your microphone input, set this to 'mic'. |
 | args.volume               | number            | 1                 | Peak volume can range from 0 to an arbitrarily large number, but you probably shouldn't set it higher than 1. |
 | args.loop                 | boolean           | false             | If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators. |
-| args.rate                 | number            | 0                 | Where in the audio clip playback begins, measured in seconds from the start of the audio clip. |
+| args.rate                 | number            | 1                 | How fast the audio clip plays, relative to its normal speed. |
+| args.offset               | number            | 0                 | Where in the audio clip playback begins, measured in seconds from the start of the audio clip. |
 | args.pitch                | string or number  | 'A4'              | Set a default pitch on the constructor if you don't want to set the pitch on `play()`. Pass in a string to play a specific pitch (12-TET, A440), or pass in a number to play that frequency, in hertz. |
 | args.detune               | number            | 0                 | Set a default detune on the constructor if you don't want to set detune on `play()`. Detune is measured in cents. 100 cents is equal to 1 semitone. |
 | args.panning              | number or array   | 0                 | Placement of the sound source. Pass in a number to use stereo panning, or pass in a 3-element array to use 3D panning. Note that some browsers do not support stereo panning. |
@@ -531,9 +532,9 @@ However, if you'd like to contribute code to WadJS, here are some tips and guide
 | args.vibrato.attack       | number            | 0                 | Time in seconds for the vibrato effect to reach peak magnitude. |
 | args.tremolo              | object            | none              | A vibrating volume effect. |
 | args.tremolo.shape        | string            | 'sine'            | Shape of the lfo waveform. Possible values are 'sine', 'sawtooth', 'square', and 'triangle'. |
-| args.tremolo.magnitude    | number            | 3                 | How much the pitch changes. Sensible values are from 1 to 10. |
-| args.tremolo.speed        | number            | 4                 | How quickly the pitch changes, in cycles per second.  Sensible values are from 0.1 to 10. |
-| args.tremolo.attack       | number            | 0                 | Time in seconds for the vibrato effect to reach peak magnitude. |
+| args.tremolo.magnitude    | number            | 3                 | How much the volume changes. Sensible values are from 1 to 10. |
+| args.tremolo.speed        | number            | 4                 | How quickly the volume changes, in cycles per second.  Sensible values are from 0.1 to 10. |
+| args.tremolo.attack       | number            | 0                 | Time in seconds for the tremolo effect to reach peak magnitude. |
 | args.tuna                 | object            | none              | Add effects from Tuna.js to this wad. Check out the Tuna.js documentation for more information. |
 
 

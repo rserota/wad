@@ -21012,187 +21012,203 @@ let constructRecorder = function(thatWad,arg){
 	}
 };
 
-const Polywad = function(arg){
-	if ( !arg ) { arg = {}; }
-	this.isSetUp  = false;
-	this.playable = 1;
+class Polywad {
+	constructor(arg){
 
-	if ( arg.reverb ) {
-		this.reverb = Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructReverb"])(this, arg); // We need to make sure we have downloaded the impulse response before continuing with the setup.
-	}
-	else {
-		this.setUp(arg);
-	}
-};
+		if ( !arg ) { arg = {}; }
+		this.isSetUp  = false;
+		this.playable = 1;
 
-Polywad.prototype.setUp = function(arg){ // Anything that needs to happen before reverb is set up can go here.
-	this.wads              = [];
-	this.input             = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createAnalyser();
-	this.input.fftSize     = 2048;
-	this.nodes             = [this.input];
-	this.destination       = arg.destination || _common__WEBPACK_IMPORTED_MODULE_0__["context"].destination; // the last node the sound is routed to
-	this.volume            = arg.volume || 1;
-	this.gain              = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createGain();
-	this.gain.gain.value   = this.volume;
-	this.output            = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createAnalyser();
-	this.tuna              = arg.tuna || null;
-	this.audioMeter        = null;
-	this.recorder          = null;
-
-	if ( arg.audioMeter ) {
-		this.audioMeter = createAudioMeter(_common__WEBPACK_IMPORTED_MODULE_0__["context"], arg.audioMeter.clipLevel, arg.audioMeter.averaging, arg.audioMeter.clipLag);
-		this.output.connect(this.audioMeter);
-	}
-
-
-	Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructFilter"])(this, arg);
-	if ( this.filter ) { Object(_common__WEBPACK_IMPORTED_MODULE_0__["createFilters"])(this, arg); }
-
-	if ( this.reverb ) { Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpReverbOnPlay"])(this, arg); }
-
-	this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_0__["context"]);
-
-	this.panning = Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructPanning"])(arg);
-	Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpPanningOnPlay"])(this, arg);
-	if ( arg.compressor ) { Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructCompressor"])(this, arg); }
-	if ( arg.recorder ) { constructRecorder(this, arg); }
-
-	Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructDelay"])(this, arg);
-	Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpDelayOnPlay"])(this, arg);
-	Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpTunaOnPlay"])(this, arg);
-	this.nodes.push(this.gain);
-	this.nodes.push(this.output);
-	Object(_common__WEBPACK_IMPORTED_MODULE_0__["plugEmIn"])(this, arg);
-	this.isSetUp = true;
-	if ( arg.callback ) { arg.callback(this); }
-};
-
-Polywad.prototype.updatePitch = function( time ) {
-	this.input.getByteTimeDomainData( buf );
-	let ac = autoCorrelate( buf, _common__WEBPACK_IMPORTED_MODULE_0__["context"].sampleRate );
-
-	if ( ac !== -1 && ac !== 11025 && ac !== 12000 ) {
-		let pitch = ac;
-		this.pitch = Math.floor( pitch ) ;
-		let note = noteFromPitch( pitch );
-		this.noteName = _pitches__WEBPACK_IMPORTED_MODULE_1__["pitchesArray"][note - 12];
-		// Detune doesn't seem to work.
-		// var detune = centsOffFromPitch( pitch, note );
-		// if (detune == 0 ) {
-		//     this.detuneEstimate = 0;
-		// } else {
-
-		//     this.detuneEstimate = detune
-		// }
-	}
-	let that = this;
-	that.rafID = window.requestAnimationFrame( function(){ that.updatePitch(); } );
-};
-
-Polywad.prototype.stopUpdatingPitch = function(){
-	cancelAnimationFrame(this.rafID);
-};
-
-
-Polywad.prototype.setVolume = function(volume){
-	if ( this.isSetUp ) {
-		this.gain.gain.value = volume;
-	}
-	else {
-		Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('This PolyWad is not set up yet.');
-	}
-	return this;
-};
-
-Polywad.prototype.setPitch = function(pitch){
-	this.wads.forEach(function(wad){
-            
-		if ( pitch in _pitches__WEBPACK_IMPORTED_MODULE_1__["pitches"] ) {
-			if ( wad.soundSource ) {
-				wad.soundSource.frequency.value = _pitches__WEBPACK_IMPORTED_MODULE_1__["pitches"][pitch];
-			}
-			wad.pitch = _pitches__WEBPACK_IMPORTED_MODULE_1__["pitches"][pitch];
+		if ( arg.reverb ) {
+			this.reverb = Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructReverb"])(this, arg); // We need to make sure we have downloaded the impulse response before continuing with the setup.
 		}
 		else {
-			if ( wad.soundSource ) {
-				wad.soundSource.frequency.value = pitch;
-			}
-			wad.pitch = pitch;
+			this.setUp(arg);
+		}
+	}
+	setUp(arg){ // Anything that needs to happen before reverb is set up can go here.
+		this.wads              = [];
+		this.input             = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createAnalyser();
+		this.input.fftSize     = 2048;
+		this.nodes             = [this.input];
+		this.destination       = arg.destination || _common__WEBPACK_IMPORTED_MODULE_0__["context"].destination; // the last node the sound is routed to
+		this.volume            = arg.volume || 1;
+		this.gain              = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createGain();
+		this.gain.gain.value   = this.volume;
+		this.output            = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createAnalyser();
+		this.tuna              = arg.tuna || null;
+		this.audioMeter        = null;
+		this.recorder          = null;
+
+		if ( arg.audioMeter ) {
+			this.audioMeter = createAudioMeter(_common__WEBPACK_IMPORTED_MODULE_0__["context"], arg.audioMeter.clipLevel, arg.audioMeter.averaging, arg.audioMeter.clipLag);
+			this.output.connect(this.audioMeter);
+		}
+
+
+		Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructFilter"])(this, arg);
+		if ( this.filter ) { Object(_common__WEBPACK_IMPORTED_MODULE_0__["createFilters"])(this, arg); }
+
+		if ( this.reverb ) { Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpReverbOnPlay"])(this, arg); }
+
+		this.constructExternalFx(arg, _common__WEBPACK_IMPORTED_MODULE_0__["context"]);
+
+		this.panning = Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructPanning"])(arg);
+		Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpPanningOnPlay"])(this, arg);
+		if ( arg.compressor ) { Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructCompressor"])(this, arg); }
+		if ( arg.recorder ) { constructRecorder(this, arg); }
+
+		Object(_common__WEBPACK_IMPORTED_MODULE_0__["constructDelay"])(this, arg);
+		Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpDelayOnPlay"])(this, arg);
+		Object(_common__WEBPACK_IMPORTED_MODULE_0__["setUpTunaOnPlay"])(this, arg);
+		this.nodes.push(this.gain);
+		this.nodes.push(this.output);
+		Object(_common__WEBPACK_IMPORTED_MODULE_0__["plugEmIn"])(this, arg);
+		this.isSetUp = true;
+		if ( arg.callback ) { arg.callback(this); }
+	}
+
+	updatePitch() {
+		this.input.getByteTimeDomainData( buf );
+		let ac = autoCorrelate( buf, _common__WEBPACK_IMPORTED_MODULE_0__["context"].sampleRate );
+
+		if ( ac !== -1 && ac !== 11025 && ac !== 12000 ) {
+			let pitch = ac;
+			this.pitch = Math.floor( pitch ) ;
+			let note = noteFromPitch( pitch );
+			this.noteName = _pitches__WEBPACK_IMPORTED_MODULE_1__["pitchesArray"][note - 12];
+			// Detune doesn't seem to work.
+			// var detune = centsOffFromPitch( pitch, note );
+			// if (detune == 0 ) {
+			//     this.detuneEstimate = 0;
+			// } else {
+
+			//     this.detuneEstimate = detune
+			// }
+		}
+		let that = this;
+		that.rafID = window.requestAnimationFrame( function(){ that.updatePitch(); } );
+	}
+
+	stopUpdatingPitch(){
+		cancelAnimationFrame(this.rafID);
+	}
+
+	/**
+	 * @param {number} volume 
+	 */
+	setVolume(volume){
+		if ( this.isSetUp ) {
+			this.gain.gain.value = volume;
+		}
+		else {
+			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('This PolyWad is not set up yet.');
 		}
 		return this;
-	});
-};
+	}
 
-Polywad.prototype.setPanning = function(panning, timeConstant){
-	Wad.prototype.setPanning.call(this, panning, timeConstant);
-};
-
-Polywad.prototype.play = function(arg){
-	if ( this.isSetUp ) {
-		if ( this.playable < 1 ) {
-			this.playOnLoad    = true;
-			this.playOnLoadArg = arg;
-		}
-		else {
-			if ( arg && arg.volume ) {
-				this.gain.gain.value = arg.volume; // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
-				arg.volume = undefined; // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad.
+	/**
+	 * @param {string|number} pitch 
+	 */
+	setPitch(pitch){
+		this.wads.forEach(function(wad){
+				
+			if ( pitch in _pitches__WEBPACK_IMPORTED_MODULE_1__["pitches"] ) {
+				if ( wad.soundSource ) {
+					wad.soundSource.frequency.value = _pitches__WEBPACK_IMPORTED_MODULE_1__["pitches"][pitch];
+				}
+				wad.pitch = _pitches__WEBPACK_IMPORTED_MODULE_1__["pitches"][pitch];
 			}
-			for ( var i = 0; i < this.wads.length; i++ ) {
-				this.wads[i].play(arg);
+			else {
+				if ( wad.soundSource ) {
+					wad.soundSource.frequency.value = pitch;
+				}
+				wad.pitch = pitch;
 			}
-		}
+			return this;
+		});
 	}
-	else {
-		Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('This PolyWad is not set up yet.');
+	
+ 
+	/**
+	 * @param {number|array} panning 
+	 * @param {number} [timeConstant] 
+	 */
+	setPanning(panning, timeConstant){
+		Wad.prototype.setPanning.call(this, panning, timeConstant);
 	}
-	return this;
-};
 
-Polywad.prototype.stop = function(arg){
-	if ( this.isSetUp ) {
-		for ( let i = 0; i < this.wads.length; i++ ) {
-			this.wads[i].stop(arg);
-		}
-	}
-};
-
-Polywad.prototype.add = function(wad){
-	if ( this.isSetUp ) {
-		wad.destination = this.input;
-		this.wads.push(wad);
-		if ( wad instanceof Polywad ) {
-			wad.output.disconnect(0);
-			wad.output.connect(this.input);
-		}
-	}
-	else {
-		Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('This PolyWad is not set up yet.');
-	}
-	return this;
-};
-
-
-
-Polywad.prototype.remove = function(wad){
-	if ( this.isSetUp ) {
-		for ( let i = 0; i < this.wads.length; i++ ) {
-			if ( this.wads[i] === wad ) {
-				this.wads[i].destination = _common__WEBPACK_IMPORTED_MODULE_0__["context"].destination;
-				this.wads.splice(i,1);
-				if ( wad instanceof Polywad ) {
-					wad.output.disconnect(0);
-					wad.output.connect(_common__WEBPACK_IMPORTED_MODULE_0__["context"].destination);
+	/**
+	 * @param {PlayArgs} [arg]
+	 */
+	play(arg){
+		if ( this.isSetUp ) {
+			if ( this.playable < 1 ) {
+				this.playOnLoad    = true;
+				this.playOnLoadArg = arg;
+			}
+			else {
+				if ( arg && arg.volume ) {
+					this.gain.gain.value = arg.volume; // if two notes are played with volume set as a play arg, does the second one overwrite the first? maybe input should be an array of gain nodes, like regular wads.
+					arg.volume = undefined; // if volume is set, it should change the gain on the polywad's gain node, NOT the gain nodes for individual wads inside the polywad.
+				}
+				for ( var i = 0; i < this.wads.length; i++ ) {
+					this.wads[i].play(arg);
 				}
 			}
 		}
+		else {
+			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('This PolyWad is not set up yet.');
+		}
+		return this;
 	}
-	return this;
-};
 
-Polywad.prototype.constructExternalFx = function(arg, context){
+	stop(arg){
+		if ( this.isSetUp ) {
+			for ( let i = 0; i < this.wads.length; i++ ) {
+				this.wads[i].stop(arg);
+			}
+		}
+	}
 
-};
+	add(wad){
+		if ( this.isSetUp ) {
+			wad.destination = this.input;
+			this.wads.push(wad);
+			if ( wad instanceof Polywad ) {
+				wad.output.disconnect(0);
+				wad.output.connect(this.input);
+			}
+		}
+		else {
+			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('This PolyWad is not set up yet.');
+		}
+		return this;
+	}
+	remove(wad){
+		if ( this.isSetUp ) {
+			for ( let i = 0; i < this.wads.length; i++ ) {
+				if ( this.wads[i] === wad ) {
+					this.wads[i].destination = _common__WEBPACK_IMPORTED_MODULE_0__["context"].destination;
+					this.wads.splice(i,1);
+					if ( wad instanceof Polywad ) {
+						wad.output.disconnect(0);
+						wad.output.connect(_common__WEBPACK_IMPORTED_MODULE_0__["context"].destination);
+					}
+				}
+			}
+		}
+		return this;
+	}
+
+	constructExternalFx(arg, context){ }
+}
+
+
+
+
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = (Polywad);
 
@@ -21465,53 +21481,23 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-/**
- * @typedef {object} Envelope
- * @property {number} [attack]
- * @property {number} [decay]
- * @property {number} [sustain]
- * @property {number} [hold]
- * @property {number} [release]
- */
 
-/**
- * @typedef {object[]} FilterConfig
- * @property {string} [FilterConfig[].type]
- * @property {number} [FilterConfig[].frequency]
- * @property {number} [FilterConfig[].q]
- * @property {FilterEnvConfig} [FilterConfig[].env]
- */
 
-/**
- * @typedef {object} FilterEnvConfig
- * @property {number} [frequency]
- * @property {number} [attack]
- */
-
-/**
- * @typedef {object} WadConfig
- * @property {string} source
- * @property {number} [volume] - From 0 to 1
- * @property {string|number} [pitch]
- * @property {number} [detune]
- * @property {Envelope} [env]
- * @property {object} [destination]
- * @property {number} [offset]
- * @property {boolean} [loop]
- * @property {object} [tuna]
- * @property {number} [rate]
- * @property {object} [sprite] - Each key is the name of a sprite. The value is a two-element array, containing the start and end time of that sprite, in seconds. 
- * @property {FilterConfig} [filter]
- * 
- */
 
 class Wad {
 
+	/**
+	 * @param {string} [label] - Stop all currently playing wads, or all currently playing wads with a given label.
+	 */
 	static stopAll(label){
 		for ( var i = 0; i < Wad.allWads.length; i++ ) {
 			Wad.allWads[i].stop(label);
 		}
 	}
+
+	/**
+	 * @param {number} volume - New volume setting for all wads.
+	 */
 	static setVolume(volume){
 		for ( var i = 0; i < Wad.allWads.length; i++ ) {
 			Wad.allWads[i].setVolume(volume);
@@ -21519,8 +21505,83 @@ class Wad {
 	}
 
 	/**
+	 * @typedef {object} DelayConfig
+	 * @property {number} [delayTime] - Time in seconds between each delayed playback.
+	 * @property {number} [wet] - Relative volume change between the original sound and the first delayed playback.
+	 * @property {number} [feedback] - Relative volume change between each delayed playback and the next.
+	 */
+
+	/**
+	 * @typedef {object} Envelope 
+	 * @property {number} [attack] - Time in seconds from onset to peak volume. Common values for oscillators may range from 0.05 to 0.3.
+	 * @property {number} [decay] - Time in seconds from peak volume to sustain volume.
+	 * @property {number} [sustain] - Sustain volume level. This is a percent of the peak volume, so sensible values are between 0 and 1.
+	 * @property {number} [hold] - Time in seconds to maintain the sustain volume level. If set to -1, the sound will be sustained indefinitely until you manually call stop().
+	 * @property {number} [release] - Time in seconds from the end of the hold period to zero volume, or from calling stop() to zero volume.
+	 */
+
+	/**
+	 * @typedef {object} FilterConfig
+	 * @property {'lowpass'|'highpass'|'bandpass'|'lowshelf'|'highshelf'|'peaking'|'notch'|'allpass'} [type] - Default is 'lowpass'
+	 * @property {number} [frequency] - The frequency, in hertz, to which the filter is applied.
+	 * @property {number} [q] - Q-factor. No one knows what this does. The default value is 1. Sensible values are from 0 to 10.
+	 * @property {FilterEnvConfig} [env] - The filter envelope.
+	 */
+
+	/**
+	 * @typedef {object} FilterEnvConfig
+	 * @property {number} [frequency] - If this is set, filter frequency will slide from filter.frequency to filter.env.frequency when a note is triggered.
+	 * @property {number} [attack] - Time in seconds for the filter frequency to slide from filter.frequency to filter.env.frequency.
+	 */
+
+	/**
+	 * @typedef {object} VibratoConfig
+	 * @property {'sine'|'sawtooth'|'square'|'triangle'} [shape] - Shape of the lfo waveform. 
+	 * @property {number} [magnitude] - How much the pitch changes. Sensible values are from 1 to 10.
+	 * @property {number} [speed] - How quickly the pitch changes, in cycles per second. Sensible values are from 0.1 to 10.
+	 * @property {number} [attack] - Time in seconds for the vibrato effect to reach peak magnitude.
+	 */
+
+	/**
+	 * @typedef {object} TremoloConfig
+	 * @property {'sine'|'sawtooth'|'square'|'triangle'} [shape] - Shape of the lfo waveform. 
+	 * @property {number} [magnitude] - How much the volume changes. Sensible values are from 1 to 10.
+	 * @property {number} [speed] - How quickly the volume changes, in cycles per second. Sensible values are from 0.1 to 10.
+	 * @property {number} [attack] - Time in seconds for the tremolo effect to reach peak magnitude.
+	 */
+
+	/**
+	 * @typedef {object} ReverbConfig
+	 * @property {number} [wet] - The volume of the reverberations.
+	 * @property {string} [impulse] - A URL for an impulse response file.
+	 */
+
+	/**
+	 * @typedef {object} WadConfig
+	 * @property {'sine'|'square'|'sawtooth'|'triangle'|'noise'} source - sine, square, sawtooth, triangle, or noise
+	 * @property {number} [volume] - From 0 to 1
+	 * @property {string|number} [pitch] - Set a default pitch on the constructor if you don't want to set the pitch on play(). Pass in a string like 'c#3' to play a specific pitch, or pass in a number to play that frequency, in hertz.
+	 * @property {number} [detune] - Detune is measured in cents. 100 cents is equal to 1 semitone.
+	 * @property {Envelope} [env]- A set of parameters that describes how a sound's volume changes over time.
+	 * @property {object} [destination] - The last node the sound is routed to.
+	 * @property {number} [offset] - Where in the audio clip playback begins, measured in seconds from the start of the audio clip.
+	 * @property {boolean} [loop] - If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators.
+	 * @property {object} [tuna] - Add effects from Tuna.js to this wad. Check out the Tuna.js documentation for more information.
+	 * @property {number} [rate] - Where in the audio clip playback begins, measured in seconds from the start of the audio clip.
+	 * @property {object} [sprite] - Each key is the name of a sprite. The value is a two-element array, containing the start and end time of that sprite, in seconds. 
+	 * @property {FilterConfig|FilterConfig[]} [filter] - Pass an object to add a filter to this wad, or pass an array of objects to add multiple filters to this wad.
+	 * @property {VibratoConfig} [vibrato] - A vibrating pitch effect. Only works for oscillators.
+	 * @property {TremoloConfig} [tremolo] - A vibrating volume effect.
+	 * @property {number|array} [panning] - Placement of the sound source. Pass in a number to use stereo panning, or pass in a 3-element array to use 3D panning. Note that some browsers do not support stereo panning.
+	 * @property {'equalpower'|'HRTF'} [panningModel] - Defaults to 'equalpower'
+	 * @property {string} [rolloffFactor]
+	 * @property {ReverbConfig} [reverb] - Add reverb to this wad.
+	 * @property {DelayConfig} [delay] - Add delay to this wad.
 	 * 
-	 * @param {WadConfig} arg 
+	 */
+
+	/**
+	 * @param {WadConfig} arg - One big object.
 	 */
 	constructor(arg){
 		/** Set basic Wad properties **/
@@ -21591,6 +21652,26 @@ class Wad {
 	set properties on those nodes according to the constructor arguments and play() arguments,
 	plug the nodes into each other with plugEmIn(),
 	then finally play the sound by calling playEnv() **/
+	
+	/**
+	 * @typedef {object} PlayArgs
+	 * @property {number} [volume] - This overrides the value for volume passed to the constructor, if it was set.
+	 * @property {number} [wait] - Time in seconds between calling play() and actually triggering the note.
+	 * @property {boolean} [loop] - This overrides the value for loop passed to the constructor, if it was set.
+	 * @property {number} [offset] - This overrides the value for offset passed to the constructor, if it was set.
+	 * @property {number} [rate] - This overrides the value for rate passed to the constructor, if it was set.
+	 * @property {string|number} [pitch] - This overrides the value for pitch passed to the constructor, if it was set.
+	 * @property {string} [label] - A label that identifies this note. 
+	 * @property {Envelope} [env] - This overrides the values for the envelope passed to the constructor, if it was set.
+	 * @property {number|array} [panning] - This overrides the value for panning passed to the constructor. 
+	 * @property {FilterConfig|FilterConfig[]} [filter] - This overrides the values for filters passed to the constructor.
+	 * @property {DelayConfig} [delay] - This overrides the values for delay passed to the constructor, if it was set.
+	 */
+
+	/**
+	 * @param {PlayArgs} [arg]
+	 * @returns {promise} 
+	 */
 	play(arg){
 		arg = arg || { arg : null };
 		if ( this.playable < 1 ) {
@@ -21721,6 +21802,12 @@ class Wad {
 
 
 	/** Change the volume of a wad at any time, including during playback **/
+	/**
+	 * @param {number} volume - New volume setting.
+	 * @param {number} [timeConstant] - Time in seconds for 63% of the transition to complete.
+	 * @param {string} [label] - If you want to apply this change to a note playing from this wad that is not the most recently triggered note, you can pass in the label of the notes you want to stop.
+	 * @returns {Wad} 
+	 */
 	setVolume(volume, timeConstant, label){
 		timeConstant = timeConstant || .01;
 		if ( label ) {
@@ -21755,6 +21842,11 @@ class Wad {
 	inputSpeed is a value of 0 < speed, and is the rate of playback of the audio.
 	E.g. if input speed = 2.0, the playback will be twice as fast
 	**/
+
+	/**
+	 * @param {number} inputSpeed - The new rate setting.
+	 * @returns {Wad}
+	 */
 	setRate(inputSpeed) {
 
 		//Check/Save the input
@@ -21777,6 +21869,12 @@ class Wad {
 		return this;
 	}
 
+	/**
+	 * @param {string|number} pitch - The new pitch setting. 
+	 * @param {number} [timeConstant] - Time in seconds for 63% of the transition to complete.
+	 * @param {string} [label] - If you want to apply this change to a note playing from this wad that is not the most recently triggered note, you can pass in the label of the notes you want to affect.
+	 * @returns {Wad} 
+	 */
 	setPitch(pitch, timeConstant, label){
 		timeConstant = timeConstant || .01;
 		if ( label ) {
@@ -21808,6 +21906,12 @@ class Wad {
 		return this;
 	}
 
+	/**
+	 * @param {number} detune - The new detune setting
+	 * @param {number} [timeConstant] - Time in seconds for 63% of the transition to complete.
+	 * @param {string} [label] - If you want to apply this change to a note playing from this wad that is not the most recently triggered note, you can pass in the label of the notes you want to affect.
+	 * @returns {Wad} 
+	 */
 	setDetune(detune, timeConstant, label){
 		timeConstant = timeConstant || .01;
 		if ( label ) {
@@ -21821,9 +21925,14 @@ class Wad {
 			this.soundSource.detune.setTargetAtTime(detune, _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime, timeConstant);
 		}
 		return this;
-	};
+	}
 
 	/** Change the panning of a Wad at any time, including during playback **/
+	/**
+	 * @param {number|array} panning - The new panning setting.
+	 * @param {number} [timeConstant] - Time in seconds for 63% of the transition to complete.
+	 * @returns {Wad}
+	 */
 	setPanning(panning, timeConstant){
 		timeConstant = timeConstant || .01;
 		if ( typeof panning === 'number' && !_common__WEBPACK_IMPORTED_MODULE_2__["context"].createStereoPanner ) {
@@ -21842,12 +21951,16 @@ class Wad {
 		if ( lodash__WEBPACK_IMPORTED_MODULE_3___default.a.isArray(panning) ) { this.panning.type = '3d'; }
 		else if ( typeof panning === 'number' ) { this.panning.type = 'stereo'; }
 		return this;
-	};
+	}
 
 	/**
 	Change the Reverb of a Wad at any time, including during playback.
 	inputWet is a value of 0 < wetness/gain < 1
 	**/
+	/**
+	 * @param {number} inputWet - The new wet setting for the reverb.
+	 * @returns {Wad} 
+	 */
 	setReverb(inputWet) {
 
 		//Check/Save the input
@@ -21885,6 +21998,12 @@ class Wad {
 	inputWet is a value of gain 0 < inputWet < 1, and is Relative volume change between the original sound and the first delayed playback.
 	inputFeedback is a value of gain 0 < inputFeedback < 1, and is Relative volume change between each delayed playback and the next.
 	**/
+	/**
+	 * @param {number} delayTime - The new delayTime setting.
+	 * @param {number} wet - The new wet setting.
+	 * @param {number} feedback - The new feedback setting. 
+	 * @returns {Wad} 
+	 */
 	setDelay(inputTime, inputWet, inputFeedback){
 
 		//Check/Save the input
@@ -21928,12 +22047,19 @@ class Wad {
 	}
 
 
+	/**
+	 * @param {string} [label] - If you want to pause a note playing from this wad that is not the most recently triggered note, you can pass in the label of the notes you want to pause.
+	 */
 	pause(label){
 		this.pauseTime = _common__WEBPACK_IMPORTED_MODULE_2__["context"].currentTime;
 		this.soundSource.onended = null;
 		this.stop(label);
 
 	}
+
+	/**
+	 * @param {PlayArgs} [args] - The same args as play()
+	 */
 	unpause(arg){
 		arg = arg || {};
 		arg.unpause = true;
@@ -21947,6 +22073,10 @@ class Wad {
 	}
 
 	/** If multiple instances of a sound are playing simultaneously, stop() only can stop the most recent one **/
+
+	/**
+	 * @param {string} [label] - If you want to stop a note playing from this wad that is not the most recently triggered note, you can pass in the label of the notes you want to stop.
+	 */
 	stop(label){
 		if ( !( this.source === 'mic' ) ) {
 			if ( !(this.gain && this.gain.length) ){
@@ -21996,7 +22126,7 @@ class Wad {
 		if ( this.tremolo ) {
 			this.tremolo.wad.stop();
 		}
-	};
+	}
 
 
 	/** Method to allow users to setup external fx in the constructor **/
@@ -22012,7 +22142,98 @@ class Wad {
 
 }
 
+/*
+ * Due to the structure of the project (the PolyWad class is a static method of the Wad class),
+ * The typedefs for PolyWad appear here, instead of in polywad.js. 
+ */
+
+Wad.Poly = class{
+
+	/**
+	 * @typedef {object} CompressorConfig
+	 * @property {number} [attack] - The amount of time, in seconds, to reduce the gain by 10dB. This parameter ranges from 0 to 1.
+	 * @property {number} [knee] - A decibel value representing the range above the threshold where the curve smoothly transitions to the "ratio" portion. This parameter ranges from 0 to 40.
+	 * @property {number} [ratio] - The amount of dB change in input for a 1 dB change in output. This parameter ranges from 1 to 20.
+	 * @property {number} [release] - The amount of time (in seconds) to increase the gain by 10dB. This parameter ranges from 0 to 1.
+	 * @property {number} [threshold] - The decibel value above which the compression will start taking effect. This parameter ranges from -100 to 0.
+	 */
+
+	/**
+	 * @typedef {object} AudioMeterConfig
+	 * @property {number} [clipLevel] - the level (0 to 1) that you would consider "clipping".
+	 * @property {number} [averaging] - how "smoothed" you would like the meter to be over time. Should be between 0 and less than 1.
+	 * @property {number} [clipLag] - how long you would like the "clipping" indicator to show after clipping has occured, in milliseconds.
+	 */
+
+	/**
+	 * @typedef {object} RecorderConfig
+	 * @property {object} options - The options passed to the MediaRecorder constructor.
+	 * @property {function} onstop - The callback used to handle the onstop event from the MediaRecorder.
+	 */
+
+	/**
+	 * @typedef {object} PolyWadConfig
+	 * @property {number} [volume] - From 0 to 1
+	 * @property {number|array} [panning] - The default panning for this polywad.
+	 * @property {FilterConfig|FilterConfig[]} [filter] - Filter(s) applied to this polywad.
+	 * @property {DelayConfig} [delay] - Delay applied to this polywad.
+	 * @property {ReverbConfig} [reverb] - Reverb applied to this polywad.
+	 * @property {object} [destination]
+	 * @property {object} [tuna] - Tuna effects applied to this polywad. Check out the tuna docs for more info. 
+	 * @property {AudioMeterConfig} [audioMeter] - Add a volume meter to this polywad that tells you if it's clipping.
+	 * @property {CompressorConfig} [compressor] - Add a compressor to this polywad.
+	 * @property {RecorderConfig} [recorder] - Record the output of this polywad to a buffer or a file.
+	 */
+
+	/**
+	 * @param {PolyWadConfig} arg 
+	 */
+	constructor(arg){}
+
+	/**
+	 * @param {Wad} wad - The wad or polywad to add.
+	 */
+	add(wad){}
+
+	/**
+	 * @param {Wad} wad - The wad or polywad to remove.
+	 */
+	remove(wad){}
+
+	/**
+	 * @param {PlayArgs} [arg] - Same arguments as Wad.prototype.play()
+	 */
+	play(arg){}
+
+	/**
+	 * @param {string} [label] - If you want to stop a note that is not the most recently played one, pass in a label to stop only those notes.
+	 */
+	stop(label){}
+
+	/**
+	 * @param {number} volume - The new volume setting.
+	 */
+	setVolume(volume){}
+
+	/**
+	 * @param {string|number} pitch - The new pitch setting.
+	 */
+	setPitch(pitch){}
+
+	/**
+	 * @param {string|number} panning - The new panning setting. 
+	 */
+	setPanning(panning){}
+};
+
+/**
+ * @type {Wad[]}
+ */
 Wad.allWads = [];
+
+/**
+ * @type {object}
+ */
 Wad.audioContext = _common__WEBPACK_IMPORTED_MODULE_2__["context"];
 Wad.listener = new _audio_listener__WEBPACK_IMPORTED_MODULE_1__["default"](_common__WEBPACK_IMPORTED_MODULE_2__["context"]);
 if ( typeof tunajs__WEBPACK_IMPORTED_MODULE_0___default.a != undefined ) {

@@ -18534,7 +18534,7 @@ return /******/ (function(modules) { // webpackBootstrap
             writable: true,
             value: {
                 drive: {
-                    value: 1,
+                    value: 0.197,
                     min: 0,
                     max: 1,
                     automatable: true,
@@ -18542,7 +18542,7 @@ return /******/ (function(modules) { // webpackBootstrap
                     scaled: true
                 },
                 outputGain: {
-                    value: 0,
+                    value: -9.154,
                     min: -46,
                     max: 0,
                     automatable: true,
@@ -18550,7 +18550,7 @@ return /******/ (function(modules) { // webpackBootstrap
                     scaled: true
                 },
                 curveAmount: {
-                    value: 0.725,
+                    value: 0.979,
                     min: 0,
                     max: 1,
                     automatable: false,
@@ -18578,7 +18578,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.inputDrive.gain;
             },
             set: function(value) {
-                this._drive = value;
+                this.inputDrive.gain.value = value;
             }
         },
         curveAmount: {
@@ -18627,7 +18627,7 @@ return /******/ (function(modules) { // webpackBootstrap
                     var i, x, y;
                     for (i = 0; i < n_samples; i++) {
                         x = i * 2 / n_samples - 1;
-                        y = ((0.5 * Math.pow((x + 1.4), 2)) - 1) * y >= 0 ? 5.8 : 1.2;
+                        y = ((0.5 * Math.pow((x + 1.4), 2)) - 1) * (y >= 0 ? 5.8 : 1.2);
                         ws_table[i] = tanh(y);
                     }
                 },
@@ -18644,9 +18644,13 @@ return /******/ (function(modules) { // webpackBootstrap
                     for (i = 0; i < n_samples; i++) {
                         x = i * 2 / n_samples - 1;
                         abx = Math.abs(x);
-                        if (abx < a) y = abx;
-                        else if (abx > a) y = a + (abx - a) / (1 + Math.pow((abx - a) / (1 - a), 2));
-                        else if (abx > 1) y = abx;
+                        if (abx < a) {
+                            y = abx;
+                        } else if (abx > a) {
+                            y = a + (abx - a) / (1 + Math.pow((abx - a) / (1 - a), 2));
+                        } else if (abx > 1) {
+                            y = abx;
+                        }
                         ws_table[i] = sign(x) * y * (1 / ((a + 1) / 2));
                     }
                 },
@@ -19169,35 +19173,35 @@ return /******/ (function(modules) { // webpackBootstrap
                     type: BOOLEAN
                 },
                 baseFrequency: {
-                    value: 0.5,
+                    value: 0.153,
                     min: 0,
                     max: 1,
                     automatable: false,
                     type: FLOAT
                 },
                 excursionOctaves: {
-                    value: 2,
+                    value: 3.3,
                     min: 1,
                     max: 6,
                     automatable: false,
                     type: FLOAT
                 },
                 sweep: {
-                    value: 0.2,
+                    value: 0.35,
                     min: 0,
                     max: 1,
                     automatable: false,
                     type: FLOAT
                 },
                 resonance: {
-                    value: 10,
+                    value: 19,
                     min: 1,
                     max: 100,
                     automatable: false,
                     type: FLOAT
                 },
                 sensitivity: {
-                    value: 0.5,
+                    value: -0.5,
                     min: -1,
                     max: 1,
                     automatable: false,
@@ -19430,20 +19434,14 @@ return /******/ (function(modules) { // webpackBootstrap
                     channels = event.inputBuffer.numberOfChannels,
                     current, chan, rms, i;
                 chan = rms = i = 0;
-                if (channels > 1) { //need to mixdown
+
+                for(chan = 0; chan < channels; ++chan) {
                     for (i = 0; i < count; ++i) {
-                        for (; chan < channels; ++chan) {
-                            current = event.inputBuffer.getChannelData(chan)[i];
-                            rms += (current * current) / channels;
-                        }
-                    }
-                } else {
-                    for (i = 0; i < count; ++i) {
-                        current = event.inputBuffer.getChannelData(0)[i];
+                        current = event.inputBuffer.getChannelData(chan)[i];
                         rms += (current * current);
                     }
                 }
-                rms = Math.sqrt(rms);
+                rms = Math.sqrt(rms / channels);
 
                 if (this._envelope < rms) {
                     this._envelope *= this._attackC;
@@ -19777,13 +19775,14 @@ class AudioListener{
 /*!***********************!*\
   !*** ./src/common.js ***!
   \***********************/
-/*! exports provided: logStats, logMessage, context, noiseBuffer, constructEnv, constructFilter, requestAudioFile, constructVibrato, constructTremolo, constructReverb, constructPanning, constructDelay, constructCompressor, getConsent, permissionsGranted, setUpMic, setUpPanningOnPlay, setUpVibratoOnPlay, setUpTremoloOnPlay, setUpDelayOnPlay, setUpTunaOnPlay, plugEmIn, setUpEnvOnPlay, setUpFilterOnPlay, setUpReverbOnPlay, filterEnv, playEnv, setUpOscillator, createFilters */
+/*! exports provided: logStats, logMessage, audioCache, context, noiseBuffer, constructEnv, constructFilter, requestAudioFile, constructVibrato, constructTremolo, constructReverb, constructPanning, constructDelay, constructCompressor, getConsent, permissionsGranted, setUpMic, setUpPanningOnPlay, setUpVibratoOnPlay, setUpTremoloOnPlay, setUpDelayOnPlay, setUpTunaOnPlay, plugEmIn, setUpEnvOnPlay, setUpFilterOnPlay, setUpReverbOnPlay, filterEnv, playEnv, setUpOscillator, createFilters */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logStats", function() { return logStats; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logMessage", function() { return logMessage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "audioCache", function() { return audioCache; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "context", function() { return context; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "noiseBuffer", function() { return noiseBuffer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "constructEnv", function() { return constructEnv; });
@@ -19824,6 +19823,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let audioContext = window.AudioContext || window.webkitAudioContext;
+
+let audioCache = {};
 
 let logStats = {
 	verbosity: 0,
@@ -19953,25 +19954,49 @@ let constructFilter = function(arg){
 /** If the Wad uses an audio file as the source, request it from the server.
 Don't let the Wad play until all necessary files have been downloaded. **/
 let requestAudioFile = function(that, callback){
-	var request = new XMLHttpRequest();
-	request.open('GET', that.source, true);
-	request.responseType = 'arraybuffer';
-	that.playable--;
-	request.onload = function(){
-		context.decodeAudioData(request.response, function (decodedBuffer){
-			that.decodedBuffer = decodedBuffer;
-			if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
-				that.defaultEnv.hold = that.decodedBuffer.duration * ( 1 / that.rate );
-				that.env.hold = that.decodedBuffer.duration * ( 1 / that.rate );
-			}
-			that.duration = that.env.hold * 1000;
+	if ( !audioCache[that.source] ) {
+		that.playable--;
+		audioCache[that.source] = fetch(that.source).then((response)=>{
+			console.log('fetch response', response)
+			return response.arrayBuffer()
+		})
+		audioCache[that.source].then((response)=>{
+			console.log('resp2', response)
+			context.decodeAudioData(response.slice(0), function (decodedBuffer){
+				that.decodedBuffer = decodedBuffer;
+				if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
+					that.defaultEnv.hold = that.decodedBuffer.duration * ( 1 / that.rate );
+					that.env.hold = that.decodedBuffer.duration * ( 1 / that.rate );
+				}
+				that.duration = that.env.hold * 1000;
 
-			if ( callback ) { callback(that); }
-			that.playable++;
-			if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
-		});
-	};
-	request.send();
+				if ( callback ) { callback(that); }
+				that.playable++;
+				if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
+			});
+
+			return response
+
+		})
+	}
+	else {
+		audioCache[that.source].then((response) => {
+			console.log('from cache', response)
+			context.decodeAudioData(response.slice(0), function (decodedBuffer){
+				that.decodedBuffer = decodedBuffer;
+				if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
+					that.defaultEnv.hold = that.decodedBuffer.duration * ( 1 / that.rate );
+					that.env.hold = that.decodedBuffer.duration * ( 1 / that.rate );
+				}
+				that.duration = that.env.hold * 1000;
+
+				if ( callback ) { callback(that); }
+				that.playable++;
+				if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
+			});
+
+		})
+	}
 };
 
 /** Set up the vibrato LFO **/

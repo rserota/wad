@@ -6,6 +6,8 @@ import _ from 'lodash';
 
 let audioContext = window.AudioContext || window.webkitAudioContext;
 
+let audioCache = {};
+
 let logStats = {
 	verbosity: 0,
 	suppressedLogs: 0
@@ -134,25 +136,49 @@ let constructFilter = function(arg){
 /** If the Wad uses an audio file as the source, request it from the server.
 Don't let the Wad play until all necessary files have been downloaded. **/
 let requestAudioFile = function(that, callback){
-	var request = new XMLHttpRequest();
-	request.open('GET', that.source, true);
-	request.responseType = 'arraybuffer';
-	that.playable--;
-	request.onload = function(){
-		context.decodeAudioData(request.response, function (decodedBuffer){
-			that.decodedBuffer = decodedBuffer;
-			if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
-				that.defaultEnv.hold = that.decodedBuffer.duration * ( 1 / that.rate );
-				that.env.hold = that.decodedBuffer.duration * ( 1 / that.rate );
-			}
-			that.duration = that.env.hold * 1000;
+	if ( !audioCache[that.source] ) {
+		that.playable--;
+		audioCache[that.source] = fetch(that.source).then((response)=>{
+			console.log('fetch response', response)
+			return response.arrayBuffer()
+		})
+		audioCache[that.source].then((response)=>{
+			console.log('resp2', response)
+			context.decodeAudioData(response.slice(0), function (decodedBuffer){
+				that.decodedBuffer = decodedBuffer;
+				if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
+					that.defaultEnv.hold = that.decodedBuffer.duration * ( 1 / that.rate );
+					that.env.hold = that.decodedBuffer.duration * ( 1 / that.rate );
+				}
+				that.duration = that.env.hold * 1000;
 
-			if ( callback ) { callback(that); }
-			that.playable++;
-			if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
-		});
-	};
-	request.send();
+				if ( callback ) { callback(that); }
+				that.playable++;
+				if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
+			});
+
+			return response
+
+		})
+	}
+	else {
+		audioCache[that.source].then((response) => {
+			console.log('from cache', response)
+			context.decodeAudioData(response.slice(0), function (decodedBuffer){
+				that.decodedBuffer = decodedBuffer;
+				if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
+					that.defaultEnv.hold = that.decodedBuffer.duration * ( 1 / that.rate );
+					that.env.hold = that.decodedBuffer.duration * ( 1 / that.rate );
+				}
+				that.duration = that.env.hold * 1000;
+
+				if ( callback ) { callback(that); }
+				that.playable++;
+				if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
+			});
+
+		})
+	}
 };
 
 /** Set up the vibrato LFO **/
@@ -592,6 +618,7 @@ let setUpTunaOnPlay = function(that, arg){
 export {
 	logStats,
 	logMessage,
+	audioCache,
 	context,
 	noiseBuffer,
 	constructEnv,

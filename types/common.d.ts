@@ -3,6 +3,7 @@ export namespace logStats {
     const suppressedLogs: number;
 }
 export function logMessage(message: any, logLevel: any): void;
+export let audioCache: {};
 export let context: any;
 /** Pre-render a noise buffer instead of generating noise on the fly. **/
 export let noiseBuffer: any;
@@ -16,7 +17,8 @@ export function constructEnv(arg: any): {
 };
 /** Set up the default filter and filter envelope. **/
 export function constructFilter(arg: any): any;
-/** If the Wad uses an audio file as the source, request it from the server.
+/** If the Wad uses an audio file as the source, request it from the server,
+or use a cached copy if available.
 Don't let the Wad play until all necessary files have been downloaded. **/
 export function requestAudioFile(that: any, callback: any): void;
 /** Set up the vibrato LFO **/

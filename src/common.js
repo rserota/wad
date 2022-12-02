@@ -134,9 +134,9 @@ let constructFilter = function(arg){
 };
 
 
-/** If the Wad uses an audio file as the source, request it from the server.
+/** If the Wad uses an audio file as the source, request it from the server, 
+or use a cached copy if available.
 Don't let the Wad play until all necessary files have been downloaded. **/
-
 let requestAudioFile = function(that, callback){
 	that.playable--;
 	let decodedBufferPromise;

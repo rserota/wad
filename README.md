@@ -498,6 +498,7 @@ However, if you'd like to contribute code to WadJS, here are some tips and guide
 | args.source               | string            | none (required)   | To make a wad that plays an audio clip, set this to the url for the audio file. To make a wad that plays an oscillator, set this to 'sine', 'square', 'sawtooth', 'triangle', or 'noise'. To create a wad that processes your microphone input, set this to 'mic'. |
 | args.volume               | number            | 1                 | Peak volume can range from 0 to an arbitrarily large number, but you probably shouldn't set it higher than 1. |
 | args.loop                 | boolean           | false             | If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators. |
+| args.useCache             | boolean           | true              | If false, the audio will be requested from the source URL without checking the audio cache. |
 | args.rate                 | number            | 1                 | How fast the audio clip plays, relative to its normal speed. |
 | args.offset               | number            | 0                 | Where in the audio clip playback begins, measured in seconds from the start of the audio clip. |
 | args.pitch                | string or number  | 'A4'              | Set a default pitch on the constructor if you don't want to set the pitch on `play()`. Pass in a string to play a specific pitch (12-TET, A440), or pass in a number to play that frequency, in hertz. |

@@ -126,6 +126,7 @@ class Wad {
 	 * @property {string} [rolloffFactor]
 	 * @property {ReverbConfig} [reverb] - Add reverb to this wad.
 	 * @property {DelayConfig} [delay] - Add delay to this wad.
+	 * @property {boolean} [useCache] - If false, the audio will be requested from the source URL without checking the audioCache.
 	 * 
 	 */
 
@@ -135,6 +136,7 @@ class Wad {
 	constructor(arg){
 		/** Set basic Wad properties **/
 		this.source        = arg.source;
+		this.useCache      = _.get(arg, 'useCache', true);
 		this.destination   = arg.destination || context.destination; // the last node the sound is routed to
 		this.volume        = _.get(arg, 'volume', 1); // peak volume. min:0, max:1 (actually max is infinite, but ...just keep it at or below 1)
 		this.defaultVolume = this.volume;

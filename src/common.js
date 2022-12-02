@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 let audioContext = window.AudioContext || window.webkitAudioContext;
 
+/* keys are URLs for audio files. values are promises that resolve to the decoded audio */
 let audioCache = {};
 
 let logStats = {
@@ -135,50 +136,36 @@ let constructFilter = function(arg){
 
 /** If the Wad uses an audio file as the source, request it from the server.
 Don't let the Wad play until all necessary files have been downloaded. **/
+
 let requestAudioFile = function(that, callback){
-	if ( !audioCache[that.source] ) {
-		that.playable--;
-		audioCache[that.source] = fetch(that.source).then((response)=>{
-			console.log('fetch response', response)
+	that.playable--;
+	let decodedBufferPromise;
+	if ( !that.useCache || !audioCache[that.source] ) {
+		decodedBufferPromise = fetch(that.source).then((response)=>{
 			return response.arrayBuffer()
+		}).then((response)=>{
+			return context.decodeAudioData(response)
 		})
-		audioCache[that.source].then((response)=>{
-			console.log('resp2', response)
-			context.decodeAudioData(response.slice(0), function (decodedBuffer){
-				that.decodedBuffer = decodedBuffer;
-				if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
-					that.defaultEnv.hold = that.decodedBuffer.duration * ( 1 / that.rate );
-					that.env.hold = that.decodedBuffer.duration * ( 1 / that.rate );
-				}
-				that.duration = that.env.hold * 1000;
-
-				if ( callback ) { callback(that); }
-				that.playable++;
-				if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
-			});
-
-			return response
-
-		})
+		if ( that.useCache ) {
+			audioCache[that.source] = decodedBufferPromise
+		}
 	}
 	else {
-		audioCache[that.source].then((response) => {
-			console.log('from cache', response)
-			context.decodeAudioData(response.slice(0), function (decodedBuffer){
-				that.decodedBuffer = decodedBuffer;
-				if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
-					that.defaultEnv.hold = that.decodedBuffer.duration * ( 1 / that.rate );
-					that.env.hold = that.decodedBuffer.duration * ( 1 / that.rate );
-				}
-				that.duration = that.env.hold * 1000;
-
-				if ( callback ) { callback(that); }
-				that.playable++;
-				if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
-			});
-
-		})
+		decodedBufferPromise = audioCache[that.source]
 	}
+
+	decodedBufferPromise.then((decodedBuffer)=>{
+		that.decodedBuffer = decodedBuffer;
+		if ( that.env.hold === 3.14159 ) { // audio buffers should not use the default hold
+			that.defaultEnv.hold = that.decodedBuffer.duration * ( 1 / that.rate );
+			that.env.hold = that.decodedBuffer.duration * ( 1 / that.rate );
+		}
+		that.duration = that.env.hold * 1000;
+
+		if ( callback ) { callback(that); }
+		that.playable++;
+		if ( that.playOnLoad ) { that.play(that.playOnLoadArg); }
+	});
 };
 
 /** Set up the vibrato LFO **/

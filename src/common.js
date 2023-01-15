@@ -66,7 +66,10 @@ let getUserMedia = (function(window) {
 	}
     
 	return function() {
-		throw 'getUserMedia is unsupported';
+		if ( window.location.hostname !== 'localhost' && window.location.protocol === 'http:' ) {
+			throw "The user's microphone can only be accessed via HTTPS or localhost. This page seems to be running on plain HTTP."
+		}
+		throw 'getUserMedia is unsupported. ';
 	};
 }(window));
     
@@ -448,7 +451,6 @@ let setUpFilterOnPlay = function(that, arg){
 		createFilters(that, that);
 	}
 };
-///////////////////////////////////////////////////////////////////////////////////////////////
 
 /** Initialize and configure a convolver node for playback **/
 let setUpReverbOnPlay = function(that, arg){
@@ -470,7 +472,6 @@ let setUpReverbOnPlay = function(that, arg){
 	that.reverb.node = reverbNode;
 	that.nodes.push(that.reverb.node);
 };
-//////////////////////////////////////////////////////////////
 
 
 /** Initialize and configure a panner node for playback **/

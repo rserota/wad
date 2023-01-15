@@ -172,7 +172,7 @@ let logPitch = function(){
 	rafId = requestAnimationFrame(logPitch);
 };
 document.getElementById('mic-consent').addEventListener('click', function(){
-	window.voice = new Wad({
+	voice = window.voice = new Wad({
 		source  : 'mic',
 		// reverb  : {
 		//     wet : .4
@@ -184,7 +184,7 @@ document.getElementById('mic-consent').addEventListener('click', function(){
 		// panning : -.2
 	});
 
-	window.tuner = new Wad.Poly({
+	tuner = window.tuner = new Wad.Poly({
 		recorder: {
 			onstop: function(){
 				let blob = new Blob(this.recorder.chunks, { 'type' : 'audio/webm;codecs=opus' });
@@ -194,7 +194,6 @@ document.getElementById('mic-consent').addEventListener('click', function(){
 	});
 	// tuner.setVolume(0) // mute the tuner to avoid feedback
 	tuner.add(voice);
-
 
 });
 

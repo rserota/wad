@@ -17,6 +17,7 @@ import {
 	pitches,
 	pitchesArray,
 } from './pitches';
+import _ from 'lodash';
 
 
 let buflen = 2048;
@@ -193,6 +194,7 @@ class Polywad {
 		this.nodes             = [this.input];
 		this.destination       = arg.destination || context.destination; // the last node the sound is routed to
 		this.volume            = arg.volume || 1;
+		this.volume            = _.get(arg, 'volume', 1)
 		this.gain              = context.createGain();
 		this.gain.gain.value   = this.volume;
 		this.output            = context.createAnalyser();
@@ -333,12 +335,12 @@ class Polywad {
 
 	add(wad){
 		if ( this.isSetUp ) {
-			wad.destination = this.input;
-			this.wads.push(wad);
 			if ( wad instanceof Polywad ) {
-				wad.output.disconnect(0);
+				wad.output.disconnect(wad.destination);
 				wad.output.connect(this.input);
 			}
+			wad.destination = this.input;
+			this.wads.push(wad);
 		}
 		else {
 			logMessage('This PolyWad is not set up yet.');
@@ -349,12 +351,12 @@ class Polywad {
 		if ( this.isSetUp ) {
 			for ( let i = 0; i < this.wads.length; i++ ) {
 				if ( this.wads[i] === wad ) {
-					this.wads[i].destination = context.destination;
-					this.wads.splice(i,1);
 					if ( wad instanceof Polywad ) {
-						wad.output.disconnect(0);
+						wad.output.disconnect(wad.destination);
 						wad.output.connect(context.destination);
 					}
+					this.wads[i].destination = context.destination;
+					this.wads.splice(i,1);
 				}
 			}
 		}
@@ -363,11 +365,6 @@ class Polywad {
 
 	constructExternalFx(arg, context){ }
 }
-
-
-
-
-
 
 
 export default Polywad;

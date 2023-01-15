@@ -18534,7 +18534,7 @@ return /******/ (function(modules) { // webpackBootstrap
             writable: true,
             value: {
                 drive: {
-                    value: 0.197,
+                    value: 1,
                     min: 0,
                     max: 1,
                     automatable: true,
@@ -18542,7 +18542,7 @@ return /******/ (function(modules) { // webpackBootstrap
                     scaled: true
                 },
                 outputGain: {
-                    value: -9.154,
+                    value: 0,
                     min: -46,
                     max: 0,
                     automatable: true,
@@ -18550,7 +18550,7 @@ return /******/ (function(modules) { // webpackBootstrap
                     scaled: true
                 },
                 curveAmount: {
-                    value: 0.979,
+                    value: 0.725,
                     min: 0,
                     max: 1,
                     automatable: false,
@@ -18578,7 +18578,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return this.inputDrive.gain;
             },
             set: function(value) {
-                this.inputDrive.gain.value = value;
+                this._drive = value;
             }
         },
         curveAmount: {
@@ -18627,7 +18627,7 @@ return /******/ (function(modules) { // webpackBootstrap
                     var i, x, y;
                     for (i = 0; i < n_samples; i++) {
                         x = i * 2 / n_samples - 1;
-                        y = ((0.5 * Math.pow((x + 1.4), 2)) - 1) * (y >= 0 ? 5.8 : 1.2);
+                        y = ((0.5 * Math.pow((x + 1.4), 2)) - 1) * y >= 0 ? 5.8 : 1.2;
                         ws_table[i] = tanh(y);
                     }
                 },
@@ -18644,13 +18644,9 @@ return /******/ (function(modules) { // webpackBootstrap
                     for (i = 0; i < n_samples; i++) {
                         x = i * 2 / n_samples - 1;
                         abx = Math.abs(x);
-                        if (abx < a) {
-                            y = abx;
-                        } else if (abx > a) {
-                            y = a + (abx - a) / (1 + Math.pow((abx - a) / (1 - a), 2));
-                        } else if (abx > 1) {
-                            y = abx;
-                        }
+                        if (abx < a) y = abx;
+                        else if (abx > a) y = a + (abx - a) / (1 + Math.pow((abx - a) / (1 - a), 2));
+                        else if (abx > 1) y = abx;
                         ws_table[i] = sign(x) * y * (1 / ((a + 1) / 2));
                     }
                 },
@@ -19173,35 +19169,35 @@ return /******/ (function(modules) { // webpackBootstrap
                     type: BOOLEAN
                 },
                 baseFrequency: {
-                    value: 0.153,
+                    value: 0.5,
                     min: 0,
                     max: 1,
                     automatable: false,
                     type: FLOAT
                 },
                 excursionOctaves: {
-                    value: 3.3,
+                    value: 2,
                     min: 1,
                     max: 6,
                     automatable: false,
                     type: FLOAT
                 },
                 sweep: {
-                    value: 0.35,
+                    value: 0.2,
                     min: 0,
                     max: 1,
                     automatable: false,
                     type: FLOAT
                 },
                 resonance: {
-                    value: 19,
+                    value: 10,
                     min: 1,
                     max: 100,
                     automatable: false,
                     type: FLOAT
                 },
                 sensitivity: {
-                    value: -0.5,
+                    value: 0.5,
                     min: -1,
                     max: 1,
                     automatable: false,
@@ -19434,14 +19430,20 @@ return /******/ (function(modules) { // webpackBootstrap
                     channels = event.inputBuffer.numberOfChannels,
                     current, chan, rms, i;
                 chan = rms = i = 0;
-
-                for(chan = 0; chan < channels; ++chan) {
+                if (channels > 1) { //need to mixdown
                     for (i = 0; i < count; ++i) {
-                        current = event.inputBuffer.getChannelData(chan)[i];
+                        for (; chan < channels; ++chan) {
+                            current = event.inputBuffer.getChannelData(chan)[i];
+                            rms += (current * current) / channels;
+                        }
+                    }
+                } else {
+                    for (i = 0; i < count; ++i) {
+                        current = event.inputBuffer.getChannelData(0)[i];
                         rms += (current * current);
                     }
                 }
-                rms = Math.sqrt(rms / channels);
+                rms = Math.sqrt(rms);
 
                 if (this._envelope < rms) {
                     this._envelope *= this._attackC;
@@ -20867,6 +20869,9 @@ let pitchesArray = [ // Just an array of note names. This can be useful for mapp
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./common */ "./src/common.js");
 /* harmony import */ var _pitches__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pitches */ "./src/pitches.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_2__);
+
 
 
 
@@ -21045,6 +21050,7 @@ class Polywad {
 		this.nodes             = [this.input];
 		this.destination       = arg.destination || _common__WEBPACK_IMPORTED_MODULE_0__["context"].destination; // the last node the sound is routed to
 		this.volume            = arg.volume || 1;
+		this.volume            = lodash__WEBPACK_IMPORTED_MODULE_2___default.a.get(arg, 'volume', 1)
 		this.gain              = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createGain();
 		this.gain.gain.value   = this.volume;
 		this.output            = _common__WEBPACK_IMPORTED_MODULE_0__["context"].createAnalyser();
@@ -21185,12 +21191,12 @@ class Polywad {
 
 	add(wad){
 		if ( this.isSetUp ) {
-			wad.destination = this.input;
-			this.wads.push(wad);
 			if ( wad instanceof Polywad ) {
-				wad.output.disconnect(0);
+				wad.output.disconnect(wad.destination);
 				wad.output.connect(this.input);
 			}
+			wad.destination = this.input;
+			this.wads.push(wad);
 		}
 		else {
 			Object(_common__WEBPACK_IMPORTED_MODULE_0__["logMessage"])('This PolyWad is not set up yet.');
@@ -21201,12 +21207,12 @@ class Polywad {
 		if ( this.isSetUp ) {
 			for ( let i = 0; i < this.wads.length; i++ ) {
 				if ( this.wads[i] === wad ) {
-					this.wads[i].destination = _common__WEBPACK_IMPORTED_MODULE_0__["context"].destination;
-					this.wads.splice(i,1);
 					if ( wad instanceof Polywad ) {
-						wad.output.disconnect(0);
+						wad.output.disconnect(wad.destination);
 						wad.output.connect(_common__WEBPACK_IMPORTED_MODULE_0__["context"].destination);
 					}
+					this.wads[i].destination = _common__WEBPACK_IMPORTED_MODULE_0__["context"].destination;
+					this.wads.splice(i,1);
 				}
 			}
 		}

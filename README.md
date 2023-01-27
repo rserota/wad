@@ -130,7 +130,7 @@ If `voice.play()` is called with no arguments, it uses the arguments from the co
 
 ## Configuring Reverb
 
-In order to use reverb, you will need a server to send an impulse response. An impulse response is a small audio file, like a wav or mp3, that describes the acoustic characteristics of a physical space.   You can make your own impulse response, but it might be easier to just <a href="http://www.voxengo.com/impulses/">find one online</a>. There's also an impulse response included in the test folder that you can use. 
+In order to use reverb, you will need a server to send an impulse response. An impulse response is a small audio file, like a wav or mp3, that describes the acoustic characteristics of a physical space.   You can make your own impulse response, but it might be easier to just find one online. There's also an impulse response included in the test folder that you can use. 
 
 ## Audio Sprites
 

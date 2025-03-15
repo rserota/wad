@@ -192,8 +192,9 @@ document.getElementById('mic-consent').addEventListener('click', function(){
 			}
 		},
 	});
-	// tuner.setVolume(0) // mute the tuner to avoid feedback
+	tuner.setVolume(0) // mute the tuner to avoid feedback
 	tuner.add(voice);
+	console.log('eh?')
 
 });
 

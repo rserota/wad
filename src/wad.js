@@ -107,7 +107,7 @@ class Wad {
 
 	/**
 	 * @typedef {object} WadConfig
-	 * @property {'sine'|'square'|'sawtooth'|'triangle'|'noise'} source - sine, square, sawtooth, triangle, or noise
+	 * @property {'sine'|'square'|'sawtooth'|'triangle'|'noise'|'mic'|string} source - sine, square, sawtooth, triangle, or noise for oscillators, mic for live microphone input, or any string to play an audio file.
 	 * @property {number} [volume] - From 0 to 1
 	 * @property {string|number} [pitch] - Set a default pitch on the constructor if you don't want to set the pitch on play(). Pass in a string like 'c#3' to play a specific pitch, or pass in a number to play that frequency, in hertz.
 	 * @property {number} [detune] - Detune is measured in cents. 100 cents is equal to 1 semitone.

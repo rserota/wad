@@ -55,7 +55,7 @@ declare class Wad {
      */
     /**
      * @typedef {object} WadConfig
-     * @property {'sine'|'square'|'sawtooth'|'triangle'|'noise'} source - sine, square, sawtooth, triangle, or noise
+     * @property {'sine'|'square'|'sawtooth'|'triangle'|'noise'|'mic'|string} source - sine, square, sawtooth, triangle, or noise for oscillators, mic for live microphone input, or any string to play an audio file.
      * @property {number} [volume] - From 0 to 1
      * @property {string|number} [pitch] - Set a default pitch on the constructor if you don't want to set the pitch on play(). Pass in a string like 'c#3' to play a specific pitch, or pass in a number to play that frequency, in hertz.
      * @property {number} [detune] - Detune is measured in cents. 100 cents is equal to 1 semitone.
@@ -82,9 +82,9 @@ declare class Wad {
      */
     constructor(arg: {
         /**
-         * - sine, square, sawtooth, triangle, or noise
+         * - sine, square, sawtooth, triangle, or noise for oscillators, mic for live microphone input, or any string to play an audio file.
          */
-        source: 'sine' | 'square' | 'sawtooth' | 'triangle' | 'noise';
+        source: 'sine' | 'square' | 'sawtooth' | 'triangle' | 'noise' | 'mic' | string;
         /**
          * - From 0 to 1
          */
@@ -289,7 +289,7 @@ declare class Wad {
         useCache?: boolean;
     });
     /** Set basic Wad properties **/
-    source: "sawtooth" | "sine" | "square" | "triangle" | "noise";
+    source: string;
     useCache: any;
     destination: any;
     volume: any;
@@ -307,45 +307,6 @@ declare class Wad {
         attack: any;
         decay: any;
         sustain: any;
-        /**
-         * @typedef {object} TremoloConfig
-         * @property {'sine'|'sawtooth'|'square'|'triangle'} [shape] - Shape of the lfo waveform.
-         * @property {number} [magnitude] - How much the volume changes. Sensible values are from 1 to 10.
-         * @property {number} [speed] - How quickly the volume changes, in cycles per second. Sensible values are from 0.1 to 10.
-         * @property {number} [attack] - Time in seconds for the tremolo effect to reach peak magnitude.
-         */
-        /**
-         * @typedef {object} ReverbConfig
-         * @property {number} [wet] - The volume of the reverberations.
-         * @property {string} [impulse] - A URL for an impulse response file.
-         */
-        /**
-         * @typedef {object} WadConfig
-         * @property {'sine'|'square'|'sawtooth'|'triangle'|'noise'} source - sine, square, sawtooth, triangle, or noise
-         * @property {number} [volume] - From 0 to 1
-         * @property {string|number} [pitch] - Set a default pitch on the constructor if you don't want to set the pitch on play(). Pass in a string like 'c#3' to play a specific pitch, or pass in a number to play that frequency, in hertz.
-         * @property {number} [detune] - Detune is measured in cents. 100 cents is equal to 1 semitone.
-         * @property {Envelope} [env]- A set of parameters that describes how a sound's volume changes over time.
-         * @property {object} [destination] - The last node the sound is routed to.
-         * @property {number} [offset] - Where in the audio clip playback begins, measured in seconds from the start of the audio clip.
-         * @property {boolean} [loop] - If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators.
-         * @property {object} [tuna] - Add effects from Tuna.js to this wad. Check out the Tuna.js documentation for more information.
-         * @property {number} [rate] - Where in the audio clip playback begins, measured in seconds from the start of the audio clip.
-         * @property {object} [sprite] - Each key is the name of a sprite. The value is a two-element array, containing the start and end time of that sprite, in seconds.
-         * @property {FilterConfig|FilterConfig[]} [filter] - Pass an object to add a filter to this wad, or pass an array of objects to add multiple filters to this wad.
-         * @property {VibratoConfig} [vibrato] - A vibrating pitch effect. Only works for oscillators.
-         * @property {TremoloConfig} [tremolo] - A vibrating volume effect.
-         * @property {number|array} [panning] - Placement of the sound source. Pass in a number to use stereo panning, or pass in a 3-element array to use 3D panning. Note that some browsers do not support stereo panning.
-         * @property {'equalpower'|'HRTF'} [panningModel] - Defaults to 'equalpower'
-         * @property {string} [rolloffFactor]
-         * @property {ReverbConfig} [reverb] - Add reverb to this wad.
-         * @property {DelayConfig} [delay] - Add delay to this wad.
-         * @property {boolean} [useCache] - If false, the audio will be requested from the source URL without checking the audioCache.
-         *
-         */
-        /**
-         * @param {WadConfig} arg - One big object.
-         */
         hold: any;
         release: any;
     };
@@ -353,45 +314,6 @@ declare class Wad {
         attack: any;
         decay: any;
         sustain: any;
-        /**
-         * @typedef {object} TremoloConfig
-         * @property {'sine'|'sawtooth'|'square'|'triangle'} [shape] - Shape of the lfo waveform.
-         * @property {number} [magnitude] - How much the volume changes. Sensible values are from 1 to 10.
-         * @property {number} [speed] - How quickly the volume changes, in cycles per second. Sensible values are from 0.1 to 10.
-         * @property {number} [attack] - Time in seconds for the tremolo effect to reach peak magnitude.
-         */
-        /**
-         * @typedef {object} ReverbConfig
-         * @property {number} [wet] - The volume of the reverberations.
-         * @property {string} [impulse] - A URL for an impulse response file.
-         */
-        /**
-         * @typedef {object} WadConfig
-         * @property {'sine'|'square'|'sawtooth'|'triangle'|'noise'} source - sine, square, sawtooth, triangle, or noise
-         * @property {number} [volume] - From 0 to 1
-         * @property {string|number} [pitch] - Set a default pitch on the constructor if you don't want to set the pitch on play(). Pass in a string like 'c#3' to play a specific pitch, or pass in a number to play that frequency, in hertz.
-         * @property {number} [detune] - Detune is measured in cents. 100 cents is equal to 1 semitone.
-         * @property {Envelope} [env]- A set of parameters that describes how a sound's volume changes over time.
-         * @property {object} [destination] - The last node the sound is routed to.
-         * @property {number} [offset] - Where in the audio clip playback begins, measured in seconds from the start of the audio clip.
-         * @property {boolean} [loop] - If true, the audio will loop. This parameter only works for audio clips, and does nothing for oscillators.
-         * @property {object} [tuna] - Add effects from Tuna.js to this wad. Check out the Tuna.js documentation for more information.
-         * @property {number} [rate] - Where in the audio clip playback begins, measured in seconds from the start of the audio clip.
-         * @property {object} [sprite] - Each key is the name of a sprite. The value is a two-element array, containing the start and end time of that sprite, in seconds.
-         * @property {FilterConfig|FilterConfig[]} [filter] - Pass an object to add a filter to this wad, or pass an array of objects to add multiple filters to this wad.
-         * @property {VibratoConfig} [vibrato] - A vibrating pitch effect. Only works for oscillators.
-         * @property {TremoloConfig} [tremolo] - A vibrating volume effect.
-         * @property {number|array} [panning] - Placement of the sound source. Pass in a number to use stereo panning, or pass in a 3-element array to use 3D panning. Note that some browsers do not support stereo panning.
-         * @property {'equalpower'|'HRTF'} [panningModel] - Defaults to 'equalpower'
-         * @property {string} [rolloffFactor]
-         * @property {ReverbConfig} [reverb] - Add reverb to this wad.
-         * @property {DelayConfig} [delay] - Add delay to this wad.
-         * @property {boolean} [useCache] - If false, the audio will be requested from the source URL without checking the audioCache.
-         *
-         */
-        /**
-         * @param {WadConfig} arg - One big object.
-         */
         hold: any;
         release: any;
     };
